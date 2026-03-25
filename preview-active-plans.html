@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WF: ACTIVEプランセクション</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #eee; font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif; }
+
+/* ============================================
+   SECTION
+   ============================================ */
+.ap-section {
+  width: 100%;
+  background: #FB4C15;
+  overflow: hidden;
+  position: relative;
+}
+.ap-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 80px 64px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================
+   FLOATING PARTICLES BACKGROUND
+   ============================================ */
+.ap-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ap-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  opacity: 0;
+  animation: apParticleFloat linear infinite;
+}
+@keyframes apParticleFloat {
+  0% { opacity: 0; transform: translateY(0) scale(0.3); }
+  8% { opacity: 0.5; }
+  85% { opacity: 0.4; }
+  100% { opacity: 0; transform: translateY(-110vh) scale(1); }
+}
+
+/* ============================================
+   HEADER: タイトル＋リード（中央揃え）
+   ============================================ */
+.ap-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.ap-title {
+  font-size: 40px;
+  font-weight: 500;
+  color: #fff;
+  line-height: 180%;
+  margin-bottom: 16px;
+}
+.ap-lead {
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.8);
+  line-height: 180%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   TABS: カプセル型
+   ============================================ */
+.ap-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+.ap-tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 28px 4px 4px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.ap-tab:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.5);
+  color: #fff;
+}
+.ap-tab--active {
+  background: #fff;
+  border-color: #fff;
+  color: #1B1D1A;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.ap-tab--active:hover {
+  background: #fff;
+  color: #1B1D1A;
+}
+.ap-tab__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+.ap-tab--active .ap-tab__avatar {
+  background: #FB4C15;
+}
+.ap-tab__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ap-tab__label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ap-tab__label-main {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.ap-tab__label-sub {
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.7;
+  line-height: 1.3;
+}
+.ap-tab--active .ap-tab__label-sub {
+  opacity: 0.5;
+}
+
+/* ============================================
+   CARDS CONTAINER
+   ============================================ */
+.ap-cards-area {
+  position: relative;
+  min-height: 500px;
+}
+.ap-cards-group {
+  display: none;
+  justify-content: center;
+  align-items: stretch;
+  gap: 24px;
+  animation: apFadeIn 0.4s ease;
+}
+.ap-cards-group--active {
+  display: flex;
+}
+@keyframes apFadeIn {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   CARD
+   ============================================ */
+.ap-card {
+  width: calc((100% - 24px * 3) / 4);
+  max-width: 304px;
+  background: #fff;
+  border-radius: 0;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.ap-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+}
+
+/* カード画像 */
+.ap-card__img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #ddd;
+  overflow: hidden;
+}
+.ap-card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ap-card__img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 14px;
+  background: linear-gradient(135deg, #e8e8e8, #d0d0d0);
+}
+
+/* カードコンテンツ */
+.ap-card__content {
+  padding: 24px;
+}
+.ap-card__plan-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1B1D1A;
+  margin-bottom: 4px;
+}
+.ap-card__plan-ja {
+  font-size: 13px;
+  font-weight: 500;
+  color: #92939C;
+  margin-bottom: 16px;
+}
+.ap-card__target {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1B1D1A;
+  line-height: 170%;
+  margin-bottom: 16px;
+  min-height: 48px;
+}
+.ap-card__specs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.ap-card__spec {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #545655;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ECECEC;
+}
+.ap-card__spec:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.ap-card__spec-label {
+  font-weight: 400;
+}
+.ap-card__spec-value {
+  font-weight: 600;
+  color: #1B1D1A;
+}
+.ap-card__price {
+  margin-bottom: 20px;
+}
+.ap-card__price-main {
+  font-family: 'Poppins', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #FB4C15;
+}
+.ap-card__price-main span {
+  font-size: 14px;
+  font-weight: 400;
+  color: #92939C;
+}
+
+/* CTA: Hero v17ボタンデザイン */
+.ap-card__cta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  overflow: hidden;
+  transition: filter 0.3s ease;
+  box-shadow: 0 16px 16px -8px rgba(251,76,21,0.35);
+}
+.ap-card__cta:hover {
+  filter: brightness(1.12);
+}
+.ap-card__cta-text {
+  position: relative;
+  z-index: 1;
+}
+.ap-card__cta-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  transition: transform 0.3s ease;
+}
+.ap-card__cta-arrow svg {
+  display: block;
+  width: 36px;
+  height: 14px;
+}
+.ap-card__cta:hover .ap-card__cta-arrow {
+  transform: translateY(-50%) translateX(4px);
+}
+
+/* ============================================
+   PC: タブ・カードの左右見切れ防止
+   ============================================ */
+.ap-tabs {
+  flex-wrap: wrap;
+}
+.ap-cards-group {
+  flex-wrap: nowrap;
+}
+
+/* ============================================
+   SP
+   ============================================ */
+@media (max-width: 767px) {
+  .ap-inner {
+    padding: 56px 0;
+  }
+  .ap-header {
+    padding: 0 24px;
+  }
+  .ap-title {
+    font-size: 28px;
+  }
+  .ap-lead {
+    font-size: 14px;
+  }
+  /* タブ: 横スクロール */
+  .ap-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 0 24px 8px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 8px;
+  }
+  .ap-tabs::-webkit-scrollbar { display: none; }
+  .ap-tab {
+    padding: 4px 16px 4px 4px;
+    font-size: 13px;
+  }
+  .ap-tab__avatar {
+    width: 32px;
+    height: 32px;
+  }
+  .ap-tab__label-main {
+    font-size: 13px;
+  }
+  .ap-tab__label-sub {
+    font-size: 10px;
+  }
+  /* カード: スワイプカルーセル（センター配置） */
+  .ap-cards-group {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 calc((100vw - 300px) / 2);
+    gap: 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ap-cards-group::-webkit-scrollbar { display: none; }
+  .ap-card {
+    flex: 0 0 300px;
+    width: 300px;
+    max-width: none;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+  .ap-card__img {
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    position: relative;
+  }
+  .ap-card__img img,
+  .ap-card__img .ap-card__img-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  /* 最後のカードの右余白でスナップ位置を確保 */
+  .ap-cards-group::after {
+    content: '';
+    flex: 0 0 1px;
+    width: 1px;
+    padding-right: calc(100vw - (100vw - 72px) - 16px - 24px - 1px);
+  }
+}
+</style>
+</head>
+<body>
+
+<section class="ap-section">
+  <!-- Floating Particles Background -->
+  <div class="ap-particles" id="apParticles"></div>
+
+  <div class="ap-inner">
+
+    <!-- HEADER -->
+    <div class="ap-header">
+      <h2 class="ap-title">体格と目的で選べる 5つのプラン</h2>
+      <p class="ap-lead">肉・魚・ビタミン・ミネラル。すべてが揃う「完全装備」。<br>アスリートを支える、高タンパク・低脂質設計。</p>
+    </div>
+
+    <!-- TABS -->
+    <div class="ap-tabs" id="apTabs">
+      <button class="ap-tab ap-tab--active" data-tab="all">
+        <div class="ap-tab__avatar">
+          <div style="width:100%;height:100%;background:#FB4C15;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;">ALL</div>
+        </div>
+        <div class="ap-tab__label">
+          <span class="ap-tab__label-main">すべてのプラン</span>
+          <span class="ap-tab__label-sub">4プラン一覧</span>
+        </div>
+      </button>
+      <button class="ap-tab" data-tab="build">
+        <div class="ap-tab__avatar">
+          <div style="width:100%;height:100%;background:rgba(255,255,255,0.3);border-radius:50%;"></div>
+        </div>
+        <div class="ap-tab__label">
+          <span class="ap-tab__label-main">筋肉量を増やしたい</span>
+          <span class="ap-tab__label-sub">バルクアップ・増量</span>
+        </div>
+      </button>
+      <button class="ap-tab" data-tab="maintain">
+        <div class="ap-tab__avatar">
+          <div style="width:100%;height:100%;background:rgba(255,255,255,0.3);border-radius:50%;"></div>
+        </div>
+        <div class="ap-tab__label">
+          <span class="ap-tab__label-main">コンディションを維持したい</span>
+          <span class="ap-tab__label-sub">体重管理・バランス維持</span>
+        </div>
+      </button>
+      <button class="ap-tab" data-tab="cut">
+        <div class="ap-tab__avatar">
+          <div style="width:100%;height:100%;background:rgba(255,255,255,0.3);border-radius:50%;"></div>
+        </div>
+        <div class="ap-tab__label">
+          <span class="ap-tab__label-main">体脂肪を落としたい</span>
+          <span class="ap-tab__label-sub">減量・シェイプアップ</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- CARDS -->
+    <div class="ap-cards-area">
+
+      <!-- 全て: ACTIVE 60, 50, 40, 30 -->
+      <div class="ap-cards-group ap-cards-group--active" data-group="all">
+        <div class="ap-card">
+          <div class="ap-card__img"><div class="ap-card__img-placeholder">320 × 320</div></div>
+          <div class="ap-card__content">
+            <p class="ap-card__plan-name">ACTIVE 60</p>
+            <p class="ap-card__plan-ja">高タンパク質プラン</p>
+            <p class="ap-card__target">70kg以上で筋力アップを<br>目指すアスリート向け</p>
+            <div class="ap-card__specs">
+              <div class="ap-card__spec"><span class="ap-card__spec-label">たんぱく質</span><span class="ap-card__spec-value">約60g</span></div>
+              <div class="ap-card__spec"><span class="ap-card__spec-label">カロリー</span><span class="ap-card__spec-value">約677kcal</span></div>
+            </div>
+            <div class="ap-card__price"><span class="ap-card__price-main">¥1,800 <span>/ 1食</span></span></div>
+            <a href="#" class="ap-card__cta"><span class="ap-card__cta-text">詳しく見る</span><span class="ap-card__cta-arrow"><svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a>
+          </div>
+        </div>
+        <div class="ap-card">
+          <div class="ap-card__img"><div class="ap-card__img-placeholder">320 × 320</div></div>
+          <div class="ap-card__content">
+            <p class="ap-card__plan-name">ACTIVE 50</p>
+            <p class="ap-card__plan-ja">バランスプラン</p>
+            <p class="ap-card__target">50〜70kgで筋肉量アップ、<br>70kg以上で維持が目的の方</p>
+            <div class="ap-card__specs">
+              <div class="ap-card__spec"><span class="ap-card__spec-label">たんぱく質</span><span class="ap-card__spec-value">約50g</span></div>
+              <div class="ap-card__spec"><span class="ap-card__spec-label">カロリー</span><span class="ap-card__spec-value">約560kcal</span></div>
+            </div>
+            <div class="ap-card__price"><span class="ap-card__price-main">¥1,400 <span>/ 1食</span></span></div>
+            <a href="#" class="ap-card__cta"><span class="ap-card__cta-text">詳しく見る</span><span class="ap-card__cta-arrow"><svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a>
+          </div>
+        </div>
+        <div class="ap-card">
+          <div class="ap-card__img"><div class="ap-card__img-placeholder">320 × 320</div></div>
+          <div class="ap-card__content">
+            <p class="ap-card__plan-name">ACTIVE 40</p>
+            <p class="ap-card__plan-ja">スタンダードプラン</p>
+            <p class="ap-card__target">50kg未満で筋肉量アップ、<br>50〜70kgでバランス維持向け</p>
+            <div class="ap-card__specs">
+              <div class="ap-card__spec"><span class="ap-card__spec-label">たんぱく質</span><span class="ap-card__spec-value">約40g</span></div>
+              <div class="ap-card__spec"><span class="ap-card__spec-label">カロリー</span><span class="ap-card__spec-value">約480kcal</span></div>
+            </div>
+            <div class="ap-card__price"><span class="ap-card__price-main">¥1,300 <span>/ 1食</span></span></div>
+            <a href="#" class="ap-card__cta"><span class="ap-card__cta-text">詳しく見る</span><span class="ap-card__cta-arrow"><svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a>
+          </div>
+        </div>
+        <div class="ap-card">
+          <div class="ap-card__img"><div class="ap-card__img-placeholder">320 × 320</div></div>
+          <div class="ap-card__content">
+            <p class="ap-card__plan-name">ACTIVE 30</p>
+            <p class="ap-card__plan-ja">ライトプラン</p>
+            <p class="ap-card__target">健康維持・減量が目的の方、<br>50kg未満の一般の方</p>
+            <div class="ap-card__specs">
+              <div class="ap-card__spec"><span class="ap-card__spec-label">たんぱく質</span><span class="ap-card__spec-value">約30g</span></div>
+              <div class="ap-card__spec"><span class="ap-card__spec-label">カロリー</span><span class="ap-card__spec-value">約350kcal</span></div>
+            </div>
+            <div class="ap-card__price"><span class="ap-card__price-main">¥1,000 <span>/ 1食</span></span></div>
+            <a href="#" class="ap-card__cta"><span class="ap-card__cta-text">詳しく見る</span><span class="ap-card__cta-arrow"><svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 筋力アップ: ACTIVE 60, 50, 40 -->
+      <div class="ap-cards-group" data-group="build">
+        <!-- ACTIVE 60 -->
+        <div class="ap-card">
+          <div class="ap-card__img">
+            <div class="ap-card__img-placeholder">320 × 320</div>
+          </div>
+          <div class="ap-card__content">
+            <p class="ap-card__plan-name">ACTIVE 60</p>
+            <p class="ap-card__plan-ja">高タンパク質プラン</p>
+            <p class="ap-card__target">70kg以上で筋力アップを<br>目指すアスリート向け</p>
+            <div class="ap-card__specs">
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">たんぱく質</span>
+                <span class="ap-card__spec-value">約60g</span>
+              </div>
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">カロリー</span>
+                <span class="ap-card__spec-value">約677kcal</span>
+              </div>
+            </div>
+            <div class="ap-card__price">
+              <span class="ap-card__price-main">¥1,800 <span>/ 1食</span></span>
+            </div>
+            <a href="#" class="ap-card__cta">
+              <span class="ap-card__cta-text">詳しく見る</span>
+              <span class="ap-card__cta-arrow">
+                <svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0" y="5" width="46" height="2" fill="white"/>
+                  <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <!-- ACTIVE 50 -->
+        <div class="ap-card">
+          <div class="ap-card__img">
+            <div class="ap-card__img-placeholder">320 × 320</div>
+          </div>
+          <div class="ap-card__content">
+            <p class="ap-card__plan-name">ACTIVE 50</p>
+            <p class="ap-card__plan-ja">バランスプラン</p>
+            <p class="ap-card__target">50〜70kgで筋肉量アップ、<br>70kg以上で維持が目的の方</p>
+            <div class="ap-card__specs">
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">たんぱく質</span>
+                <span class="ap-card__spec-value">約50g</span>
+              </div>
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">カロリー</span>
+                <span class="ap-card__spec-value">約560kcal</span>
+              </div>
+            </div>
+            <div class="ap-card__price">
+              <span class="ap-card__price-main">¥1,400 <span>/ 1食</span></span>
+            </div>
+            <a href="#" class="ap-card__cta">
+              <span class="ap-card__cta-text">詳しく見る</span>
+              <span class="ap-card__cta-arrow">
+                <svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0" y="5" width="46" height="2" fill="white"/>
+                  <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <!-- ACTIVE 40 -->
+        <div class="ap-card">
+          <div class="ap-card__img">
+            <div class="ap-card__img-placeholder">320 × 320</div>
+          </div>
+          <div class="ap-card__content">
+            <p class="ap-card__plan-name">ACTIVE 40</p>
+            <p class="ap-card__plan-ja">スタンダードプラン</p>
+            <p class="ap-card__target">50kg未満で筋肉量アップ、<br>50〜70kgでバランス維持向け</p>
+            <div class="ap-card__specs">
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">たんぱく質</span>
+                <span class="ap-card__spec-value">約40g</span>
+              </div>
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">カロリー</span>
+                <span class="ap-card__spec-value">約480kcal</span>
+              </div>
+            </div>
+            <div class="ap-card__price">
+              <span class="ap-card__price-main">¥1,300 <span>/ 1食</span></span>
+            </div>
+            <a href="#" class="ap-card__cta">
+              <span class="ap-card__cta-text">詳しく見る</span>
+              <span class="ap-card__cta-arrow">
+                <svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0" y="5" width="46" height="2" fill="white"/>
+                  <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 維持: ACTIVE 50, 40, 30 -->
+      <div class="ap-cards-group" data-group="maintain">
+        <!-- ACTIVE 50 -->
+        <div class="ap-card">
+          <div class="ap-card__img">
+            <div class="ap-card__img-placeholder">320 × 320</div>
+          </div>
+          <div class="ap-card__content">
+            <p class="ap-card__plan-name">ACTIVE 50</p>
+            <p class="ap-card__plan-ja">バランスプラン</p>
+            <p class="ap-card__target">70kg以上で筋肉量と<br>コンディション維持が目的の方</p>
+            <div class="ap-card__specs">
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">たんぱく質</span>
+                <span class="ap-card__spec-value">約50g</span>
+              </div>
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">カロリー</span>
+                <span class="ap-card__spec-value">約560kcal</span>
+              </div>
+            </div>
+            <div class="ap-card__price">
+              <span class="ap-card__price-main">¥1,400 <span>/ 1食</span></span>
+            </div>
+            <a href="#" class="ap-card__cta">
+              <span class="ap-card__cta-text">詳しく見る</span>
+              <span class="ap-card__cta-arrow">
+                <svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0" y="5" width="46" height="2" fill="white"/>
+                  <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <!-- ACTIVE 40 -->
+        <div class="ap-card">
+          <div class="ap-card__img">
+            <div class="ap-card__img-placeholder">320 × 320</div>
+          </div>
+          <div class="ap-card__content">
+            <p class="ap-card__plan-name">ACTIVE 40</p>
+            <p class="ap-card__plan-ja">スタンダードプラン</p>
+            <p class="ap-card__target">50〜70kgで筋肉量と<br>バランス維持が目的の方</p>
+            <div class="ap-card__specs">
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">たんぱく質</span>
+                <span class="ap-card__spec-value">約40g</span>
+              </div>
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">カロリー</span>
+                <span class="ap-card__spec-value">約480kcal</span>
+              </div>
+            </div>
+            <div class="ap-card__price">
+              <span class="ap-card__price-main">¥1,300 <span>/ 1食</span></span>
+            </div>
+            <a href="#" class="ap-card__cta">
+              <span class="ap-card__cta-text">詳しく見る</span>
+              <span class="ap-card__cta-arrow">
+                <svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0" y="5" width="46" height="2" fill="white"/>
+                  <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <!-- ACTIVE 30 -->
+        <div class="ap-card">
+          <div class="ap-card__img">
+            <div class="ap-card__img-placeholder">320 × 320</div>
+          </div>
+          <div class="ap-card__content">
+            <p class="ap-card__plan-name">ACTIVE 30</p>
+            <p class="ap-card__plan-ja">ライトプラン</p>
+            <p class="ap-card__target">50kg未満でコンディション<br>維持が目的のアスリート向け</p>
+            <div class="ap-card__specs">
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">たんぱく質</span>
+                <span class="ap-card__spec-value">約30g</span>
+              </div>
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">カロリー</span>
+                <span class="ap-card__spec-value">約350kcal</span>
+              </div>
+            </div>
+            <div class="ap-card__price">
+              <span class="ap-card__price-main">¥1,000 <span>/ 1食</span></span>
+            </div>
+            <a href="#" class="ap-card__cta">
+              <span class="ap-card__cta-text">詳しく見る</span>
+              <span class="ap-card__cta-arrow">
+                <svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0" y="5" width="46" height="2" fill="white"/>
+                  <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 減量: ACTIVE 30 -->
+      <div class="ap-cards-group" data-group="cut">
+        <div class="ap-card">
+          <div class="ap-card__img">
+            <div class="ap-card__img-placeholder">320 × 320</div>
+          </div>
+          <div class="ap-card__content">
+            <p class="ap-card__plan-name">ACTIVE 30</p>
+            <p class="ap-card__plan-ja">ライトプラン</p>
+            <p class="ap-card__target">健康維持・減量が目的の方、<br>50kg未満で筋肉量アップの一般の方</p>
+            <div class="ap-card__specs">
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">たんぱく質</span>
+                <span class="ap-card__spec-value">約30g</span>
+              </div>
+              <div class="ap-card__spec">
+                <span class="ap-card__spec-label">カロリー</span>
+                <span class="ap-card__spec-value">約350kcal</span>
+              </div>
+            </div>
+            <div class="ap-card__price">
+              <span class="ap-card__price-main">¥1,000 <span>/ 1食</span></span>
+            </div>
+            <a href="#" class="ap-card__cta">
+              <span class="ap-card__cta-text">詳しく見る</span>
+              <span class="ap-card__cta-arrow">
+                <svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0" y="5" width="46" height="2" fill="white"/>
+                  <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.ap-cards-area -->
+
+  </div>
+</section>
+
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.ap-tab');
+  var groups = document.querySelectorAll('.ap-cards-group');
+
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var target = this.dataset.tab;
+
+      // タブ切替
+      tabs.forEach(function(t) { t.classList.remove('ap-tab--active'); });
+      this.classList.add('ap-tab--active');
+
+      // アバター色切替
+      tabs.forEach(function(t) {
+        var av = t.querySelector('.ap-tab__avatar > div');
+        if (av) av.style.background = 'rgba(255,255,255,0.3)';
+      });
+      var activeAv = this.querySelector('.ap-tab__avatar > div');
+      if (activeAv) activeAv.style.background = '#FB4C15';
+
+      // カードグループ切替（フェードアニメーション）
+      groups.forEach(function(g) {
+        g.classList.remove('ap-cards-group--active');
+        g.style.animation = 'none';
+      });
+      var targetGroup = document.querySelector('[data-group="' + target + '"]');
+      if (targetGroup) {
+        // reflow でアニメーションリセット
+        void targetGroup.offsetWidth;
+        targetGroup.style.animation = '';
+        targetGroup.classList.add('ap-cards-group--active');
+      }
+    });
+  });
+})();
+</script>
+
+<!-- Floating Particles Generator -->
+<script>
+(function() {
+  var container = document.getElementById('apParticles');
+  if (!container) return;
+
+  // 300〜400個のパーティクルを大量生成
+  var count = Math.floor(Math.random() * 101) + 300;
+
+  for (var i = 0; i < count; i++) {
+    var p = document.createElement('div');
+    p.className = 'ap-particle';
+
+    // ランダムなサイズ（1〜8px、小さめ多め）
+    var size = Math.random() * 7 + 1;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+
+    // ランダムな水平位置（画面全幅に均等分散）
+    p.style.left = Math.random() * 100 + '%';
+
+    // セクション下部からスタート
+    p.style.bottom = -(Math.random() * 5) + '%';
+
+    // ランダムなアニメーション時間（4〜12秒）
+    var duration = Math.random() * 8 + 4;
+    p.style.animationDuration = duration + 's';
+
+    // 負の遅延で初期状態から分散表示
+    p.style.animationDelay = -(Math.random() * duration) + 's';
+
+    // ランダムな透明度（0.08〜0.35）
+    var opacity = Math.random() * 0.27 + 0.08;
+    p.style.background = 'rgba(255,255,255,' + opacity + ')';
+
+    // 一部のパーティクルを少し大きく＆明るくして密度感を出す
+    if (Math.random() < 0.15) {
+      var bigSize = Math.random() * 5 + 8;
+      p.style.width = bigSize + 'px';
+      p.style.height = bigSize + 'px';
+      p.style.background = 'rgba(255,255,255,' + (Math.random() * 0.15 + 0.05) + ')';
+    }
+
+    container.appendChild(p);
+  }
+})();
+</script>
+
+</body>
+</html>

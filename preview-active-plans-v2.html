@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WF: ACTIVEプラン v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #eee; font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif; }
+
+/* ===== SECTION（最下層：背景） ===== */
+.apv2 {
+  width: 100%;
+  background: #FB4C15;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 0;
+}
+
+/* HEADER */
+.apv2__header { max-width: 1440px; margin: 0 auto 48px; padding: 0 64px; text-align: center; }
+.apv2__title { font-size: 40px; font-weight: 500; color: #fff; line-height: 180%; margin-bottom: 16px; }
+.apv2__lead { font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.8); line-height: 180%; }
+
+/* ===== MAIN: position:relativeで4層管理 ===== */
+.apv2__main {
+  position: relative;
+  height: 480px;
+}
+
+/* ===== 下から2番目: メニューブロック ===== */
+.apv2__cards-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 480px;
+  z-index: 1;
+}
+.apv2__cards-group { display: none; }
+.apv2__cards-group--active {
+  display: flex;
+  gap: 56px;
+  height: 480px;
+  overflow-x: auto;
+  /* PC: snap無効。SPはメディアクエリで有効化 */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* 初期位置: タブ(379px) + グラデ余白(56px) = 435px */
+  padding-left: 0;
+  padding-right: 64px;
+}
+.apv2__cards-group--active::-webkit-scrollbar { display: none; }
+.apv2__cards-group--active::after { content: ''; flex: 0 0 1px; }
+
+/* ===== 下から3番目: グラデーション層 ===== */
+/* 横幅435px。0~379pxはオレンジ100%、379~435pxはグラデーション */
+.apv2__gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 435px;
+  height: 480px;
+  z-index: 2;
+  background: linear-gradient(to right,
+    #FB4C15 0%,
+    #FB4C15 87.1%,
+    rgba(251,76,21,0) 100%
+  );
+  pointer-events: none;
+}
+/* 87.1% = 379/435 */
+
+/* ===== 下から4番目: タブ（最上層） ===== */
+.apv2__tabs-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  padding-left: 64px;
+}
+.apv2__tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.apv2__tab {
+  display: flex; align-items: center; gap: 16px;
+  padding: 4px 24px 4px 4px; border-radius: 42px; border: none;
+  background: #1B1D1A; color: rgba(255,255,255,0.9);
+  font-family: inherit; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: all 0.3s ease;
+  white-space: nowrap; height: 72px; text-align: left;
+}
+.apv2__tab:hover { background: #2c2e2b; }
+.apv2__tab--active { background: rgba(255,255,255,0.95); color: #1B1D1A; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+.apv2__tab-avatar { width: 64px; height: 64px; border-radius: 50%; overflow: hidden; background: rgba(255,255,255,0.15); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.apv2__tab--active .apv2__tab-avatar { background: #FB4C15; }
+.apv2__tab-label { display: flex; flex-direction: column; gap: 4px; }
+.apv2__tab-main { font-size: 16px; font-weight: 600; line-height: 1.3; }
+.apv2__tab-sub { font-size: 12px; font-weight: 400; opacity: 0.6; line-height: 1.3; }
+
+/* ===== CARD ===== */
+.apv2__card {
+  flex: 0 0 864px; width: 864px; height: 480px;
+  display: flex;
+  transition: transform 0.3s ease;
+}
+.apv2__card:hover { transform: translateY(-4px); }
+.apv2__card-text { width: 352px; height: 480px; flex-shrink: 0; display: flex; flex-direction: column; }
+.apv2__card-img { width: 480px; height: 480px; flex-shrink: 0; margin-left: 32px; overflow: hidden; background: #ddd; }
+.apv2__card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.apv2__card-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e0e0e0, #c8c8c8); color: #999; font-size: 14px; }
+
+/* テキスト */
+.apv2__card-ja { font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+.apv2__card-plan { font-family: 'Poppins', sans-serif; font-size: 40px; font-weight: 400; color: #fff; line-height: 1.2; }
+.apv2__card-divider { width: 100%; height: 2px; background: rgba(255,255,255,0.2); margin: 24px 0; }
+.apv2__card-target { font-size: 20px; font-weight: 500; color: rgba(255,255,255,0.9); line-height: 170%; margin-bottom: 24px; }
+.apv2__card-specs { display: flex; flex-direction: column; margin-bottom: 20px; }
+.apv2__card-spec { display: flex; justify-content: space-between; font-size: 13px; color: rgba(255,255,255,0.6); padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.apv2__card-spec:last-child { border-bottom: none; }
+.apv2__card-spec-label { font-weight: 400; }
+.apv2__card-spec-value { font-weight: 600; color: #fff; }
+.apv2__card-price { margin-bottom: 24px; display: flex; justify-content: space-between; align-items: baseline; }
+.apv2__card-price-label { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.6); }
+.apv2__card-price-main { font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 500; color: #fff; }
+
+/* CTA */
+.apv2__card-cta {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 352px; height: 48px; border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(to bottom, rgba(27,29,26,0.90), rgba(27,29,26,0.95));
+  color: #fff !important; font-family: inherit; font-size: 14px; font-weight: 700;
+  text-decoration: none !important; letter-spacing: 0.08em;
+  position: relative; transition: filter 0.3s ease; margin-top: auto;
+}
+.apv2__card-cta:hover { filter: brightness(1.3); }
+.apv2__card-cta-text { position: relative; z-index: 1; }
+.apv2__card-cta-arrow { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; transition: transform 0.3s ease; }
+.apv2__card-cta:hover .apv2__card-cta-arrow { transform: translateY(-50%) translateX(4px); }
+.apv2__card-cta-arrow svg { display: block; width: 36px; height: 14px; }
+
+/* ===== SP (1280px以下) ===== */
+@media (max-width: 1280px) {
+  .apv2 { padding: 80px 0; }
+  .apv2__header { padding: 0 24px; }
+  .apv2__title { font-size: 28px; }
+  .apv2__lead { font-size: 14px; }
+  .apv2__main { height: auto; display: flex; flex-direction: column; }
+  .apv2__gradient { display: none; }
+  .apv2__tabs-wrap { position: relative; z-index: 5; padding: 0 24px; width: 100%; overflow-x: auto; scrollbar-width: none; margin-bottom: 24px; order: -1; }
+  .apv2__tabs-wrap::-webkit-scrollbar { display: none; }
+  .apv2__tabs { flex-direction: row; gap: 8px; }
+  .apv2__tab { height: 56px; padding: 4px 16px 4px 4px; flex-shrink: 0; }
+  .apv2__tab-avatar { width: 48px; height: 48px; }
+  .apv2__tab-main { font-size: 13px; }
+  .apv2__tab-sub { font-size: 10px; }
+  .apv2__cards-area { position: relative; height: auto; }
+  .apv2__cards-group--active {
+    height: auto; scroll-snap-type: x mandatory; gap: 16px;
+    padding: 8px 0 56px 0;
+  }
+  .apv2__cards-group--active::before, .apv2__cards-group--active::after {
+    content: ''; flex: 0 0 calc((100vw - 320px) / 2 - 8px);
+  }
+  .apv2__card {
+    flex: 0 0 320px; width: 320px; height: auto;
+    flex-direction: column; scroll-snap-align: center; scroll-snap-stop: always; background: #fff;
+  }
+  .apv2__card-text { width: 100%; height: auto; padding: 20px; }
+  .apv2__card-ja { color: #92939C; font-size: 13px; }
+  .apv2__card-plan { color: #1B1D1A; font-size: 24px; }
+  .apv2__card-divider { background: #ECECEC; margin: 16px 0; }
+  .apv2__card-target { color: #1B1D1A; font-size: 14px; }
+  .apv2__card-spec { color: #545655; border-bottom-color: #ECECEC; }
+  .apv2__card-spec-value { color: #1B1D1A; }
+  .apv2__card-price-label { color: #545655; }
+  .apv2__card-price-main { color: #FB4C15; font-size: 28px; }
+  .apv2__card-cta { width: 100%; background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95)); box-shadow: 0 16px 16px -8px rgba(251,76,21,0.35); }
+  .apv2__card-img { width: 100%; height: 0; padding-bottom: 100%; margin-left: 0; position: relative; order: -1; }
+  .apv2__card-img img, .apv2__card-img .apv2__card-img-placeholder { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+}
+</style>
+</head>
+<body>
+<section class="apv2">
+  <div class="apv2__header">
+    <h2 class="apv2__title">体格と目的で選べる<br>5つのプラン</h2>
+    <p class="apv2__lead">肉・魚・ビタミン・ミネラル。すべてが揃う「完全装備」。<br>アスリートを支える、高タンパク・低脂質設計。</p>
+  </div>
+  <div class="apv2__main">
+    <!-- 下から2番目: メニューブロック -->
+    <div class="apv2__cards-area">
+      <div class="apv2__cards-group apv2__cards-group--active" data-group="all">
+        <!-- ダミースペーサー: 435px - gap56px = 379px -->
+        <div style="flex:0 0 379px;width:379px;height:1px;pointer-events:none;" aria-hidden="true"></div>
+        <div class="apv2__card"><div class="apv2__card-text"><p class="apv2__card-ja">アスリートプラス60</p><p class="apv2__card-plan">AthletePlus 60</p><div class="apv2__card-divider"></div><p class="apv2__card-target">70kg以上で筋力アップを<br>目指すアスリート向け</p><div class="apv2__card-specs"><div class="apv2__card-spec"><span class="apv2__card-spec-label">メニュー数</span><span class="apv2__card-spec-value">9種類</span></div><div class="apv2__card-spec"><span class="apv2__card-spec-label">たんぱく質</span><span class="apv2__card-spec-value">約60g</span></div><div class="apv2__card-spec"><span class="apv2__card-spec-label">カロリー</span><span class="apv2__card-spec-value">約677kcal</span></div></div><div class="apv2__card-price"><span class="apv2__card-price-label">1食あたり</span><span class="apv2__card-price-main">¥ 1,800</span></div><a class="apv2__card-cta" href="#"><span class="apv2__card-cta-text">メニューを見る</span><span class="apv2__card-cta-arrow"><svg width="36" height="14" viewBox="0 0 53 12" fill="none"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a></div><div class="apv2__card-img"><div class="apv2__card-img-placeholder">480 × 480</div></div></div>
+        <div class="apv2__card"><div class="apv2__card-text"><p class="apv2__card-ja">アスリートサポート50</p><p class="apv2__card-plan">AthletePlus 50</p><div class="apv2__card-divider"></div><p class="apv2__card-target">50〜70kgで筋肉量アップ、<br>70kg以上で維持が目的の方</p><div class="apv2__card-specs"><div class="apv2__card-spec"><span class="apv2__card-spec-label">メニュー数</span><span class="apv2__card-spec-value">9種類</span></div><div class="apv2__card-spec"><span class="apv2__card-spec-label">たんぱく質</span><span class="apv2__card-spec-value">約50g</span></div><div class="apv2__card-spec"><span class="apv2__card-spec-label">カロリー</span><span class="apv2__card-spec-value">約560kcal</span></div></div><div class="apv2__card-price"><span class="apv2__card-price-label">1食あたり</span><span class="apv2__card-price-main">¥ 1,400</span></div><a class="apv2__card-cta" href="#"><span class="apv2__card-cta-text">メニューを見る</span><span class="apv2__card-cta-arrow"><svg width="36" height="14" viewBox="0 0 53 12" fill="none"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a></div><div class="apv2__card-img"><div class="apv2__card-img-placeholder">480 × 480</div></div></div>
+        <div class="apv2__card"><div class="apv2__card-text"><p class="apv2__card-ja">フィジカルプラン40</p><p class="apv2__card-plan">AthletePlus 40</p><div class="apv2__card-divider"></div><p class="apv2__card-target">50kg未満で筋肉量アップ、<br>50〜70kgでバランス維持向け</p><div class="apv2__card-specs"><div class="apv2__card-spec"><span class="apv2__card-spec-label">メニュー数</span><span class="apv2__card-spec-value">9種類</span></div><div class="apv2__card-spec"><span class="apv2__card-spec-label">たんぱく質</span><span class="apv2__card-spec-value">約40g</span></div><div class="apv2__card-spec"><span class="apv2__card-spec-label">カロリー</span><span class="apv2__card-spec-value">約480kcal</span></div></div><div class="apv2__card-price"><span class="apv2__card-price-label">1食あたり</span><span class="apv2__card-price-main">¥ 1,300</span></div><a class="apv2__card-cta" href="#"><span class="apv2__card-cta-text">メニューを見る</span><span class="apv2__card-cta-arrow"><svg width="36" height="14" viewBox="0 0 53 12" fill="none"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a></div><div class="apv2__card-img"><div class="apv2__card-img-placeholder">480 × 480</div></div></div>
+        <div class="apv2__card"><div class="apv2__card-text"><p class="apv2__card-ja">ヘルスケアプラン30</p><p class="apv2__card-plan">AthletePlus 30</p><div class="apv2__card-divider"></div><p class="apv2__card-target">健康維持・減量が目的の方、<br>50kg未満の一般の方</p><div class="apv2__card-specs"><div class="apv2__card-spec"><span class="apv2__card-spec-label">メニュー数</span><span class="apv2__card-spec-value">9種類</span></div><div class="apv2__card-spec"><span class="apv2__card-spec-label">たんぱく質</span><span class="apv2__card-spec-value">約30g</span></div><div class="apv2__card-spec"><span class="apv2__card-spec-label">カロリー</span><span class="apv2__card-spec-value">約350kcal</span></div></div><div class="apv2__card-price"><span class="apv2__card-price-label">1食あたり</span><span class="apv2__card-price-main">¥ 1,000</span></div><a class="apv2__card-cta" href="#"><span class="apv2__card-cta-text">メニューを見る</span><span class="apv2__card-cta-arrow"><svg width="36" height="14" viewBox="0 0 53 12" fill="none"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a></div><div class="apv2__card-img"><div class="apv2__card-img-placeholder">480 × 480</div></div></div>
+      </div>
+    </div>
+    <!-- 下から3番目: グラデーション -->
+    <div class="apv2__gradient"></div>
+    <!-- 下から4番目: タブ（最上層） -->
+    <div class="apv2__tabs-wrap">
+      <div class="apv2__tabs" id="apv2Tabs">
+        <button class="apv2__tab apv2__tab--active" data-tab="all"><div class="apv2__tab-avatar"><div style="width:100%;height:100%;border-radius:50%;background:#FB4C15;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">ALL</div></div><div class="apv2__tab-label"><span class="apv2__tab-main">すべてのプラン</span><span class="apv2__tab-sub">4プラン一覧</span></div></button>
+        <button class="apv2__tab" data-tab="build"><div class="apv2__tab-avatar"><div style="width:100%;height:100%;border-radius:50%;background:rgba(255,255,255,0.3);"></div></div><div class="apv2__tab-label"><span class="apv2__tab-main">筋肉量を増やしたい</span><span class="apv2__tab-sub">バルクアップ・増量</span></div></button>
+        <button class="apv2__tab" data-tab="maintain"><div class="apv2__tab-avatar"><div style="width:100%;height:100%;border-radius:50%;background:rgba(255,255,255,0.3);"></div></div><div class="apv2__tab-label"><span class="apv2__tab-main">コンディションを維持したい</span><span class="apv2__tab-sub">体重管理・バランス維持</span></div></button>
+        <button class="apv2__tab" data-tab="cut"><div class="apv2__tab-avatar"><div style="width:100%;height:100%;border-radius:50%;background:rgba(255,255,255,0.3);"></div></div><div class="apv2__tab-label"><span class="apv2__tab-main">体脂肪を落としたい</span><span class="apv2__tab-sub">減量・シェイプアップ</span></div></button>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function() {
+  var tabs = document.querySelectorAll('.apv2__tab');
+  var groups = document.querySelectorAll('.apv2__cards-group');
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var target = this.dataset.tab;
+      tabs.forEach(function(t) { t.classList.remove('apv2__tab--active'); });
+      this.classList.add('apv2__tab--active');
+      tabs.forEach(function(t) { var av = t.querySelector('.apv2__tab-avatar > div'); if (av) av.style.background = 'rgba(255,255,255,0.3)'; });
+      var activeAv = this.querySelector('.apv2__tab-avatar > div');
+      if (activeAv) activeAv.style.background = '#FB4C15';
+      groups.forEach(function(g) { g.classList.remove('apv2__cards-group--active'); });
+      var tg = document.querySelector('[data-group="' + target + '"]') || groups[0];
+      if (tg) {
+        tg.classList.add('apv2__cards-group--active');
+        if (window.innerWidth <= 1280) {
+          tg.scrollLeft = 0;
+        } else {
+          tg.scrollTo({ left: 0, behavior: 'instant' });
+        }
+      }
+    });
+  });
+
+  // 初期スクロール位置を0にリセット（ダミー要素が見える位置 = カード60が435px右に表示）
+  groups.forEach(function(g) {
+    if (g.classList.contains('apv2__cards-group--active')) {
+      g.scrollLeft = 0;
+    }
+  });
+})();
+</script>
+</body>
+</html>

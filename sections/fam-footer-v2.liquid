@@ -1,0 +1,546 @@
+{% comment %}theme-check-disable UndefinedObject{% endcomment %}
+{% comment %} === FAM Custom Footer V2 === {% endcomment %}
+{%- liquid
+  assign has_sns = false
+  if section.settings.sns_instagram != blank or section.settings.sns_youtube != blank or section.settings.sns_note != blank or section.settings.sns_tiktok != blank or section.settings.sns_linktree != blank
+    assign has_sns = true
+  endif
+-%}
+
+{%- comment -%} デフォルトのコーナーSVG {%- endcomment -%}
+{%- capture default_corner_svg -%}
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <rect x="28.5859" width="6.82667" height="64" fill="#FC825B"/>
+  <rect y="35.4141" width="6.82667" height="64" transform="rotate(-90 0 35.4141)" fill="#FC825B"/>
+  <path d="M35.4141 14.9277C35.4141 22.4683 41.5269 28.581 49.0674 28.5811H35.4141V14.9277Z" fill="#FC825B"/>
+  <path d="M28.5938 49.0645C28.5938 41.5239 22.4809 35.4111 14.9404 35.4111L28.5938 35.4111L28.5938 49.0645Z" fill="#FC825B"/>
+  <path d="M49.0703 35.4082C41.5298 35.4082 35.417 41.521 35.417 49.0615L35.417 35.4082L49.0703 35.4082Z" fill="#FC825B"/>
+  <path d="M14.9375 28.584C22.478 28.584 28.5908 22.4712 28.5908 14.9307L28.5908 28.584L14.9375 28.584Z" fill="#FC825B"/>
+</svg>
+{%- endcapture -%}
+
+<footer class="fam-footer-v2">
+  <div class="fam-footer-v2__main">
+
+    <!-- 左上 -->
+    <div class="fam-footer-v2__corner fam-footer-v2__corner--tl">
+      {%- if section.settings.corner_icon != blank -%}
+        <img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+      {%- else -%}
+        {{ default_corner_svg }}
+      {%- endif -%}
+    </div>
+    <!-- 左下 -->
+    <div class="fam-footer-v2__corner fam-footer-v2__corner--bl">
+      {%- if section.settings.corner_icon != blank -%}
+        <img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+      {%- else -%}
+        {{ default_corner_svg }}
+      {%- endif -%}
+    </div>
+    <!-- 右上 -->
+    <div class="fam-footer-v2__corner fam-footer-v2__corner--tr">
+      {%- if section.settings.corner_icon != blank -%}
+        <img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+      {%- else -%}
+        {{ default_corner_svg }}
+      {%- endif -%}
+    </div>
+    <!-- 右下 -->
+    <div class="fam-footer-v2__corner fam-footer-v2__corner--br">
+      {%- if section.settings.corner_icon != blank -%}
+        <img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+      {%- else -%}
+        {{ default_corner_svg }}
+      {%- endif -%}
+    </div>
+
+    <div class="fam-footer-v2__inner">
+      <div class="fam-footer-v2__content">
+
+        <!-- Brand -->
+        <div class="fam-footer-v2__brand">
+          {%- if section.settings.footer_logo != blank -%}
+            {%- assign flogo = section.settings.footer_logo -%}
+            {%- assign flogo_h = section.settings.footer_logo_width | divided_by: flogo.aspect_ratio -%}
+            <img
+              src="{{ flogo | image_url: width: 400 }}"
+              alt="{{ shop.name }}"
+              class="fam-footer-v2__logo"
+              width="{{ section.settings.footer_logo_width }}"
+              height="{{ flogo_h }}"
+              loading="lazy"
+            >
+          {%- endif -%}
+          {%- if section.settings.footer_tagline != blank -%}
+            <p class="fam-footer-v2__tagline">{{ section.settings.footer_tagline }}</p>
+          {%- endif -%}
+        </div>
+
+        <!-- Navigation -->
+        <div class="fam-footer-v2__nav">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'link_list' and block.settings.menu != blank -%}
+              {%- if block.settings.menu.links.size <= 7 -%}
+                <div class="fam-footer-v2__nav-col" {{ block.shopify_attributes }}>
+                  {%- for link in block.settings.menu.links -%}
+                    <a href="{{ link.url }}" class="fam-footer-v2__link">
+                      <span>{{ link.title }}</span>
+                      <svg class="fam-footer-v2__arrow" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 6h18M13 1l5 5-5 5" stroke="currentColor" stroke-width="1.2"/></svg>
+                    </a>
+                  {%- endfor -%}
+                </div>
+
+                {%- if has_sns -%}
+                <div class="fam-footer-v2__nav-col fam-footer-v2__nav-col--sns">
+                  <div class="fam-footer-v2__social">
+                    <ul class="fam-footer-v2__social-list">
+                      {%- if section.settings.sns_instagram != blank -%}<li><a href="{{ section.settings.sns_instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M20.021 8.00058C21.6353 8.00058 23.2495 7.99942 24.864 8.00058C27.1095 8.00233 28.9571 8.87272 30.3982 10.5835C31.3111 11.6669 31.8347 12.9288 31.9752 14.3426C32.0011 14.6027 32.0148 14.8648 32.0148 15.126C32.0165 18.4176 32.0575 21.7101 32.0014 25.0005C31.9531 27.8197 30.596 29.8959 28.123 31.2332C27.102 31.7853 25.9916 32.0014 24.8338 32C21.6245 31.9965 18.4152 31.9962 15.2063 32C13.2307 32.0023 11.5266 31.3263 10.1192 29.9433C8.99223 28.8358 8.31122 27.488 8.09129 25.9192C8.04184 25.5655 8.02002 25.2047 8.01973 24.8475C8.01537 21.5655 7.97028 18.2826 8.03311 15.0021C8.09013 12.0328 9.55746 9.90834 12.2181 8.61556C13.1097 8.1824 14.0688 7.99913 15.062 8C16.7152 8.00146 18.3681 8.00029 20.0213 8.00029L20.021 8.00058ZM29.8341 20.0074C29.8341 18.3786 29.8362 16.7496 29.8321 15.1208C29.8315 14.8645 29.8181 14.6065 29.7838 14.3525C29.4699 12.0174 27.4449 10.2048 25.0732 10.1894C21.7042 10.1675 18.3349 10.1789 14.9657 10.1908C14.5826 10.1923 14.1893 10.249 13.8189 10.3482C11.6496 10.9297 10.2001 12.8366 10.1989 15.0865C10.1969 18.3586 10.1931 21.631 10.205 24.9031C10.2065 25.3156 10.2571 25.7377 10.3548 26.1385C10.8872 28.3238 12.8505 29.8182 15.1498 29.8173C18.3931 29.8162 21.6361 29.8167 24.8794 29.8173C25.5552 29.8173 26.2179 29.7231 26.8335 29.4406C28.7796 28.5475 29.7963 27.0229 29.8295 24.8792C29.8545 23.2557 29.8344 21.6312 29.8344 20.0074H29.8341Z" fill="white"/><path d="M13.4688 19.9945C13.4702 16.398 16.415 13.4529 20.0118 13.4512C23.6129 13.4494 26.5644 16.4044 26.5586 20.0053C26.5528 23.6023 23.6027 26.546 20.0083 26.5416C16.4113 26.5373 13.4673 23.5901 13.4688 19.9942V19.9945ZM20.0164 15.6338C17.5938 15.6327 15.6549 17.5672 15.6502 19.9901C15.6456 22.4099 17.5842 24.3555 20.0039 24.3595C22.433 24.3636 24.3777 22.4227 24.3771 19.9954C24.3763 17.573 22.4388 15.635 20.0164 15.6338Z" fill="white"/><path d="M26.4744 12.5686C27.0303 12.5796 27.455 13.0174 27.4452 13.5687C27.4353 14.1217 26.9945 14.5493 26.4444 14.5403C25.8932 14.5313 25.4632 14.088 25.4728 13.5387C25.4824 12.9866 25.9252 12.5578 26.4744 12.5686Z" fill="white"/></svg></a></li>{%- endif -%}
+                      {%- if section.settings.sns_youtube != blank -%}<li><a href="{{ section.settings.sns_youtube }}" target="_blank" rel="noopener" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" fill="#FB4C15"/><path d="M21.1953 11C23.4628 11.0636 25.7325 11.0942 27.9974 11.2076C28.9439 11.2549 29.8961 11.4216 30.8175 11.6395C31.8506 11.884 32.5106 12.5753 32.8409 13.5298C33.1534 14.4331 33.2781 15.3713 33.3459 16.3141C33.4868 18.2739 33.5546 20.2367 33.4471 22.1995C33.3736 23.5431 33.2724 24.8866 32.8946 26.1952C32.4996 27.5634 31.5276 28.3483 30.0797 28.5204C28.6173 28.6944 27.1402 28.7763 25.6662 28.8419C23.7738 28.9262 21.8788 28.973 19.9843 28.9982C18.9512 29.012 17.9171 28.9444 16.883 28.9173C15.7012 28.8862 14.5168 28.8961 13.3382 28.8207C12.0839 28.7403 10.8228 28.6446 9.58677 28.4395C8.12637 28.197 7.30878 27.2695 7.01608 25.9151C6.53293 23.6802 6.44371 21.4186 6.52824 19.1481C6.56841 18.0654 6.61172 16.9807 6.71659 15.9029C6.78494 15.2037 6.93103 14.5061 7.10582 13.8222C7.45957 12.4422 8.42586 11.6543 9.89669 11.4457C10.7289 11.3279 11.5705 11.2381 12.4105 11.21C14.9379 11.1238 17.4668 11.073 19.9953 11.0118C20.3949 11.002 20.7946 11.0104 21.1948 11.0104C21.1948 11.0069 21.1953 11.0035 21.1958 11H21.1953ZM17.2388 23.8463C19.642 22.5536 22.003 21.2835 24.414 19.9863C21.9936 18.6871 19.6352 17.4209 17.2388 16.1346V23.8463Z" fill="white"/></svg></a></li>{%- endif -%}
+                      {%- if section.settings.sns_note != blank -%}<li><a href="{{ section.settings.sns_note }}" target="_blank" rel="noopener" aria-label="note"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M8 9.14333C12.6225 9.14333 18.9503 8.91509 23.4943 9.03464C29.5865 9.18681 31.8866 11.7627 31.9651 18.1099C32.0436 21.7074 31.9651 31.9891 31.9651 31.9891H25.368C25.368 22.9899 25.4016 21.5009 25.368 18.6642C25.2894 16.1644 24.5602 14.9798 22.5743 14.7515C20.4762 14.5233 14.5971 14.7189 14.5971 14.7189V32H8V9.14333Z" fill="white"/></svg></a></li>{%- endif -%}
+                      {%- if section.settings.sns_tiktok != blank -%}<li><a href="{{ section.settings.sns_tiktok }}" target="_blank" rel="noopener" aria-label="TikTok"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M21.0292 8.02001C22.3486 8 23.6579 8.00999 24.9672 8C25.0478 9.53 25.6017 11.09 26.7297 12.1699C27.8577 13.2799 29.449 13.7899 31 13.9599V17.9899C29.5497 17.9399 28.0893 17.6399 26.77 17.0199C26.1959 16.7599 25.6621 16.4299 25.1384 16.0899C25.1283 19.0098 25.1485 21.9298 25.1182 24.8398C25.0377 26.2398 24.5744 27.6298 23.7586 28.7797C22.4392 30.6997 20.153 31.9497 17.8063 31.9897C16.3661 32.0697 14.9259 31.6797 13.6971 30.9597C11.6627 29.7697 10.2325 27.5898 10.0211 25.2498C10.0009 24.7498 9.99084 24.2498 10.011 23.7598C10.1923 21.8598 11.139 20.0398 12.6094 18.7998C14.2813 17.3599 16.6179 16.6699 18.8034 17.0799C18.8235 18.5599 18.7631 20.0398 18.7631 21.5198C17.766 21.1998 16.5977 21.2898 15.7215 21.8898C15.087 22.2998 14.6036 22.9298 14.3518 23.6398C14.1403 24.1498 14.2007 24.7098 14.2108 25.2498C14.4525 26.8898 16.0438 28.2697 17.7358 28.1197C18.8638 28.1097 19.9415 27.4597 20.5257 26.5098C20.717 26.1798 20.9285 25.8398 20.9386 25.4498C21.0393 23.6598 20.999 21.8798 21.0091 20.0898C21.0191 16.0599 20.999 12.0399 21.0292 8.02001Z" fill="white"/></svg></a></li>{%- endif -%}
+                      {%- if section.settings.sns_linktree != blank -%}<li><a href="{{ section.settings.sns_linktree }}" target="_blank" rel="noopener" aria-label="Linktree"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-8 -8 40 40" fill="none"><path d="m13.73635 5.85251 4.00467 -4.11665 2.3248 2.3808 -4.20064 4.00466h5.9085v3.30473h-5.9365l4.22865 4.10766 -2.3248 2.3338L12.0005 12.099l-5.74052 5.76852 -2.3248 -2.3248 4.22864 -4.10766h-5.9375V8.12132h5.9085L3.93417 4.11666l2.3248 -2.3808 4.00468 4.11665V0h3.4727zm-3.4727 10.30614h3.4727V24h-3.4727z" fill="white"/></svg></a></li>{%- endif -%}
+                    </ul>
+                  </div>
+                </div>
+                {%- endif -%}
+
+              {%- else -%}
+                <div class="fam-footer-v2__nav-col" {{ block.shopify_attributes }}>
+                  {%- for link in block.settings.menu.links -%}
+                    {%- if forloop.index <= 7 -%}
+                    <a href="{{ link.url }}" class="fam-footer-v2__link">
+                      <span>{{ link.title }}</span>
+                      <svg class="fam-footer-v2__arrow" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 6h18M13 1l5 5-5 5" stroke="currentColor" stroke-width="1.2"/></svg>
+                    </a>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+                <div class="fam-footer-v2__nav-col">
+                  {%- for link in block.settings.menu.links -%}
+                    {%- if forloop.index > 7 -%}
+                    <a href="{{ link.url }}" class="fam-footer-v2__link">
+                      <span>{{ link.title }}</span>
+                      <svg class="fam-footer-v2__arrow" width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 6h18M13 1l5 5-5 5" stroke="currentColor" stroke-width="1.2"/></svg>
+                    </a>
+                    {%- endif -%}
+                  {%- endfor -%}
+
+                  {%- if has_sns -%}
+                  <div class="fam-footer-v2__social">
+                    <ul class="fam-footer-v2__social-list">
+                      {%- if section.settings.sns_instagram != blank -%}<li><a href="{{ section.settings.sns_instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M20.021 8.00058C21.6353 8.00058 23.2495 7.99942 24.864 8.00058C27.1095 8.00233 28.9571 8.87272 30.3982 10.5835C31.3111 11.6669 31.8347 12.9288 31.9752 14.3426C32.0011 14.6027 32.0148 14.8648 32.0148 15.126C32.0165 18.4176 32.0575 21.7101 32.0014 25.0005C31.9531 27.8197 30.596 29.8959 28.123 31.2332C27.102 31.7853 25.9916 32.0014 24.8338 32C21.6245 31.9965 18.4152 31.9962 15.2063 32C13.2307 32.0023 11.5266 31.3263 10.1192 29.9433C8.99223 28.8358 8.31122 27.488 8.09129 25.9192C8.04184 25.5655 8.02002 25.2047 8.01973 24.8475C8.01537 21.5655 7.97028 18.2826 8.03311 15.0021C8.09013 12.0328 9.55746 9.90834 12.2181 8.61556C13.1097 8.1824 14.0688 7.99913 15.062 8C16.7152 8.00146 18.3681 8.00029 20.0213 8.00029L20.021 8.00058ZM29.8341 20.0074C29.8341 18.3786 29.8362 16.7496 29.8321 15.1208C29.8315 14.8645 29.8181 14.6065 29.7838 14.3525C29.4699 12.0174 27.4449 10.2048 25.0732 10.1894C21.7042 10.1675 18.3349 10.1789 14.9657 10.1908C14.5826 10.1923 14.1893 10.249 13.8189 10.3482C11.6496 10.9297 10.2001 12.8366 10.1989 15.0865C10.1969 18.3586 10.1931 21.631 10.205 24.9031C10.2065 25.3156 10.2571 25.7377 10.3548 26.1385C10.8872 28.3238 12.8505 29.8182 15.1498 29.8173C18.3931 29.8162 21.6361 29.8167 24.8794 29.8173C25.5552 29.8173 26.2179 29.7231 26.8335 29.4406C28.7796 28.5475 29.7963 27.0229 29.8295 24.8792C29.8545 23.2557 29.8344 21.6312 29.8344 20.0074H29.8341Z" fill="white"/><path d="M13.4688 19.9945C13.4702 16.398 16.415 13.4529 20.0118 13.4512C23.6129 13.4494 26.5644 16.4044 26.5586 20.0053C26.5528 23.6023 23.6027 26.546 20.0083 26.5416C16.4113 26.5373 13.4673 23.5901 13.4688 19.9942V19.9945ZM20.0164 15.6338C17.5938 15.6327 15.6549 17.5672 15.6502 19.9901C15.6456 22.4099 17.5842 24.3555 20.0039 24.3595C22.433 24.3636 24.3777 22.4227 24.3771 19.9954C24.3763 17.573 22.4388 15.635 20.0164 15.6338Z" fill="white"/><path d="M26.4744 12.5686C27.0303 12.5796 27.455 13.0174 27.4452 13.5687C27.4353 14.1217 26.9945 14.5493 26.4444 14.5403C25.8932 14.5313 25.4632 14.088 25.4728 13.5387C25.4824 12.9866 25.9252 12.5578 26.4744 12.5686Z" fill="white"/></svg></a></li>{%- endif -%}
+                      {%- if section.settings.sns_youtube != blank -%}<li><a href="{{ section.settings.sns_youtube }}" target="_blank" rel="noopener" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" fill="#FB4C15"/><path d="M21.1953 11C23.4628 11.0636 25.7325 11.0942 27.9974 11.2076C28.9439 11.2549 29.8961 11.4216 30.8175 11.6395C31.8506 11.884 32.5106 12.5753 32.8409 13.5298C33.1534 14.4331 33.2781 15.3713 33.3459 16.3141C33.4868 18.2739 33.5546 20.2367 33.4471 22.1995C33.3736 23.5431 33.2724 24.8866 32.8946 26.1952C32.4996 27.5634 31.5276 28.3483 30.0797 28.5204C28.6173 28.6944 27.1402 28.7763 25.6662 28.8419C23.7738 28.9262 21.8788 28.973 19.9843 28.9982C18.9512 29.012 17.9171 28.9444 16.883 28.9173C15.7012 28.8862 14.5168 28.8961 13.3382 28.8207C12.0839 28.7403 10.8228 28.6446 9.58677 28.4395C8.12637 28.197 7.30878 27.2695 7.01608 25.9151C6.53293 23.6802 6.44371 21.4186 6.52824 19.1481C6.56841 18.0654 6.61172 16.9807 6.71659 15.9029C6.78494 15.2037 6.93103 14.5061 7.10582 13.8222C7.45957 12.4422 8.42586 11.6543 9.89669 11.4457C10.7289 11.3279 11.5705 11.2381 12.4105 11.21C14.9379 11.1238 17.4668 11.073 19.9953 11.0118C20.3949 11.002 20.7946 11.0104 21.1948 11.0104C21.1948 11.0069 21.1953 11.0035 21.1958 11H21.1953ZM17.2388 23.8463C19.642 22.5536 22.003 21.2835 24.414 19.9863C21.9936 18.6871 19.6352 17.4209 17.2388 16.1346V23.8463Z" fill="white"/></svg></a></li>{%- endif -%}
+                      {%- if section.settings.sns_note != blank -%}<li><a href="{{ section.settings.sns_note }}" target="_blank" rel="noopener" aria-label="note"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M8 9.14333C12.6225 9.14333 18.9503 8.91509 23.4943 9.03464C29.5865 9.18681 31.8866 11.7627 31.9651 18.1099C32.0436 21.7074 31.9651 31.9891 31.9651 31.9891H25.368C25.368 22.9899 25.4016 21.5009 25.368 18.6642C25.2894 16.1644 24.5602 14.9798 22.5743 14.7515C20.4762 14.5233 14.5971 14.7189 14.5971 14.7189V32H8V9.14333Z" fill="white"/></svg></a></li>{%- endif -%}
+                      {%- if section.settings.sns_tiktok != blank -%}<li><a href="{{ section.settings.sns_tiktok }}" target="_blank" rel="noopener" aria-label="TikTok"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M21.0292 8.02001C22.3486 8 23.6579 8.00999 24.9672 8C25.0478 9.53 25.6017 11.09 26.7297 12.1699C27.8577 13.2799 29.449 13.7899 31 13.9599V17.9899C29.5497 17.9399 28.0893 17.6399 26.77 17.0199C26.1959 16.7599 25.6621 16.4299 25.1384 16.0899C25.1283 19.0098 25.1485 21.9298 25.1182 24.8398C25.0377 26.2398 24.5744 27.6298 23.7586 28.7797C22.4392 30.6997 20.153 31.9497 17.8063 31.9897C16.3661 32.0697 14.9259 31.6797 13.6971 30.9597C11.6627 29.7697 10.2325 27.5898 10.0211 25.2498C10.0009 24.7498 9.99084 24.2498 10.011 23.7598C10.1923 21.8598 11.139 20.0398 12.6094 18.7998C14.2813 17.3599 16.6179 16.6699 18.8034 17.0799C18.8235 18.5599 18.7631 20.0398 18.7631 21.5198C17.766 21.1998 16.5977 21.2898 15.7215 21.8898C15.087 22.2998 14.6036 22.9298 14.3518 23.6398C14.1403 24.1498 14.2007 24.7098 14.2108 25.2498C14.4525 26.8898 16.0438 28.2697 17.7358 28.1197C18.8638 28.1097 19.9415 27.4597 20.5257 26.5098C20.717 26.1798 20.9285 25.8398 20.9386 25.4498C21.0393 23.6598 20.999 21.8798 21.0091 20.0898C21.0191 16.0599 20.999 12.0399 21.0292 8.02001Z" fill="white"/></svg></a></li>{%- endif -%}
+                      {%- if section.settings.sns_linktree != blank -%}<li><a href="{{ section.settings.sns_linktree }}" target="_blank" rel="noopener" aria-label="Linktree"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-8 -8 40 40" fill="none"><path d="m13.73635 5.85251 4.00467 -4.11665 2.3248 2.3808 -4.20064 4.00466h5.9085v3.30473h-5.9365l4.22865 4.10766 -2.3248 2.3338L12.0005 12.099l-5.74052 5.76852 -2.3248 -2.3248 4.22864 -4.10766h-5.9375V8.12132h5.9085L3.93417 4.11666l2.3248 -2.3808 4.00468 4.11665V0h3.4727zm-3.4727 10.30614h3.4727V24h-3.4727z" fill="white"/></svg></a></li>{%- endif -%}
+                    </ul>
+                  </div>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+      </div>
+
+      <!-- 装飾画像（右50%中央） -->
+      {%- if section.settings.footer_deco_image != blank -%}
+        <div class="fam-footer-v2__deco" aria-hidden="true">
+          {%- assign deco_img = section.settings.footer_deco_image -%}
+          {%- assign deco_h = 800 | divided_by: deco_img.aspect_ratio -%}
+          <img
+            src="{{ deco_img | image_url: width: 800 }}"
+            alt=""
+            width="800"
+            height="{{ deco_h }}"
+            loading="lazy"
+          >
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+
+  <!-- ===== ボトムバー ===== -->
+  <div class="fam-footer-v2__bottom">
+    <div class="fam-footer-v2__bottom-inner">
+      <small>&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}</small>
+    </div>
+  </div>
+</footer>
+
+<style>
+/* ========================
+   FAM Footer V2
+   ======================== */
+.fam-footer-v2__main {
+  position: relative;
+  background: #FB4C15;
+  overflow: hidden;
+}
+.fam-footer-v2__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px 0 {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px 50px;
+}
+@media screen and (min-width: 750px) {
+  .fam-footer-v2 {
+    margin-top: {{ section.settings.margin_top }}px;
+  }
+  .fam-footer-v2__inner {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px 50px;
+  }
+}
+.fam-footer-v2__content {
+  max-width: calc(50% - 50px);
+}
+
+/* ========================
+   四隅コーナーアイコン
+   ======================== */
+.fam-footer-v2__corner {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+  z-index: 2;
+}
+.fam-footer-v2__corner svg,
+.fam-footer-v2__corner img {
+  width: 64px;
+  height: 64px;
+  display: block;
+}
+.fam-footer-v2__corner--tl { top: 0; left: 0; }
+.fam-footer-v2__corner--bl { bottom: 0; left: 0; }
+.fam-footer-v2__corner--tr { top: 0; right: 0; }
+.fam-footer-v2__corner--br { bottom: 0; right: 0; }
+
+/* ========================
+   Brand
+   ======================== */
+.fam-footer-v2__brand {
+  margin-bottom: 28px;
+}
+.fam-footer-v2__logo {
+  display: block;
+  height: auto;
+  width: auto;
+  max-height: 40px;
+  margin-bottom: 12px;
+}
+.fam-footer-v2__tagline {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 170%;
+  letter-spacing: 1px;
+  color: #fff;
+  opacity: 0.3;
+}
+
+/* ========================
+   Nav
+   ======================== */
+.fam-footer-v2__nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+/* ========================
+   Links
+   ======================== */
+.fam-footer-v2__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  text-decoration: none;
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  transition: opacity 0.2s;
+}
+.fam-footer-v2__link:hover {
+  opacity: 0.7;
+}
+.fam-footer-v2__arrow {
+  flex-shrink: 0;
+  width: 16px;
+  height: 10px;
+  margin-left: 12px;
+}
+
+/* ========================
+   Social
+   ======================== */
+.fam-footer-v2__social {
+  padding-top: 24px;
+}
+.fam-footer-v2__social-list {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.fam-footer-v2__social-list a {
+  color: #fff;
+  display: block;
+  transition: opacity 0.2s;
+}
+.fam-footer-v2__social-list a:hover {
+  opacity: 0.7;
+}
+.fam-footer-v2__social-list svg {
+  display: block;
+  width: 40px;
+  height: 40px;
+}
+
+/* ========================
+   右装飾画像
+   ======================== */
+.fam-footer-v2__deco {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 0;
+}
+.fam-footer-v2__deco img {
+  width: 280px;
+  height: 310px;
+  aspect-ratio: 28 / 31;
+  object-fit: contain;
+  display: block;
+}
+
+/* ========================
+   ボトムバー
+   ======================== */
+.fam-footer-v2__bottom {
+  background: #1B1D1A;
+  padding: 16px 0;
+  text-align: center;
+}
+.fam-footer-v2__bottom-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 50px;
+}
+.fam-footer-v2__bottom small {
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  font-family: "Hiragino Sans", sans-serif;
+}
+.fam-footer-v2__bottom a {
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+}
+
+/* ========================
+   SP
+   ======================== */
+@media (max-width: 767px) {
+  .fam-footer-v2__inner {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .fam-footer-v2__content {
+    max-width: none;
+  }
+  .fam-footer-v2__tagline {
+    font-size: 16px;
+  }
+  .fam-footer-v2__nav {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .fam-footer-v2__social-list {
+    justify-content: center;
+    gap: 30px;
+  }
+  .fam-footer-v2__nav-col + .fam-footer-v2__nav-col .fam-footer-v2__link:first-child {
+    border-top: none;
+  }
+  .fam-footer-v2__deco {
+    display: none;
+  }
+  /* SP: 四隅すべて非表示 */
+  .fam-footer-v2__corner {
+    display: none;
+  }
+  .fam-footer-v2__link {
+    font-size: 13px;
+    padding: 12px 0;
+  }
+  .fam-footer-v2__bottom-inner {
+    padding: 0 20px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "FAM Footer V2",
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "link_list",
+      "name": "メニュー",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "見出し"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "default": "footer",
+          "label": "メニュー"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "ロゴ・タグライン"
+    },
+    {
+      "type": "image_picker",
+      "id": "footer_logo",
+      "label": "フッターロゴ（白）"
+    },
+    {
+      "type": "range",
+      "id": "footer_logo_width",
+      "min": 80,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "ロゴ幅",
+      "default": 160
+    },
+    {
+      "type": "text",
+      "id": "footer_tagline",
+      "label": "タグライン",
+      "default": "FUEL THE AMBITION"
+    },
+    {
+      "type": "header",
+      "content": "四隅コーナーアイコン"
+    },
+    {
+      "type": "image_picker",
+      "id": "corner_icon",
+      "label": "コーナーアイコン画像（64×64px推奨）",
+      "info": "SVGファイルをShopifyファイルにアップロードし選択。PC四隅・SP左のみ表示。空欄でデフォルトSVG。"
+    },
+    {
+      "type": "header",
+      "content": "装飾"
+    },
+    {
+      "type": "image_picker",
+      "id": "footer_deco_image",
+      "label": "装飾画像（右側）"
+    },
+    {
+      "type": "header",
+      "content": "SNS"
+    },
+    {
+      "type": "url",
+      "id": "sns_instagram",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "sns_youtube",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "url",
+      "id": "sns_note",
+      "label": "note URL"
+    },
+    {
+      "type": "url",
+      "id": "sns_tiktok",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "sns_linktree",
+      "label": "Linktree URL"
+    },
+    {
+      "type": "header",
+      "content": "余白"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "上マージン",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "上パディング",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "下パディング",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAM Footer V2",
+      "blocks": [
+        { "type": "link_list" },
+        { "type": "link_list" }
+      ]
+    }
+  ]
+}
+{% endschema %}

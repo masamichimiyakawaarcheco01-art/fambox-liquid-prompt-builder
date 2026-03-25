@@ -1,0 +1,315 @@
+<!-- ============================================
+     FAMBOX インタビューセクション
+     sections/fambox-interview.liquid
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-interview-' | append: section.id
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+  /* ============================================
+     RESET
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     SECTION BASE
+     ============================================ */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
+    width: 100%;
+    padding: 120px 0;
+    background: {{ section.settings.bg_color }} !important;
+  }
+
+  #{{ sec_id }} .iv__inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 0 0 56px;
+  }
+
+  /* ============================================
+     KICKER
+     ============================================ */
+  #{{ sec_id }} .iv__kicker {
+    color: #ff4a00 !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    margin: 0 0 24px !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+
+  /* ============================================
+     TITLE
+     ============================================ */
+  #{{ sec_id }} .iv__title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
+    font-size: 40px !important;
+    font-weight: 500 !important;
+    line-height: 180% !important;
+    margin: 0 0 24px !important;
+    color: #1B1D1A !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+
+  /* ============================================
+     GRID (2カラム)
+     ============================================ */
+  #{{ sec_id }} .iv__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  /* ============================================
+     WHO (組織名・名前)
+     ============================================ */
+  #{{ sec_id }} .iv__who-org {
+    color: {{ section.settings.accent_color }} !important;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    line-height: 180% !important;
+    margin-bottom: 8px !important;
+  }
+
+  #{{ sec_id }} .iv__who-name {
+    color: {{ section.settings.accent_color }} !important;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
+    font-size: 32px !important;
+    font-weight: 600 !important;
+    line-height: 180% !important;
+    margin-bottom: 24px !important;
+  }
+
+  /* ============================================
+     LEAD (名前と本文の間)
+     ============================================ */
+  #{{ sec_id }} .iv__lead {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 40px !important;
+    color: #1B1D1A !important;
+    line-height: 180% !important;
+    margin-bottom: 32px !important;
+  }
+
+  /* ============================================
+     BODY
+     ============================================ */
+  #{{ sec_id }} .iv__body {
+    color: #1B1D1A !important;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    line-height: 180% !important;
+  }
+
+  #{{ sec_id }} .iv__body p {
+    margin: 0 0 32px !important;
+  }
+
+  /* ============================================
+     IMAGE
+     ============================================ */
+  #{{ sec_id }} .iv__img-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ============================================
+     PC/SP 本文表示切替
+     ============================================ */
+  #{{ sec_id }} .iv__body--sp {
+    display: none;
+  }
+  #{{ sec_id }} .iv__body--pc {
+    display: block;
+  }
+
+  /* ============================================
+     SP (max-width: 767px)
+     ============================================ */
+  @media (max-width: 767px) {
+    #{{ sec_id }} {
+      padding: 80px 0;
+    }
+    #{{ sec_id }} .iv__inner {
+      padding: 0 0 0 24px;
+    }
+    #{{ sec_id }} .iv__title {
+      font-size: 28px !important;
+    }
+    #{{ sec_id }} .iv__grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    #{{ sec_id }} .iv__who-org {
+      margin-bottom: 0 !important;
+    }
+    #{{ sec_id }} .iv__who-name {
+      font-size: 16px !important;
+      margin-bottom: 24px !important;
+      font-weight: 600 !important;
+      line-height: 180% !important;
+    }
+    #{{ sec_id }} .iv__lead {
+      font-size: 24px !important;
+      margin-bottom: 24px !important;
+    }
+    #{{ sec_id }} .iv__body--pc {
+      display: none;
+    }
+    #{{ sec_id }} .iv__body--sp {
+      display: block;
+      margin-top: 24px;
+      padding-right: 24px;
+      color: #1B1D1A !important;
+      font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      line-height: 180% !important;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <div class="iv__inner">
+
+    <!-- KICKER -->
+    <div class="iv__kicker">{{ section.settings.kicker }}</div>
+
+    <!-- TITLE -->
+    <h2 class="iv__title">{{ section.settings.title | newline_to_br }}</h2>
+
+    <!-- GRID -->
+    <div class="iv__grid">
+
+      <!-- Left: Text -->
+      <div class="iv__left">
+        <div class="iv__who-org">{{ section.settings.org | newline_to_br }}</div>
+        <div class="iv__who-name">{{ section.settings.person_name }}</div>
+        <p class="iv__lead">{{ section.settings.lead_text | newline_to_br }}</p>
+        <div class="iv__body iv__body--pc">
+          {{ section.settings.body_text | newline_to_br }}
+        </div>
+      </div>
+
+      <!-- Right: Image + SP body -->
+      <div class="iv__right">
+        <div class="iv__img-wrap">
+          {%- if section.settings.main_image != blank -%}
+            {{ section.settings.main_image | image_url: width: 1200 | image_tag:
+              alt: section.settings.person_name,
+              loading: 'lazy'
+            }}
+          {%- endif -%}
+        </div>
+        <div class="iv__body iv__body--sp">
+          {{ section.settings.body_text | newline_to_br }}
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "インタビュー",
+  "tag": "section",
+  "class": "fambox-interview-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "全体設定"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "アクセントカラー（組織名・名前）",
+      "default": "#E71422"
+    },
+    {
+      "type": "header",
+      "content": "── ヘッダー ──"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "キッカーテキスト（英語ラベル）",
+      "default": "Changes After Implementing FAM"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "セクションタイトル（改行可）",
+      "default": "FAM導入後の現場の変化"
+    },
+    {
+      "type": "header",
+      "content": "── 人物情報 ──"
+    },
+    {
+      "type": "textarea",
+      "id": "org",
+      "label": "組織名・肩書（改行可）",
+      "default": "トヨタ自動車硬式野球部\nTOYOTA RED CRUISERS 監督"
+    },
+    {
+      "type": "text",
+      "id": "person_name",
+      "label": "名前",
+      "default": "藤原航平さん"
+    },
+    {
+      "type": "textarea",
+      "id": "lead_text",
+      "label": "リード文（改行可）",
+      "default": "FAMBOXのおかげで\n選手の朝食環境が変わりました"
+    },
+    {
+      "type": "header",
+      "content": "── 本文・画像 ──"
+    },
+    {
+      "type": "textarea",
+      "id": "body_text",
+      "label": "本文（改行可）",
+      "default": "オフシーズンは会社・仕事中心で動くため夕方まで仕事があります。その場合、どのタイミングで食事が摂れるかってところがコントロールできなかったりすると思うので、そういう難しさはあるのかなと思います。\n\n夕食は提供しているのですが朝食ですよね。仕事に行く場合もそうですし、練習くる場合も自分で用意するっていう中でFAM(ファム)さんの温めて食べれるところは、選手には助かっているんだろうなと思っています。"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "メイン画像"
+    }
+  ],
+  "presets": [
+    {
+      "name": "インタビュー"
+    }
+  ]
+}
+{% endschema %}

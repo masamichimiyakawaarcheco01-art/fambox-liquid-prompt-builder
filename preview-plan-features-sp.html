@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0">
+<title>Plan Features - SP Wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    padding: 40px 0;
+    background: #e5e5e5;
+    font-family: 'Hiragino Sans', sans-serif;
+  }
+
+  /* ========================================
+     SECTION: full-width orange bg
+     ======================================== */
+  .wf-section {
+    width: 100%;
+    background: #FB4C15;
+    padding: 0 16px;
+  }
+
+  /* 16px margin label */
+  .wf-section::before {
+    content: '← 16px →  表示領域  ← 16px →';
+    display: block;
+    text-align: center;
+    font-size: 9px;
+    color: rgba(255,255,255,0.6);
+    padding-top: 8px;
+  }
+
+  /* ========================================
+     BOX: width=100%, height=142px
+     ======================================== */
+  .wf-box {
+    width: 100%;
+    height: 142px;
+    position: relative;
+    border: 1px dashed rgba(255,255,255,0.4);
+  }
+
+  .wf-box::before {
+    position: absolute;
+    color: rgba(255,255,255,0.7);
+    font-size: 10px;
+    font-weight: 600;
+    background: rgba(0,0,0,0.2);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+
+  .wf-box--top::before {
+    content: '358 × 142 (上)';
+    top: 4px;
+    left: 4px;
+  }
+
+  .wf-box--bottom::before {
+    content: '358 × 142 (下)';
+    top: 4px;
+    left: 4px;
+  }
+
+  /* ========================================
+     INNER BOX (padding: 32px top/bottom)
+     ======================================== */
+  .wf-padding {
+    position: absolute;
+    top: 32px;
+    left: 0;
+    right: 0;
+    bottom: 32px;
+    border: 1px dashed rgba(255,255,255,0.6);
+  }
+
+  /* ========================================
+     PADDING DIMENSION MARKERS
+     ======================================== */
+  .wf-dim {
+    position: absolute;
+    color: rgba(255,255,255,0.9);
+    font-size: 9px;
+    font-weight: 600;
+  }
+
+  .wf-dim-top {
+    top: 12px;
+    left: 8px;
+  }
+  .wf-dim-top::before { content: '↑ 32px'; }
+
+  .wf-dim-bottom {
+    bottom: 12px;
+    left: 8px;
+  }
+  .wf-dim-bottom::before { content: '↓ 32px'; }
+
+  /* ========================================
+     CONTENT inside padding box
+     ======================================== */
+  .wf-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 16px;
+  }
+
+  .wf-text-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Label */
+  .wf-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1;
+    border: 1px dotted rgba(255,255,255,0.4);
+    padding: 2px;
+    position: relative;
+  }
+
+  .wf-label::after {
+    content: 'W5 12px（仮）';
+    position: absolute;
+    top: -14px;
+    left: 0;
+    font-size: 8px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* Value row */
+  .wf-value-row {
+    display: flex;
+    align-items: baseline;
+    margin-top: 12px;
+    position: relative;
+  }
+
+  .wf-value-row::before {
+    content: '↕ 12px（仮）';
+    position: absolute;
+    top: -16px;
+    left: 0;
+    font-size: 8px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .wf-number {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 48px;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    border: 1px dotted rgba(255,255,255,0.4);
+    position: relative;
+  }
+
+  .wf-number::after {
+    content: 'Poppins Medium 48px（仮）';
+    position: absolute;
+    bottom: -14px;
+    left: 0;
+    font-size: 8px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+
+  .wf-unit {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: #fff;
+    line-height: 1;
+    border: 1px dotted rgba(255,255,255,0.4);
+    position: relative;
+  }
+
+  .wf-unit::after {
+    content: 'Semi Bold 20px（仮）';
+    position: absolute;
+    bottom: -14px;
+    left: 0;
+    font-size: 8px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+
+  .wf-unit--ja {
+    font-family: 'Hiragino Sans', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: #fff;
+    line-height: 1;
+    border: 1px dotted rgba(255,255,255,0.4);
+    position: relative;
+  }
+
+  .wf-unit--ja::after {
+    content: 'W6 18px（仮）';
+    position: absolute;
+    bottom: -14px;
+    left: 0;
+    font-size: 8px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+
+  /* Icon placeholder */
+  .wf-icon {
+    width: 78px;
+    height: 78px;
+    background: rgba(200,200,200,0.5);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.8);
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    position: relative;
+  }
+
+  .wf-icon::after {
+    content: '78 × 78（仮）';
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+
+  /* ========================================
+     TRIANGLE (bottom box only)
+     ======================================== */
+  .wf-triangle-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wf-triangle-wrap::after {
+    content: '64 × 32 ▽ center';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+
+  .wf-triangle {
+    width: 0;
+    height: 0;
+    border-left: 32px solid transparent;
+    border-right: 32px solid transparent;
+    border-top: 32px solid #fff;
+  }
+
+  /* gap marker */
+  .wf-gap-marker {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<div class="wf-section">
+
+  <!-- ============ TOP BOX (= PC左) ============ -->
+  <div class="wf-box wf-box--top">
+    <div class="wf-dim wf-dim-top"></div>
+    <div class="wf-dim wf-dim-bottom"></div>
+
+    <div class="wf-padding">
+      <div class="wf-content">
+        <div class="wf-text-group">
+          <span class="wf-label">1食あたりのたんぱく質</span>
+          <div class="wf-value-row">
+            <span class="wf-number">30~60</span>
+            <span class="wf-unit">g</span>
+          </div>
+        </div>
+        <div class="wf-icon">SVG<br>ICON</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BOTTOM BOX (= PC右) ============ -->
+  <div class="wf-box wf-box--bottom">
+    <div class="wf-dim wf-dim-top"></div>
+
+    <div class="wf-padding">
+      <div class="wf-content">
+        <div class="wf-text-group">
+          <span class="wf-label">おかずの種類｜随時追加</span>
+          <div class="wf-value-row">
+            <span class="wf-number">36</span>
+            <span class="wf-unit--ja">種</span>
+          </div>
+        </div>
+        <div class="wf-icon">SVG<br>ICON</div>
+      </div>
+    </div>
+
+    <div class="wf-gap-marker">↕ 24px</div>
+    <div class="wf-triangle-wrap">
+      <div class="wf-triangle"></div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

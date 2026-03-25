@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WF: プロフィールセクション</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Hiragino Sans', sans-serif; }
+
+  .wf-section {
+    max-width: 1440px;
+    margin: 40px auto;
+    background: #FB4C15;
+    position: relative;
+  }
+
+  .wf-inner {
+    padding: 64px 64px 64px 64px;
+  }
+
+  /* ============================================
+     セクションタイトルボックス: 1312×72, border 2px #FF7A51
+     ============================================ */
+  .wf-title-box {
+    width: 1312px;
+    max-width: 100%;
+    height: 72px;
+    border: 2px solid #FF7A51;
+    display: flex;
+    align-items: center;
+  }
+
+  /* アイコン正方形: 72×72, border 2px #FF7A51 */
+  .wf-title-icon {
+    width: 72px;
+    height: 72px;
+    border-right: 2px solid #FF7A51;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    /* 内側に68px(72-2*2)の空間 */
+  }
+  .wf-title-icon svg,
+  .wf-title-icon img {
+    width: 40px;
+    height: 40px;
+  }
+  /* SVGプレースホルダー */
+  .wf-title-icon-placeholder {
+    width: 40px;
+    height: 40px;
+    background: #FF7A51;
+    border-radius: 4px;
+    opacity: 0.5;
+  }
+
+  /* タイトルテキスト: 左から96px(72+24padding) */
+  .wf-title-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    color: #ffffff;
+    padding-left: 24px;
+    line-height: 1;
+  }
+
+  /* ============================================
+     プロフィールボックスコンテナ
+     ============================================ */
+  .wf-profiles {
+    display: flex;
+    gap: 64px;
+    margin-top: 56px;
+  }
+
+  /* ============================================
+     プロフィールボックス: 624×517
+     ============================================ */
+  .wf-profile-box {
+    width: 624px;
+    height: auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  /* 背景画像 */
+  .wf-profile-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .wf-profile-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .wf-profile-bg-placeholder {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+
+  /* テキスト箱: w284, 上寄せ、左配置 */
+  .wf-profile-content {
+    position: relative;
+    z-index: 1;
+    width: 284px;
+    padding: 0;
+  }
+
+  /* 名前 */
+  .wf-profile-name {
+    font-family: 'Hiragino Sans', sans-serif;
+    font-weight: 500;
+    font-size: 40px;
+    color: #ffffff;
+    line-height: 1.3;
+  }
+
+  /* 肩書 */
+  .wf-profile-title {
+    font-family: 'Hiragino Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: #ffffff;
+    line-height: 1.8;
+    margin-top: 8px;
+  }
+
+  /* 区切り線 */
+  .wf-profile-line {
+    width: 284px;
+    height: 2px;
+    background: #FF7A51;
+    margin-top: 32px;
+  }
+
+  /* プロフィール文 */
+  .wf-profile-bio {
+    font-family: 'Hiragino Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #ffffff;
+    line-height: 180%;
+    margin-top: 32px;
+  }
+
+  /* ============================================
+     寸法アノテーション
+     ============================================ */
+  .dim { color: red; font-size: 11px; font-family: monospace; position: absolute; }
+
+  /* ============================================
+     SP版 (max-width: 767px)
+     ============================================ */
+  @media (max-width: 767px) {
+    .wf-inner {
+      padding: 64px 24px 64px 24px;
+    }
+    .wf-title-box {
+      width: 100%;
+    }
+    .wf-title-text {
+      font-size: 24px;
+    }
+    .wf-profiles {
+      flex-direction: column;
+      gap: 32px;
+    }
+    .wf-profile-box {
+      width: 100%;
+      height: auto;
+    }
+    .wf-profile-content {
+      width: 100%;
+      position: relative;
+    }
+    .wf-profile-line {
+      width: 100%;
+    }
+    /* SP: プロフィール文の下に画像 */
+    .wf-profile-bg {
+      position: relative;
+      height: 180px;
+    }
+    .wf-profile-bg-placeholder {
+      height: 180px;
+    }
+    .wf-profile-sp-image {
+      display: block;
+      width: 100%;
+      height: 180px;
+      margin-top: 24px;
+      overflow: hidden;
+    }
+    .wf-profile-sp-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .wf-profile-sp-placeholder {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, #333 0%, #555 100%);
+    }
+    /* PC背景を非表示 */
+    .wf-profile-bg--pc { display: none; }
+    .wf-profile-sp-image { display: block; }
+  }
+
+  @media (min-width: 768px) {
+    .wf-profile-sp-image { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div style="text-align:center; padding:20px; color:#666; font-size:14px;">
+  WF: プロフィールセクション | PC: 1440px / SP: ~390px
+</div>
+
+<div class="wf-section">
+  <div class="wf-inner">
+
+    <!-- ========================================
+         セクションタイトルボックス
+         ======================================== -->
+    <div class="wf-title-box">
+      <div class="wf-title-icon">
+        <div class="wf-title-icon-placeholder"></div>
+      </div>
+      <span class="wf-title-text">Profile</span>
+    </div>
+
+    <!-- ========================================
+         プロフィールボックス × 2
+         ======================================== -->
+    <div class="wf-profiles">
+
+      <!-- プロフィール1: 大前恵 -->
+      <div class="wf-profile-box">
+        <!-- PC: 背景画像 -->
+        <div class="wf-profile-bg wf-profile-bg--pc">
+          <div class="wf-profile-bg-placeholder"></div>
+        </div>
+        <!-- テキスト箱 -->
+        <div class="wf-profile-content">
+          <p class="wf-profile-name">大前 恵</p>
+          <p class="wf-profile-title">FAMスポーツ栄養アドバイザー<br>管理栄養士</p>
+          <div class="wf-profile-line"></div>
+          <p class="wf-profile-bio">プロ野球選手をはじめ、トップアスリートの栄養管理を15年以上担当。個々の体質や競技特性に応じた食事プランの設計を専門とし、FAMBOXのメニュー監修を手がける。</p>
+          <!-- SP: 画像 -->
+          <div class="wf-profile-sp-image">
+            <div class="wf-profile-sp-placeholder"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- プロフィール2: 和田毅 -->
+      <div class="wf-profile-box">
+        <!-- PC: 背景画像 -->
+        <div class="wf-profile-bg wf-profile-bg--pc">
+          <div class="wf-profile-bg-placeholder"></div>
+        </div>
+        <!-- テキスト箱 -->
+        <div class="wf-profile-content">
+          <p class="wf-profile-name">和田 毅</p>
+          <p class="wf-profile-title">球団統括本部アドバイザー<br>福岡ソフトバンクホークス</p>
+          <div class="wf-profile-line"></div>
+          <p class="wf-profile-bio">NPB通算150勝を達成した左腕投手。現役時代から食事管理を徹底し、40歳まで第一線で活躍。引退後はその経験を活かし、次世代アスリートの栄養環境改善に取り組む。</p>
+          <!-- SP: 画像 -->
+          <div class="wf-profile-sp-image">
+            <div class="wf-profile-sp-placeholder"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.wf-profiles -->
+
+  </div><!-- /.wf-inner -->
+</div><!-- /.wf-section -->
+
+</body>
+</html>

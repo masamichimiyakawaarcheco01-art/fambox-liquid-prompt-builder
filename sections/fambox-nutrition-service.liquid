@@ -1,0 +1,327 @@
+<!-- ============================================
+     FAMBOX Nutrition Service Section
+     sections/fambox-nutrition-service.liquid
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-nutrition-' | append: section.id
+-%}
+
+<style>
+  /* ===== base ===== */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
+    overflow: hidden;
+    background: {{ section.settings.bg_color }} !important;
+  }
+
+  /* SVGハニカムパターン */
+  #{{ sec_id }}::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 369 674'%3E%3Cpath d='M184.5 0L0 113L184.5 225L369 113Z M0 0V337L184.5 450L0 562V674 M369 0V337L184.5 450L369 562V674 M184.5 225V674' fill='none' stroke='%23CF4526' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 369px 674px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  #{{ sec_id }} .ns__inner {
+    max-width: 1440px;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    margin: 0 auto;
+    padding: 120px 56px;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+    align-items: center;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
+  }
+
+  /* ===== 左側テキスト ===== */
+  #{{ sec_id }} .ns__title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
+    margin: 0 0 37px !important;
+    font-size: 40px !important;
+    line-height: 180% !important;
+    font-weight: 500 !important;
+    color: #1B1D1A !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+
+  #{{ sec_id }} .ns__lead {
+    margin: 0 0 37px !important;
+    color: #1B1D1A !important;
+    font-size: 16px !important;
+    line-height: 180% !important;
+    font-weight: 400 !important;
+  }
+
+  #{{ sec_id }} .ns__body {
+    margin: 0 !important;
+    color: #1B1D1A !important;
+    font-size: 16px !important;
+    line-height: 180% !important;
+    font-weight: 500 !important;
+  }
+
+  /* ===== 右の黒スタック ===== */
+  #{{ sec_id }} .ns__stack {
+    background: #0f0f0f;
+    overflow: hidden;
+  }
+
+  #{{ sec_id }} .ns__card {
+    padding: 40px 18px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    background: rgba(0,0,0,0.55) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+
+  #{{ sec_id }} .ns__card-image {
+    width: 160px;
+    height: 96px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  #{{ sec_id }} .ns__card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #{{ sec_id }} .ns__card-image-placeholder {
+    width: 160px;
+    height: 96px;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.3);
+    font-size: 10px;
+  }
+  #{{ sec_id }} .ns__card-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  #{{ sec_id }} .ns__card:nth-child(2) {
+    background: #2C2E2B !important;
+  }
+
+  #{{ sec_id }} .ns__card:last-child {
+    border-bottom: none !important;
+  }
+
+  #{{ sec_id }} .ns__card-title {
+    margin: 0 0 8px !important;
+    color: #fff !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    line-height: 180% !important;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+
+  #{{ sec_id }} .ns__card-desc {
+    margin: 0 !important;
+    color: rgba(255,255,255,0.86) !important;
+    font-size: 14px !important;
+    line-height: 180% !important;
+    font-weight: 500 !important;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
+  }
+
+  /* ===== SP (max-width: 767px) ===== */
+  @media (max-width: 767px) {
+    #{{ sec_id }}::before {
+      background-size: 246px 449px;
+    }
+
+    #{{ sec_id }} .ns__inner {
+      padding: 80px 24px;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    #{{ sec_id }} .ns__title {
+      margin: 0 0 32px !important;
+      font-size: 28px !important;
+    }
+
+    #{{ sec_id }} .ns__lead {
+      margin: 0 0 33px !important;
+    }
+
+    #{{ sec_id }} .ns__stack {
+      width: 100%;
+    }
+
+    #{{ sec_id }} .ns__card {
+      padding: 22px 20px !important;
+    }
+
+    /* SP時にbr非表示 */
+    #{{ sec_id }} .ns__body br {
+      display: none;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <div class="ns__inner">
+
+    <!-- ===== 左側テキスト ===== -->
+    <div class="ns__left">
+      <h2 class="ns__title">{{ section.settings.title | newline_to_br }}</h2>
+      <p class="ns__lead">{{ section.settings.lead | newline_to_br }}</p>
+      <p class="ns__body">{{ section.settings.body | newline_to_br }}</p>
+    </div>
+
+    <!-- ===== 右側カードスタック ===== -->
+    <div class="ns__right">
+      <div class="ns__stack">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'service_card' -%}
+            <div class="ns__card" {{ block.shopify_attributes }}>
+              <div class="ns__card-image">
+                {%- if block.settings.card_image != blank -%}
+                  {%- assign img_alt = block.settings.card_image_alt | default: block.settings.card_title -%}
+                  {{ block.settings.card_image | image_url: width: 320 | image_tag:
+                    alt: img_alt,
+                    width: 160,
+                    height: 96,
+                    loading: 'lazy'
+                  }}
+                {%- else -%}
+                  <div class="ns__card-image-placeholder">80×80</div>
+                {%- endif -%}
+              </div>
+              <div class="ns__card-body">
+                <h3 class="ns__card-title">{{ block.settings.card_title }}</h3>
+                <p class="ns__card-desc">{{ block.settings.card_desc | newline_to_br }}</p>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "栄養サポートサービス",
+  "tag": "section",
+  "class": "fambox-nutrition-service-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "全体設定"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#FB4C15"
+    },
+    {
+      "type": "header",
+      "content": "── 左側テキスト ──"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "タイトル（改行可）",
+      "default": "アスリートの栄養は\n食事だけでは完結しない"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "リード文（改行可）",
+      "default": "FAMは、個人からチームまで対応する3つの栄養サポートを展開しています。"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "本文（改行可）",
+      "default": "アスリート個別最適化のための個別栄養コンサル、\nチーム全体の栄養体制を設計するチーム栄養コンサル、\nそしてスポーツ栄養アドバイザーが直接登壇する実践型の栄養セミナーです。"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "service_card",
+      "name": "サービスカード",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "card_image",
+          "label": "カード画像（160×96推奨）"
+        },
+        {
+          "type": "text",
+          "id": "card_image_alt",
+          "label": "画像の代替テキスト"
+        },
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "カードタイトル",
+          "default": "個別栄養コンサル（単発/年間契約）"
+        },
+        {
+          "type": "textarea",
+          "id": "card_desc",
+          "label": "カード説明文（改行可）",
+          "default": "アスリート一人ひとりの課題や目標に合わせ、食事内容・タイミング・サプリメント活用などを個別最適化"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "栄養サポートサービス",
+      "blocks": [
+        {
+          "type": "service_card",
+          "settings": {
+            "card_title": "個別栄養コンサル（単発/年間契約）",
+            "card_desc": "アスリート一人ひとりの課題や目標に合わせ、食事内容・タイミング・サプリメント活用などを個別最適化"
+          }
+        },
+        {
+          "type": "service_card",
+          "settings": {
+            "card_title": "チーム栄養コンサル（年間契約）",
+            "card_desc": "チーム全体の栄養体制を設計し、食事環境づくり・栄養教育・個別面談を包括的に支援。"
+          }
+        },
+        {
+          "type": "service_card",
+          "settings": {
+            "card_title": "個別栄養セミナー（単発）",
+            "card_desc": "スポーツ栄養アドバイザーが直接登壇し、競技特性やシーズン時期に応じたテーマで講義を実施。"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

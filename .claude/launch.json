@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "food-diagnosis",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/archecoinc./fambox-work/food-diagnosis", "-l", "3456", "--no-clipboard"],
+      "port": 3456
+    },
+    {
+      "name": "plan-features-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1", "-l", "3457", "--no-clipboard"],
+      "port": 3457
+    }
+  ]
+}

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAM Spirit - Carousel with Heartbeat v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #fafafa; overflow-x: hidden; }
+
+/* =============================================
+   SECTION: 720px
+   ============================================= */
+.fam-spirit {
+  width: 100%;
+  height: 720px;
+  background: #FB4C15;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =============================================
+   BACKGROUND TEXTURE
+   ============================================= */
+.spirit-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.spirit-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px;
+}
+
+/* =============================================
+   HEARTBEAT BACKGROUND: セクション上下センター
+   ============================================= */
+.spirit-heartbeat {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.spirit-heartbeat__core {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  box-shadow: 0 0 100px 50px rgba(255,255,255,0.08), 0 0 250px 100px rgba(255,255,255,0.04);
+  animation: hbCore 8s ease-in-out infinite;
+}
+@keyframes hbCore {
+  0%, 100% { transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 100px 50px rgba(255,255,255,0.08), 0 0 250px 100px rgba(255,255,255,0.04); }
+  30% { transform: translate(-50%,-50%) scale(2); box-shadow: 0 0 150px 70px rgba(255,255,255,0.15), 0 0 300px 130px rgba(255,255,255,0.06); }
+  50% { transform: translate(-50%,-50%) scale(1.2); box-shadow: 0 0 120px 55px rgba(255,255,255,0.1), 0 0 260px 110px rgba(255,255,255,0.05); }
+  70% { transform: translate(-50%,-50%) scale(1.8); box-shadow: 0 0 140px 65px rgba(255,255,255,0.12), 0 0 280px 120px rgba(255,255,255,0.05); }
+}
+
+.spirit-heartbeat__ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  opacity: 0;
+}
+.spirit-heartbeat__ring--1 { animation: hbRing 8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite 0s; }
+.spirit-heartbeat__ring--2 { animation: hbRing 8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite 1.1s; }
+.spirit-heartbeat__ring--3 { animation: hbRing 8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite 2.2s; }
+.spirit-heartbeat__ring--4 { animation: hbRing 8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite 3.3s; }
+.spirit-heartbeat__ring--5 { animation: hbRing 8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite 4.4s; }
+.spirit-heartbeat__ring--6 { animation: hbRing 8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite 5.5s; }
+.spirit-heartbeat__ring--7 { animation: hbRing 8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite 6.6s; }
+@keyframes hbRing {
+  0% { width: 16px; height: 16px; opacity: 0.4; border-width: 2px; }
+  40% { opacity: 0.15; }
+  100% { width: 1800px; height: 1800px; opacity: 0; border-width: 0.5px; }
+}
+
+.spirit-heartbeat__ecg {
+  position: absolute;
+  top: 0;
+  left: -700px;
+  width: 1400px;
+  height: 1px;
+  overflow: hidden;
+  transform: translateY(-50%);
+}
+.spirit-heartbeat__ecg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.06) 50%, transparent 70%);
+  animation: hbEcg 12s linear infinite;
+}
+@keyframes hbEcg {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+.spirit-heartbeat__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 40%, transparent 65%);
+  animation: hbGlow 12s ease-in-out infinite;
+}
+@keyframes hbGlow {
+  0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.3; }
+  50% { transform: translate(-50%,-50%) scale(1.5); opacity: 0.7; }
+}
+
+/* =============================================
+   HEADER
+   ============================================= */
+.spirit-header {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  margin-bottom: 56px;
+}
+.spirit-header__kicker {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.spirit-header__title {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 180%;
+  color: #fff;
+}
+
+/* =============================================
+   CAROUSEL
+   ============================================= */
+.spirit-carousel {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  height: 420px;
+  perspective: 1200px;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.spirit-carousel:active { cursor: grabbing; }
+
+.spirit-carousel__track {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+}
+
+/* =============================================
+   CARD: 背景画像対応
+   ============================================= */
+.spirit-card {
+  position: absolute;
+  width: 340px;
+  height: 380px;
+  background: linear-gradient(135deg, #1B1D1A 0%, #2C2E2B 100%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+              opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+              filter 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+              box-shadow 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+              width 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+              height 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+              left 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  will-change: transform, opacity, filter, left;
+}
+
+/* カード内画像（下部配置） */
+.spirit-card__image {
+  margin-top: auto;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.spirit-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.spirit-card__image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(251,76,21,0.08) 0%, rgba(251,76,21,0.02) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.15);
+  font-size: 12px;
+}
+
+/* CENTER card: shadow付き */
+.spirit-card[data-pos="0"] {
+  z-index: 10;
+  opacity: 1;
+  filter: blur(0);
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.4);
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ±1 */
+.spirit-card[data-pos="1"],
+.spirit-card[data-pos="-1"] {
+  z-index: 8;
+  opacity: 0.65;
+  filter: blur(3px);
+  box-shadow: none;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ±2 */
+.spirit-card[data-pos="2"],
+.spirit-card[data-pos="-2"] {
+  z-index: 6;
+  opacity: 0.35;
+  filter: blur(6px);
+  box-shadow: none;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ±3: ふわっと消える/現れる */
+.spirit-card[data-pos="3"],
+.spirit-card[data-pos="-3"] {
+  z-index: 4;
+  opacity: 0;
+  filter: blur(12px);
+  box-shadow: none;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: none;
+}
+
+/* =============================================
+   CARD CONTENT
+   ============================================= */
+.spirit-card__content {
+  position: relative;
+  z-index: 2;
+  padding: 36px 32px;
+}
+.spirit-card__index {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+.spirit-card__line {
+  width: 32px;
+  height: 2px;
+  background: #FB4C15;
+  margin-bottom: 16px;
+  opacity: 0.5;
+  transition: width 0.5s ease, opacity 0.5s ease;
+}
+.spirit-card[data-pos="0"] .spirit-card__line {
+  width: 48px;
+  opacity: 1;
+}
+.spirit-card__title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 170%;
+  color: #fff;
+  margin-bottom: 12px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.spirit-card__body {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 180%;
+  color: rgba(255,255,255,0.8);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+/* =============================================
+   NAV DOTS
+   ============================================= */
+.spirit-dots {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  gap: 10px;
+  margin-top: 40px;
+}
+.spirit-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: all 0.4s ease;
+  border: none;
+  padding: 0;
+}
+.spirit-dot--active {
+  background: #fff;
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* =============================================
+   SP
+   ============================================= */
+@media (max-width: 767px) {
+  .fam-spirit {
+    height: auto;
+    min-height: 640px;
+    padding: 56px 0;
+  }
+  .spirit-header__title {
+    font-size: 24px;
+  }
+  .spirit-carousel {
+    height: 360px;
+  }
+  .spirit-card {
+    width: 260px;
+    height: 310px;
+  }
+  .spirit-card[data-pos="0"] {
+    width: 260px;
+    height: 310px;
+  }
+  .spirit-card__content {
+    padding: 28px 24px;
+  }
+  .spirit-card__title {
+    font-size: 16px;
+  }
+  .spirit-card__body {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: 0s !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<section class="fam-spirit">
+  <div class="spirit-bg"></div>
+
+  <!-- HEARTBEAT: セクション上下左右センター -->
+  <div class="spirit-heartbeat">
+    <div class="spirit-heartbeat__glow"></div>
+    <div class="spirit-heartbeat__core"></div>
+    <div class="spirit-heartbeat__ring spirit-heartbeat__ring--1"></div>
+    <div class="spirit-heartbeat__ring spirit-heartbeat__ring--2"></div>
+    <div class="spirit-heartbeat__ring spirit-heartbeat__ring--3"></div>
+    <div class="spirit-heartbeat__ring spirit-heartbeat__ring--4"></div>
+    <div class="spirit-heartbeat__ring spirit-heartbeat__ring--5"></div>
+    <div class="spirit-heartbeat__ring spirit-heartbeat__ring--6"></div>
+    <div class="spirit-heartbeat__ring spirit-heartbeat__ring--7"></div>
+    <div class="spirit-heartbeat__ecg"></div>
+  </div>
+
+  <div class="spirit-header">
+    <div class="spirit-header__kicker">Our Spirit</div>
+    <h2 class="spirit-header__title">FAMBOXに込めた想い</h2>
+  </div>
+
+  <div class="spirit-carousel" id="spiritCarousel">
+    <div class="spirit-carousel__track" id="spiritTrack"></div>
+  </div>
+
+  <div class="spirit-dots" id="spiritDots"></div>
+</section>
+
+<script>
+(function() {
+  var cards = [
+    {
+      index: '01',
+      title: '栄養を、最強の武器に。',
+      body: 'トップアスリートの栄養戦略を、すべてのアスリートが手にできる環境を創る。それがFAMBOXの原点です。',
+      image: ''
+    },
+    {
+      index: '02',
+      title: '「食べる」を、戦略にする。',
+      body: '食事は単なるエネルギー補給ではありません。パフォーマンスを最大化するための、最も基本的な戦略です。',
+      image: ''
+    },
+    {
+      index: '03',
+      title: '個の力を、食で引き出す。',
+      body: '一人ひとりの身体、競技、目標が異なる。だからこそ個別最適化された食事が、真の力を引き出します。',
+      image: ''
+    },
+    {
+      index: '04',
+      title: '寮でも遠征先でも、妥協しない。',
+      body: '場所や環境に左右されない栄養管理。冷凍技術とテクノロジーで、どこでもプロの食事を届けます。',
+      image: ''
+    },
+    {
+      index: '05',
+      title: '科学と情熱の、交差点。',
+      body: 'スポーツ栄養学の知見と、アスリートへの深い理解。その交差点から生まれるのが、FAMBOXのメニューです。',
+      image: ''
+    },
+    {
+      index: '06',
+      title: '次の世代のために。',
+      body: '今のアスリートだけでなく、これから育つすべてのアスリートが、最適な栄養環境を当たり前に持てる未来を。',
+      image: ''
+    },
+    {
+      index: '07',
+      title: '食卓から、勝利を。',
+      body: '毎日の食卓が変われば、身体が変わる。身体が変われば、パフォーマンスが変わる。その連鎖を信じています。',
+      image: ''
+    }
+  ];
+
+  var current = 0;
+  var total = cards.length;
+  var track = document.getElementById('spiritTrack');
+  var dotsContainer = document.getElementById('spiritDots');
+  var carousel = document.getElementById('spiritCarousel');
+  var isAnimating = false;
+
+  // カード生成
+  cards.forEach(function(c, i) {
+    var el = document.createElement('div');
+    el.className = 'spirit-card';
+    el.dataset.idx = i;
+
+    var imageHtml = '';
+    if (c.image) {
+      imageHtml = '<div class="spirit-card__image"><img src="' + c.image + '" alt=""></div>';
+    } else {
+      imageHtml = '<div class="spirit-card__image"><div class="spirit-card__image-placeholder">IMAGE</div></div>';
+    }
+
+    el.innerHTML =
+      '<div class="spirit-card__content">' +
+        '<div class="spirit-card__index">' + c.index + '</div>' +
+        '<div class="spirit-card__line"></div>' +
+        '<div class="spirit-card__title">' + c.title + '</div>' +
+        '<div class="spirit-card__body">' + c.body + '</div>' +
+      '</div>' +
+      imageHtml;
+
+    // クリック用のインデックスをdata属性に保持（pointerupはcarouselで処理）
+
+    track.appendChild(el);
+  });
+
+  // ドット生成
+  cards.forEach(function(_, i) {
+    var dot = document.createElement('button');
+    dot.className = 'spirit-dot';
+    dot.dataset.idx = i;
+    dot.addEventListener('click', function() {
+      if (isAnimating) return;
+      goTo(i);
+    });
+    dotsContainer.appendChild(dot);
+  });
+
+  function getSpacing() {
+    return window.innerWidth <= 767 ? 280 : 360;
+  }
+
+  function goTo(idx) {
+    current = idx;
+    render();
+  }
+
+  function render() {
+    var spacing = getSpacing();
+    var cardEls = track.querySelectorAll('.spirit-card');
+
+    cardEls.forEach(function(el) {
+      var idx = parseInt(el.dataset.idx);
+      var diff = idx - current;
+
+      // wrap
+      if (diff > total / 2) diff -= total;
+      if (diff < -total / 2) diff += total;
+
+      var absDiff = Math.abs(diff);
+      var posX = diff * spacing;
+
+      el.dataset.pos = Math.max(-3, Math.min(3, diff));
+      el.style.left = 'calc(50% + ' + posX + 'px)';
+      el.style.top = '50%';
+
+      // ±3以上はCSSで opacity:0 + blur で自然にフェード
+      // ±4以上は完全非表示
+      if (absDiff > 3) {
+        el.style.visibility = 'hidden';
+        el.style.pointerEvents = 'none';
+      } else {
+        el.style.visibility = '';
+        el.style.pointerEvents = 'auto';
+      }
+    });
+
+    // dots
+    var dots = dotsContainer.querySelectorAll('.spirit-dot');
+    dots.forEach(function(d, i) {
+      d.classList.toggle('spirit-dot--active', i === current);
+    });
+  }
+
+  // ドラッグ/スワイプ（滑らか版）
+  var startX = 0;
+  var startY = 0;
+  var isDragging = false;
+  var dragDelta = 0;
+  var isHorizontal = null;
+  var wasDragged = false;
+
+  carousel.addEventListener('pointerdown', function(e) {
+    startX = e.clientX;
+    startY = e.clientY;
+    isDragging = true;
+    dragDelta = 0;
+    wasDragged = false;
+    isHorizontal = null;
+    carousel.setPointerCapture(e.pointerId);
+  });
+
+  carousel.addEventListener('pointermove', function(e) {
+    if (!isDragging) return;
+
+    var dx = e.clientX - startX;
+    var dy = e.clientY - startY;
+
+    // 方向判定（最初の大きな動きで決定）
+    if (isHorizontal === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+      isHorizontal = Math.abs(dx) > Math.abs(dy);
+    }
+
+    if (isHorizontal === false) return; // 縦スクロール優先
+
+    if (Math.abs(dx) > 8) wasDragged = true;
+    dragDelta = dx;
+
+    // ドラッグ中のリアルタイム位置更新
+    var spacing = getSpacing();
+    var cardEls = track.querySelectorAll('.spirit-card');
+    cardEls.forEach(function(el) {
+      var idx = parseInt(el.dataset.idx);
+      var diff = idx - current;
+      if (diff > total / 2) diff -= total;
+      if (diff < -total / 2) diff += total;
+      var posX = diff * spacing + dragDelta;
+      el.style.transition = 'none';
+      el.style.left = 'calc(50% + ' + posX + 'px)';
+    });
+  });
+
+  carousel.addEventListener('pointerup', function(e) {
+    if (!isDragging) return;
+    isDragging = false;
+
+    // トランジション復元
+    var cardEls = track.querySelectorAll('.spirit-card');
+    cardEls.forEach(function(el) {
+      el.style.transition = '';
+    });
+
+    // ドラッグだった場合
+    if (wasDragged) {
+      var threshold = 60;
+      if (dragDelta < -threshold) {
+        current = (current + 1) % total;
+      } else if (dragDelta > threshold) {
+        current = (current - 1 + total) % total;
+      }
+      render();
+      return;
+    }
+
+    // クリックだった場合: クリック位置のカードを特定
+    var clickedCard = document.elementFromPoint(e.clientX, e.clientY);
+    if (clickedCard) {
+      var card = clickedCard.closest('.spirit-card');
+      if (card) {
+        var clickedIdx = parseInt(card.dataset.idx);
+        if (clickedIdx !== current) {
+          stopAuto();
+          var diff = clickedIdx - current;
+          if (diff > total / 2) diff -= total;
+          if (diff < -total / 2) diff += total;
+
+          var step = diff > 0 ? 1 : -1;
+          var stepsRemaining = Math.abs(diff);
+          var stepInterval = setInterval(function() {
+            current = (current + step + total) % total;
+            render();
+            stepsRemaining--;
+            if (stepsRemaining <= 0) {
+              clearInterval(stepInterval);
+              startAuto();
+            }
+          }, 180);
+        }
+      }
+    }
+  });
+
+  carousel.addEventListener('pointercancel', function() {
+    isDragging = false;
+    var cardEls = track.querySelectorAll('.spirit-card');
+    cardEls.forEach(function(el) { el.style.transition = ''; });
+    render();
+  });
+
+  // キーボード
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight') { current = (current + 1) % total; render(); }
+    if (e.key === 'ArrowLeft') { current = (current - 1 + total) % total; render(); }
+  });
+
+  // 自動送り
+  var autoTimer;
+  function startAuto() {
+    autoTimer = setInterval(function() {
+      current = (current + 1) % total;
+      render();
+    }, 6000);
+  }
+  function stopAuto() { clearInterval(autoTimer); }
+
+  carousel.addEventListener('mouseenter', stopAuto);
+  carousel.addEventListener('mouseleave', startAuto);
+
+  render();
+  startAuto();
+  window.addEventListener('resize', render);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WF: FAMBOXの3つの価値セクション</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #e0e0e0;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ===== セクション全体（全幅） ===== */
+  .wf-section {
+    width: 100%;
+    height: 752px;
+    margin: 40px 0;
+    background: #fafafa;
+    position: relative;
+  }
+
+  /* 寸法ラベル */
+  .wf-section::before {
+    content: '全幅 × 752px（内部max-width: 1440px）';
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #666;
+    background: #fff;
+    padding: 2px 8px;
+    border: 1px solid #ccc;
+    z-index: 10;
+  }
+
+  /* ===== タイトルエリア（max-width制約あり） ===== */
+  .wf-title-area {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 64px 64px 0 64px;
+  }
+
+  .wf-title-block {
+    height: 83px;
+    position: relative;
+    outline: 1px dashed rgba(255, 0, 0, 0.3);
+  }
+
+  .wf-title-block::after {
+    content: '↕ 83px (タイトルブロック)';
+    position: absolute;
+    right: -200px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: red;
+  }
+
+  .wf-title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.8;
+    color: #1B1D1A;
+  }
+
+  /* ===== 56px余白（padding-topで実現） ===== */
+
+  /* ===== コンテンツスクロールエリア（全幅） ===== */
+  .wf-scroll-area {
+    width: 100%;
+    height: 458px;
+    margin-top: 56px;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* スクロールバー非表示 */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* スムーズスクロール */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  .wf-scroll-area::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wf-scroll-area::after {
+    content: '↕ 458px ← 全幅スクロール（左右見切れなし） →';
+    position: absolute;
+    left: 64px;
+    top: -20px;
+    font-size: 11px;
+    color: red;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* スクロールトラック */
+  .wf-scroll-track {
+    display: flex;
+    align-items: stretch;
+    height: 458px;
+    gap: 0;
+    /* 左64px: タイトルと揃える、右64px: 最後のカード後の余白 */
+    padding-left: max(64px, calc((100% - 1440px) / 2 + 64px));
+    padding-right: 64px;
+  }
+
+  /* ===== コンテンツブロック（358 × 458） ===== */
+  .wf-card {
+    flex: 0 0 358px;
+    width: 358px;
+    height: 458px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    outline: 1px dashed rgba(0, 100, 200, 0.3);
+  }
+
+  .wf-card::before {
+    content: '358 × 458';
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: #0066cc;
+    background: rgba(255,255,255,0.9);
+    padding: 1px 6px;
+    z-index: 5;
+  }
+
+  /* ===== 区切り線 ===== */
+  .wf-divider {
+    flex: 0 0 1px;
+    width: 1px;
+    height: 458px;
+    background: #D0D1DB;
+    margin: 0 32px;
+  }
+
+  /* ===== カード内部（中央揃え） ===== */
+  /* 画像 216×216 */
+  .wf-card-image {
+    width: 216px;
+    height: 216px;
+    background: #ddd;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #999;
+  }
+
+  /* カテゴリ */
+  .wf-card-category {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #FB4C15;
+    margin-top: 16px;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  /* タイトル */
+  .wf-card-title {
+    width: 310px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: #1B1D1A;
+    margin-top: 8px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* 説明文 */
+  .wf-card-desc {
+    width: 310px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #1B1D1A;
+    line-height: 1.7;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* ボタン */
+  .wf-card-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 40px;
+    border-radius: 4px;
+    background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95));
+    color: #fff;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    margin-top: auto;
+    position: relative;
+    box-shadow: 0 8px 12px -4px rgba(251,76,21,0.3);
+  }
+
+  .wf-card-btn-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* ===== 余白ラベル ===== */
+  .wf-label-top {
+    position: absolute;
+    top: 32px;
+    left: max(80px, calc((100% - 1440px) / 2 + 80px));
+    font-size: 11px;
+    color: red;
+    z-index: 5;
+  }
+  .wf-label-bottom {
+    position: absolute;
+    bottom: 32px;
+    left: max(80px, calc((100% - 1440px) / 2 + 80px));
+    font-size: 11px;
+    color: red;
+    z-index: 5;
+  }
+
+  /* ===== 注釈 ===== */
+  .wf-notes {
+    max-width: 1440px;
+    margin: 20px auto;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #ddd;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #333;
+  }
+  .wf-notes h3 { margin-bottom: 8px; color: #0066cc; }
+  .wf-notes ul { padding-left: 20px; }
+  .wf-notes li { margin-bottom: 4px; }
+  .wf-notes .highlight { color: #d00; font-weight: 600; }
+
+  /* ===== SP版（max-width: 767px） ===== */
+  @media (max-width: 767px) {
+    /* タイトルエリア: 左余白16px */
+    .wf-title-area {
+      padding: 64px 16px 0 16px;
+    }
+
+    /* タイトル: 24px W5 行間180% 高さ67px */
+    .wf-title-block {
+      height: 67px;
+    }
+    .wf-title-block::after {
+      content: '↕ 67px (SP タイトルブロック)';
+      right: auto;
+      left: 0;
+      top: -16px;
+      transform: none;
+    }
+    .wf-title {
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 1.8;
+    }
+
+    /* スクロールトラック: 左余白16px */
+    .wf-scroll-track {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    /* 余白ラベル調整 */
+    .wf-label-top,
+    .wf-label-bottom {
+      left: 20px;
+    }
+
+    /* スクロールラベル調整 */
+    .wf-scroll-area::after {
+      left: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="wf-section">
+  <span class="wf-label-top">↕ 64px (上余白 = padding-top)</span>
+  <span class="wf-label-bottom">↕ 64px (下余白)</span>
+
+  <!-- タイトル（max-width: 1440px内、左64px） -->
+  <div class="wf-title-area">
+    <div class="wf-title-block">
+      <h2 class="wf-title">最適解と<br>FAMBOX</h2>
+    </div>
+  </div>
+
+  <!-- コンテンツスクロールエリア（全幅・見切れなし） -->
+  <div class="wf-scroll-area">
+    <div class="wf-scroll-track">
+
+      <!-- カード1 -->
+      <div class="wf-card">
+        <div class="wf-card-image">216 × 216</div>
+        <div class="wf-card-category">ADAPTIVE NUTRITION BLUEPRINT</div>
+        <div class="wf-card-title">個別最適化</div>
+        <div class="wf-card-desc">テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。</div>
+        <a class="wf-card-btn" href="#">
+          <span>詳しく見る</span>
+          <span class="wf-card-btn-arrow">
+            <svg width="28" height="10" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="5" width="46" height="2" fill="white"/>
+              <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <!-- 区切り線 -->
+      <div class="wf-divider">&nbsp;</div>
+
+      <!-- カード2 -->
+      <div class="wf-card">
+        <div class="wf-card-image">216 × 216</div>
+        <div class="wf-card-category">ADAPTIVE NUTRITION BLUEPRINT</div>
+        <div class="wf-card-title">高たんぱく質設計</div>
+        <div class="wf-card-desc">テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。</div>
+        <a class="wf-card-btn" href="#">
+          <span>詳しく見る</span>
+          <span class="wf-card-btn-arrow">
+            <svg width="28" height="10" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="5" width="46" height="2" fill="white"/>
+              <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <!-- 区切り線 -->
+      <div class="wf-divider">&nbsp;</div>
+
+      <!-- カード3 -->
+      <div class="wf-card">
+        <div class="wf-card-image">216 × 216</div>
+        <div class="wf-card-category">ADAPTIVE NUTRITION BLUEPRINT</div>
+        <div class="wf-card-title">おかずの種類の豊富さ</div>
+        <div class="wf-card-desc">テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。</div>
+        <a class="wf-card-btn" href="#">
+          <span>詳しく見る</span>
+          <span class="wf-card-btn-arrow">
+            <svg width="28" height="10" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="5" width="46" height="2" fill="white"/>
+              <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <!-- 区切り線 -->
+      <div class="wf-divider">&nbsp;</div>
+
+      <!-- カード4 -->
+      <div class="wf-card">
+        <div class="wf-card-image">216 × 216</div>
+        <div class="wf-card-category">ADAPTIVE NUTRITION BLUEPRINT</div>
+        <div class="wf-card-title">プロ監修の品質</div>
+        <div class="wf-card-desc">テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。</div>
+        <a class="wf-card-btn" href="#">
+          <span>詳しく見る</span>
+          <span class="wf-card-btn-arrow">
+            <svg width="28" height="10" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="5" width="46" height="2" fill="white"/>
+              <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="wf-notes">
+  <h3>WF注釈</h3>
+  <ul>
+    <li><strong>タイトル:</strong> 「最適解と」+改行+「FAMBOX」/ Hiragino Sans W5 32px / line-height 180% / #1B1D1A</li>
+    <li><strong>カード内要素:</strong> <span class="highlight">すべて左右センター揃え</span></li>
+    <li><strong>横スクロール:</strong> <span class="highlight">セクション全幅（100%）にスクロールエリアを配置 → ビューポート端まで使うため左右見切れなし</span></li>
+    <li><strong>左余白:</strong> padding-leftをmax(64px, calc((100% - 1440px) / 2 + 64px)) で1440px以上でもタイトルと揃う</li>
+    <li><strong>区切り線:</strong> 1px #D0D1DB / 458px / 左右32pxマージン / <span class="highlight">&amp;nbsp;挿入（div:empty対策）</span></li>
+    <li><strong>ボタン:</strong> Shopifyで有り無し選択可能にする</li>
+    <li><strong>Shopifyテーマ対策:</strong> 空div回避（区切り線に&amp;nbsp;）、paddingで余白管理</li>
+  </ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan Features - Wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    padding: 40px 0;
+    background: #e5e5e5;
+    font-family: 'Hiragino Sans', sans-serif;
+  }
+
+  /* ========================================
+     SECTION: full-width orange bg
+     ======================================== */
+  .wf-section {
+    width: 100%;
+    background: #FB4C15;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ========================================
+     INNER: 1440 × 224
+     ======================================== */
+  .wf-inner {
+    width: 1440px;
+    height: 224px;
+    display: flex;
+    border: 2px dashed rgba(255,255,255,0.5);
+    position: relative;
+  }
+
+  /* dimension label */
+  .wf-inner::after {
+    content: '1440 × 224';
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(0,0,0,0.3);
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+
+  /* ========================================
+     BOX: 720 × 224
+     ======================================== */
+  .wf-box {
+    width: 720px;
+    height: 224px;
+    position: relative;
+    border: 1px dashed rgba(255,255,255,0.4);
+  }
+
+  .wf-box::before {
+    position: absolute;
+    color: rgba(255,255,255,0.7);
+    font-size: 10px;
+    font-weight: 600;
+    background: rgba(0,0,0,0.2);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+
+  .wf-box--left::before {
+    content: '720 × 224 (左)';
+    top: 4px;
+    left: 4px;
+  }
+
+  .wf-box--right::before {
+    content: '720 × 224 (右)';
+    top: 4px;
+    right: 4px;
+  }
+
+  /* ========================================
+     INNER BOX (padding visualisation)
+     ======================================== */
+  .wf-box--left .wf-padding {
+    position: absolute;
+    top: 56px;
+    left: 64px;
+    right: 32px;
+    bottom: 56px;
+    border: 1px dashed rgba(255,255,255,0.6);
+  }
+
+  .wf-box--right .wf-padding {
+    position: absolute;
+    top: 56px;
+    left: 32px;
+    right: 64px;
+    bottom: 56px;
+    border: 1px dashed rgba(255,255,255,0.6);
+  }
+
+  /* ========================================
+     PADDING DIMENSION MARKERS
+     ======================================== */
+  .wf-dim {
+    position: absolute;
+    color: rgba(255,255,255,0.9);
+    font-size: 9px;
+    font-weight: 600;
+  }
+
+  /* Left box padding markers */
+  .wf-box--left .wf-dim-top {
+    top: 24px;
+    left: 64px;
+  }
+  .wf-box--left .wf-dim-top::before { content: '↑ 56px'; }
+
+  .wf-box--left .wf-dim-left {
+    top: 56px;
+    left: 8px;
+  }
+  .wf-box--left .wf-dim-left::before { content: '← 64px'; }
+
+  .wf-box--left .wf-dim-right {
+    top: 56px;
+    right: 4px;
+  }
+  .wf-box--left .wf-dim-right::before { content: '32px →'; }
+
+  .wf-box--left .wf-dim-bottom {
+    bottom: 24px;
+    left: 64px;
+  }
+  .wf-box--left .wf-dim-bottom::before { content: '↓ 56px'; }
+
+  /* Right box padding markers */
+  .wf-box--right .wf-dim-top {
+    top: 24px;
+    left: 32px;
+  }
+  .wf-box--right .wf-dim-top::before { content: '↑ 56px'; }
+
+  .wf-box--right .wf-dim-left {
+    top: 56px;
+    left: 4px;
+  }
+  .wf-box--right .wf-dim-left::before { content: '← 32px'; }
+
+  .wf-box--right .wf-dim-right {
+    top: 56px;
+    right: 4px;
+  }
+  .wf-box--right .wf-dim-right::before { content: '64px →'; }
+
+  /* ========================================
+     CONTENT inside padding box
+     ======================================== */
+  .wf-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .wf-text-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Label */
+  .wf-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1;
+    border: 1px dotted rgba(255,255,255,0.4);
+    padding: 2px;
+    position: relative;
+  }
+
+  .wf-label::after {
+    content: 'W5 16px';
+    position: absolute;
+    top: -14px;
+    left: 0;
+    font-size: 8px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* Value row */
+  .wf-value-row {
+    display: flex;
+    align-items: baseline;
+    margin-top: 32px;
+    position: relative;
+  }
+
+  .wf-value-row::before {
+    content: '↕ 32px';
+    position: absolute;
+    top: -24px;
+    left: 0;
+    font-size: 8px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .wf-number {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 96px;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    border: 1px dotted rgba(255,255,255,0.4);
+    position: relative;
+  }
+
+  .wf-number::after {
+    content: 'Poppins Medium 96px';
+    position: absolute;
+    bottom: -14px;
+    left: 0;
+    font-size: 8px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .wf-unit {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 32px;
+    color: #fff;
+    line-height: 1;
+    border: 1px dotted rgba(255,255,255,0.4);
+    position: relative;
+  }
+
+  .wf-unit::after {
+    content: 'Poppins Semi Bold 32px';
+    position: absolute;
+    bottom: -14px;
+    left: 0;
+    font-size: 8px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+
+  .wf-unit--ja {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    color: #fff;
+    line-height: 1;
+    border: 1px dotted rgba(255,255,255,0.4);
+    position: relative;
+  }
+
+  .wf-unit--ja::after {
+    content: 'Hiragino W6 28px';
+    position: absolute;
+    bottom: -14px;
+    left: 0;
+    font-size: 8px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+
+  /* Icon placeholder */
+  .wf-icon {
+    width: 112px;
+    height: 112px;
+    background: rgba(200,200,200,0.5);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.8);
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    position: relative;
+  }
+
+  .wf-icon::after {
+    content: '112 × 112';
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+
+  /* ========================================
+     TRIANGLE
+     ======================================== */
+  .wf-triangle-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wf-triangle-wrap::after {
+    content: '64 × 32 ▽ center';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+
+  .wf-triangle {
+    width: 0;
+    height: 0;
+    border-left: 32px solid transparent;
+    border-right: 32px solid transparent;
+    border-bottom: 32px solid #fff;
+  }
+
+  /* 24px gap marker */
+  .wf-gap-marker {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+</style>
+
+<div class="wf-section">
+  <div class="wf-inner">
+
+    <!-- ============ LEFT BOX ============ -->
+    <div class="wf-box wf-box--left">
+      <div class="wf-dim wf-dim-top"></div>
+      <div class="wf-dim wf-dim-left"></div>
+      <div class="wf-dim wf-dim-right"></div>
+      <div class="wf-dim wf-dim-bottom"></div>
+
+      <div class="wf-padding">
+        <div class="wf-content">
+          <div class="wf-text-group">
+            <span class="wf-label">1食あたりのたんぱく質</span>
+            <div class="wf-value-row">
+              <span class="wf-number">30~60</span>
+              <span class="wf-unit">g</span>
+            </div>
+          </div>
+          <div class="wf-icon">SVG<br>ICON</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ RIGHT BOX ============ -->
+    <div class="wf-box wf-box--right">
+      <div class="wf-dim wf-dim-top"></div>
+      <div class="wf-dim wf-dim-left"></div>
+      <div class="wf-dim wf-dim-right"></div>
+
+      <div class="wf-padding">
+        <div class="wf-content">
+          <div class="wf-text-group">
+            <span class="wf-label">おかずの種類｜随時追加</span>
+            <div class="wf-value-row">
+              <span class="wf-number">36</span>
+              <span class="wf-unit--ja">種</span>
+            </div>
+          </div>
+          <div class="wf-icon">SVG<br>ICON</div>
+        </div>
+      </div>
+
+      <div class="wf-gap-marker">↕ 24px</div>
+      <div class="wf-triangle-wrap">
+        <div class="wf-triangle"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

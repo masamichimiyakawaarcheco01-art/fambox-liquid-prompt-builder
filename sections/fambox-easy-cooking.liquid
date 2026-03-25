@@ -1,0 +1,351 @@
+{% comment %}
+  ============================================
+  FAMBOX 調理の手軽さセクション
+  sections/fambox-easy-cooking.liquid
+  ============================================
+{% endcomment %}
+{%- liquid
+  assign sec_id = 'fambox-easy-cooking-' | append: section.id
+-%}
+
+<style>
+  /* ============================================
+     BASE: セクション全体
+     ============================================ */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
+    width: 100%;
+    height: 650px;
+    overflow: hidden;
+    background: #333;
+    margin-top: 0 !important;
+  }
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     背景動画
+     ============================================ */
+  #{{ sec_id }} .ec__video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    z-index: 0;
+  }
+
+  /* ============================================
+     コンテンツレイヤー: max-width 1440、中央寄せ
+     ============================================ */
+  #{{ sec_id }} .ec__layer {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    width: 100%;
+    display: flex;
+  }
+
+  /* ============================================
+     左ブロック: 50%（空）
+     ============================================ */
+  #{{ sec_id }} .ec__block-left {
+    width: 50%;
+    height: 650px;
+    flex-shrink: 0;
+    display: block !important; /* div:empty対策 */
+  }
+
+  /* ============================================
+     右ブロック: 50%、コンテンツをエリア中央に配置
+     ============================================ */
+  #{{ sec_id }} .ec__block-right {
+    width: 50%;
+    height: 650px;
+    flex-shrink: 0;
+    position: relative;
+    display: flex !important; /* div:empty対策 */
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ============================================
+     背景画像（右ブロック内、上下左右センター）
+     ============================================ */
+  #{{ sec_id }} .ec__bg-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 528px;
+    height: 433px;
+    z-index: 0;
+    pointer-events: none;
+    animation: ec-bg-fade 4s ease-in-out infinite;
+  }
+  @keyframes ec-bg-fade {
+    0%   { opacity: 0; }
+    50%  { opacity: 0.5; }
+    100% { opacity: 0; }
+  }
+  #{{ sec_id }} .ec__bg-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* ============================================
+     コンテンツグループ（上下左右センター、中央揃え）
+     ============================================ */
+  #{{ sec_id }} .ec__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* ============================================
+     タイトル
+     ============================================ */
+  #{{ sec_id }} .ec__title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 40px !important;
+    line-height: 1.8 !important;
+    color: #ffffff !important;
+    letter-spacing: normal !important;
+  }
+
+  /* ============================================
+     文章
+     ============================================ */
+  #{{ sec_id }} .ec__desc {
+    width: 420px;
+    margin-top: 16px !important;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif !important;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #ffffff;
+  }
+
+  /* ============================================
+     画像（216×216）
+     ============================================ */
+  #{{ sec_id }} .ec__image {
+    margin-top: 28px !important;
+    width: 216px;
+    height: 216px;
+    flex-shrink: 0;
+  }
+  #{{ sec_id }} .ec__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* ============================================
+     SP版（max-width: 767px）
+     ============================================ */
+  @media (max-width: 767px) {
+    #{{ sec_id }} {
+      height: 650px;
+    }
+
+    /* 動画: 左半分を優先表示 */
+    #{{ sec_id }} .ec__video {
+      object-position: left center;
+    }
+
+    /* コンテンツレイヤー: 中央1ブロック */
+    #{{ sec_id }} .ec__layer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 左ブロック: 非表示 */
+    #{{ sec_id }} .ec__block-left {
+      display: none !important;
+    }
+
+    /* 右ブロック: 全幅・センター */
+    #{{ sec_id }} .ec__block-right {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 背景画像: SP版サイズ */
+    #{{ sec_id }} .ec__bg-image {
+      width: 391px;
+      height: 320px;
+    }
+
+    /* タイトル: SP版 */
+    #{{ sec_id }} .ec__title {
+      font-size: 28px !important;
+      line-height: 1.8 !important;
+    }
+
+    /* 文章: SP版 */
+    #{{ sec_id }} .ec__desc {
+      width: 320px;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    /* 画像: SP版 */
+    #{{ sec_id }} .ec__image {
+      width: 180px;
+      height: 180px;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <!-- 背景動画 -->
+  {%- if section.settings.video_url != blank -%}
+    <video
+      class="ec__video"
+      src="{{ section.settings.video_url }}"
+      autoplay muted loop playsinline preload="auto"
+    ></video>
+  {%- elsif section.settings.video_file != blank -%}
+    <video
+      class="ec__video"
+      src="{{ section.settings.video_file | file_url }}"
+      autoplay muted loop playsinline preload="auto"
+    ></video>
+  {%- endif -%}
+
+  <!-- コンテンツレイヤー -->
+  <div class="ec__layer">
+
+    <!-- 左ブロック（空 — div:empty対策でコメント挿入） -->
+    <div class="ec__block-left"><!-- spacer --></div>
+
+    <!-- 右ブロック -->
+    <div class="ec__block-right">
+
+      <!-- 背景画像 -->
+      {%- if section.settings.bg_image != blank -%}
+        <div class="ec__bg-image">
+          <img
+            src="{{ section.settings.bg_image | image_url: width: 1056 }}"
+            alt=""
+            width="528"
+            height="433"
+            loading="lazy"
+            aria-hidden="true"
+          >
+        </div>
+      {%- endif -%}
+
+      <!-- コンテンツグループ -->
+      <div class="ec__content">
+        <!-- タイトル -->
+        <h2 class="ec__title">{{ section.settings.title | newline_to_br }}</h2>
+
+        <!-- 文章 -->
+        {%- if section.settings.description != blank -%}
+          <p class="ec__desc">{{ section.settings.description | newline_to_br }}</p>
+        {%- endif -%}
+
+        <!-- 画像 -->
+        {%- if section.settings.content_image != blank -%}
+          <div class="ec__image">
+            <img
+              src="{{ section.settings.content_image | image_url: width: 432 }}"
+              alt="{{ section.settings.content_image_alt }}"
+              width="216"
+              height="216"
+              loading="lazy"
+            >
+          </div>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "調理の手軽さセクション",
+  "tag": "section",
+  "class": "fambox-easy-cooking-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "背景動画"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "動画URL（外部URL）",
+      "info": "Shopifyファイルにアップロードした動画のURLを貼り付け。1920×1080推奨。"
+    },
+    {
+      "type": "text",
+      "id": "video_file",
+      "label": "動画ファイル名（Shopify Files）",
+      "info": "ファイル名のみ記入（例: cooking-bg.mp4）。動画URLが優先されます。"
+    },
+    {
+      "type": "header",
+      "content": "背景画像（右ブロック内）"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "背景画像（PC: 528×433 / SP: 391×320）",
+      "info": "コンテンツの背後に上下左右センターで表示"
+    },
+    {
+      "type": "header",
+      "content": "コンテンツ"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "タイトル（改行可）",
+      "default": "レンジ5分で、\nプロの食事。"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "文章（改行可）",
+      "default": "忙しいトレーニング後でも、レンジで温めるだけ。管理栄養士が設計したプロ仕様の食事を、たった5分でお召し上がりいただけます。"
+    },
+    {
+      "type": "image_picker",
+      "id": "content_image",
+      "label": "コンテンツ画像（PC: 216×216 / SP: 180×180）"
+    },
+    {
+      "type": "text",
+      "id": "content_image_alt",
+      "label": "コンテンツ画像のalt属性",
+      "default": "レンジ調理イメージ"
+    }
+  ],
+  "presets": [
+    {
+      "name": "調理の手軽さセクション"
+    }
+  ]
+}
+{% endschema %}

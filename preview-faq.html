@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WF: FAQ Section</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e0e0e0; font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif; }
+
+  /* ===== セクション ===== */
+  .wf-section {
+    width: 100%;
+    background: #fafafa;
+    position: relative;
+  }
+
+  /* ===== インナー: padding で余白管理 ===== */
+  .wf-inner {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+
+  /* ===== タイトルエリア ===== */
+  .wf-title-area {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 64px;
+  }
+  .wf-title {
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 180%;
+    color: #1B1D1A;
+  }
+
+  /* ===== スクロールエリア ===== */
+  .wf-scroll-area {
+    width: 100%;
+    margin-top: 56px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .wf-scroll-area::-webkit-scrollbar { display: none; }
+
+  /* ===== スクロールトラック ===== */
+  .wf-scroll-track {
+    display: flex;
+    gap: 32px;
+    /* PC: 左64px、1440以上では中央寄せ+左64px */
+    padding-left: max(64px, calc((100% - 1440px) / 2 + 64px));
+    padding-right: max(0px, calc((100% - 1440px) / 2));
+  }
+
+  /* ===== FAQカード ===== */
+  .wf-faq-card {
+    flex: 0 0 320px;
+    width: 320px;
+  }
+
+  /* ===== ユーザ画像 ===== */
+  .wf-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #999;
+  }
+
+  /* ===== Question番号 ===== */
+  .wf-q-number {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #1B1D1A;
+    margin-top: 16px;
+  }
+
+  /* ===== 質問文 ===== */
+  .wf-question {
+    font-weight: 600;
+    font-size: 18px;
+    color: #1B1D1A;
+    line-height: 170%;
+    margin-top: 24px;
+  }
+
+  /* ===== 黒線 ===== */
+  .wf-line {
+    width: 32px;
+    height: 2px;
+    background: #1B1D1A;
+    margin-top: 24px;
+  }
+
+  /* ===== 回答文 ===== */
+  .wf-answer {
+    font-weight: 500;
+    font-size: 18px;
+    color: #FC5214;
+    line-height: 170%;
+    margin-top: 24px;
+  }
+
+  /* ===== FAMBOXロゴ ===== */
+  .wf-logo {
+    margin-top: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+  }
+  .wf-logo-placeholder {
+    height: 32px;
+    padding: 0 12px;
+    background: #ddd;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    color: #999;
+  }
+
+  /* ===== 寸法アノテーション ===== */
+  .wf-dim {
+    position: absolute;
+    color: red;
+    font-size: 11px;
+    font-family: monospace;
+    pointer-events: none;
+  }
+
+  /* ===== SP版 ===== */
+  @media (max-width: 767px) {
+    .wf-title-area {
+      padding: 0 16px;
+    }
+    .wf-title {
+      font-size: 24px;
+    }
+    .wf-scroll-area {
+      scroll-snap-type: x mandatory;
+      scroll-padding-left: 16px;
+    }
+    .wf-scroll-track {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    .wf-faq-card {
+      flex: 0 0 calc(100vw - 80px);
+      width: calc(100vw - 80px);
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+    .wf-question,
+    .wf-answer {
+      font-size: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="wf-section">
+  <div class="wf-inner">
+
+    <!-- タイトル -->
+    <div class="wf-title-area">
+      <h2 class="wf-title">よくあるご質問</h2>
+    </div>
+
+    <!-- スクロールエリア -->
+    <div class="wf-scroll-area">
+      <div class="wf-scroll-track">
+
+        <!-- FAQ 1 -->
+        <div class="wf-faq-card">
+          <div class="wf-avatar">40×40</div>
+          <p class="wf-q-number">Question 1</p>
+          <p class="wf-question">FAMBOXはどのような食事ですか？</p>
+          <div class="wf-line"></div>
+          <p class="wf-answer">FAMBOXはスポーツ栄養学に基づいた冷凍宅配食です。アスリートの目標に合わせた栄養バランスで設計されています。</p>
+          <div class="wf-logo">
+            <div class="wf-logo-placeholder">FAMBOX SVG</div>
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="wf-faq-card">
+          <div class="wf-avatar">40×40</div>
+          <p class="wf-q-number">Question 2</p>
+          <p class="wf-question">最低注文数はありますか？</p>
+          <div class="wf-line"></div>
+          <p class="wf-answer">法人プランの場合、最低10食からご注文いただけます。チーム規模に応じた柔軟なプランをご用意しています。</p>
+          <div class="wf-logo">
+            <div class="wf-logo-placeholder">FAMBOX SVG</div>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="wf-faq-card">
+          <div class="wf-avatar">40×40</div>
+          <p class="wf-q-number">Question 3</p>
+          <p class="wf-question">アレルギー対応はしていますか？</p>
+          <div class="wf-line"></div>
+          <p class="wf-answer">主要なアレルゲンについてはメニューごとに表示しています。個別のご相談も承っておりますのでお気軽にお問い合わせください。</p>
+          <div class="wf-logo">
+            <div class="wf-logo-placeholder">FAMBOX SVG</div>
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="wf-faq-card">
+          <div class="wf-avatar">40×40</div>
+          <p class="wf-q-number">Question 4</p>
+          <p class="wf-question">配送エリアに制限はありますか？</p>
+          <div class="wf-line"></div>
+          <p class="wf-answer">全国配送に対応しています。冷凍便でお届けするため、届いたらそのまま冷凍庫で保管いただけます。</p>
+          <div class="wf-logo">
+            <div class="wf-logo-placeholder">FAMBOX SVG</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

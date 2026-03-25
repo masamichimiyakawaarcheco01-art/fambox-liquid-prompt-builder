@@ -1,0 +1,6 @@
+.DS_Store
+*.MOV
+*.mov
+tmp_audio/
+tmp_transcripts/
+.claude/settings.local.json

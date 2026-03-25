@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAM Pulse Rings - Extreme Edition</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Hiragino Sans', sans-serif;
+  background: #0a0a0a;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  gap: 80px;
+}
+h1 {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+/* =============================================
+   CARD CONTAINER
+   ============================================= */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  max-width: 1200px;
+  width: 100%;
+}
+@media (max-width: 900px) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .card-grid { grid-template-columns: 1fr; max-width: 400px; }
+}
+
+/* =============================================
+   BASE CARD
+   ============================================= */
+.pulse-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 48px 32px;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.4s ease;
+}
+.pulse-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 30px 60px -15px rgba(251, 76, 21, 0.3);
+}
+
+/* カード背景レイヤー */
+.pulse-card__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* コンテンツ */
+.pulse-card__content {
+  position: relative;
+  z-index: 10;
+}
+.pulse-card__number {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 12px;
+}
+.pulse-card__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.pulse-card__desc {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+}
+
+/* =============================================
+   VARIANT 1: MULTI-ORIGIN PULSE
+   複数の発信源から波紋が時間差で発生
+   ============================================= */
+.pulse-card--v1 {
+  background: radial-gradient(ellipse at 30% 20%, #2a1008, #0f0704 60%, #080402);
+}
+.v1-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(251, 76, 21, 0.4);
+  opacity: 0;
+}
+/* 発信源A: 左上 */
+.v1-ring--a { top: 15%; left: 20%; }
+.v1-ring--a1 { animation: v1expand 5s ease-out infinite 0s; }
+.v1-ring--a2 { animation: v1expand 5s ease-out infinite 1.2s; }
+.v1-ring--a3 { animation: v1expand 5s ease-out infinite 2.4s; }
+/* 発信源B: 右下 */
+.v1-ring--b { top: 70%; left: 75%; }
+.v1-ring--b1 { animation: v1expand 6s ease-out infinite 0.6s; }
+.v1-ring--b2 { animation: v1expand 6s ease-out infinite 2s; }
+.v1-ring--b3 { animation: v1expand 6s ease-out infinite 3.4s; }
+/* 発信源C: 中央やや左 */
+.v1-ring--c { top: 45%; left: 35%; }
+.v1-ring--c1 { animation: v1expand 7s ease-out infinite 1.8s; }
+.v1-ring--c2 { animation: v1expand 7s ease-out infinite 3.6s; }
+
+@keyframes v1expand {
+  0% { width: 0; height: 0; opacity: 0; transform: translate(-50%, -50%); }
+  5% { opacity: 0.8; }
+  40% { opacity: 0.3; }
+  100% { width: 500px; height: 500px; opacity: 0; transform: translate(-50%, -50%); }
+}
+
+/* 干渉パターン（SVGフィルター） */
+.v1-interference {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(251,76,21,0.08) 0%, transparent 50%),
+              radial-gradient(circle at 75% 70%, rgba(251,76,21,0.06) 0%, transparent 40%);
+  mix-blend-mode: screen;
+  animation: v1shimmer 8s ease-in-out infinite;
+}
+@keyframes v1shimmer {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* =============================================
+   VARIANT 2: HEARTBEAT PULSE
+   心拍のように不規則なリズムで脈打つ
+   ============================================= */
+.pulse-card--v2 {
+  background: radial-gradient(ellipse at 50% 50%, #1a0d08, #0d0704 60%, #060302);
+}
+.v2-core {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FB4C15;
+  box-shadow: 0 0 20px 8px rgba(251,76,21,0.4);
+  animation: v2heartbeat 2.4s ease-in-out infinite;
+}
+@keyframes v2heartbeat {
+  0% { transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 20px 8px rgba(251,76,21,0.4); }
+  8% { transform: translate(-50%,-50%) scale(1.8); box-shadow: 0 0 40px 15px rgba(251,76,21,0.6); }
+  16% { transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 20px 8px rgba(251,76,21,0.3); }
+  24% { transform: translate(-50%,-50%) scale(1.4); box-shadow: 0 0 30px 12px rgba(251,76,21,0.5); }
+  32% { transform: translate(-50%,-50%) scale(1); }
+  100% { transform: translate(-50%,-50%) scale(1); }
+}
+
+.v2-ring {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(251,76,21,0.3);
+  opacity: 0;
+}
+.v2-ring--1 { animation: v2pulse 2.4s ease-out infinite 0.08s; }
+.v2-ring--2 { animation: v2pulse 2.4s ease-out infinite 0.24s; }
+.v2-ring--3 { animation: v2pulse 2.4s ease-out infinite 0.16s; }
+.v2-ring--4 { animation: v2pulse 2.4s ease-out infinite 0.32s; }
+@keyframes v2pulse {
+  0% { width: 8px; height: 8px; opacity: 0.9; border-width: 2px; }
+  60% { opacity: 0.2; }
+  100% { width: 400px; height: 400px; opacity: 0; border-width: 0.5px; }
+}
+
+/* ECG風のライン */
+.v2-ecg {
+  position: absolute;
+  top: 35%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  overflow: hidden;
+}
+.v2-ecg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, transparent 40%, rgba(251,76,21,0.6) 50%, transparent 60%, transparent 100%);
+  animation: v2ecgScan 3s linear infinite;
+}
+@keyframes v2ecgScan {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* =============================================
+   VARIANT 3: SPIRAL PULSE
+   螺旋状に広がる波紋
+   ============================================= */
+.pulse-card--v3 {
+  background: radial-gradient(ellipse at 50% 40%, #1f0f06, #0c0804 60%, #050302);
+}
+.v3-orbit {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid transparent;
+}
+.v3-orbit--1 {
+  width: 80px; height: 80px;
+  border-color: rgba(251,76,21,0.3);
+  animation: v3spin 8s linear infinite, v3breathe 4s ease-in-out infinite;
+}
+.v3-orbit--2 {
+  width: 160px; height: 160px;
+  border-color: rgba(251,76,21,0.2);
+  animation: v3spin 12s linear infinite reverse, v3breathe 5s ease-in-out infinite 1s;
+}
+.v3-orbit--3 {
+  width: 260px; height: 260px;
+  border-color: rgba(251,76,21,0.12);
+  animation: v3spin 18s linear infinite, v3breathe 6s ease-in-out infinite 2s;
+}
+.v3-orbit--4 {
+  width: 380px; height: 380px;
+  border-color: rgba(251,76,21,0.06);
+  animation: v3spin 24s linear infinite reverse, v3breathe 7s ease-in-out infinite 0.5s;
+}
+
+/* 軌道上のドット */
+.v3-orbit::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FB4C15;
+  box-shadow: 0 0 12px 3px rgba(251,76,21,0.6);
+}
+.v3-orbit--2::after { width: 4px; height: 4px; opacity: 0.7; }
+.v3-orbit--3::after { width: 3px; height: 3px; opacity: 0.5; }
+.v3-orbit--4::after { width: 2px; height: 2px; opacity: 0.3; }
+
+@keyframes v3spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes v3breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* 中心の光 */
+.v3-center {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #FB4C15;
+  box-shadow: 0 0 30px 10px rgba(251,76,21,0.3), 0 0 60px 20px rgba(251,76,21,0.1);
+  animation: v3centerPulse 3s ease-in-out infinite;
+}
+@keyframes v3centerPulse {
+  0%, 100% { transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 30px 10px rgba(251,76,21,0.3), 0 0 60px 20px rgba(251,76,21,0.1); }
+  50% { transform: translate(-50%,-50%) scale(1.5); box-shadow: 0 0 50px 15px rgba(251,76,21,0.5), 0 0 80px 30px rgba(251,76,21,0.2); }
+}
+
+/* =============================================
+   VARIANT 4: PARTICLE FIELD + PULSE
+   粒子フィールドと波紋の融合
+   ============================================= */
+.pulse-card--v4 {
+  background: linear-gradient(160deg, #180c05, #0a0604 40%, #050303);
+}
+.v4-field {
+  position: absolute;
+  inset: 0;
+}
+.v4-dot {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(251,76,21,0.5);
+  animation: v4twinkle 3s ease-in-out infinite;
+}
+@keyframes v4twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 1; transform: scale(2); }
+}
+.v4-wave {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(251,76,21,0.15) 0%, transparent 70%);
+  opacity: 0;
+  animation: v4wave 6s ease-out infinite;
+}
+.v4-wave--1 { animation-delay: 0s; }
+.v4-wave--2 { animation-delay: 2s; }
+.v4-wave--3 { animation-delay: 4s; }
+@keyframes v4wave {
+  0% { width: 0; height: 0; opacity: 0.8; }
+  100% { width: 600px; height: 600px; opacity: 0; }
+}
+
+/* グリッドライン */
+.v4-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(251,76,21,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(251,76,21,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: v4gridShift 20s linear infinite;
+}
+@keyframes v4gridShift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(40px, 40px); }
+}
+
+/* =============================================
+   VARIANT 5: AURORA PULSE (融合)
+   オーロラとパルスリングの融合
+   ============================================= */
+.pulse-card--v5 {
+  background: linear-gradient(180deg, #0d0806, #140a05 50%, #0a0604);
+}
+.v5-aurora {
+  position: absolute;
+  width: 200%;
+  height: 40%;
+  bottom: 20%;
+  left: -50%;
+  filter: blur(40px);
+  border-radius: 50%;
+  opacity: 0.4;
+}
+.v5-aurora--1 {
+  background: linear-gradient(90deg, transparent, #FB4C15, transparent);
+  animation: v5auroraWave 8s ease-in-out infinite;
+}
+.v5-aurora--2 {
+  background: linear-gradient(90deg, transparent, #FF7A51, transparent);
+  animation: v5auroraWave 12s ease-in-out infinite reverse;
+  bottom: 30%;
+  opacity: 0.25;
+}
+@keyframes v5auroraWave {
+  0%, 100% { transform: translateX(-15%) scaleY(1); }
+  50% { transform: translateX(15%) scaleY(1.5); }
+}
+
+.v5-ring {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(255,122,81,0.25);
+  opacity: 0;
+  animation: v5ring 5s ease-out infinite;
+}
+.v5-ring--1 { animation-delay: 0s; }
+.v5-ring--2 { animation-delay: 1.6s; }
+.v5-ring--3 { animation-delay: 3.2s; }
+@keyframes v5ring {
+  0% { width: 0; height: 0; opacity: 0.7; }
+  100% { width: 300px; height: 300px; opacity: 0; }
+}
+
+/* =============================================
+   VARIANT 6: DATA STREAM PULSE
+   データストリーム風パルス
+   ============================================= */
+.pulse-card--v6 {
+  background: #080605;
+}
+.v6-line {
+  position: absolute;
+  width: 1px;
+  top: 0;
+  bottom: 0;
+  background: rgba(251,76,21,0.04);
+}
+.v6-line::after {
+  content: '';
+  position: absolute;
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, #FB4C15, transparent);
+  animation: v6drop linear infinite;
+  opacity: 0.6;
+}
+.v6-line:nth-child(1) { left: 15%; }
+.v6-line:nth-child(1)::after { animation-duration: 3s; animation-delay: 0s; }
+.v6-line:nth-child(2) { left: 30%; }
+.v6-line:nth-child(2)::after { animation-duration: 4s; animation-delay: 1.5s; }
+.v6-line:nth-child(3) { left: 50%; }
+.v6-line:nth-child(3)::after { animation-duration: 2.5s; animation-delay: 0.8s; }
+.v6-line:nth-child(4) { left: 70%; }
+.v6-line:nth-child(4)::after { animation-duration: 3.5s; animation-delay: 2s; }
+.v6-line:nth-child(5) { left: 85%; }
+.v6-line:nth-child(5)::after { animation-duration: 4.5s; animation-delay: 0.3s; }
+
+@keyframes v6drop {
+  0% { top: -40px; }
+  100% { top: calc(100% + 40px); }
+}
+
+.v6-pulse {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #FB4C15;
+  box-shadow: 0 0 20px 5px rgba(251,76,21,0.3);
+  animation: v6corePulse 3s ease-in-out infinite;
+}
+@keyframes v6corePulse {
+  0%, 70%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.8; }
+  10% { transform: translate(-50%,-50%) scale(3); opacity: 1; }
+  20% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+  30% { transform: translate(-50%,-50%) scale(2); opacity: 0.9; }
+  40% { transform: translate(-50%,-50%) scale(1); opacity: 0.8; }
+}
+
+.v6-hex-ring {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(251,76,21,0.15);
+  opacity: 0;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: v6hexExpand 4s ease-out infinite;
+}
+.v6-hex-ring--1 { animation-delay: 0s; }
+.v6-hex-ring--2 { animation-delay: 1.3s; }
+.v6-hex-ring--3 { animation-delay: 2.6s; }
+@keyframes v6hexExpand {
+  0% { width: 4px; height: 4px; opacity: 0.8; border-width: 2px; }
+  100% { width: 350px; height: 350px; opacity: 0; border-width: 0.5px; }
+}
+
+/* =============================================
+   prefers-reduced-motion
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<h1>FAM Pulse Rings &mdash; Extreme Card Backgrounds</h1>
+
+<div class="card-grid">
+
+  <!-- V1: Multi-Origin -->
+  <div class="pulse-card pulse-card--v1">
+    <div class="pulse-card__bg">
+      <div class="v1-interference"></div>
+      <div class="v1-ring v1-ring--a v1-ring--a1"></div>
+      <div class="v1-ring v1-ring--a v1-ring--a2"></div>
+      <div class="v1-ring v1-ring--a v1-ring--a3"></div>
+      <div class="v1-ring v1-ring--b v1-ring--b1"></div>
+      <div class="v1-ring v1-ring--b v1-ring--b2"></div>
+      <div class="v1-ring v1-ring--b v1-ring--b3"></div>
+      <div class="v1-ring v1-ring--c v1-ring--c1"></div>
+      <div class="v1-ring v1-ring--c v1-ring--c2"></div>
+    </div>
+    <div class="pulse-card__content">
+      <div class="pulse-card__number">01 — MULTI ORIGIN</div>
+      <div class="pulse-card__title">複数波源の干渉</div>
+      <div class="pulse-card__desc">異なる位置から発生した波紋が干渉し合い、複雑なパターンを生成</div>
+    </div>
+  </div>
+
+  <!-- V2: Heartbeat -->
+  <div class="pulse-card pulse-card--v2">
+    <div class="pulse-card__bg">
+      <div class="v2-core"></div>
+      <div class="v2-ring v2-ring--1"></div>
+      <div class="v2-ring v2-ring--2"></div>
+      <div class="v2-ring v2-ring--3"></div>
+      <div class="v2-ring v2-ring--4"></div>
+      <div class="v2-ecg"></div>
+    </div>
+    <div class="pulse-card__content">
+      <div class="pulse-card__number">02 — HEARTBEAT</div>
+      <div class="pulse-card__title">心拍リズム</div>
+      <div class="pulse-card__desc">不規則なリズムで脈打つ波紋とスキャンライン。生命の鼓動</div>
+    </div>
+  </div>
+
+  <!-- V3: Spiral -->
+  <div class="pulse-card pulse-card--v3">
+    <div class="pulse-card__bg">
+      <div class="v3-center"></div>
+      <div class="v3-orbit v3-orbit--1"></div>
+      <div class="v3-orbit v3-orbit--2"></div>
+      <div class="v3-orbit v3-orbit--3"></div>
+      <div class="v3-orbit v3-orbit--4"></div>
+    </div>
+    <div class="pulse-card__content">
+      <div class="pulse-card__number">03 — ORBITAL</div>
+      <div class="pulse-card__title">軌道パルス</div>
+      <div class="pulse-card__desc">螺旋軌道上を周回する光点。精密さとダイナミズムの共存</div>
+    </div>
+  </div>
+
+  <!-- V4: Particle Field -->
+  <div class="pulse-card pulse-card--v4">
+    <div class="pulse-card__bg">
+      <div class="v4-grid"></div>
+      <div class="v4-field">
+        <div class="v4-dot" style="top:12%;left:18%;animation-delay:0s;"></div>
+        <div class="v4-dot" style="top:25%;left:72%;animation-delay:0.8s;"></div>
+        <div class="v4-dot" style="top:45%;left:35%;animation-delay:1.5s;"></div>
+        <div class="v4-dot" style="top:60%;left:85%;animation-delay:0.3s;"></div>
+        <div class="v4-dot" style="top:78%;left:22%;animation-delay:2s;"></div>
+        <div class="v4-dot" style="top:35%;left:55%;animation-delay:1s;"></div>
+        <div class="v4-dot" style="top:88%;left:65%;animation-delay:2.5s;"></div>
+        <div class="v4-dot" style="top:15%;left:48%;animation-delay:1.8s;"></div>
+        <div class="v4-dot" style="top:55%;left:12%;animation-delay:0.6s;"></div>
+        <div class="v4-dot" style="top:70%;left:50%;animation-delay:1.3s;"></div>
+      </div>
+      <div class="v4-wave v4-wave--1"></div>
+      <div class="v4-wave v4-wave--2"></div>
+      <div class="v4-wave v4-wave--3"></div>
+    </div>
+    <div class="pulse-card__content">
+      <div class="pulse-card__number">04 — PARTICLE FIELD</div>
+      <div class="pulse-card__title">粒子フィールド</div>
+      <div class="pulse-card__desc">グリッドと粒子が波紋に反応。データの海をイメージ</div>
+    </div>
+  </div>
+
+  <!-- V5: Aurora Pulse -->
+  <div class="pulse-card pulse-card--v5">
+    <div class="pulse-card__bg">
+      <div class="v5-aurora v5-aurora--1"></div>
+      <div class="v5-aurora v5-aurora--2"></div>
+      <div class="v5-ring v5-ring--1"></div>
+      <div class="v5-ring v5-ring--2"></div>
+      <div class="v5-ring v5-ring--3"></div>
+    </div>
+    <div class="pulse-card__content">
+      <div class="pulse-card__number">05 — AURORA PULSE</div>
+      <div class="pulse-card__title">オーロラ融合</div>
+      <div class="pulse-card__desc">オーロラの幻想感とパルスリングの力強さを融合</div>
+    </div>
+  </div>
+
+  <!-- V6: Data Stream -->
+  <div class="pulse-card pulse-card--v6">
+    <div class="pulse-card__bg">
+      <div class="v6-line"></div>
+      <div class="v6-line"></div>
+      <div class="v6-line"></div>
+      <div class="v6-line"></div>
+      <div class="v6-line"></div>
+      <div class="v6-pulse"></div>
+      <div class="v6-hex-ring v6-hex-ring--1"></div>
+      <div class="v6-hex-ring v6-hex-ring--2"></div>
+      <div class="v6-hex-ring v6-hex-ring--3"></div>
+    </div>
+    <div class="pulse-card__content">
+      <div class="pulse-card__number">06 — DATA STREAM</div>
+      <div class="pulse-card__title">データストリーム</div>
+      <div class="pulse-card__desc">縦のデータ流と六角形パルス。テクノロジーの最前線</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

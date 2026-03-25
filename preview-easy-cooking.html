@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WF: 調理の手軽さセクション</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #e0e0e0; font-family: 'Hiragino Sans', sans-serif; }
+
+  /* ===== セクション全体 ===== */
+  .wf-section {
+    position: relative;
+    width: 100%;
+    height: 650px;
+    overflow: hidden;
+    background: #333;
+  }
+
+  /* ===== 背景動画（プレースホルダー） ===== */
+  .wf-video {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    z-index: 0;
+  }
+  .wf-video-placeholder {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #666 0%, #444 50%, #555 100%);
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 24px;
+  }
+
+  /* ===== コンテンツレイヤー ===== */
+  .wf-content-layer {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+  }
+
+  /* ===== 左ブロック（空） ===== */
+  .wf-block-left {
+    width: 720px;
+    height: 650px;
+    flex-shrink: 0;
+    /* デバッグ用ボーダー */
+    border: 1px dashed rgba(255,0,0,0.3);
+    position: relative;
+  }
+  .wf-block-left::after {
+    content: '左ブロック 720×650（空）';
+    position: absolute;
+    top: 10px; left: 10px;
+    color: rgba(255,100,100,0.6);
+    font-size: 12px;
+  }
+
+  /* ===== 右ブロック ===== */
+  .wf-block-right {
+    width: 720px;
+    height: 650px;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* デバッグ用ボーダー */
+    border: 1px dashed rgba(255,0,0,0.3);
+  }
+  .wf-block-right::before {
+    content: '右ブロック 720×650';
+    position: absolute;
+    top: 10px; right: 10px;
+    color: rgba(255,100,100,0.6);
+    font-size: 12px;
+  }
+
+  /* ===== 背景画像（右ブロック内、上下左右センター） ===== */
+  .wf-bg-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 528px;
+    height: 433px;
+    background: rgba(200, 200, 200, 0.3);
+    border: 1px dashed rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+  }
+
+  /* ===== コンテンツグループ（右ブロック内、上下左右センター） ===== */
+  .wf-content-group {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* ===== タイトル ===== */
+  .wf-title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 1.8;
+    color: #1B1D1A;
+  }
+
+  /* ===== 文章 ===== */
+  .wf-desc {
+    width: 420px;
+    margin-top: 40px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #1B1D1A;
+  }
+
+  /* ===== 画像 ===== */
+  .wf-image {
+    margin-top: 28px;
+    width: 216px;
+    height: 216px;
+    background: #ccc;
+    border: 1px dashed #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 12px;
+  }
+
+  /* ===== 寸法注釈 ===== */
+  .wf-dim {
+    color: red;
+    font-size: 11px;
+    position: absolute;
+  }
+
+  /* ============================================================
+     SP版（max-width: 767px）
+     ============================================================ */
+  @media (max-width: 767px) {
+    .wf-section {
+      height: 650px;
+    }
+
+    /* 動画: 左半分を優先表示 */
+    .wf-video {
+      object-position: left center;
+    }
+    .wf-video-placeholder {
+      background: linear-gradient(135deg, #555 0%, #444 30%, #666 100%);
+    }
+    .wf-video-placeholder::after {
+      content: '（SP: 左半分を優先表示）';
+      display: block;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    /* コンテンツレイヤー: 2分割やめて中央1ブロック */
+    .wf-content-layer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 左ブロック: 非表示 */
+    .wf-block-left {
+      display: none;
+    }
+
+    /* 右ブロック: 全幅・センター配置 */
+    .wf-block-right {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .wf-block-right::before {
+      content: 'SPブロック（上下左右センター）';
+    }
+
+    /* 背景画像: SP版サイズ */
+    .wf-bg-image {
+      width: 391px;
+      height: 320px;
+    }
+
+    /* タイトル: SP版 */
+    .wf-title {
+      font-size: 32px;
+      line-height: 1.8;
+    }
+
+    /* 文章: SP版 */
+    .wf-desc {
+      width: 320px;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    /* 画像: SP版 */
+    .wf-image {
+      width: 180px;
+      height: 180px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<section class="wf-section">
+  <!-- 背景動画プレースホルダー -->
+  <div class="wf-video-placeholder">背景動画 1920×1080 → 高さ650でクロップ</div>
+
+  <!-- コンテンツレイヤー -->
+  <div class="wf-content-layer">
+
+    <!-- 左ブロック（空） -->
+    <div class="wf-block-left">
+      <span class="wf-dim" style="top:50%;left:50%;transform:translate(-50%,-50%)">720 × 650（空）</span>
+    </div>
+
+    <!-- 右ブロック -->
+    <div class="wf-block-right">
+      <!-- 背景画像 -->
+      <div class="wf-bg-image">
+        PC: 528×433 / SP: 391×320
+      </div>
+
+      <!-- コンテンツグループ（上下左右センター） -->
+      <div class="wf-content-group">
+        <!-- タイトル -->
+        <h2 class="wf-title">レンジ5分で、<br>プロの食事。</h2>
+
+        <!-- 余白40px → margin-top: 40px -->
+        <!-- 文章 -->
+        <p class="wf-desc">
+          忙しいトレーニング後でも、レンジで温めるだけ。管理栄養士が設計したプロ仕様の食事を、たった5分でお召し上がりいただけます。
+        </p>
+
+        <!-- 余白28px → margin-top: 28px -->
+        <!-- 画像 -->
+        <div class="wf-image">
+          PC: 216×216<br>SP: 180×180
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 寸法ガイド -->
+<div style="max-width:1440px;margin:20px auto;padding:0 20px;">
+  <h3 style="color:#333;margin-bottom:12px;">📐 寸法ガイド</h3>
+  <table style="border-collapse:collapse;font-size:13px;color:#333;">
+    <tr><th style="text-align:left;padding:4px 16px 4px 0;border-bottom:1px solid #ccc;">要素</th><th style="padding:4px 16px;border-bottom:1px solid #ccc;">PC</th><th style="padding:4px 16px;border-bottom:1px solid #ccc;">SP</th></tr>
+    <tr><td style="padding:4px 16px 4px 0;">セクション高さ</td><td style="padding:4px 16px;">650px</td><td style="padding:4px 16px;">650px</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;">動画 object-position</td><td style="padding:4px 16px;">center center</td><td style="padding:4px 16px;">left center</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;">左ブロック</td><td style="padding:4px 16px;">720×650（空）</td><td style="padding:4px 16px;">非表示</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;">右ブロック</td><td style="padding:4px 16px;">720×650</td><td style="padding:4px 16px;">全幅×650</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;">背景画像</td><td style="padding:4px 16px;">528×433</td><td style="padding:4px 16px;">391×320</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;">タイトル</td><td style="padding:4px 16px;">W6 48px 行間180%</td><td style="padding:4px 16px;">W6 32px 行間180%</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;">タイトル→文章 余白</td><td style="padding:4px 16px;">40px</td><td style="padding:4px 16px;">40px</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;">文章テキストボックス幅</td><td style="padding:4px 16px;">420px</td><td style="padding:4px 16px;">320px</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;">文章</td><td style="padding:4px 16px;">W4 16px 行間180%</td><td style="padding:4px 16px;">W4 14px 行間180%</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;">文章→画像 余白</td><td style="padding:4px 16px;">28px</td><td style="padding:4px 16px;">28px</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;">画像</td><td style="padding:4px 16px;">216×216</td><td style="padding:4px 16px;">180×180</td></tr>
+  </table>
+</div>
+
+</body>
+</html>

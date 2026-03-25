@@ -1,0 +1,306 @@
+{% comment %}
+  Section: FAM 導入実績
+  File: sections/fam-achievement.liquid
+{% endcomment %}
+<section class="fam-achievement">
+<!-- カード層（下レイヤー・全幅） -->
+<div class="fam-achievement__ticker-wrap">
+<div class="fam-achievement__ticker" id="fam-ticker">
+{% for block in section.blocks %}
+{% if block.type == 'card' %}
+<div class="fam-achievement__card" {{ block.shopify_attributes }}>
+<div class="fam-achievement__avatar">
+{% if block.settings.image != blank %}
+<img
+src="{{ block.settings.image | image_url: width: 150, height: 150, crop: 'center' }}"
+alt="{{ block.settings.line1 }}"
+width="76"
+height="76"
+loading="lazy"
+>
+{% endif %}
+</div>
+<div class="fam-achievement__card-text">
+<p>{{ block.settings.line1 }}</p>
+<p>{{ block.settings.line2 }}</p>
+</div>
+</div>
+{% endif %}
+{% endfor %}
+</div>
+</div>
+<!-- 左側：固定色履き＋テキスト（上レイヤー） -->
+<div class="fam-achievement__label">
+<p class="fam-achievement__kicker">{{ section.settings.kicker }}</p>
+<p class="fam-achievement__title">{{ section.settings.title }}</p>
+</div>
+</section>
+<style>
+/* ===== Section Base ===== */
+.fam-achievement {
+position: relative;
+z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
+background: #1B1D1A;
+overflow: hidden;
+border-top: 1px solid #545655;
+border-bottom: 1px solid #545655;
+}
+/* ===== カード層（下レイヤー） ===== */
+.fam-achievement__ticker-wrap {
+width: 100%;
+overflow: hidden;
+display: flex;
+align-items: center;
+padding: 40px 0;
+position: relative;
+z-index: 1;
+}
+.fam-achievement__ticker {
+display: flex;
+gap: 32px;
+align-items: center;
+will-change: transform;
+padding-left: 240px;
+}
+/* ===== カード ===== */
+.fam-achievement__card {
+flex: 0 0 auto;
+display: flex;
+align-items: center;
+gap: 24px;
+background: #323433;
+border-radius: 42px;
+padding: 4px 32px 4px 4px;
+height: 84px;
+box-sizing: border-box;
+white-space: nowrap;
+}
+.fam-achievement__avatar {
+width: 76px;
+height: 76px;
+min-width: 76px;
+border-radius: 50%;
+overflow: hidden;
+background: #111;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.fam-achievement__avatar img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+}
+.fam-achievement__card-text {
+font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+font-size: 16px;
+font-weight: 500;
+line-height: 1.6;
+color: rgba(255, 255, 255, 0.7);
+}
+.fam-achievement__card-text p {
+margin: 0;
+}
+/* ===== 左側：固定色履き＋テキスト（上レイヤー） ===== */
+.fam-achievement__label {
+position: absolute;
+top: 0;
+left: 0;
+width: 224px;
+height: 100%;
+background: #1B1D1A;
+display: flex;
+flex-direction: column;
+justify-content: center;
+padding-left: 62px;
+box-sizing: border-box;
+z-index: 2;
+-webkit-mask-image: linear-gradient(to right, #000 70%, transparent 100%);
+mask-image: linear-gradient(to right, #000 70%, transparent 100%);
+}
+.fam-achievement__kicker {
+font-family: 'Poppins', sans-serif;
+font-size: 12px;
+font-weight: 400;
+line-height: 170%;
+letter-spacing: 1px;
+color: #fff;
+margin: 0 0 2px;
+white-space: nowrap;
+position: relative;
+z-index: 3;
+}
+.fam-achievement__title {
+font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+font-size: 24px;
+font-weight: 500;
+line-height: 200%;
+color: #fff;
+margin: 0;
+white-space: nowrap;
+position: relative;
+z-index: 3;
+}
+/* ===== テキストだけmaskの影響を受けないよう上に重ねる ===== */
+.fam-achievement__label::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 70%;
+height: 100%;
+background: #1B1D1A;
+z-index: 1;
+pointer-events: none;
+}
+/* ===== SP ===== */
+@media (max-width: 767px) {
+.fam-achievement__label {
+display: none;
+  }
+.fam-achievement__ticker-wrap {
+padding: 24px 0;
+  }
+.fam-achievement__ticker {
+padding-left: 16px;
+  }
+.fam-achievement__card {
+height: 60px;
+padding: 2px 24px 2px 2px;
+gap: 16px;
+  }
+.fam-achievement__avatar {
+width: 56px;
+height: 56px;
+min-width: 56px;
+  }
+.fam-achievement__card-text {
+font-size: 12px;
+  }
+}
+</style>
+<script>
+(function() {
+function initTicker() {
+var ticker = document.getElementById('fam-ticker');
+if (!ticker) return;
+var originalCards = Array.from(ticker.children);
+if (originalCards.length === 0) return;
+for (var s = 0; s < 2; s++) {
+originalCards.forEach(function(card) {
+ticker.appendChild(card.cloneNode(true));
+      });
+    }
+var gap = 32;
+var totalWidth = 0;
+requestAnimationFrame(function() {
+originalCards.forEach(function(card) {
+totalWidth += card.offsetWidth + gap;
+      });
+var position = 0;
+var speed = 0.6;
+var rafId = null;
+function animate() {
+position -= speed;
+if (Math.abs(position) >= totalWidth) {
+position = 0;
+        }
+ticker.style.transform = 'translateX(' + position + 'px)';
+rafId = requestAnimationFrame(animate);
+      }
+ticker.addEventListener('mouseenter', function() {
+cancelAnimationFrame(rafId);
+      });
+ticker.addEventListener('mouseleave', function() {
+rafId = requestAnimationFrame(animate);
+      });
+rafId = requestAnimationFrame(animate);
+    });
+  }
+if (document.readyState === 'loading') {
+document.addEventListener('DOMContentLoaded', initTicker);
+  } else {
+initTicker();
+  }
+})();
+</script>
+{% schema %}
+{
+"name": "FAM 導入実績",
+"settings": [
+    {
+"type": "text",
+"id": "kicker",
+"label": "英語小見出し",
+"default": "ACHIEVEMENTS"
+    },
+    {
+"type": "text",
+"id": "title",
+"label": "日本語タイトル",
+"default": "導入実績"
+    }
+  ],
+"blocks": [
+    {
+"type": "card",
+"name": "実績カード",
+"settings": [
+        {
+"type": "image_picker",
+"id": "image",
+"label": "アイコン画像（丸形）"
+        },
+        {
+"type": "text",
+"id": "line1",
+"label": "テキスト1行目",
+"default": "チーム名"
+        },
+        {
+"type": "text",
+"id": "line2",
+"label": "テキスト2行目",
+"default": "サブテキスト"
+        }
+      ]
+    }
+  ],
+"presets": [
+    {
+"name": "FAM 導入実績",
+"blocks": [
+        {
+"type": "card",
+"settings": {
+"line1": "トヨタ硬式野球部",
+"line2": "トヨタレッドクルーザーズ"
+          }
+        },
+        {
+"type": "card",
+"settings": {
+"line1": "テイ・エステック",
+"line2": "硬式野球部"
+          }
+        },
+        {
+"type": "card",
+"settings": {
+"line1": "2026年新春",
+"line2": "プロ野球選手練習合宿"
+          }
+        },
+        {
+"type": "card",
+"settings": {
+"line1": "第20回和田毅杯",
+"line2": "少年少女野球大会"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

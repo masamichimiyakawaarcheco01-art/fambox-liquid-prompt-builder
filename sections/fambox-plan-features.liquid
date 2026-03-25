@@ -1,0 +1,396 @@
+<!-- ============================================
+     FAMBOX Plan Features Section
+     sections/fambox-plan-features.liquid
+     ============================================ -->
+
+{%- liquid
+  assign sec_id = 'fambox-plan-features-' | append: section.id
+-%}
+
+<style>
+  /* ============================================
+     BASE
+     ============================================ */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
+    width: 100%;
+    background: {{ section.settings.bg_color }};
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     INNER: max-width 1440, centered
+     ============================================ */
+  #{{ sec_id }} .plan-features__inner {
+    max-width: 1440px;
+    height: 224px;
+    margin: 0 auto;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* ============================================
+     BOXES: 720 × 224
+     ============================================ */
+  #{{ sec_id }} .plan-features__box {
+    position: relative;
+    width: 720px;
+    min-width: 0;
+    flex: 1;
+    height: 224px;
+  }
+
+  /* ============================================
+     PADDING DIV (absolute positioning = WF同様)
+     ============================================ */
+  #{{ sec_id }} .plan-features__box--left .plan-features__padding {
+    position: absolute;
+    top: 56px;
+    left: 64px;
+    right: 32px;
+    bottom: 56px;
+  }
+
+  #{{ sec_id }} .plan-features__box--right .plan-features__padding {
+    position: absolute;
+    top: 56px;
+    left: 32px;
+    right: 64px;
+    bottom: 56px;
+  }
+
+  /* ============================================
+     CONTENT: flex row, fill padding box
+     ============================================ */
+  #{{ sec_id }} .plan-features__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  #{{ sec_id }} .plan-features__text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ============================================
+     LABEL
+     ============================================ */
+  #{{ sec_id }} .plan-features__label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1;
+  }
+
+  /* ============================================
+     VALUE ROW
+     ============================================ */
+  #{{ sec_id }} .plan-features__value-row {
+    display: flex;
+    align-items: baseline;
+    margin-top: 32px;
+  }
+
+  #{{ sec_id }} .plan-features__number {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 96px;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  #{{ sec_id }} .plan-features__unit {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 32px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  #{{ sec_id }} .plan-features__unit--ja {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  /* ============================================
+     ICON: 112 × 112
+     ============================================ */
+  #{{ sec_id }} .plan-features__icon {
+    width: 112px;
+    height: 112px;
+    flex-shrink: 0;
+  }
+
+  #{{ sec_id }} .plan-features__icon svg,
+  #{{ sec_id }} .plan-features__icon img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* ============================================
+     TRIANGLE (right box, absolute bottom center)
+     ============================================ */
+  #{{ sec_id }} .plan-features__triangle {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 32px;
+  }
+
+  #{{ sec_id }} .plan-features__triangle svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ============================================
+     SP LAYOUT (max-width: 767px)
+     ============================================ */
+  @media (max-width: 767px) {
+    #{{ sec_id }} {
+      padding: 0 16px;
+    }
+
+    #{{ sec_id }} .plan-features__inner {
+      flex-direction: column;
+      height: auto;
+      max-width: none;
+      overflow: visible;
+    }
+
+    #{{ sec_id }} .plan-features__box {
+      width: 100%;
+      height: 142px;
+      flex: none;
+      min-width: auto;
+    }
+
+    #{{ sec_id }} .plan-features__box--left .plan-features__padding,
+    #{{ sec_id }} .plan-features__box--right .plan-features__padding {
+      top: 32px;
+      left: 0;
+      right: 0;
+      bottom: 32px;
+    }
+
+    #{{ sec_id }} .plan-features__label {
+      font-size: 12px;
+    }
+
+    #{{ sec_id }} .plan-features__number {
+      font-size: 48px;
+    }
+
+    #{{ sec_id }} .plan-features__unit {
+      font-size: 20px;
+    }
+
+    #{{ sec_id }} .plan-features__unit--ja {
+      font-size: 18px;
+    }
+
+    #{{ sec_id }} .plan-features__icon {
+      width: 78px;
+      height: 78px;
+    }
+
+    #{{ sec_id }} .plan-features__content {
+      padding: 0 16px;
+    }
+
+    #{{ sec_id }} .plan-features__value-row {
+      margin-top: 12px;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <div class="plan-features__inner">
+
+    <!-- ========================================
+         LEFT BOX
+         ======================================== -->
+    <div class="plan-features__box plan-features__box--left">
+      <div class="plan-features__padding">
+        <div class="plan-features__content">
+          <div class="plan-features__text">
+            <span class="plan-features__label">{{ section.settings.left_label }}</span>
+            <div class="plan-features__value-row">
+              <span class="plan-features__number">{{ section.settings.left_number }}</span>
+              <span class="plan-features__unit">{{ section.settings.left_unit }}</span>
+            </div>
+          </div>
+          <div class="plan-features__icon">
+            {%- if section.settings.left_icon_svg != blank -%}
+              {{ section.settings.left_icon_svg }}
+            {%- elsif section.settings.left_icon != blank -%}
+              {{ section.settings.left_icon | image_url: width: 224 | image_tag: alt: section.settings.left_label }}
+            {%- else -%}
+              <svg viewBox="0 0 112 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="112" height="112" rx="8" fill="#ccc"/>
+              </svg>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================
+         RIGHT BOX
+         ======================================== -->
+    <div class="plan-features__box plan-features__box--right">
+      <div class="plan-features__padding">
+        <div class="plan-features__content">
+          <div class="plan-features__text">
+            <span class="plan-features__label">{{ section.settings.right_label }}</span>
+            <div class="plan-features__value-row">
+              <span class="plan-features__number">{{ section.settings.right_number }}</span>
+              <span class="plan-features__unit--ja">{{ section.settings.right_unit }}</span>
+            </div>
+          </div>
+          <div class="plan-features__icon">
+            {%- if section.settings.right_icon_svg != blank -%}
+              {{ section.settings.right_icon_svg }}
+            {%- elsif section.settings.right_icon != blank -%}
+              {{ section.settings.right_icon | image_url: width: 224 | image_tag: alt: section.settings.right_label }}
+            {%- else -%}
+              <svg viewBox="0 0 112 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="112" height="112" rx="8" fill="#ccc"/>
+              </svg>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+
+      <!-- Triangle: bottom center -->
+      <div class="plan-features__triangle">
+        {%- if section.settings.triangle_svg != blank -%}
+          {{ section.settings.triangle_svg }}
+        {%- else -%}
+          <svg viewBox="0 0 64 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="0,0 64,0 32,32" fill="#fff"/>
+          </svg>
+        {%- endif -%}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "プラン特徴セクション",
+  "tag": "section",
+  "class": "fambox-plan-features-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "全体設定"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#FB4C15"
+    },
+    {
+      "type": "header",
+      "content": "── 左ボックス ──"
+    },
+    {
+      "type": "text",
+      "id": "left_label",
+      "label": "左 ラベル",
+      "default": "1食あたりのたんぱく質"
+    },
+    {
+      "type": "text",
+      "id": "left_number",
+      "label": "左 数値",
+      "default": "30~60"
+    },
+    {
+      "type": "text",
+      "id": "left_unit",
+      "label": "左 単位",
+      "default": "g"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_icon",
+      "label": "左 アイコン画像（112×112）"
+    },
+    {
+      "type": "html",
+      "id": "left_icon_svg",
+      "label": "左 アイコンSVG（画像より優先）"
+    },
+    {
+      "type": "header",
+      "content": "── 右ボックス ──"
+    },
+    {
+      "type": "text",
+      "id": "right_label",
+      "label": "右 ラベル",
+      "default": "おかずの種類｜随時追加"
+    },
+    {
+      "type": "text",
+      "id": "right_number",
+      "label": "右 数値",
+      "default": "36"
+    },
+    {
+      "type": "text",
+      "id": "right_unit",
+      "label": "右 単位",
+      "default": "種"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_icon",
+      "label": "右 アイコン画像（112×112）"
+    },
+    {
+      "type": "html",
+      "id": "right_icon_svg",
+      "label": "右 アイコンSVG（画像より優先）"
+    },
+    {
+      "type": "header",
+      "content": "── 三角形 ──"
+    },
+    {
+      "type": "html",
+      "id": "triangle_svg",
+      "label": "三角形SVG（カスタム）"
+    }
+  ],
+  "presets": [
+    {
+      "name": "プラン特徴セクション"
+    }
+  ]
+}
+{% endschema %}

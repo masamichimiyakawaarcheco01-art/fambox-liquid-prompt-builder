@@ -1,0 +1,264 @@
+<!-- ============================================
+     FAMBOX Menu Showcase Section
+     sections/fambox-menu-showcase.liquid
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-menu-showcase-' | append: section.id
+  assign block_count = section.blocks.size
+  assign scroll_offset = block_count | times: 180
+-%}
+
+<style>
+/* ============================================
+   BASE — テーマCSSの干渉を防ぐため !important 付き
+   ============================================ */
+#{{ sec_id }} {
+  position: relative;
+  z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
+  width: 100% !important;
+  background: #fafafa !important;
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: visible !important;
+}
+#{{ sec_id }} *,
+#{{ sec_id }} *::before,
+#{{ sec_id }} *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ============================================
+   INNER: max-width 1440, paddingで余白確保
+   テーマの div:empty { display:none } 対策
+   ============================================ */
+#{{ sec_id }} .menu-showcase__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  position: relative;
+  overflow: visible !important;
+  padding-top: 120px !important;
+  padding-bottom: 0 !important;
+}
+
+/* ============================================
+   おかず表示エリア: 高さ225px
+   ============================================ */
+#{{ sec_id }} .menu-showcase__area {
+  height: 225px !important;
+  position: relative;
+  overflow: hidden !important;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-bottom: 64px !important;
+}
+
+/* ============================================
+   スクロールトラック
+   シームレスループ: ブロック数 × (132px + 32px) = 正確なオフセット
+   ============================================ */
+#{{ sec_id }} .menu-showcase__track {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+  animation: menuShowcaseScroll-{{ section.id }} 60s linear infinite;
+  width: max-content;
+}
+
+@keyframes menuShowcaseScroll-{{ section.id }} {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-{{ scroll_offset }}px); }
+}
+
+/* ============================================
+   おかずブロック: 132 × 225
+   ============================================ */
+#{{ sec_id }} .menu-showcase__item {
+  width: 132px;
+  min-width: 132px;
+  height: 225px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 画像: 132 × 132 */
+#{{ sec_id }} .menu-showcase__img {
+  width: 132px;
+  height: 132px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+#{{ sec_id }} .menu-showcase__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+#{{ sec_id }} .menu-showcase__img svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 名称テキスト（画像との余白24pxはmargin-topで確保） */
+#{{ sec_id }} .menu-showcase__name {
+  margin-top: 24px !important;
+  width: 132px;
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+  line-height: 170% !important;
+  color: #1B1D1A !important;
+  text-align: center !important;
+}
+
+/* Proteinテキスト */
+#{{ sec_id }} .menu-showcase__protein {
+  width: 132px;
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+  line-height: 170% !important;
+  color: #92939C !important;
+  text-align: center !important;
+}
+
+/* ============================================
+   区切り線: 2px #D0D1DB
+   PC: 1312px (1440 - 64*2), 中央揃え
+   疑似要素で描画（div:empty対策）
+   ============================================ */
+#{{ sec_id }} .menu-showcase__inner::after {
+  content: "" !important;
+  display: block !important;
+  height: 2px !important;
+  background: #D0D1DB !important;
+  max-width: 1312px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   SP LAYOUT (max-width: 767px)
+   ============================================ */
+@media (max-width: 767px) {
+  #{{ sec_id }} .menu-showcase__inner {
+    padding-top: 80px !important;
+    padding-bottom: 32px !important;
+  }
+  #{{ sec_id }} .menu-showcase__area {
+    margin-bottom: 32px !important;
+  }
+  #{{ sec_id }} .menu-showcase__inner::after {
+    max-width: none;
+    margin: 0 24px;
+  }
+}
+</style>
+
+<section id="{{ sec_id }}">
+  <div class="menu-showcase__inner">
+
+    <!-- おかず表示エリア 225px（上余白64pxはinnerのpadding-topで確保） -->
+    <div class="menu-showcase__area">
+      <div class="menu-showcase__track">
+
+        {%- comment -%} セット1: ブロックから描画 {%- endcomment -%}
+        {%- for block in section.blocks -%}
+          <div class="menu-showcase__item" {{ block.shopify_attributes }}>
+            <div class="menu-showcase__img">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 264 | image_tag: alt: block.settings.name, loading: 'lazy' }}
+              {%- else -%}
+                <svg viewBox="0 0 132 132" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="132" height="132" rx="8" fill="#ddd"/>
+                </svg>
+              {%- endif -%}
+            </div>
+
+            <div class="menu-showcase__name">{{ block.settings.name }}</div>
+            <div class="menu-showcase__protein">{{ block.settings.protein }}</div>
+          </div>
+        {%- endfor -%}
+
+        {%- comment -%} セット2: シームレスループ用（セット1の完全複製） {%- endcomment -%}
+        {%- for block in section.blocks -%}
+          <div class="menu-showcase__item">
+            <div class="menu-showcase__img">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 264 | image_tag: alt: block.settings.name, loading: 'lazy' }}
+              {%- else -%}
+                <svg viewBox="0 0 132 132" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="132" height="132" rx="8" fill="#ddd"/>
+                </svg>
+              {%- endif -%}
+            </div>
+
+            <div class="menu-showcase__name">{{ block.settings.name }}</div>
+            <div class="menu-showcase__protein">{{ block.settings.protein }}</div>
+          </div>
+        {%- endfor -%}
+
+      </div>
+    </div>
+
+    <!-- 下余白62pxはinnerのpadding-bottomで確保 -->
+    <!-- 区切り線はinnerの::after疑似要素で描画 -->
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "おかずショーケース",
+  "tag": "section",
+  "class": "fambox-menu-showcase-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "menu_item",
+      "name": "おかず",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "おかず画像（132×132）"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "おかず名称",
+          "default": "おかず名"
+        },
+        {
+          "type": "text",
+          "id": "protein",
+          "label": "Protein表記",
+          "default": "Protein 00.0g"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "おかずショーケース",
+      "blocks": [
+        { "type": "menu_item", "settings": { "name": "鶏むね肉のグリル", "protein": "Protein 25.3g" } },
+        { "type": "menu_item", "settings": { "name": "豚ロース味噌漬け", "protein": "Protein 18.7g" } },
+        { "type": "menu_item", "settings": { "name": "サーモンのハーブ焼き", "protein": "Protein 22.1g" } },
+        { "type": "menu_item", "settings": { "name": "牛肉のしぐれ煮", "protein": "Protein 19.5g" } },
+        { "type": "menu_item", "settings": { "name": "エビチリ", "protein": "Protein 15.2g" } },
+        { "type": "menu_item", "settings": { "name": "鯖の塩焼き", "protein": "Protein 20.8g" } },
+        { "type": "menu_item", "settings": { "name": "チキン南蛮", "protein": "Protein 23.4g" } },
+        { "type": "menu_item", "settings": { "name": "豆腐ハンバーグ", "protein": "Protein 14.6g" } },
+        { "type": "menu_item", "settings": { "name": "回鍋肉", "protein": "Protein 16.3g" } },
+        { "type": "menu_item", "settings": { "name": "鶏もも肉の照り焼き", "protein": "Protein 21.7g" } },
+        { "type": "menu_item", "settings": { "name": "アジフライ", "protein": "Protein 17.9g" } },
+        { "type": "menu_item", "settings": { "name": "麻婆豆腐", "protein": "Protein 13.8g" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAM Plan Sections - WF v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif; background: #f5f5f5; }
+
+/* ============================================
+   SECTION 1: 定期便（ダーク）
+   左テキスト + 右動画 + 中央画像
+   ============================================ */
+.plan-sub {
+  width: 100%;
+  background: #1B1D1A;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.plan-sub__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+}
+
+/* 左: テキスト（720px） */
+.plan-sub__left {
+  width: 720px;
+  flex-shrink: 0;
+  padding: 96px 56px 96px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* 右: 動画（720px基準、右端見切れなし） */
+.plan-sub__right {
+  flex: 1;
+  min-width: 720px;
+  position: relative;
+  overflow: hidden;
+}
+.plan-sub__video-area {
+  width: 100%;
+  height: 100%;
+  background: #2a2c2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.2);
+  font-size: 14px;
+  min-height: 600px;
+}
+.plan-sub__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 中央画像（320×320、セクション上下左右センター、最上位レイヤー） */
+.plan-sub__center-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 320px;
+  z-index: 5;
+  pointer-events: none;
+}
+.plan-sub__center-placeholder {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed rgba(255,255,255,0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.25);
+  font-size: 13px;
+  text-align: center;
+}
+.plan-sub__center-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* テキスト */
+.plan-sub__kicker {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.plan-sub__title {
+  font-size: 40px;
+  font-weight: 500;
+  color: #fff;
+  line-height: 180%;
+  margin-bottom: 16px;
+}
+.plan-sub__desc {
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.7);
+  line-height: 180%;
+  margin-bottom: 40px;
+  max-width: 480px;
+}
+.plan-sub__price {
+  margin-bottom: 40px;
+}
+.plan-sub__badge {
+  display: inline-block;
+  background: #FB4C15;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 16px;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+.plan-sub__price-main {
+  font-family: 'Poppins', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+.plan-sub__price-main span {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+}
+.plan-sub__price-note {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 12px;
+  line-height: 180%;
+}
+
+/* CTA: Hero v17ボタンデザイン */
+.plan-sub__cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  height: 48px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  overflow: hidden;
+  transition: filter 0.3s ease;
+  box-shadow: 0 16px 16px -8px rgba(251,76,21,0.35);
+}
+.plan-sub__cta:hover { filter: brightness(1.12); }
+.plan-sub__cta-text { position: relative; z-index: 1; }
+.plan-sub__cta-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+.plan-sub__cta:hover .plan-sub__cta-arrow {
+  transform: translateY(-50%) translateX(4px);
+}
+
+/* ============================================
+   SECTION 2: ACTIVE プラン（オレンジ）
+   ============================================ */
+.plan-active {
+  width: 100%;
+  background: #FB4C15;
+  position: relative;
+  z-index: 1;
+}
+.plan-active__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 64px 64px;
+}
+.plan-active__title {
+  font-size: 40px;
+  font-weight: 600;
+  color: #1B1D1A;
+  line-height: 180%;
+  margin-bottom: 32px;
+}
+.plan-active__filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+.plan-active__filter {
+  padding: 10px 24px;
+  border: 1px solid rgba(255,255,255,0.5);
+  background: transparent;
+  color: #fff;
+  font-family: 'Hiragino Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.plan-active__filter--active,
+.plan-active__filter:hover {
+  background: #fff;
+  color: #1B1D1A;
+  border-color: #fff;
+}
+.plan-active__cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.plan-active__card {
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  transition: all 0.4s ease;
+  display: flex;
+  flex-direction: column;
+}
+.plan-active__card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+}
+.plan-active__card-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 13px;
+}
+.plan-active__card-body {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.plan-active__card-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1B1D1A;
+  margin-bottom: 4px;
+}
+.plan-active__card-sub {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #FB4C15;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.plan-active__card-target {
+  font-size: 14px;
+  font-weight: 500;
+  color: #545655;
+  line-height: 170%;
+  margin-bottom: 16px;
+}
+.plan-active__card-line {
+  width: 32px;
+  height: 2px;
+  background: #FB4C15;
+  margin-bottom: 16px;
+}
+.plan-active__card-specs {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 24px;
+}
+.plan-active__card-protein {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1B1D1A;
+}
+.plan-active__card-price {
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1B1D1A;
+}
+.plan-active__card-price span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #545655;
+}
+.plan-active__card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+  background: #1B1D1A;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  margin-top: auto;
+  transition: background 0.3s ease;
+  position: relative;
+}
+.plan-active__card-cta:hover { background: #FB4C15; }
+.plan-active__card-cta-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ============================================
+   SP
+   ============================================ */
+@media (max-width: 767px) {
+  /* Section 1: SP版 - 動画+画像が上、テキストが下 */
+  .plan-sub__inner {
+    flex-direction: column;
+  }
+  .plan-sub__left {
+    width: 100%;
+    order: 2;
+    padding: 40px 24px 56px;
+  }
+  .plan-sub__right {
+    width: 100%;
+    min-width: 0;
+    order: 1;
+    height: 560px;
+  }
+  .plan-sub__video-area {
+    min-height: 560px;
+    height: 560px;
+  }
+  /* 中央画像: 動画エリア内の上下左右センター */
+  .plan-sub__center-img {
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 560px;
+    transform: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .plan-sub__center-placeholder,
+  .plan-sub__center-img img {
+    width: 320px;
+    height: 320px;
+  }
+  .plan-sub__title {
+    font-size: 28px;
+  }
+  .plan-sub__desc {
+    font-size: 14px;
+  }
+  .plan-sub__price-main {
+    font-size: 36px;
+  }
+  .plan-sub__cta {
+    width: 100%;
+    max-width: 358px;
+  }
+
+  /* Section 2 */
+  .plan-active__inner {
+    padding: 48px 24px;
+  }
+  .plan-active__title {
+    font-size: 28px;
+  }
+  .plan-active__cards {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+  }
+  .plan-active__cards::-webkit-scrollbar { display: none; }
+  .plan-active__card {
+    flex: 0 0 calc(100vw - 72px);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .plan-active__filters { gap: 8px; }
+  .plan-active__filter { padding: 8px 16px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     SECTION 1: 定期便プラン（ダーク）
+     左テキスト + 右動画 + 中央320×320画像
+     ============================================ -->
+<section class="plan-sub">
+  <div class="plan-sub__inner">
+
+    <!-- 左: テキスト -->
+    <div class="plan-sub__left">
+      <p class="plan-sub__kicker">Subscription Plan</p>
+      <h2 class="plan-sub__title">何を食べればいいか、<br>もう迷わない。</h2>
+      <p class="plan-sub__desc">
+        栄養計算されたアスリート食を、定期的にお届け。<br>
+        温めるだけで、トレーニング後も仕事終わりも、<br>
+        いつでも理想の食事が手に入る。
+      </p>
+      <div class="plan-sub__price">
+        <div class="plan-sub__badge">初回購入 50% OFF</div>
+        <div class="plan-sub__price-main">
+          ¥950〜 <span>/ 毎週1回のお届け</span>
+        </div>
+        <p class="plan-sub__price-note">
+          各プランを毎週1回のお届けで、<br>
+          1食から5食までの定期便プランを準備しております。
+        </p>
+      </div>
+      <a href="#" class="plan-sub__cta">
+        <span class="plan-sub__cta-text">定期便を見る</span>
+        <span class="plan-sub__cta-arrow">
+          <svg width="36" height="14" viewBox="0 0 53 12" fill="none">
+            <rect x="0" y="5" width="46" height="2" fill="white"/>
+            <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+
+    <!-- 右: 動画エリア -->
+    <div class="plan-sub__right">
+      <div class="plan-sub__video-area">
+        背景動画エリア（1920×1080 MP4推奨）
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 中央画像（320×320、セクション上下左右センター） -->
+  <div class="plan-sub__center-img">
+    <div class="plan-sub__center-placeholder">320 × 320<br>ロゴ / 皿画像</div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 2: ACTIVEプラン（オレンジ）
+     ============================================ -->
+<section class="plan-active">
+  <div class="plan-active__inner">
+    <h2 class="plan-active__title">まずは試してみたい方へ</h2>
+    <div class="plan-active__filters">
+      <button class="plan-active__filter plan-active__filter--active" data-filter="all">すべて</button>
+      <button class="plan-active__filter" data-filter="bulk">筋力アップ</button>
+      <button class="plan-active__filter" data-filter="maintain">維持</button>
+      <button class="plan-active__filter" data-filter="cut">減量</button>
+    </div>
+    <div class="plan-active__cards">
+      <div class="plan-active__card" data-category="bulk">
+        <div class="plan-active__card-img">料理写真</div>
+        <div class="plan-active__card-body">
+          <p class="plan-active__card-name">ACTIVE 60</p>
+          <p class="plan-active__card-sub">FAMBOX</p>
+          <p class="plan-active__card-target">70kg以上のアスリート<br>筋力アップが目的の方</p>
+          <div class="plan-active__card-line"></div>
+          <div class="plan-active__card-specs">
+            <span class="plan-active__card-protein">Protein 60g</span>
+            <span class="plan-active__card-price">¥1,800 <span>/食</span></span>
+          </div>
+          <a href="#" class="plan-active__card-cta">詳しく見る<span class="plan-active__card-cta-arrow"><svg width="24" height="10" viewBox="0 0 53 12" fill="none"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a>
+        </div>
+      </div>
+      <div class="plan-active__card" data-category="bulk maintain">
+        <div class="plan-active__card-img">料理写真</div>
+        <div class="plan-active__card-body">
+          <p class="plan-active__card-name">ACTIVE 50</p>
+          <p class="plan-active__card-sub">FAMBOX</p>
+          <p class="plan-active__card-target">50〜70kgのアスリート<br>筋力アップ・維持が目的の方</p>
+          <div class="plan-active__card-line"></div>
+          <div class="plan-active__card-specs">
+            <span class="plan-active__card-protein">Protein 50g</span>
+            <span class="plan-active__card-price">¥1,400 <span>/食</span></span>
+          </div>
+          <a href="#" class="plan-active__card-cta">詳しく見る<span class="plan-active__card-cta-arrow"><svg width="24" height="10" viewBox="0 0 53 12" fill="none"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a>
+        </div>
+      </div>
+      <div class="plan-active__card" data-category="bulk maintain">
+        <div class="plan-active__card-img">料理写真</div>
+        <div class="plan-active__card-body">
+          <p class="plan-active__card-name">ACTIVE 40</p>
+          <p class="plan-active__card-sub">FAMBOX</p>
+          <p class="plan-active__card-target">50kg未満のアスリート<br>筋力アップ・バランス維持</p>
+          <div class="plan-active__card-line"></div>
+          <div class="plan-active__card-specs">
+            <span class="plan-active__card-protein">Protein 40g</span>
+            <span class="plan-active__card-price">¥1,300 <span>/食</span></span>
+          </div>
+          <a href="#" class="plan-active__card-cta">詳しく見る<span class="plan-active__card-cta-arrow"><svg width="24" height="10" viewBox="0 0 53 12" fill="none"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a>
+        </div>
+      </div>
+      <div class="plan-active__card" data-category="maintain cut">
+        <div class="plan-active__card-img">料理写真</div>
+        <div class="plan-active__card-body">
+          <p class="plan-active__card-name">ACTIVE 30</p>
+          <p class="plan-active__card-sub">FAMBOX</p>
+          <p class="plan-active__card-target">全体重帯<br>維持・健康が目的の方</p>
+          <div class="plan-active__card-line"></div>
+          <div class="plan-active__card-specs">
+            <span class="plan-active__card-protein">Protein 30g</span>
+            <span class="plan-active__card-price">¥1,000 <span>/食</span></span>
+          </div>
+          <a href="#" class="plan-active__card-cta">詳しく見る<span class="plan-active__card-cta-arrow"><svg width="24" height="10" viewBox="0 0 53 12" fill="none"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.querySelectorAll('.plan-active__filter').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.plan-active__filter').forEach(function(b) {
+      b.classList.remove('plan-active__filter--active');
+    });
+    btn.classList.add('plan-active__filter--active');
+    var filter = btn.dataset.filter;
+    document.querySelectorAll('.plan-active__card').forEach(function(card) {
+      if (filter === 'all' || card.dataset.category.indexOf(filter) !== -1) {
+        card.style.opacity = '1';
+        card.style.filter = 'none';
+        card.style.transform = '';
+      } else {
+        card.style.opacity = '0.25';
+        card.style.filter = 'blur(2px)';
+        card.style.transform = 'scale(0.97)';
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

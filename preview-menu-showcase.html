@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>WF: おかず種類セクション</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #e0e0e0; display: flex; justify-content: center; padding: 40px 0; overflow-x: hidden; }
+
+  /* ============================================
+     セクション全体
+     ============================================ */
+  .wf-section {
+    width: 1440px;
+    height: 353px;
+    background: #fff;
+    position: relative;
+    overflow: visible;
+  }
+
+  /* ============================================
+     寸法ラベル共通
+     ============================================ */
+  .dim {
+    position: absolute;
+    font-size: 10px;
+    color: red;
+    font-family: monospace;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  /* ============================================
+     上余白: 64px
+     ============================================ */
+  .wf-spacer-top {
+    height: 64px;
+    border-bottom: 1px dashed red;
+    position: relative;
+  }
+  .wf-spacer-top .dim {
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+  }
+
+  /* ============================================
+     おかず表示エリア: 高さ225px
+     ============================================ */
+  .wf-showcase-area {
+    height: 225px;
+    position: relative;
+    overflow: hidden;
+    /* 1440pxの枠を突破して画面全幅に広げる */
+    width: 100vw;
+    margin-left: calc((100vw - 1440px) / -2);
+    margin-left: calc(50% - 50vw);
+  }
+  .wf-showcase-area-label {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    font-size: 10px;
+    color: blue;
+    font-family: monospace;
+    z-index: 10;
+  }
+
+  /* スクロールトラック */
+  .wf-track {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    animation: scrollLeft 60s linear infinite;
+    width: max-content;
+    /* エリア内で垂直中央 → 上端揃え（デザイン指示通り） */
+  }
+
+  @keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ============================================
+     おかずブロック: 132×225
+     ============================================ */
+  .wf-item {
+    width: 132px;
+    min-width: 132px;
+    height: 225px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  /* 画像: 132×132 */
+  .wf-item__img {
+    width: 132px;
+    height: 132px;
+    background: #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #999;
+    font-family: monospace;
+  }
+
+  /* 余白: 24px */
+  .wf-item__spacer {
+    height: 24px;
+  }
+
+  /* 名称テキスト */
+  .wf-item__name {
+    width: 132px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 170%;
+    color: #1B1D1A;
+    text-align: center;
+  }
+
+  /* Proteinテキスト */
+  .wf-item__protein {
+    width: 132px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 170%;
+    color: #92939C;
+    text-align: center;
+  }
+
+  /* ============================================
+     下余白: 62px
+     ============================================ */
+  .wf-spacer-bottom {
+    height: 62px;
+    border-top: 1px dashed red;
+    position: relative;
+  }
+  .wf-spacer-bottom .dim {
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+  }
+
+  /* ============================================
+     区切り線: 2px #D0D1DB
+     ============================================ */
+  .wf-line {
+    height: 2px;
+    background: #D0D1DB;
+    width: 1312px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .wf-line .dim {
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* ============================================
+     全体の寸法表記
+     ============================================ */
+  .dim-section-w {
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .dim-section-h {
+    top: 50%;
+    right: -50px;
+    transform: translateY(-50%);
+  }
+  .dim-margin-lr {
+    bottom: 8px;
+    left: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="wf-section">
+  <!-- 寸法ラベル -->
+  <span class="dim dim-section-w">1440px (横幅可変)</span>
+  <span class="dim dim-section-h">353px</span>
+
+  <!-- 上余白 64px -->
+  <div class="wf-spacer-top">
+    <span class="dim">↕ 64px</span>
+  </div>
+
+  <!-- おかず表示エリア 225px -->
+  <div class="wf-showcase-area">
+    <span class="wf-showcase-area-label">おかず表示エリア: 225px高</span>
+
+    <div class="wf-track">
+      <!-- 23品 × 2セット = シームレスループ用 -->
+      <!-- セット1 -->
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">鶏むね肉の<br>グリル</div>
+        <div class="wf-item__protein">Protein 25.3g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">豚ロース<br>味噌漬け</div>
+        <div class="wf-item__protein">Protein 18.7g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">サーモンの<br>ハーブ焼き</div>
+        <div class="wf-item__protein">Protein 22.1g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">牛肉の<br>しぐれ煮</div>
+        <div class="wf-item__protein">Protein 19.5g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">エビチリ</div>
+        <div class="wf-item__protein">Protein 15.2g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">鯖の塩焼き</div>
+        <div class="wf-item__protein">Protein 20.8g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">チキン南蛮</div>
+        <div class="wf-item__protein">Protein 23.4g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">豆腐<br>ハンバーグ</div>
+        <div class="wf-item__protein">Protein 14.6g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">回鍋肉</div>
+        <div class="wf-item__protein">Protein 16.3g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">鶏もも肉の<br>照り焼き</div>
+        <div class="wf-item__protein">Protein 21.7g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">アジフライ</div>
+        <div class="wf-item__protein">Protein 17.9g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">麻婆豆腐</div>
+        <div class="wf-item__protein">Protein 13.8g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">タンドリー<br>チキン</div>
+        <div class="wf-item__protein">Protein 24.2g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">肉じゃが</div>
+        <div class="wf-item__protein">Protein 12.5g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">カレイの<br>煮付け</div>
+        <div class="wf-item__protein">Protein 18.3g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">油淋鶏</div>
+        <div class="wf-item__protein">Protein 22.6g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">ぶりの照焼</div>
+        <div class="wf-item__protein">Protein 20.1g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">生姜焼き</div>
+        <div class="wf-item__protein">Protein 19.8g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">鶏つくね</div>
+        <div class="wf-item__protein">Protein 16.7g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">白身魚の<br>フリッター</div>
+        <div class="wf-item__protein">Protein 15.4g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">酢豚</div>
+        <div class="wf-item__protein">Protein 17.2g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">ささみの<br>梅しそ巻き</div>
+        <div class="wf-item__protein">Protein 26.1g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">デミグラス<br>ハンバーグ</div>
+        <div class="wf-item__protein">Protein 21.3g</div>
+      </div>
+
+      <!-- セット2（シームレスループ用：セット1の複製） -->
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">鶏むね肉の<br>グリル</div>
+        <div class="wf-item__protein">Protein 25.3g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">豚ロース<br>味噌漬け</div>
+        <div class="wf-item__protein">Protein 18.7g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">サーモンの<br>ハーブ焼き</div>
+        <div class="wf-item__protein">Protein 22.1g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">牛肉の<br>しぐれ煮</div>
+        <div class="wf-item__protein">Protein 19.5g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">エビチリ</div>
+        <div class="wf-item__protein">Protein 15.2g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">鯖の塩焼き</div>
+        <div class="wf-item__protein">Protein 20.8g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">チキン南蛮</div>
+        <div class="wf-item__protein">Protein 23.4g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">豆腐<br>ハンバーグ</div>
+        <div class="wf-item__protein">Protein 14.6g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">回鍋肉</div>
+        <div class="wf-item__protein">Protein 16.3g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">鶏もも肉の<br>照り焼き</div>
+        <div class="wf-item__protein">Protein 21.7g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">アジフライ</div>
+        <div class="wf-item__protein">Protein 17.9g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">麻婆豆腐</div>
+        <div class="wf-item__protein">Protein 13.8g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">タンドリー<br>チキン</div>
+        <div class="wf-item__protein">Protein 24.2g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">肉じゃが</div>
+        <div class="wf-item__protein">Protein 12.5g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">カレイの<br>煮付け</div>
+        <div class="wf-item__protein">Protein 18.3g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">油淋鶏</div>
+        <div class="wf-item__protein">Protein 22.6g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">ぶりの照焼</div>
+        <div class="wf-item__protein">Protein 20.1g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">生姜焼き</div>
+        <div class="wf-item__protein">Protein 19.8g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">鶏つくね</div>
+        <div class="wf-item__protein">Protein 16.7g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">白身魚の<br>フリッター</div>
+        <div class="wf-item__protein">Protein 15.4g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">酢豚</div>
+        <div class="wf-item__protein">Protein 17.2g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">ささみの<br>梅しそ巻き</div>
+        <div class="wf-item__protein">Protein 26.1g</div>
+      </div>
+      <div class="wf-item">
+        <div class="wf-item__img">132×132</div>
+        <div class="wf-item__spacer"></div>
+        <div class="wf-item__name">デミグラス<br>ハンバーグ</div>
+        <div class="wf-item__protein">Protein 21.3g</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 下余白 62px -->
+  <div class="wf-spacer-bottom">
+    <span class="dim">↕ 62px</span>
+  </div>
+
+  <!-- 区切り線 2px -->
+  <div class="wf-line">
+    <span class="dim">1312px × 2px / #D0D1DB</span>
+  </div>
+</div>
+
+</body>
+</html>

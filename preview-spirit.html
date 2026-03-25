@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAM Spirit Section - Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #fafafa; }
+
+/* =============================================
+   SECTION BASE
+   ============================================= */
+.fam-spirit {
+  width: 100%;
+  height: 640px;
+  background: #FB4C15;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+
+/* =============================================
+   INNER: 1440px center
+   ============================================= */
+.fam-spirit__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 0 64px;
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  position: relative;
+  z-index: 2;
+}
+
+/* =============================================
+   LEFT: タイポグラフィー
+   ============================================= */
+.fam-spirit__left {
+  flex: 1;
+  min-width: 0;
+}
+
+.fam-spirit__kicker {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 32px;
+  text-transform: uppercase;
+}
+
+.fam-spirit__title {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 180%;
+  color: #fff;
+  margin-bottom: 32px;
+  letter-spacing: 0.04em;
+}
+
+.fam-spirit__body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 200%;
+  color: rgba(255,255,255,0.85);
+  max-width: 480px;
+}
+
+/* =============================================
+   RIGHT: HEARTBEAT CARD (400×400)
+   ============================================= */
+.fam-spirit__right {
+  flex: 0 0 400px;
+  width: 400px;
+  height: 400px;
+}
+
+.spirit-card {
+  width: 400px;
+  height: 400px;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 45%, #1a0d08, #0d0704 55%, #060302);
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.4);
+}
+
+/* ── HEARTBEAT CORE ── */
+.spirit-card__core {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FB4C15;
+  box-shadow: 0 0 30px 12px rgba(251,76,21,0.4);
+  animation: spiritHeartbeat 2.4s ease-in-out infinite;
+}
+@keyframes spiritHeartbeat {
+  0% { transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 30px 12px rgba(251,76,21,0.4); }
+  8% { transform: translate(-50%,-50%) scale(2.2); box-shadow: 0 0 50px 20px rgba(251,76,21,0.7); }
+  16% { transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 25px 10px rgba(251,76,21,0.3); }
+  24% { transform: translate(-50%,-50%) scale(1.6); box-shadow: 0 0 40px 15px rgba(251,76,21,0.5); }
+  32% { transform: translate(-50%,-50%) scale(1); }
+  100% { transform: translate(-50%,-50%) scale(1); }
+}
+
+/* ── PULSE RINGS ── */
+.spirit-card__ring {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(251,76,21,0.35);
+  opacity: 0;
+}
+.spirit-card__ring--1 { animation: spiritRing 2.4s ease-out infinite 0.08s; }
+.spirit-card__ring--2 { animation: spiritRing 2.4s ease-out infinite 0.16s; }
+.spirit-card__ring--3 { animation: spiritRing 2.4s ease-out infinite 0.24s; }
+.spirit-card__ring--4 { animation: spiritRing 2.4s ease-out infinite 0.32s; }
+.spirit-card__ring--5 { animation: spiritRing 2.4s ease-out infinite 0.40s; }
+@keyframes spiritRing {
+  0% { width: 6px; height: 6px; opacity: 0.9; border-width: 2px; }
+  50% { opacity: 0.3; }
+  100% { width: 500px; height: 500px; opacity: 0; border-width: 0.5px; }
+}
+
+/* ── ECG SCAN LINE ── */
+.spirit-card__ecg {
+  position: absolute;
+  top: 42%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  overflow: hidden;
+}
+.spirit-card__ecg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, transparent 35%, rgba(251,76,21,0.5) 50%, transparent 65%, transparent 100%);
+  animation: spiritEcg 3.5s linear infinite;
+}
+@keyframes spiritEcg {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* ── AMBIENT GLOW ── */
+.spirit-card__glow {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(251,76,21,0.12) 0%, transparent 70%);
+  animation: spiritGlow 4s ease-in-out infinite;
+}
+@keyframes spiritGlow {
+  0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%,-50%) scale(1.5); opacity: 1; }
+}
+
+/* ── CARD TYPOGRAPHY (カード内テキスト) ── */
+.spirit-card__content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px;
+  z-index: 5;
+  background: linear-gradient(to top, rgba(6,3,2,0.9) 0%, rgba(6,3,2,0.4) 60%, transparent 100%);
+}
+
+.spirit-card__quote {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: rgba(251,76,21,0.8);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.spirit-card__message {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 180%;
+  color: rgba(255,255,255,0.9);
+}
+
+/* ── CORNER ACCENTS ── */
+.spirit-card__corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  z-index: 3;
+}
+.spirit-card__corner--tl { top: 16px; left: 16px; border-top: 1px solid rgba(251,76,21,0.3); border-left: 1px solid rgba(251,76,21,0.3); }
+.spirit-card__corner--tr { top: 16px; right: 16px; border-top: 1px solid rgba(251,76,21,0.3); border-right: 1px solid rgba(251,76,21,0.3); }
+.spirit-card__corner--bl { bottom: 16px; left: 16px; border-bottom: 1px solid rgba(251,76,21,0.3); border-left: 1px solid rgba(251,76,21,0.3); }
+.spirit-card__corner--br { bottom: 16px; right: 16px; border-bottom: 1px solid rgba(251,76,21,0.3); border-right: 1px solid rgba(251,76,21,0.3); }
+
+/* =============================================
+   BACKGROUND TEXTURE (セクション全体)
+   ============================================= */
+.fam-spirit__texture {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.fam-spirit__texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px;
+}
+.fam-spirit__texture::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%, rgba(0,0,0,0.05) 100%);
+}
+
+/* =============================================
+   SP LAYOUT
+   ============================================= */
+@media (max-width: 960px) {
+  .fam-spirit {
+    height: auto;
+    min-height: 640px;
+  }
+  .fam-spirit__inner {
+    flex-direction: column;
+    padding: 64px 24px;
+    gap: 48px;
+    align-items: flex-start;
+  }
+  .fam-spirit__title {
+    font-size: 28px;
+  }
+  .fam-spirit__body {
+    font-size: 14px;
+  }
+  .fam-spirit__right {
+    flex: none;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    aspect-ratio: 1;
+    align-self: center;
+  }
+  .spirit-card {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .fam-spirit__title {
+    font-size: 24px;
+  }
+  .spirit-card__content {
+    padding: 24px;
+  }
+  .spirit-card__message {
+    font-size: 13px;
+  }
+}
+
+/* =============================================
+   prefers-reduced-motion
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<section class="fam-spirit">
+  <!-- 背景テクスチャ -->
+  <div class="fam-spirit__texture"></div>
+
+  <div class="fam-spirit__inner">
+
+    <!-- LEFT: タイポグラフィー -->
+    <div class="fam-spirit__left">
+      <div class="fam-spirit__kicker">Our Spirit</div>
+      <h2 class="fam-spirit__title">
+        食事の力で、<br>
+        アスリートの<br>
+        可能性を解放する。
+      </h2>
+      <p class="fam-spirit__body">
+        最高のパフォーマンスは、最高の栄養から生まれる。<br>
+        私たちはその信念のもと、トップアスリートの<br>
+        栄養戦略を、すべてのアスリートが手にできる<br>
+        環境を創り続けます。
+      </p>
+    </div>
+
+    <!-- RIGHT: HEARTBEAT CARD -->
+    <div class="fam-spirit__right">
+      <div class="spirit-card">
+        <!-- Corner accents -->
+        <div class="spirit-card__corner spirit-card__corner--tl"></div>
+        <div class="spirit-card__corner spirit-card__corner--tr"></div>
+        <div class="spirit-card__corner spirit-card__corner--bl"></div>
+        <div class="spirit-card__corner spirit-card__corner--br"></div>
+
+        <!-- Heartbeat animation -->
+        <div class="spirit-card__glow"></div>
+        <div class="spirit-card__core"></div>
+        <div class="spirit-card__ring spirit-card__ring--1"></div>
+        <div class="spirit-card__ring spirit-card__ring--2"></div>
+        <div class="spirit-card__ring spirit-card__ring--3"></div>
+        <div class="spirit-card__ring spirit-card__ring--4"></div>
+        <div class="spirit-card__ring spirit-card__ring--5"></div>
+        <div class="spirit-card__ecg"></div>
+
+        <!-- Card text -->
+        <div class="spirit-card__content">
+          <div class="spirit-card__quote">Philosophy</div>
+          <p class="spirit-card__message">
+            栄養を、最強の武器に。<br>
+            それがFAMBOXの原点です。
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>

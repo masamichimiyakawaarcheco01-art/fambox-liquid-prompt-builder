@@ -1,0 +1,447 @@
+{% comment %}
+  FAM BOX ブログカルーセル（統一デザイン版）
+  sections/fambox-blog-carousel.liquid
+{% endcomment %}
+{%- liquid
+  assign sec_id = 'fambox-blog-' | append: section.id
+  assign blog_handle = section.settings.blog
+  assign article_count = section.settings.article_count
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+  /* RESET */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* SECTION */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    background: {{ section.settings.bg_color }} !important;
+    padding: 120px 0 !important;
+    overflow: hidden;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  #{{ sec_id }} .bc__header {
+    max-width: 1440px;
+    margin: 0 auto 48px;
+    padding: 0 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #{{ sec_id }} .bc__title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 40px !important;
+    font-weight: 500 !important;
+    color: #1B1D1A !important;
+    line-height: 180% !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+
+  /* NAV BUTTONS */
+  #{{ sec_id }} .bc__nav {
+    display: flex;
+    gap: 8px;
+  }
+  #{{ sec_id }} .bc__nav-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 0 !important;
+    border: none !important;
+    background: #1B1D1A !important;
+    color: #fff !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    padding: 0;
+  }
+  #{{ sec_id }} .bc__nav-btn svg,
+  #{{ sec_id }} .bc__nav-btn img {
+    width: 18px;
+    height: 18px;
+    display: block !important;
+  }
+  #{{ sec_id }} .bc__nav-btn svg {
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+  }
+  #{{ sec_id }} .bc__nav-btn:hover {
+    background: #FB4C15 !important;
+  }
+  #{{ sec_id }} .bc__nav-btn:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
+  #{{ sec_id }} .bc__nav-btn:disabled:hover {
+    background: #1B1D1A !important;
+  }
+
+  /* TRACK */
+  #{{ sec_id }} .bc__track-wrap {
+    overflow: hidden;
+    width: 100%;
+    padding: 0 0 0 64px;
+  }
+  #{{ sec_id }} .bc__track {
+    display: flex;
+    gap: 24px;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  /* CARD: 固定幅で見切れなし */
+  #{{ sec_id }} .bc__card {
+    flex: 0 0 calc((100vw - 64px - 64px - 24px) / 2);
+    display: flex;
+    overflow: hidden;
+    background: #fff !important;
+    text-decoration: none !important;
+    color: inherit !important;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    min-height: 260px;
+  }
+  #{{ sec_id }} .bc__card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    transform: translateY(-3px);
+    text-decoration: none !important;
+  }
+  #{{ sec_id }} .bc__card-image {
+    flex: 0 0 45%;
+    position: relative;
+    overflow: hidden;
+  }
+  #{{ sec_id }} .bc__card-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    transition: transform 0.5s ease;
+  }
+  #{{ sec_id }} .bc__card:hover .bc__card-image img {
+    transform: scale(1.03);
+  }
+
+  /* CARD CONTENT */
+  #{{ sec_id }} .bc__card-content {
+    flex: 1;
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+  }
+  #{{ sec_id }} .bc__card-date {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #FB4C15 !important;
+    letter-spacing: 0.02em;
+  }
+  #{{ sec_id }} .bc__card-heading {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    color: #1B1D1A !important;
+    line-height: 1.6 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  #{{ sec_id }} .bc__card-excerpt {
+    font-size: 12px !important;
+    color: #666 !important;
+    line-height: 1.8 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  #{{ sec_id }} .bc__card-readmore {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #1B1D1A !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.04em;
+    transition: gap 0.25s ease;
+    text-decoration: none !important;
+  }
+  #{{ sec_id }} .bc__card:hover .bc__card-readmore {
+    gap: 10px;
+  }
+  #{{ sec_id }} .bc__card-readmore::after {
+    content: "→";
+    font-size: 14px;
+  }
+
+  /* INDICATORS */
+  #{{ sec_id }} .bc__dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 40px;
+  }
+  #{{ sec_id }} .bc__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #D0D1DB !important;
+    border: none !important;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+  }
+  #{{ sec_id }} .bc__dot--active {
+    background: #FB4C15 !important;
+    width: 32px;
+    border-radius: 4px;
+  }
+
+  /* SP */
+  @media (max-width: 767px) {
+    #{{ sec_id }} {
+      padding: 80px 0 !important;
+    }
+    #{{ sec_id }} .bc__header {
+      padding: 0 24px;
+    }
+    #{{ sec_id }} .bc__title {
+      font-size: 28px !important;
+    }
+    #{{ sec_id }} .bc__track-wrap {
+      padding: 0 0 0 24px;
+    }
+    #{{ sec_id }} .bc__card {
+      flex: 0 0 calc(100vw - 48px);
+      flex-direction: column;
+      min-height: auto;
+    }
+    #{{ sec_id }} .bc__card-image {
+      flex: 0 0 200px;
+      height: 200px;
+    }
+    #{{ sec_id }} .bc__card-content {
+      padding: 16px 24px;
+    }
+    #{{ sec_id }} .bc__card-heading {
+      font-size: 15px !important;
+    }
+    #{{ sec_id }} .bc__nav-btn {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  @media (min-width: 750px) and (max-width: 989px) {
+    #{{ sec_id }} .bc__card {
+      flex: 0 0 100%;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <div class="bc__header">
+    <h2 class="bc__title">{{ section.settings.heading | newline_to_br }}</h2>
+    <div class="bc__nav">
+      <button class="bc__nav-btn" data-dir="prev" aria-label="前の記事">
+        {%- if section.settings.prev_svg != blank -%}
+          {{ section.settings.prev_svg }}
+        {%- else -%}
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        {%- endif -%}
+      </button>
+      <button class="bc__nav-btn" data-dir="next" aria-label="次の記事">
+        {%- if section.settings.next_svg != blank -%}
+          {{ section.settings.next_svg }}
+        {%- else -%}
+          <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+        {%- endif -%}
+      </button>
+    </div>
+  </div>
+
+  <div class="bc__track-wrap">
+    <div class="bc__track" id="bcTrack-{{ section.id }}" data-per-slide="2">
+      {%- if blog_handle != blank -%}
+        {%- for article in blogs[blog_handle].articles limit: article_count -%}
+          <a href="{{ article.url }}" class="bc__card">
+            <div class="bc__card-image">
+              {%- if article.image -%}
+                {{ article.image | image_url: width: 600 | image_tag:
+                  loading: 'lazy',
+                  widths: '300, 400, 600',
+                  sizes: '(max-width: 749px) 100vw, 300px'
+                }}
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </div>
+            <div class="bc__card-content">
+              <span class="bc__card-date">{{ article.published_at | date: "%Y年%-m月%-d日" }}</span>
+              <h3 class="bc__card-heading">{{ article.title }}</h3>
+              {%- if article.excerpt_or_content != blank -%}
+                <p class="bc__card-excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
+              {%- endif -%}
+              <span class="bc__card-readmore">続きを読む</span>
+            </div>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <div class="bc__card">
+            <div class="bc__card-image">{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+            <div class="bc__card-content">
+              <span class="bc__card-date">2026年1月13日</span>
+              <h3 class="bc__card-heading">サンプル記事タイトル{{ i }}</h3>
+              <p class="bc__card-excerpt">ファムボックスは、トップアスリートの現場で培われた知見をもとに開発された、総合栄養ソリューションです。</p>
+              <span class="bc__card-readmore">続きを読む</span>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="bc__dots" id="bcDots-{{ section.id }}">{%- comment -%}dots{%- endcomment -%}</div>
+</section>
+
+<script>
+(function() {
+  var secEl = document.getElementById('{{ sec_id }}');
+  if (!secEl) return;
+
+  var track = secEl.querySelector('.bc__track');
+  var cards = track.querySelectorAll('.bc__card');
+  var prevBtn = secEl.querySelector('[data-dir="prev"]');
+  var nextBtn = secEl.querySelector('[data-dir="next"]');
+  var dotsWrap = secEl.querySelector('.bc__dots');
+  if (cards.length === 0) return;
+
+  var currentIndex = 0;
+  var perSlide = window.innerWidth <= 749 ? 1 : 2;
+  var totalSlides = Math.ceil(cards.length / perSlide);
+
+  // ドット生成
+  for (var i = 0; i < totalSlides; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'bc__dot' + (i === 0 ? ' bc__dot--active' : '');
+    dot.dataset.idx = i;
+    (function(idx) {
+      dot.addEventListener('click', function() { goTo(idx); });
+    })(i);
+    dotsWrap.appendChild(dot);
+  }
+
+  function goTo(index) {
+    currentIndex = Math.max(0, Math.min(index, totalSlides - 1));
+    var cardWidth = cards[0].offsetWidth;
+    var gap = parseFloat(getComputedStyle(track).gap) || 24;
+    var offset = currentIndex * (cardWidth + gap) * perSlide;
+    track.style.transform = 'translateX(-' + offset + 'px)';
+
+    var dots = dotsWrap.querySelectorAll('.bc__dot');
+    dots.forEach(function(d, i) {
+      d.classList.toggle('bc__dot--active', i === currentIndex);
+    });
+    if (prevBtn) prevBtn.disabled = currentIndex === 0;
+    if (nextBtn) nextBtn.disabled = currentIndex >= totalSlides - 1;
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', function() { goTo(currentIndex - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function() { goTo(currentIndex + 1); });
+  goTo(0);
+
+  // タッチスワイプ
+  var startX = 0;
+  track.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', function(e) {
+    var diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      diff > 0 ? goTo(currentIndex + 1) : goTo(currentIndex - 1);
+    }
+  }, { passive: true });
+
+  // リサイズ
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      perSlide = window.innerWidth <= 749 ? 1 : 2;
+      goTo(currentIndex);
+    }, 200);
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "ブログカルーセル",
+  "tag": "section",
+  "class": "fambox-blog-carousel-section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "見出しテキスト（改行可）",
+      "default": "NEWS"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#fafafa"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "表示するブログ"
+    },
+    {
+      "type": "range",
+      "id": "article_count",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 6,
+      "label": "表示する記事数"
+    },
+    {
+      "type": "header",
+      "content": "── ナビボタン ──"
+    },
+    {
+      "type": "html",
+      "id": "prev_svg",
+      "label": "前へボタンSVG（空欄でデフォルト）"
+    },
+    {
+      "type": "html",
+      "id": "next_svg",
+      "label": "次へボタンSVG（空欄でデフォルト）"
+    }
+  ],
+  "presets": [
+    {
+      "name": "ブログカルーセル"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,326 @@
+<style>
+  .fam-plan-section {
+    padding: 60px 0 80px;
+    background: #fff;
+    overflow: hidden;
+  }
+  .fam-plan-section .plan-header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px 40px;
+  }
+  .fam-plan-section .plan-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 16px;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+  }
+  .fam-plan-section .plan-description {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #555;
+    max-width: 720px;
+  }
+
+  /* カードコンテナ */
+  .fam-plan-cards {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 40px 20px;
+    scrollbar-width: none;
+  }
+  .fam-plan-cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 個別カード */
+  .fam-plan-card {
+    flex: 0 0 260px;
+    scroll-snap-align: start;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s;
+  }
+  .fam-plan-card:hover {
+    opacity: 0.85;
+  }
+
+  /* 定期便カード（左端） */
+  .fam-plan-card--teiki {
+    flex: 0 0 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4px;
+  }
+  .fam-plan-card--teiki .teiki-inner {
+    background: #f5f5f5;
+    border-radius: 4px;
+    width: 100%;
+    height: 340px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .fam-plan-card--teiki .teiki-label {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: 0.05em;
+  }
+
+  /* カード画像エリア */
+  .fam-plan-card__image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 0;
+  }
+  .fam-plan-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .fam-plan-card__overlay {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+  .fam-plan-card__overlay .plan-en-name {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+  }
+  .fam-plan-card__overlay .plan-number {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .fam-plan-card__logo {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    letter-spacing: 0.04em;
+  }
+  .fam-plan-card__logo svg {
+    width: 16px;
+    height: 16px;
+    fill: #fff;
+  }
+
+  /* カード情報エリア */
+  .fam-plan-card__info {
+    padding: 14px 4px 0;
+  }
+  .fam-plan-card__name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 6px;
+    letter-spacing: 0.02em;
+  }
+  .fam-plan-card__catch {
+    font-size: 15px;
+    font-weight: 700;
+    color: #E8491D;
+    margin: 0 0 12px;
+    line-height: 1.5;
+  }
+  .fam-plan-card__divider {
+    width: 30px;
+    height: 2px;
+    background: #1a1a1a;
+    margin: 0 0 12px;
+  }
+  .fam-plan-card__specs {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.7;
+    margin: 0 0 10px;
+  }
+  .fam-plan-card__specs strong {
+    color: #1a1a1a;
+  }
+  .fam-plan-card__detail {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* レスポンシブ */
+  @media screen and (max-width: 749px) {
+    .fam-plan-section {
+      padding: 40px 0 60px;
+    }
+    .fam-plan-section .plan-header {
+      padding: 0 20px 30px;
+    }
+    .fam-plan-section .plan-title {
+      font-size: 22px;
+    }
+    .fam-plan-cards {
+      padding: 0 20px 16px;
+    }
+    .fam-plan-card {
+      flex: 0 0 220px;
+    }
+    .fam-plan-card--teiki {
+      flex: 0 0 160px;
+    }
+    .fam-plan-card--teiki .teiki-inner {
+      height: 280px;
+    }
+  }
+</style>
+
+<div class="fam-plan-section">
+  <!-- ヘッダー -->
+  <div class="plan-header">
+    <h2 class="plan-title">あなたの体格と目的で選べる4つのプラン</h2>
+    <p class="plan-description">
+      和田毅さんの食事の基本は、高タンパク質・低脂質、そしてビタミン・ミネラルをしっかり摂ること。魚介類と肉の両方が入っていることがメニューの特徴です。1食セットで、一般の方なら２人でちょうどいいほどのボリュームがあります。とってもお得でもあるアスリートメニューを、ぜひ試してみてください！
+    </p>
+  </div>
+
+  <!-- プランカード -->
+  <div class="fam-plan-cards">
+
+    <!-- 定期便プラン（左端の導線カード） -->
+    <div class="fam-plan-card fam-plan-card--teiki">
+      <div class="teiki-inner">
+        <span class="teiki-label">定期便プラン</span>
+      </div>
+    </div>
+
+    <!-- アスリートプラス60 -->
+    <a href="/collections/all#athlete-plus-60" class="fam-plan-card">
+      <div class="fam-plan-card__image">
+        <!-- 画像URLをShopifyにアップした画像に差し替えてください -->
+        <img src="https://cdn.shopify.com/placeholder-athlete-plus-60.jpg" alt="アスリートプラス60" loading="lazy">
+        <div class="fam-plan-card__overlay">
+          <div class="plan-en-name">Athlete<br>Plus</div>
+          <div class="plan-number">60</div>
+        </div>
+        <div class="fam-plan-card__logo">
+          <span>FAM BOX</span>
+        </div>
+      </div>
+      <div class="fam-plan-card__info">
+        <p class="fam-plan-card__name">アスリートプラス60</p>
+        <p class="fam-plan-card__catch">カラダを<br>大きく筋力量アップ</p>
+        <div class="fam-plan-card__divider"></div>
+        <p class="fam-plan-card__specs">
+          平均 <strong>677kcal</strong><br>
+          たんぱく質 <strong>約60g</strong><br>
+          1食あたり <strong>¥1,800</strong>
+        </p>
+        <p class="fam-plan-card__detail">
+          主菜2品＋副菜2品で構成された筋肉量アップを本気で狙うアスリート向けプラン。
+        </p>
+      </div>
+    </a>
+
+    <!-- アスリートサポート50 -->
+    <a href="/collections/all#athlete-support-50" class="fam-plan-card">
+      <div class="fam-plan-card__image">
+        <img src="https://cdn.shopify.com/placeholder-athlete-support-50.jpg" alt="アスリートサポート50" loading="lazy">
+        <div class="fam-plan-card__overlay">
+          <div class="plan-en-name">Athlete<br>Support</div>
+          <div class="plan-number">50</div>
+        </div>
+        <div class="fam-plan-card__logo">
+          <span>FAM BOX</span>
+        </div>
+      </div>
+      <div class="fam-plan-card__info">
+        <p class="fam-plan-card__name">アスリートサポート50</p>
+        <p class="fam-plan-card__catch">筋力アップと<br>コンディション維持</p>
+        <div class="fam-plan-card__divider"></div>
+        <p class="fam-plan-card__specs">
+          平均 <strong>568kcal</strong><br>
+          たんぱく質 <strong>約50g</strong><br>
+          1食あたり <strong>¥1,400</strong>
+        </p>
+        <p class="fam-plan-card__detail">
+          主菜2品＋副菜1品で構成された筋肉量アップ、コンディション維持を目的とした選手向けプラン。
+        </p>
+      </div>
+    </a>
+
+    <!-- フィジカルプラン40 -->
+    <a href="/collections/all#physical-plan-40" class="fam-plan-card">
+      <div class="fam-plan-card__image">
+        <img src="https://cdn.shopify.com/placeholder-physical-plan-40.jpg" alt="フィジカルプラン40" loading="lazy">
+        <div class="fam-plan-card__overlay">
+          <div class="plan-en-name">Physical<br>Plan</div>
+          <div class="plan-number">40</div>
+        </div>
+        <div class="fam-plan-card__logo">
+          <span>FAM BOX</span>
+        </div>
+      </div>
+      <div class="fam-plan-card__info">
+        <p class="fam-plan-card__name">フィジカルプラン40</p>
+        <p class="fam-plan-card__catch">筋力量と体重の<br>バランス維持</p>
+        <div class="fam-plan-card__divider"></div>
+        <p class="fam-plan-card__specs">
+          平均 <strong>490kcal</strong><br>
+          たんぱく質 <strong>約40g</strong><br>
+          1食あたり <strong>¥1,300</strong>
+        </p>
+        <p class="fam-plan-card__detail">
+          主菜1品＋副菜2品で構成された筋肉量と体重バランス維持を目的としたアスリート向けプラン。
+        </p>
+      </div>
+    </a>
+
+    <!-- ヘルスケアプラン30 -->
+    <a href="/collections/all#healthcare-plan-30" class="fam-plan-card">
+      <div class="fam-plan-card__image">
+        <img src="https://cdn.shopify.com/placeholder-healthcare-30.jpg" alt="ヘルスケアプラン30" loading="lazy">
+        <div class="fam-plan-card__overlay">
+          <div class="plan-en-name">Healthcare<br>Plan</div>
+          <div class="plan-number">30</div>
+        </div>
+        <div class="fam-plan-card__logo">
+          <span>FAM BOX</span>
+        </div>
+      </div>
+      <div class="fam-plan-card__info">
+        <p class="fam-plan-card__name">ヘルスケアプラン30</p>
+        <p class="fam-plan-card__catch">健康維持と<br>コンディショニング</p>
+        <div class="fam-plan-card__divider"></div>
+        <p class="fam-plan-card__specs">
+          平均 <strong>350kcal</strong><br>
+          たんぱく質 <strong>約30g</strong><br>
+          1食あたり <strong>¥1,000</strong>
+        </p>
+        <p class="fam-plan-card__detail">
+          主菜1品＋副菜1品で構成された健康維持を目的とした方向けのライトプラン。
+        </p>
+      </div>
+    </a>
+
+  </div>
+</div>

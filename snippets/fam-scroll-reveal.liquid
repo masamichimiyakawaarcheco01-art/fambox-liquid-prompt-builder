@@ -1,0 +1,124 @@
+{% comment %}
+  スクロールフェードイン（全セクション共通）
+  snippets/fam-scroll-reveal.liquid
+
+  使い方:
+  1. theme.liquid の </body> 直前に {% render 'fam-scroll-reveal' %} を追加
+  2. 各セクションのルート要素に class="fam-reveal" を追加
+  3. 子要素を個別にアニメーションさせたい場合は class="fam-reveal-child" を追加
+
+  アニメーション:
+  - opacity: 0 → 1
+  - translateY(24px → 0)
+  - 0.7s ease-out
+  - 子要素は 100ms ずつディレイ
+{% endcomment %}
+
+<style>
+  /* ============================================
+     スクロールフェードイン: 初期状態（非表示）
+     ============================================ */
+  .fam-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+                transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+    will-change: opacity, transform;
+  }
+
+  /* 表示状態 */
+  .fam-reveal--visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  /* 子要素の個別アニメーション */
+  .fam-reveal-child {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+                transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+    will-change: opacity, transform;
+  }
+
+  .fam-reveal-child--visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  /* prefers-reduced-motion: アニメーション無効化 */
+  @media (prefers-reduced-motion: reduce) {
+    .fam-reveal,
+    .fam-reveal-child {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+(function() {
+  'use strict';
+
+  // prefers-reduced-motion チェック
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+
+  function initScrollReveal() {
+    // IntersectionObserver 非対応ブラウザはフォールバック（全て表示）
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.fam-reveal').forEach(function(el) {
+        el.classList.add('fam-reveal--visible');
+      });
+      document.querySelectorAll('.fam-reveal-child').forEach(function(el) {
+        el.classList.add('fam-reveal-child--visible');
+      });
+      return;
+    }
+
+    // セクション単位のObserver
+    var sectionObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fam-reveal--visible');
+
+          // 子要素のディレイ付きアニメーション
+          var children = entry.target.querySelectorAll('.fam-reveal-child');
+          children.forEach(function(child, index) {
+            setTimeout(function() {
+              child.classList.add('fam-reveal-child--visible');
+            }, index * 100); // 100msずつディレイ
+          });
+
+          // 一度表示したら監視解除（パフォーマンス）
+          sectionObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,    // 10%見えたらトリガー
+      rootMargin: '0px 0px -40px 0px'  // 下から40px入ったらトリガー
+    });
+
+    // 全 .fam-reveal 要素を監視
+    document.querySelectorAll('.fam-reveal').forEach(function(el) {
+      sectionObserver.observe(el);
+    });
+  }
+
+  // DOM Ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollReveal);
+  } else {
+    initScrollReveal();
+  }
+
+  // Shopifyテーマエディタ対応: セクション再描画時にも動作
+  if (window.Shopify && window.Shopify.designMode) {
+    document.addEventListener('shopify:section:load', function() {
+      setTimeout(initScrollReveal, 100);
+    });
+  }
+})();
+</script>

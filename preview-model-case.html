@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WF: モデルケースセクション</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #e0e0e0; font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif; }
+
+  /* ============================================
+     セクション全体
+     ============================================ */
+  .wf-section {
+    max-width: 1440px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 64px 56px;
+    position: relative;
+  }
+
+  /* 寸法アノテーション */
+  .wf-section::before {
+    content: '1440px (max-width)';
+    position: absolute; top: -24px; left: 50%;
+    transform: translateX(-50%);
+    background: #333; color: #fff; font-size: 11px;
+    padding: 2px 8px; border-radius: 3px;
+  }
+
+  /* ============================================
+     セクションタイトル
+     ============================================ */
+  .wf-title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 170%;
+    color: #1B1D1A;
+    margin-bottom: 56px;
+    position: relative;
+  }
+  .wf-title::after {
+    content: '↕ 56px';
+    position: absolute; bottom: -36px; left: 0;
+    color: red; font-size: 11px; font-weight: 400;
+  }
+
+  /* ============================================
+     箱コンテナ（横並び）
+     ============================================ */
+  .wf-boxes {
+    display: flex;
+    gap: 56px;
+  }
+
+  /* ============================================
+     箱（636px、可変）
+     ============================================ */
+  .wf-box {
+    flex: 1;
+    min-width: 0;
+    border: 1px dashed #ccc;
+    position: relative;
+  }
+  .wf-box::before {
+    content: '636px (flex:1)';
+    position: absolute; top: -20px; left: 0;
+    color: #999; font-size: 10px;
+  }
+
+  /* ============================================
+     ヘッダー行（Case + 目的）
+     ============================================ */
+  .wf-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 32px;
+  }
+  .wf-case-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    color: #FB4C15;
+    line-height: 1;
+  }
+  .wf-case-purpose {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #FB4C15;
+    line-height: 1;
+  }
+
+  /* ============================================
+     区切り線
+     ============================================ */
+  .wf-divider {
+    height: 2px;
+    background: #1B1D1A;
+    width: 100%;
+  }
+
+  /* ============================================
+     タイトル・文章エリア
+     ============================================ */
+  .wf-box-title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #1B1D1A;
+    line-height: 170%;
+    margin-top: 32px;
+    margin-bottom: 32px;
+  }
+  .wf-box-desc {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #545655;
+    line-height: 180%;
+    margin-bottom: 32px;
+  }
+
+  /* ============================================
+     データ行（72px高）
+     ============================================ */
+  .wf-data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 72px;
+    border-bottom: 2px solid #ECECEC;
+    position: relative;
+  }
+  .wf-data-row:first-of-type::before {
+    content: '72px';
+    position: absolute; right: -40px; top: 50%;
+    transform: translateY(-50%);
+    color: red; font-size: 10px;
+  }
+  .wf-data-label {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    color: #1B1D1A;
+  }
+  .wf-data-value {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    color: #1B1D1A;
+    text-align: right;
+  }
+
+  /* 合計行（下線なし、大きめ） */
+  .wf-data-row--total {
+    border-bottom: none;
+  }
+  .wf-data-row--total .wf-data-label,
+  .wf-data-row--total .wf-data-value {
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  /* ============================================
+     余白アノテーション
+     ============================================ */
+  .wf-anno {
+    color: red;
+    font-size: 10px;
+    font-weight: 400;
+    position: relative;
+  }
+  .wf-anno--top::before {
+    content: '↕ 64px (top)';
+    position: absolute; top: -50px; left: 0;
+  }
+  .wf-anno--left::before {
+    content: '← 56px';
+    position: absolute; top: 0; left: -50px;
+  }
+
+  /* ============================================
+     SP版（箱が2列に収まらない幅）
+     ============================================ */
+  @media (max-width: 900px) {
+    .wf-section {
+      padding: 64px 24px;
+    }
+    .wf-boxes {
+      flex-direction: column;
+      gap: 56px;
+    }
+    .wf-box::before {
+      content: '100% (SP)';
+    }
+    .wf-title {
+      font-size: 24px;
+    }
+    .wf-case-label {
+      font-size: 24px;
+    }
+    .wf-case-purpose {
+      font-size: 20px;
+    }
+    .wf-box-title {
+      font-size: 20px;
+    }
+    .wf-data-label,
+    .wf-data-value {
+      font-size: 16px;
+    }
+    .wf-data-row--total .wf-data-label,
+    .wf-data-row--total .wf-data-value {
+      font-size: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<section class="wf-section">
+  <!-- セクションタイトル -->
+  <h2 class="wf-title">実際のモデルケース</h2>
+
+  <!-- 箱2つ横並び -->
+  <div class="wf-boxes">
+
+    <!-- ===== 箱1（左） ===== -->
+    <div class="wf-box">
+      <!-- ヘッダー: Case + 目的 -->
+      <div class="wf-header-row">
+        <span class="wf-case-label">Case 1.</span>
+        <span class="wf-case-purpose">筋力アップ</span>
+      </div>
+      <!-- 区切り線 -->
+      <div class="wf-divider"></div>
+      <!-- タイトル -->
+      <h3 class="wf-box-title">社会人野球チームが<br>朝食のみFAMBOXを導入する場合</h3>
+      <!-- 文章 -->
+      <p class="wf-box-desc">20~30代の社会人、練習頻度は週5回。練習時間は5時間程度。導入目的は体重+3kg増。栄養管理の効率化を図りたい。</p>
+      <!-- 区切り線 -->
+      <div class="wf-divider"></div>
+      <!-- データ行 ×5 -->
+      <div class="wf-data-row">
+        <span class="wf-data-label">チーム人数</span>
+        <span class="wf-data-value">30人</span>
+      </div>
+      <div class="wf-data-row">
+        <span class="wf-data-label">1食あたりの単価</span>
+        <span class="wf-data-value">¥1,200</span>
+      </div>
+      <div class="wf-data-row">
+        <span class="wf-data-label">食数</span>
+        <span class="wf-data-value">週5食 × 4週間 = 20食/月</span>
+      </div>
+      <div class="wf-data-row">
+        <span class="wf-data-label">1人あたりの月額</span>
+        <span class="wf-data-value">¥24,000</span>
+      </div>
+      <div class="wf-data-row">
+        <span class="wf-data-label">チーム月額</span>
+        <span class="wf-data-value">¥720,000</span>
+      </div>
+      <!-- 合計行 -->
+      <div class="wf-data-row wf-data-row--total">
+        <span class="wf-data-label">合計</span>
+        <span class="wf-data-value">約72万</span>
+      </div>
+    </div>
+
+    <!-- ===== 箱2（右） ===== -->
+    <div class="wf-box">
+      <!-- ヘッダー: Case + 目的 -->
+      <div class="wf-header-row">
+        <span class="wf-case-label">Case 2.</span>
+        <span class="wf-case-purpose">体重管理</span>
+      </div>
+      <!-- 区切り線 -->
+      <div class="wf-divider"></div>
+      <!-- タイトル -->
+      <h3 class="wf-box-title">プロバレーボールチームが<br>昼食と夕食にFAMBOXを導入する場合</h3>
+      <!-- 文章 -->
+      <p class="wf-box-desc">20~30代のプロ選手、練習頻度は週6回。試合期間中の体重管理が課題。栄養バランスの最適化を目指す。</p>
+      <!-- 区切り線 -->
+      <div class="wf-divider"></div>
+      <!-- データ行 ×5 -->
+      <div class="wf-data-row">
+        <span class="wf-data-label">チーム人数</span>
+        <span class="wf-data-value">20人</span>
+      </div>
+      <div class="wf-data-row">
+        <span class="wf-data-label">1食あたりの単価</span>
+        <span class="wf-data-value">¥1,200</span>
+      </div>
+      <div class="wf-data-row">
+        <span class="wf-data-label">食数</span>
+        <span class="wf-data-value">週6食×2 × 4週間 = 48食/月</span>
+      </div>
+      <div class="wf-data-row">
+        <span class="wf-data-label">1人あたりの月額</span>
+        <span class="wf-data-value">¥57,600</span>
+      </div>
+      <div class="wf-data-row">
+        <span class="wf-data-label">チーム月額</span>
+        <span class="wf-data-value">¥1,152,000</span>
+      </div>
+      <!-- 合計行 -->
+      <div class="wf-data-row wf-data-row--total">
+        <span class="wf-data-label">合計</span>
+        <span class="wf-data-value">約115万</span>
+      </div>
+    </div>
+
+  </div><!-- /.wf-boxes -->
+</section>
+
+</body>
+</html>

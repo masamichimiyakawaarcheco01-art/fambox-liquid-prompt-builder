@@ -1,0 +1,380 @@
+<!-- ============================================
+     FAMBOX Profile Section
+     sections/fambox-profile.liquid
+     WF: preview-profile.html
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-profile-' | append: section.id
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap');
+
+  /* ============================================
+     RESET: テーマCSS干渉対策
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     SECTION BASE
+     ============================================ */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
+    width: 100%;
+    background: {{ section.settings.bg_color }} !important;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============================================
+     INNER: padding で余白管理
+     ============================================ */
+  #{{ sec_id }} .pf__inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 120px 64px;
+  }
+
+  /* ============================================
+     セクションタイトルボックス: border 2px #FF7A51
+     ============================================ */
+  #{{ sec_id }} .pf__title-box {
+    width: 100%;
+    max-width: 1312px;
+    height: 72px;
+    border: 2px solid #FF7A51;
+    display: flex;
+    align-items: center;
+  }
+
+  /* アイコン正方形: 72×72 */
+  #{{ sec_id }} .pf__title-icon {
+    width: 72px;
+    height: 100%;
+    border-right: 2px solid #FF7A51;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  #{{ sec_id }} .pf__title-icon svg,
+  #{{ sec_id }} .pf__title-icon img {
+    width: 40px;
+    height: 40px;
+    display: block;
+  }
+
+  /* タイトルテキスト */
+  #{{ sec_id }} .pf__title-text {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 40px !important;
+    color: #ffffff !important;
+    padding-left: 24px !important;
+    line-height: 180% !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+
+  /* ============================================
+     プロフィールコンテナ
+     ============================================ */
+  #{{ sec_id }} .pf__profiles {
+    display: flex;
+    gap: 64px;
+    margin-top: 56px;
+  }
+
+  /* ============================================
+     プロフィールボックス: 624幅、高さauto
+     ============================================ */
+  #{{ sec_id }} .pf__box {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* PC: 背景画像（absolute、ボックス全体） */
+  #{{ sec_id }} .pf__bg-image {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  #{{ sec_id }} .pf__bg-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* テキストコンテンツ: w284, 上寄せ、左配置 */
+  #{{ sec_id }} .pf__content {
+    position: relative;
+    z-index: 1;
+    width: 284px;
+  }
+
+  /* 名前 */
+  #{{ sec_id }} .pf__name {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 40px !important;
+    color: #ffffff !important;
+    line-height: 180% !important;
+  }
+
+  /* 肩書 */
+  #{{ sec_id }} .pf__role {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    color: #ffffff !important;
+    line-height: 180% !important;
+    margin-top: 8px !important;
+  }
+
+  /* 区切り線: 284×2px #FF7A51 (div:empty対策済み) */
+  #{{ sec_id }} .pf__line {
+    width: 284px;
+    height: 2px;
+    background: #FF7A51 !important;
+    margin-top: 32px !important;
+    display: block !important;
+  }
+
+  /* プロフィール文 */
+  #{{ sec_id }} .pf__bio {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 14px !important;
+    color: #ffffff !important;
+    line-height: 180% !important;
+    margin-top: 32px !important;
+  }
+
+  /* ============================================
+     SP: 画像（プロフィール文の下） PC非表示
+     ============================================ */
+  #{{ sec_id }} .pf__sp-image {
+    display: none;
+  }
+
+  /* ============================================
+     SP版 (max-width: 767px)
+     ============================================ */
+  @media (max-width: 767px) {
+    #{{ sec_id }} .pf__inner {
+      padding: 80px 24px;
+    }
+    #{{ sec_id }} .pf__title-text {
+      font-size: 28px !important;
+    }
+    #{{ sec_id }} .pf__profiles {
+      flex-direction: column;
+      gap: 32px;
+    }
+    #{{ sec_id }} .pf__content {
+      width: 100%;
+    }
+    #{{ sec_id }} .pf__line {
+      width: 100%;
+    }
+    #{{ sec_id }} .pf__name {
+      font-size: 32px !important;
+    }
+    /* PC背景を非表示 */
+    #{{ sec_id }} .pf__bg-image {
+      display: none;
+    }
+    /* SP画像を表示 */
+    #{{ sec_id }} .pf__sp-image {
+      display: block;
+      width: 100%;
+      height: 232px;
+      margin-top: 24px;
+      overflow: hidden;
+    }
+    #{{ sec_id }} .pf__sp-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <div class="pf__inner">
+
+    <!-- ========================================
+         セクションタイトルボックス
+         ======================================== -->
+    <div class="pf__title-box">
+      <div class="pf__title-icon">
+        {%- if section.settings.title_icon_svg != blank -%}
+          {{ section.settings.title_icon_svg }}
+        {%- elsif section.settings.title_icon != blank -%}
+          {{ section.settings.title_icon | image_url: width: 80 | image_tag: alt: '', width: 40, height: 40 }}
+        {%- else -%}
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="4" fill="#FF7A51" opacity="0.5"/>
+          </svg>
+        {%- endif -%}
+      </div>
+      <span class="pf__title-text">{{ section.settings.title_text }}</span>
+    </div>
+
+    <!-- ========================================
+         プロフィールボックス × 2
+         ======================================== -->
+    <div class="pf__profiles">
+
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'profile' -%}
+          <div class="pf__box" {{ block.shopify_attributes }}>
+
+            <!-- PC: 背景画像 -->
+            {%- if block.settings.bg_image != blank -%}
+              <div class="pf__bg-image">
+                {{ block.settings.bg_image | image_url: width: 1248 | image_tag:
+                  alt: block.settings.name,
+                  loading: 'lazy'
+                }}
+              </div>
+            {%- endif -%}
+
+            <!-- テキストコンテンツ -->
+            <div class="pf__content">
+              <p class="pf__name">{{ block.settings.name }}</p>
+              <p class="pf__role">{{ block.settings.role | newline_to_br }}</p>
+              <div class="pf__line">{%- comment -%}not empty{%- endcomment -%}</div>
+              <p class="pf__bio">{{ block.settings.bio | newline_to_br }}</p>
+
+              <!-- SP: 画像 -->
+              {%- if block.settings.sp_image != blank -%}
+                <div class="pf__sp-image">
+                  {{ block.settings.sp_image | image_url: width: 800 | image_tag:
+                    alt: block.settings.name,
+                    loading: 'lazy'
+                  }}
+                </div>
+              {%- endif -%}
+            </div>
+
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+    </div><!-- /.pf__profiles -->
+
+  </div><!-- /.pf__inner -->
+</section>
+
+{% schema %}
+{
+  "name": "プロフィール紹介",
+  "tag": "section",
+  "class": "fambox-profile-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "全体設定"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#FB4C15"
+    },
+    {
+      "type": "header",
+      "content": "── タイトルボックス ──"
+    },
+    {
+      "type": "text",
+      "id": "title_text",
+      "label": "タイトルテキスト",
+      "default": "Profile"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_icon",
+      "label": "タイトルアイコン画像（72×72推奨）"
+    },
+    {
+      "type": "html",
+      "id": "title_icon_svg",
+      "label": "タイトルアイコンSVG（画像より優先）"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "profile",
+      "name": "プロフィール",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "名前",
+          "default": "大前 恵"
+        },
+        {
+          "type": "textarea",
+          "id": "role",
+          "label": "肩書（改行可）",
+          "default": "FAMスポーツ栄養アドバイザー\n管理栄養士"
+        },
+        {
+          "type": "textarea",
+          "id": "bio",
+          "label": "プロフィール文（改行可）",
+          "default": "プロ野球選手をはじめ、トップアスリートの栄養管理を15年以上担当。個々の体質や競技特性に応じた食事プランの設計を専門とし、FAMBOXのメニュー監修を手がける。"
+        },
+        {
+          "type": "image_picker",
+          "id": "bg_image",
+          "label": "PC用背景画像（624×517推奨）"
+        },
+        {
+          "type": "image_picker",
+          "id": "sp_image",
+          "label": "SP用画像（横幅100%×180px）"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "プロフィール紹介",
+      "blocks": [
+        {
+          "type": "profile",
+          "settings": {
+            "name": "大前 恵",
+            "role": "FAMスポーツ栄養アドバイザー\n管理栄養士",
+            "bio": "プロ野球選手をはじめ、トップアスリートの栄養管理を15年以上担当。個々の体質や競技特性に応じた食事プランの設計を専門とし、FAMBOXのメニュー監修を手がける。"
+          }
+        },
+        {
+          "type": "profile",
+          "settings": {
+            "name": "和田 毅",
+            "role": "球団統括本部アドバイザー\n福岡ソフトバンクホークス",
+            "bio": "NPB通算150勝を達成した左腕投手。現役時代から食事管理を徹底し、40歳まで第一線で活躍。引退後はその経験を活かし、次世代アスリートの栄養環境改善に取り組む。"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,678 @@
+<!-- ============================================
+     FAMBOX ACTIVEプランセクション v2
+     sections/fambox-active-plans-v2.liquid
+     WF: preview-active-plans-v2.html
+     4層構造: 背景 → カード(z1) → グラデ(z2) → タブ(z3)
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-apv2-' | append: section.id
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+  /* ============================================
+     RESET
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     SECTION（最下層：背景）
+     ============================================ */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    background: {{ section.settings.bg_color }} !important;
+    overflow: hidden;
+    padding: 120px 0;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============================================
+     HEADER
+     ============================================ */
+  #{{ sec_id }} .apv2__header {
+    max-width: 1440px;
+    margin: 0 auto 48px;
+    padding: 0 64px;
+    text-align: center;
+  }
+  #{{ sec_id }} .apv2__title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 40px !important;
+    font-weight: 500 !important;
+    color: #fff !important;
+    line-height: 180% !important;
+    margin-bottom: 16px !important;
+  }
+  #{{ sec_id }} .apv2__lead {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    color: rgba(255,255,255,0.8) !important;
+    line-height: 180% !important;
+  }
+
+  /* ============================================
+     MAIN: 4層管理
+     ============================================ */
+  #{{ sec_id }} .apv2__main {
+    position: relative;
+    height: 480px;
+  }
+
+  /* ============================================
+     z1: カードエリア
+     ============================================ */
+  #{{ sec_id }} .apv2__cards-area {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 480px;
+    z-index: 1;
+  }
+  #{{ sec_id }} .apv2__cards-group {
+    display: none;
+  }
+  #{{ sec_id }} .apv2__cards-group--active {
+    display: flex !important;
+    gap: 56px;
+    height: 480px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-right: 64px;
+  }
+  #{{ sec_id }} .apv2__cards-group--active::-webkit-scrollbar { display: none; }
+  #{{ sec_id }} .apv2__cards-group--active::after { content: ''; flex: 0 0 1px; }
+
+  /* ダミースペーサー */
+  #{{ sec_id }} .apv2__spacer {
+    flex: 0 0 379px;
+    width: 379px;
+    height: 1px;
+    pointer-events: none;
+    display: block !important;
+  }
+
+  /* ============================================
+     z2: グラデーション
+     ============================================ */
+  #{{ sec_id }} .apv2__gradient {
+    position: absolute;
+    top: 0; left: 0;
+    width: 435px !important;
+    height: 480px !important;
+    min-height: 480px !important;
+    z-index: 2;
+    background: linear-gradient(to right, {{ section.settings.bg_color }} 0%, {{ section.settings.bg_color }} 87.1%, rgba(251,76,21,0) 100%) !important;
+    pointer-events: none;
+    display: block !important;
+  }
+
+  /* ============================================
+     z3: タブ（最上層）
+     ============================================ */
+  #{{ sec_id }} .apv2__tabs-wrap {
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 3;
+    padding-left: 64px;
+  }
+  #{{ sec_id }} .apv2__tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  #{{ sec_id }} .apv2__tab {
+    display: flex !important;
+    align-items: center;
+    gap: 16px;
+    padding: 4px 24px 4px 4px;
+    border-radius: 42px;
+    border: none !important;
+    background: #1B1D1A;
+    color: rgba(255,255,255,0.9) !important;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    height: 72px;
+    text-align: left;
+    text-decoration: none !important;
+  }
+  #{{ sec_id }} .apv2__tab:hover { background: #2c2e2b; }
+  #{{ sec_id }} .apv2__tab--active {
+    background: rgba(255,255,255,0.95) !important;
+    color: #1B1D1A !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  #{{ sec_id }} .apv2__tab-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgba(255,255,255,0.15);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #{{ sec_id }} .apv2__tab--active .apv2__tab-avatar { background: #FB4C15; }
+  #{{ sec_id }} .apv2__tab-avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block !important;
+  }
+  #{{ sec_id }} .apv2__tab-label { display: flex; flex-direction: column; gap: 4px; }
+  #{{ sec_id }} .apv2__tab-main { font-size: 16px !important; font-weight: 600 !important; line-height: 1.3 !important; }
+  #{{ sec_id }} .apv2__tab-sub { font-size: 12px !important; font-weight: 400 !important; opacity: 0.6; line-height: 1.3 !important; }
+
+  /* ============================================
+     CARD
+     ============================================ */
+  #{{ sec_id }} .apv2__card {
+    flex: 0 0 864px;
+    width: 864px;
+    height: 480px;
+    display: flex;
+    transition: transform 0.3s ease;
+  }
+  #{{ sec_id }} .apv2__card:hover { transform: translateY(-4px); }
+  #{{ sec_id }} .apv2__card-text {
+    width: 352px; height: 480px; flex-shrink: 0;
+    display: flex; flex-direction: column;
+  }
+  #{{ sec_id }} .apv2__card-img {
+    width: 480px; height: 480px; flex-shrink: 0;
+    margin-left: 32px; overflow: hidden; background: #ddd;
+  }
+  #{{ sec_id }} .apv2__card-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block !important;
+  }
+
+  /* テキスト */
+  #{{ sec_id }} .apv2__card-ja {
+    font-size: 16px !important; font-weight: 500 !important;
+    color: rgba(255,255,255,0.7) !important; margin-bottom: 4px;
+  }
+  #{{ sec_id }} .apv2__card-plan {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 36px !important; font-weight: 400 !important;
+    color: #fff !important; line-height: 1.2 !important;
+  }
+  #{{ sec_id }} .apv2__card-divider {
+    width: 100% !important; height: 2px !important;
+    min-height: 2px !important;
+    background: rgba(255,255,255,0.2) !important;
+    margin: 16px 0 !important;
+    display: block !important;
+  }
+  #{{ sec_id }} .apv2__card-target {
+    font-size: 20px !important; font-weight: 500 !important;
+    color: rgba(255,255,255,0.9) !important;
+    line-height: 170% !important; margin-bottom: 16px;
+  }
+  #{{ sec_id }} .apv2__card-specs { display: flex; flex-direction: column; margin-bottom: 12px; }
+  #{{ sec_id }} .apv2__card-spec {
+    display: flex !important; justify-content: space-between;
+    font-size: 13px !important; color: rgba(255,255,255,0.85) !important;
+    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  #{{ sec_id }} .apv2__card-spec:last-child { border-bottom: none; }
+  #{{ sec_id }} .apv2__card-spec-label { font-weight: 400 !important; }
+  #{{ sec_id }} .apv2__card-spec-value { font-weight: 600 !important; color: #fff !important; }
+  #{{ sec_id }} .apv2__card-price {
+    margin-bottom: 12px;
+    display: flex !important; justify-content: space-between; align-items: baseline;
+  }
+  #{{ sec_id }} .apv2__card-price-label {
+    font-size: 14px !important; font-weight: 500 !important;
+    color: rgba(255,255,255,0.85) !important;
+  }
+  #{{ sec_id }} .apv2__card-price-main {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 32px !important; font-weight: 500 !important;
+    color: #fff !important;
+  }
+
+  /* CTA */
+  #{{ sec_id }} .apv2__card-cta {
+    display: inline-flex !important; align-items: center !important; justify-content: center !important;
+    width: 352px !important; height: 48px !important; min-height: 48px !important;
+    border-radius: 4px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    background: linear-gradient(to bottom, rgba(27,29,26,0.90), rgba(27,29,26,0.95)) !important;
+    color: #fff !important;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 14px !important; font-weight: 700 !important;
+    text-decoration: none !important; letter-spacing: 0.08em;
+    position: relative; transition: filter 0.3s ease; margin-top: auto;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  #{{ sec_id }} .apv2__card-cta:hover { filter: brightness(1.3); text-decoration: none !important; color: #fff !important; }
+  #{{ sec_id }} .apv2__card-cta-text { position: relative; z-index: 1; }
+  #{{ sec_id }} .apv2__card-cta-arrow {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    display: inline-flex; align-items: center; transition: transform 0.3s ease;
+  }
+  #{{ sec_id }} .apv2__card-cta:hover .apv2__card-cta-arrow { transform: translateY(-50%) translateX(4px); }
+  #{{ sec_id }} .apv2__card-cta-arrow svg { display: block !important; width: 36px; height: 14px; }
+
+  /* ============================================
+     SP (1280px以下)
+     ============================================ */
+  @media (max-width: 1280px) {
+    #{{ sec_id }} { padding: 80px 0; }
+    #{{ sec_id }} .apv2__header { padding: 0 24px; }
+    #{{ sec_id }} .apv2__title { font-size: 28px !important; }
+    #{{ sec_id }} .apv2__lead { font-size: 14px !important; }
+    #{{ sec_id }} .apv2__main { height: auto; display: flex; flex-direction: column; }
+    #{{ sec_id }} .apv2__gradient { display: none !important; width: 0 !important; height: 0 !important; }
+    #{{ sec_id }} .apv2__tabs-wrap {
+      position: relative; z-index: 5; order: -1;
+      padding: 0 24px; width: 100%;
+      overflow-x: auto; scrollbar-width: none;
+      margin-bottom: 24px;
+    }
+    #{{ sec_id }} .apv2__tabs-wrap::-webkit-scrollbar { display: none; }
+    #{{ sec_id }} .apv2__tabs { flex-direction: row; gap: 8px; }
+    #{{ sec_id }} .apv2__tab { height: 56px; padding: 4px 16px 4px 4px; flex-shrink: 0; }
+    #{{ sec_id }} .apv2__tab-avatar { width: 48px; height: 48px; }
+    #{{ sec_id }} .apv2__tab-main { font-size: 13px !important; }
+    #{{ sec_id }} .apv2__tab-sub { font-size: 10px !important; }
+    #{{ sec_id }} .apv2__spacer { display: none !important; }
+    #{{ sec_id }} .apv2__cards-area { position: relative; height: auto; }
+    #{{ sec_id }} .apv2__cards-group--active {
+      height: auto; scroll-snap-type: x mandatory; gap: 16px;
+      padding: 8px 0 56px 0;
+    }
+    #{{ sec_id }} .apv2__cards-group--active::before,
+    #{{ sec_id }} .apv2__cards-group--active::after {
+      content: ''; flex: 0 0 calc((100vw - 320px) / 2 - 8px);
+    }
+    #{{ sec_id }} .apv2__card {
+      flex: 0 0 320px; width: 320px; height: auto;
+      flex-direction: column; scroll-snap-align: center; scroll-snap-stop: always;
+      background: #fff !important;
+    }
+    #{{ sec_id }} .apv2__card-text { width: 100%; height: auto; padding: 20px; }
+    #{{ sec_id }} .apv2__card-ja { color: #92939C !important; font-size: 13px !important; }
+    #{{ sec_id }} .apv2__card-plan { color: #1B1D1A !important; font-size: 24px !important; }
+    #{{ sec_id }} .apv2__card-divider { background: #ECECEC !important; margin: 16px 0; }
+    #{{ sec_id }} .apv2__card-target { color: #1B1D1A !important; font-size: 14px !important; }
+    #{{ sec_id }} .apv2__card-spec { color: #545655 !important; border-bottom-color: #ECECEC; }
+    #{{ sec_id }} .apv2__card-spec-value { color: #1B1D1A !important; }
+    #{{ sec_id }} .apv2__card-price-label { color: #545655 !important; }
+    #{{ sec_id }} .apv2__card-price-main { color: #FB4C15 !important; font-size: 28px !important; }
+    #{{ sec_id }} .apv2__card-cta {
+      width: 100% !important;
+      background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95)) !important;
+      box-shadow: 0 16px 16px -8px rgba(251,76,21,0.35) !important;
+    }
+    #{{ sec_id }} .apv2__card-img {
+      width: 100% !important; height: auto !important;
+      aspect-ratio: 1 / 1 !important;
+      padding-bottom: 0 !important;
+      margin-left: 0 !important; order: -1;
+      overflow: hidden !important;
+    }
+    #{{ sec_id }} .apv2__card-img img {
+      width: 100% !important; height: 100% !important;
+      object-fit: cover !important;
+      display: block !important;
+      position: static !important;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <div class="apv2__header">
+    <h2 class="apv2__title">{{ section.settings.title | newline_to_br }}</h2>
+    <p class="apv2__lead">{{ section.settings.lead | newline_to_br }}</p>
+  </div>
+
+  <div class="apv2__main">
+    <!-- z1: カードエリア -->
+    <div class="apv2__cards-area">
+      {%- assign tab_index = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'tab' -%}
+          <div class="apv2__cards-group{% if tab_index == 0 %} apv2__cards-group--active{% endif %}" data-group="{{ block.settings.tab_key }}">
+            <!-- ダミースペーサー（div:empty対策） -->
+            <div class="apv2__spacer">{%- comment -%}spacer{%- endcomment -%}</div>
+            {%- for card_block in section.blocks -%}
+              {%- if card_block.type == 'plan_card' -%}
+                {%- assign card_tabs = card_block.settings.belongs_to_tabs | split: ',' -%}
+                {%- for tab_name in card_tabs -%}
+                  {%- assign trimmed = tab_name | strip -%}
+                  {%- if trimmed == block.settings.tab_key -%}
+                    <div class="apv2__card" {{ card_block.shopify_attributes }}>
+                      <div class="apv2__card-text">
+                        <p class="apv2__card-ja">{{ card_block.settings.plan_ja }}</p>
+                        <p class="apv2__card-plan">{{ card_block.settings.plan_name }}</p>
+                        <div class="apv2__card-divider">{%- comment -%}line{%- endcomment -%}</div>
+                        <p class="apv2__card-target">{{ card_block.settings.target | newline_to_br }}</p>
+                        <div class="apv2__card-specs">
+                          {%- if card_block.settings.spec1_label != blank -%}
+                            <div class="apv2__card-spec">
+                              <span class="apv2__card-spec-label">{{ card_block.settings.spec1_label }}</span>
+                              <span class="apv2__card-spec-value">{{ card_block.settings.spec1_value }}</span>
+                            </div>
+                          {%- endif -%}
+                          {%- if card_block.settings.spec2_label != blank -%}
+                            <div class="apv2__card-spec">
+                              <span class="apv2__card-spec-label">{{ card_block.settings.spec2_label }}</span>
+                              <span class="apv2__card-spec-value">{{ card_block.settings.spec2_value }}</span>
+                            </div>
+                          {%- endif -%}
+                          {%- if card_block.settings.spec3_label != blank -%}
+                            <div class="apv2__card-spec">
+                              <span class="apv2__card-spec-label">{{ card_block.settings.spec3_label }}</span>
+                              <span class="apv2__card-spec-value">{{ card_block.settings.spec3_value }}</span>
+                            </div>
+                          {%- endif -%}
+                        </div>
+                        <div class="apv2__card-price">
+                          <span class="apv2__card-price-label">{{ card_block.settings.price_label }}</span>
+                          <span class="apv2__card-price-main">{{ card_block.settings.price }}</span>
+                        </div>
+                        <a class="apv2__card-cta" href="{{ card_block.settings.cta_url }}">
+                          <span class="apv2__card-cta-text">{{ card_block.settings.cta_text }}</span>
+                          <span class="apv2__card-cta-arrow">
+                            {%- if card_block.settings.cta_arrow_svg != blank -%}
+                              {{ card_block.settings.cta_arrow_svg }}
+                            {%- else -%}
+                              <svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0" y="5" width="46" height="2" fill="white"/>
+                                <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                              </svg>
+                            {%- endif -%}
+                          </span>
+                        </a>
+                      </div>
+                      <div class="apv2__card-img">
+                        {%- if card_block.settings.card_image != blank -%}
+                          {{ card_block.settings.card_image | image_url: width: 960 | image_tag: alt: card_block.settings.plan_name }}
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          {%- assign tab_index = tab_index | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <!-- z2: グラデーション -->
+    <div class="apv2__gradient">{%- comment -%}gradient{%- endcomment -%}</div>
+
+    <!-- z3: タブ（最上層） -->
+    <div class="apv2__tabs-wrap">
+      <div class="apv2__tabs" id="apv2Tabs-{{ section.id }}">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'tab' -%}
+            <button class="apv2__tab{% if forloop.first %} apv2__tab--active{% endif %}" data-tab="{{ block.settings.tab_key }}" {{ block.shopify_attributes }}>
+              <div class="apv2__tab-avatar">
+                {%- if block.settings.tab_image != blank -%}
+                  {{ block.settings.tab_image | image_url: width: 128 | image_tag: alt: block.settings.tab_main }}
+                {%- else -%}
+                  <div style="width:100%;height:100%;border-radius:50%;background:{% if forloop.first %}#FB4C15{% else %}rgba(255,255,255,0.3){% endif %};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">{%- comment -%}av{%- endcomment -%}</div>
+                {%- endif -%}
+              </div>
+              <div class="apv2__tab-label">
+                <span class="apv2__tab-main">{{ block.settings.tab_main }}</span>
+                <span class="apv2__tab-sub">{{ block.settings.tab_sub }}</span>
+              </div>
+            </button>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var secEl = document.getElementById('{{ sec_id }}');
+  if (!secEl) return;
+
+  var tabs = secEl.querySelectorAll('.apv2__tab');
+  var groups = secEl.querySelectorAll('.apv2__cards-group');
+
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var target = this.dataset.tab;
+      tabs.forEach(function(t) { t.classList.remove('apv2__tab--active'); });
+      this.classList.add('apv2__tab--active');
+
+      tabs.forEach(function(t) {
+        var av = t.querySelector('.apv2__tab-avatar > div');
+        if (av) av.style.background = 'rgba(255,255,255,0.3)';
+      });
+      var activeAv = this.querySelector('.apv2__tab-avatar > div');
+      if (activeAv) activeAv.style.background = '#FB4C15';
+
+      groups.forEach(function(g) { g.classList.remove('apv2__cards-group--active'); });
+      var tg = secEl.querySelector('[data-group="' + target + '"]');
+      if (tg) {
+        tg.classList.add('apv2__cards-group--active');
+        if (window.innerWidth <= 1280) {
+          tg.scrollLeft = 0;
+        } else {
+          tg.scrollTo({ left: 0, behavior: 'instant' });
+        }
+      }
+    });
+  });
+
+  // 初期スクロール位置リセット
+  groups.forEach(function(g) {
+    if (g.classList.contains('apv2__cards-group--active')) {
+      g.scrollLeft = 0;
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "ACTIVEプラン v2",
+  "tag": "section",
+  "class": "fambox-active-plans-v2-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#FB4C15"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "セクションタイトル（改行可）",
+      "default": "体格と目的で選べる\n5つのプラン"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "リード文（改行可）",
+      "default": "肉・魚・ビタミン・ミネラル。すべてが揃う「完全装備」。\nアスリートを支える、高タンパク・低脂質設計。"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "タブ",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_key",
+          "label": "タブキー（英語、一意）",
+          "default": "all",
+          "info": "カードの「所属タブ」と一致させてください"
+        },
+        {
+          "type": "text",
+          "id": "tab_main",
+          "label": "タブメインテキスト",
+          "default": "すべてのプラン"
+        },
+        {
+          "type": "text",
+          "id": "tab_sub",
+          "label": "タブサブテキスト",
+          "default": "4プラン一覧"
+        },
+        {
+          "type": "image_picker",
+          "id": "tab_image",
+          "label": "タブアイコン画像（丸形・64×64推奨）"
+        }
+      ]
+    },
+    {
+      "type": "plan_card",
+      "name": "プランカード",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "text",
+          "id": "belongs_to_tabs",
+          "label": "所属タブ（カンマ区切り）",
+          "default": "all,build",
+          "info": "例: all,build,maintain"
+        },
+        {
+          "type": "header",
+          "content": "── プラン情報 ──"
+        },
+        {
+          "type": "text",
+          "id": "plan_name",
+          "label": "プラン名（英語）",
+          "default": "AthletePlus 60"
+        },
+        {
+          "type": "text",
+          "id": "plan_ja",
+          "label": "プラン名（日本語）",
+          "default": "アスリートプラス60"
+        },
+        {
+          "type": "textarea",
+          "id": "target",
+          "label": "ターゲット説明（改行可）",
+          "default": "70kg以上で筋力アップを\n目指すアスリート向け"
+        },
+        {
+          "type": "image_picker",
+          "id": "card_image",
+          "label": "料理画像（480×480推奨）"
+        },
+        {
+          "type": "header",
+          "content": "── スペック ──"
+        },
+        {
+          "type": "text",
+          "id": "spec1_label",
+          "label": "スペック1 ラベル",
+          "default": "メニュー数"
+        },
+        {
+          "type": "text",
+          "id": "spec1_value",
+          "label": "スペック1 値",
+          "default": "9種類"
+        },
+        {
+          "type": "text",
+          "id": "spec2_label",
+          "label": "スペック2 ラベル",
+          "default": "たんぱく質"
+        },
+        {
+          "type": "text",
+          "id": "spec2_value",
+          "label": "スペック2 値",
+          "default": "約60g"
+        },
+        {
+          "type": "text",
+          "id": "spec3_label",
+          "label": "スペック3 ラベル",
+          "default": "カロリー"
+        },
+        {
+          "type": "text",
+          "id": "spec3_value",
+          "label": "スペック3 値",
+          "default": "約677kcal"
+        },
+        {
+          "type": "header",
+          "content": "── 価格・CTA ──"
+        },
+        {
+          "type": "text",
+          "id": "price_label",
+          "label": "価格ラベル",
+          "default": "1食あたり"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "価格",
+          "default": "¥ 1,800"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "ボタンテキスト",
+          "default": "メニューを見る"
+        },
+        {
+          "type": "url",
+          "id": "cta_url",
+          "label": "ボタンリンク先"
+        },
+        {
+          "type": "html",
+          "id": "cta_arrow_svg",
+          "label": "矢印SVGコード（空欄でデフォルト）"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ACTIVEプラン v2",
+      "blocks": [
+        { "type": "tab", "settings": { "tab_key": "all", "tab_main": "すべてのプラン", "tab_sub": "4プラン一覧" } },
+        { "type": "tab", "settings": { "tab_key": "build", "tab_main": "筋肉量を増やしたい", "tab_sub": "バルクアップ・増量" } },
+        { "type": "tab", "settings": { "tab_key": "maintain", "tab_main": "コンディションを維持したい", "tab_sub": "体重管理・バランス維持" } },
+        { "type": "tab", "settings": { "tab_key": "cut", "tab_main": "体脂肪を落としたい", "tab_sub": "減量・シェイプアップ" } },
+        { "type": "plan_card", "settings": { "belongs_to_tabs": "all,build", "plan_name": "AthletePlus 60", "plan_ja": "アスリートプラス60", "target": "70kg以上で筋力アップを\n目指すアスリート向け", "spec1_label": "メニュー数", "spec1_value": "9種類", "spec2_label": "たんぱく質", "spec2_value": "約60g", "spec3_label": "カロリー", "spec3_value": "約677kcal", "price_label": "1食あたり", "price": "¥ 1,800", "cta_text": "メニューを見る" } },
+        { "type": "plan_card", "settings": { "belongs_to_tabs": "all,build,maintain", "plan_name": "AthletePlus 50", "plan_ja": "アスリートサポート50", "target": "50〜70kgで筋肉量アップ、\n70kg以上で維持が目的の方", "spec1_label": "メニュー数", "spec1_value": "9種類", "spec2_label": "たんぱく質", "spec2_value": "約50g", "spec3_label": "カロリー", "spec3_value": "約560kcal", "price_label": "1食あたり", "price": "¥ 1,400", "cta_text": "メニューを見る" } },
+        { "type": "plan_card", "settings": { "belongs_to_tabs": "all,build,maintain", "plan_name": "AthletePlus 40", "plan_ja": "フィジカルプラン40", "target": "50kg未満で筋肉量アップ、\n50〜70kgでバランス維持向け", "spec1_label": "メニュー数", "spec1_value": "9種類", "spec2_label": "たんぱく質", "spec2_value": "約40g", "spec3_label": "カロリー", "spec3_value": "約480kcal", "price_label": "1食あたり", "price": "¥ 1,300", "cta_text": "メニューを見る" } },
+        { "type": "plan_card", "settings": { "belongs_to_tabs": "all,maintain,cut", "plan_name": "AthletePlus 30", "plan_ja": "ヘルスケアプラン30", "target": "健康維持・減量が目的の方、\n50kg未満の一般の方", "spec1_label": "メニュー数", "spec1_value": "9種類", "spec2_label": "たんぱく質", "spec2_value": "約30g", "spec3_label": "カロリー", "spec3_value": "約350kcal", "price_label": "1食あたり", "price": "¥ 1,000", "cta_text": "メニューを見る" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

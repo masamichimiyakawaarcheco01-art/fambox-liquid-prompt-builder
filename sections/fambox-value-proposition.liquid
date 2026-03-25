@@ -1,0 +1,513 @@
+{% comment %}
+  ============================================
+  FAMBOX 3つの価値セクション
+  sections/fambox-value-proposition.liquid
+
+  WF: preview-value-proposition.html
+  ============================================
+{% endcomment %}
+
+{%- liquid
+  assign sec_id = 'fambox-vp-' | append: section.id
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+  /* ============================================
+     RESET: テーマCSS干渉対策
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* テーマの .section + .section margin対策 */
+  .shopify-section:has(#{{ sec_id }}) {
+    margin-top: 0 !important;
+  }
+
+  /* ============================================
+     SECTION BASE
+     ============================================ */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
+    width: 100%;
+    background: {{ section.settings.bg_color }};
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================
+     INNER: padding で余白管理（空div不使用）
+     ============================================ */
+  #{{ sec_id }} .vp__inner {
+    padding-top: 120px;
+    padding-bottom: 120px;
+  }
+
+  /* ============================================
+     TITLE AREA: max-width 1440px, 左64px
+     ============================================ */
+  #{{ sec_id }} .vp__title-area {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 64px;
+  }
+
+  #{{ sec_id }} .vp__title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 40px !important;
+    font-weight: 500 !important;
+    line-height: 1.8 !important;
+    color: #1B1D1A !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* ============================================
+     SCROLL AREA: 全幅、手動スワイプ
+     ============================================ */
+  #{{ sec_id }} .vp__scroll-area {
+    width: 100%;
+    margin-top: 56px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  #{{ sec_id }} .vp__scroll-area::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ============================================
+     SCROLL TRACK: flex row
+     ============================================ */
+  #{{ sec_id }} .vp__scroll-track {
+    display: flex;
+    align-items: stretch;
+    height: 458px;
+    /* 左余白: 1440px以上でもタイトルと揃う */
+    padding-left: max(64px, calc((100% - 1440px) / 2 + 64px));
+    padding-right: 64px;
+  }
+
+  /* ============================================
+     CARD: 358 × 458
+     ============================================ */
+  #{{ sec_id }} .vp__card {
+    flex: 0 0 358px;
+    width: 358px;
+    height: 458px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ============================================
+     DIVIDER: 1px #D0D1DB, margin 0 32px
+     div:empty対策: Liquidコメント挿入で:emptyにしない
+     ============================================ */
+  #{{ sec_id }} .vp__divider {
+    flex: 0 0 2px;
+    width: 2px;
+    height: 458px;
+    background: #D0D1DB;
+    margin: 0 32px;
+    display: block !important;
+  }
+
+  /* ============================================
+     CARD IMAGE: 216 × 216
+     ============================================ */
+  #{{ sec_id }} .vp__card-image {
+    width: 216px;
+    height: 216px;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  #{{ sec_id }} .vp__card-image img {
+    width: 216px;
+    height: 216px;
+    display: block;
+    object-fit: cover;
+  }
+  /* 画像未設定時のプレースホルダー */
+  #{{ sec_id }} .vp__card-image-placeholder {
+    width: 216px;
+    height: 216px;
+    background: #ddd;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 12px;
+  }
+
+  /* ============================================
+     CATEGORY: Poppins Medium 12px
+     ============================================ */
+  #{{ sec_id }} .vp__card-category {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 12px !important;
+    color: #FB4C15 !important;
+    margin-top: 16px;
+    line-height: 1.4;
+    text-align: center;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+
+  /* ============================================
+     CARD TITLE: W6 20px
+     ============================================ */
+  #{{ sec_id }} .vp__card-title {
+    width: 310px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 20px !important;
+    color: #1B1D1A !important;
+    margin-top: 8px;
+    line-height: 1.5 !important;
+    text-align: center;
+    letter-spacing: normal !important;
+  }
+
+  /* ============================================
+     CARD DESC: W4 14px 行間170%
+     ============================================ */
+  #{{ sec_id }} .vp__card-desc {
+    width: 310px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 14px !important;
+    color: #1B1D1A !important;
+    line-height: 1.8 !important;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* ============================================
+     BUTTON: #FB4C15 ベース（hero参考）
+     ============================================ */
+  #{{ sec_id }} .vp__card-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95));
+    color: #fff !important;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    letter-spacing: 0.08em;
+    margin-top: auto;
+    position: relative;
+    box-shadow: 0 8px 12px -4px rgba(251,76,21,0.3);
+    cursor: pointer;
+    transition: filter 0.3s ease;
+  }
+  #{{ sec_id }} .vp__card-btn:hover {
+    filter: brightness(1.12);
+    text-decoration: none !important;
+    color: #fff !important;
+  }
+  #{{ sec_id }} .vp__card-btn:active {
+    filter: brightness(0.95);
+  }
+
+  #{{ sec_id }} .vp__card-btn-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  #{{ sec_id }} .vp__card-btn-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+  }
+  #{{ sec_id }} .vp__card-btn-arrow svg,
+  #{{ sec_id }} .vp__card-btn-arrow img {
+    display: block;
+    width: 28px;
+    height: 10px;
+  }
+  #{{ sec_id }} .vp__card-btn:hover .vp__card-btn-arrow {
+    transform: translateY(-50%) translateX(4px);
+  }
+
+  /* ============================================
+     SP LAYOUT (max-width: 767px)
+     ============================================ */
+  @media (max-width: 767px) {
+    /* タイトルエリア: 左24px */
+    #{{ sec_id }} .vp__title-area {
+      padding: 0 24px;
+    }
+
+    /* タイトル: 28px W6 行間180% */
+    #{{ sec_id }} .vp__title {
+      font-size: 28px !important;
+      font-weight: 500 !important;
+      line-height: 1.8 !important;
+    }
+
+    /* スクロールエリア: スナップスクロール（カード単位で切り替え） */
+    #{{ sec_id }} .vp__scroll-area {
+      scroll-snap-type: x mandatory;
+      scroll-padding-left: 16px;
+    }
+
+    /* スクロールトラック: 左16px */
+    #{{ sec_id }} .vp__scroll-track {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    /* カード: 左右16px内余白、スナップポイント
+       1枚 + 0.3枚チラ見え
+       390px例: カード=274px, 区切り=25px, チラ見え=75px(≈0.27枚分) */
+    #{{ sec_id }} .vp__card {
+      flex: 0 0 calc(100vw - 116px);
+      width: calc(100vw - 116px);
+      padding: 0 16px;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+
+    /* 区切り線: SPではマージン縮小 */
+    #{{ sec_id }} .vp__divider {
+      margin: 0 12px;
+    }
+
+    /* カード内テキスト幅を自動 */
+    #{{ sec_id }} .vp__card-title,
+    #{{ sec_id }} .vp__card-desc {
+      width: 100%;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <div class="vp__inner">
+
+    <!-- ========================================
+         TITLE AREA
+         ======================================== -->
+    <div class="vp__title-area">
+      <h2 class="vp__title">{{ section.settings.title | newline_to_br }}</h2>
+    </div>
+
+    <!-- ========================================
+         SCROLL AREA（全幅）
+         ======================================== -->
+    <div class="vp__scroll-area">
+      <div class="vp__scroll-track">
+
+        {%- for block in section.blocks -%}
+          {%- if forloop.index > 1 -%}
+            <!-- 区切り線（div:empty対策: Liquidコメント挿入） -->
+            <div class="vp__divider">{% comment %}not-empty{% endcomment %}</div>
+          {%- endif -%}
+
+          <!-- カード {{ forloop.index }} -->
+          <div class="vp__card" {{ block.shopify_attributes }}>
+
+            <!-- 画像 216×216 -->
+            <div class="vp__card-image">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 432 | image_tag:
+                  alt: block.settings.card_title,
+                  width: 216,
+                  height: 216,
+                  loading: 'lazy'
+                }}
+              {%- else -%}
+                <div class="vp__card-image-placeholder">216 × 216</div>
+              {%- endif -%}
+            </div>
+
+            <!-- カテゴリ -->
+            <p class="vp__card-category">{{ block.settings.category }}</p>
+
+            <!-- タイトル -->
+            <p class="vp__card-title">{{ block.settings.card_title }}</p>
+
+            <!-- 説明文 -->
+            <p class="vp__card-desc">{{ block.settings.description }}</p>
+
+            <!-- ボタン（有り無し選択可能） -->
+            {%- if block.settings.show_button -%}
+              <a class="vp__card-btn" href="{{ block.settings.button_url }}">
+                <span class="vp__card-btn-text">{{ block.settings.button_text }}</span>
+                <span class="vp__card-btn-arrow">
+                  {%- if block.settings.button_arrow_svg != blank -%}
+                    {{ block.settings.button_arrow_svg }}
+                  {%- else -%}
+                    <svg width="28" height="10" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="0" y="5" width="46" height="2" fill="white"/>
+                      <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                    </svg>
+                  {%- endif -%}
+                </span>
+              </a>
+            {%- endif -%}
+
+          </div>
+        {%- endfor -%}
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "3つの価値セクション",
+  "tag": "section",
+  "class": "fambox-value-proposition-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "全体設定"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#fafafa"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "セクションタイトル（改行可）",
+      "default": "最適解と\nFAMBOX"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "value_card",
+      "name": "価値カード",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "画像（216×216推奨）"
+        },
+        {
+          "type": "text",
+          "id": "category",
+          "label": "カテゴリテキスト",
+          "default": "ADAPTIVE NUTRITION BLUEPRINT"
+        },
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "カードタイトル",
+          "default": "個別最適化"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "説明文",
+          "default": "テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。"
+        },
+        {
+          "type": "header",
+          "content": "── ボタン ──"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_button",
+          "label": "ボタンを表示する",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "ボタンテキスト",
+          "default": "詳しく見る"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "ボタンリンク先"
+        },
+        {
+          "type": "html",
+          "id": "button_arrow_svg",
+          "label": "矢印アイコンSVG（空欄でデフォルト）"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "3つの価値セクション",
+      "blocks": [
+        {
+          "type": "value_card",
+          "settings": {
+            "category": "ADAPTIVE NUTRITION BLUEPRINT",
+            "card_title": "個別最適化",
+            "description": "テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。",
+            "show_button": true,
+            "button_text": "詳しく見る"
+          }
+        },
+        {
+          "type": "value_card",
+          "settings": {
+            "category": "ADAPTIVE NUTRITION BLUEPRINT",
+            "card_title": "高たんぱく質設計",
+            "description": "テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。",
+            "show_button": true,
+            "button_text": "詳しく見る"
+          }
+        },
+        {
+          "type": "value_card",
+          "settings": {
+            "category": "ADAPTIVE NUTRITION BLUEPRINT",
+            "card_title": "おかずの種類の豊富さ",
+            "description": "テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。",
+            "show_button": true,
+            "button_text": "詳しく見る"
+          }
+        },
+        {
+          "type": "value_card",
+          "settings": {
+            "category": "ADAPTIVE NUTRITION BLUEPRINT",
+            "card_title": "プロ監修の品質",
+            "description": "テキストが入ります。テキストが入ります。テキストが入ります。テキストが入ります。",
+            "show_button": true,
+            "button_text": "詳しく見る"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
