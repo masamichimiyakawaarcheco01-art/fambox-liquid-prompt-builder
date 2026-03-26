@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Liquid Prompt Builder v3 - PDCA Design Verification</title>
+<title>Liquid Prompt Builder v4 - Figma-Driven PDCA Verification</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -274,9 +274,9 @@ body {
   <div class="header__left">
     <div>
       <div class="header__logo">Liquid <span>Prompt</span> Builder</div>
-      <div class="header__sub">PDCA Design Verification System</div>
+      <div class="header__sub">Figma-Driven PDCA Verification</div>
     </div>
-    <span class="header__badge">v3</span>
+    <span class="header__badge">v4</span>
   </div>
 </header>
 
@@ -1283,6 +1283,17 @@ function resetForm() {
   setToggle('transitionSpeed', '0.3s');
   setToggle('textOnImage', 'gradient');
   selectedTemplate = null;
+  // Clear Figma import fields
+  document.getElementById('figmaJson').value = '';
+  document.getElementById('figmaUrl').value = '';
+  document.getElementById('importDot').className = 'import-status__dot import-status__dot--idle';
+  document.getElementById('importMsg').textContent = 'JSONを貼り付けてください';
+  document.getElementById('importMsg').style.color = '';
+  document.getElementById('importSummary').innerHTML = '';
+  figmaImported = false;
+  // Clear detail fields
+  var detailFields = ['shadowDetail', 'gradientDefs', 'blurValues', 'opacityValues', 'borderRadiusVariants', 'elementHierarchy'];
+  detailFields.forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ''; });
   generatePrompt();
 }
 
@@ -1400,6 +1411,13 @@ const checklistRules = [
   // Layout
   { toggle: 'layoutRatio', template: 'レイアウト比率が {value} になっているか', category: 'layout' },
   { field: 'breakpoint',   template: 'SPブレイクポイント {value} で切り替わるか', category: 'layout' },
+  // Figma detail checks
+  { field: 'shadowDetail', template: 'シャドウ値 {value} が正確に適用されているか', category: 'parts' },
+  { field: 'gradientDefs', template: 'グラデーション定義が適用されているか', category: 'color', type: 'visual' },
+  { field: 'blurValues', template: 'ブラー効果 {value} が適用されているか', category: 'taste', type: 'visual' },
+  { field: 'borderRadiusVariants', template: '要素別border-radiusが一致しているか', category: 'parts', type: 'visual' },
+  { field: 'elementHierarchy', template: '要素の階層構造がFigmaと一致しているか', category: 'layout', type: 'visual' },
+  { field: 'opacityValues', template: '透過度がFigmaと一致しているか', category: 'taste', type: 'visual' },
 ];
 
 function generateChecklist() {
@@ -1412,6 +1430,7 @@ function generateChecklist() {
       value = getVal(rule.field);
       if (!value) return;
       if (rule.skipDefault && value === rule.skipDefault) return;
+      if (value && value.includes('\n')) value = value.split('\n')[0].substring(0, 30) + '...';
       label = value;
     } else if (rule.toggle) {
       const active = document.querySelector('#' + rule.toggle + ' .toggle-item.active');
@@ -1475,35 +1494,47 @@ function getDesignSpec() {
 }
 
 function copyForClaude() {
-  const unchecked = generateDiffReport();
+  var unchecked = generateDiffReport();
   if (unchecked.length === 0) { showToast('全項目合格です'); return; }
-  const code = document.getElementById('codeInput').value;
-  const prompt = '以下のコードを修正してください。\n\n## 現在のコード\n' + code +
-    '\n\n## 修正が必要な項目\n' + unchecked.map(i => '- ' + i).join('\n') +
-    '\n\n## デザイン仕様\n' + getDesignSpec() +
-    '\n\n元のコードを直接編集し、修正済みコードを出力してください。';
+  var code = document.getElementById('codeInput').value;
+  var spec = getDesignSpec();
+  var detailedSpecs = '';
+  var sd = getVal('shadowDetail'); if (sd) detailedSpecs += '\n### シャドウ\n' + sd;
+  var gd = getVal('gradientDefs'); if (gd) detailedSpecs += '\n### グラデーション\n' + gd;
+  var bv = getVal('blurValues'); if (bv) detailedSpecs += '\n### ブラー\n' + bv;
+  var ov = getVal('opacityValues'); if (ov) detailedSpecs += '\n### 不透明度\n' + ov;
+  var brv = getVal('borderRadiusVariants'); if (brv) detailedSpecs += '\n### 要素別border-radius\n' + brv;
+  var eh = getVal('elementHierarchy'); if (eh) detailedSpecs += '\n### 要素階層\n' + eh;
+
+  var prompt = '以下のコードを修正してください。\n\n## 現在のコード\n' + code +
+    '\n\n## 修正が必要な項目\n' + unchecked.map(function(i) { return '- ' + i; }).join('\n') +
+    '\n\n## デザイン仕様\n' + spec;
+  if (detailedSpecs) prompt += '\n\n## 詳細デザイン仕様（正確に再現すること）' + detailedSpecs;
+  prompt += '\n\n元のコードを直接編集し、修正済みコードを出力してください。';
   enterActPhase();
-  navigator.clipboard.writeText(prompt).then(() => showToast('Claude用プロンプトをコピー'));
+  navigator.clipboard.writeText(prompt).then(function() { showToast('Claude用プロンプトをコピー'); });
 }
 
 function copyForGemini() {
   generateDiffReport();
-  const prompt = '以下のUIデザイン画像と実装コードのスクリーンショットを比較し、差異を列挙してください。\n\n' +
-    '## デザイン仕様\n' + getDesignSpec() +
-    '\n\n## チェック観点\n1. カラーの一致（Primary/Secondary/Gray）\n2. フォントサイズ・ウェイトの一致\n3. 余白・スペーシングの一致\n4. レイアウト比率の一致\n5. 角丸・シャドウの一致\n6. 全体的な印象・世界観の一致\n\n差異ごとに「箇所」「期待値」「実際の値」「重要度(高/中/低)」を表形式で出力してください。\n\n※ Figmaデザイン画像とプレビューのスクリーンショットを添付してください。';
+  var spec = getDesignSpec();
+  var prompt = '以下のUIデザイン画像と実装コードのスクリーンショットを比較し、差異を列挙してください。\n\n' +
+    '## デザイン仕様\n' + spec +
+    '\n\n## チェック観点\n1. カラーの一致（Primary/Secondary/Gray）\n2. フォントサイズ・ウェイトの一致\n3. 余白・スペーシングの一致\n4. レイアウト比率の一致\n5. 角丸・シャドウの一致\n6. 全体的な印象・世界観の一致\n7. グラデーション・ブラー効果の一致\n8. 不透明度（opacity）の一致\n9. 要素の階層・ネスト構造の一致\n\n差異ごとに「箇所」「期待値」「実際の値」「重要度(高/中/低)」を表形式で出力してください。\n\n※ Figmaデザイン画像とプレビューのスクリーンショットを添付してください。';
   enterActPhase();
-  navigator.clipboard.writeText(prompt).then(() => showToast('Gemini用プロンプトをコピー'));
+  navigator.clipboard.writeText(prompt).then(function() { showToast('Gemini用プロンプトをコピー'); });
 }
 
 function copyForChatGPT() {
-  const unchecked = generateDiffReport();
+  var unchecked = generateDiffReport();
   if (unchecked.length === 0) { showToast('全項目合格です'); return; }
-  const prompt = 'UIの実装コードがデザイン仕様と一致しない原因を分析してください。\n\n' +
-    '## 不一致項目\n' + unchecked.map(i => '- ' + i).join('\n') +
-    '\n\n## 使用したプロンプト\n' + getDesignSpec() +
-    '\n\n以下を分析してください:\n1. プロンプトのどの記述が不十分だったか\n2. どう書き換えればLLMが正確に実装するか\n3. Prompt Builderの入力項目として何を追加すべきか\n\n改善案を具体的に提示してください。';
+  var spec = getDesignSpec();
+  var prompt = 'UIの実装コードがデザイン仕様と一致しない原因を分析してください。\n\n' +
+    '## 不一致項目\n' + unchecked.map(function(i) { return '- ' + i; }).join('\n') +
+    '\n\n## 使用したプロンプト\n' + spec +
+    '\n\n以下を分析してください:\n1. プロンプトのどの記述が不十分だったか\n2. どう書き換えればLLMが正確に実装するか\n3. Prompt Builderの入力項目として何を追加すべきか\n4. グラデーション・ブラー・不透明度の記述は十分か\n5. 要素階層の指示は明確か\n\n改善案を具体的に提示してください。';
   enterActPhase();
-  navigator.clipboard.writeText(prompt).then(() => showToast('ChatGPT用プロンプトをコピー'));
+  navigator.clipboard.writeText(prompt).then(function() { showToast('ChatGPT用プロンプトをコピー'); });
 }
 
 // ===== PDCA STATE MACHINE (Task 6) =====
