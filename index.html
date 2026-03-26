@@ -137,7 +137,7 @@ body {
 .chip.active { background: var(--orange); color: #fff; border-color: var(--orange); }
 
 /* ===== TOGGLE ROW ===== */
-.toggle-row { display: flex; gap: 6px; }
+.toggle-row, .toggle-group { display: flex; gap: 6px; flex-wrap: wrap; }
 .toggle-item {
   flex: 1; padding: 8px; text-align: center; font-size: 12px; font-weight: 500;
   border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s;
@@ -380,9 +380,9 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
         <label class="field__label">レイアウト構成（詳細）</label>
         <textarea class="field__textarea" id="layout" placeholder="PC: 2カラム（左テキスト / 右画像）&#10;SP: 1カラム（画像→テキスト）" oninput="generatePrompt()"></textarea>
       </div>
-      <div class="detail-field">
-        <div class="section-label">ELEMENT HIERARCHY</div>
-        <textarea class="field__textarea" id="elementHierarchy" placeholder="Figmaのレイヤー構造（自動入力）"></textarea>
+      <div class="field">
+        <label class="field__label">要素階層（Figma抽出）</label>
+        <textarea class="field__textarea" id="elementHierarchy" placeholder="depth 0: wrapper (1920x1080, #020214)&#10;depth 1: card (1192x268, rgba(255,255,255,0.1))&#10;depth 2: metric-pill (160x160, rgba(255,255,255,0.05))" rows="4"></textarea>
       </div>
       <div class="field-group">
         <div class="field">
@@ -473,17 +473,17 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
         <label class="field__label">背景の扱い</label>
         <input type="text" class="field__input" id="bgTreatment" placeholder="例: 単色 / グラデーション / パターン / 写真ぼかし" oninput="generatePrompt()">
       </div>
-      <div class="detail-field">
-        <div class="section-label">GRADIENT DEFINITIONS</div>
-        <textarea class="field__textarea" id="gradientDefs" placeholder="例: linear-gradient(135deg, rgb(5,181,75), rgb(5,222,92))"></textarea>
+      <div class="field">
+        <label class="field__label">グラデーション定義</label>
+        <textarea class="field__textarea" id="gradientDef" placeholder="例: linear-gradient(135deg, rgb(5,181,75) 3%, rgb(5,222,92) 100%)" rows="2"></textarea>
       </div>
-      <div class="detail-field">
-        <div class="section-label">BLUR / BACKDROP VALUES</div>
-        <textarea class="field__textarea" id="blurValues" placeholder="例: backdrop-filter: blur(12px)"></textarea>
+      <div class="field">
+        <label class="field__label">ブラー値</label>
+        <textarea class="field__textarea" id="blurDef" placeholder="例: backdrop-filter: blur(12px); background-blur on card elements" rows="2"></textarea>
       </div>
-      <div class="detail-field">
-        <div class="section-label">OPACITY MAP</div>
-        <textarea class="field__textarea" id="opacityValues" placeholder="例: card-bg: 0.1, text-secondary: 0.5"></textarea>
+      <div class="field">
+        <label class="field__label">不透明度マップ</label>
+        <textarea class="field__textarea" id="opacityMap" placeholder="例: card-bg: 0.1, sidebar-bg: 0.3, overlay: 0.6" rows="2"></textarea>
       </div>
     </div>
 
@@ -678,6 +678,26 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
         <input type="text" class="field__input" id="colorGray4" value="#888888" oninput="syncSwatch(this,'colorGray4Swatch'); generatePrompt()">
       </div>
 
+      <label class="field__label" style="margin-top:16px">Surface System (M3)</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="field">
+          <label class="field__label" style="font-size:10px">Surface</label>
+          <div style="display:flex;gap:4px"><input type="color" id="colorSurface" value="#FFFBFE" style="width:32px;height:28px;border:none;padding:0;cursor:pointer"><input class="field__input" id="colorSurfaceHex" value="#FFFBFE" style="font-size:11px" oninput="document.getElementById('colorSurface').value=this.value"></div>
+        </div>
+        <div class="field">
+          <label class="field__label" style="font-size:10px">On-Surface</label>
+          <div style="display:flex;gap:4px"><input type="color" id="colorOnSurface" value="#1C1B1F" style="width:32px;height:28px;border:none;padding:0;cursor:pointer"><input class="field__input" id="colorOnSurfaceHex" value="#1C1B1F" style="font-size:11px" oninput="document.getElementById('colorOnSurface').value=this.value"></div>
+        </div>
+        <div class="field">
+          <label class="field__label" style="font-size:10px">Surface Container</label>
+          <div style="display:flex;gap:4px"><input type="color" id="colorSurfaceContainer" value="#F3EDF7" style="width:32px;height:28px;border:none;padding:0;cursor:pointer"><input class="field__input" id="colorSurfaceContainerHex" value="#F3EDF7" style="font-size:11px" oninput="document.getElementById('colorSurfaceContainer').value=this.value"></div>
+        </div>
+        <div class="field">
+          <label class="field__label" style="font-size:10px">Outline</label>
+          <div style="display:flex;gap:4px"><input type="color" id="colorOutline" value="#79747E" style="width:32px;height:28px;border:none;padding:0;cursor:pointer"><input class="field__input" id="colorOutlineHex" value="#79747E" style="font-size:11px" oninput="document.getElementById('colorOutline').value=this.value"></div>
+        </div>
+      </div>
+
       <div class="section-label">Text on Image</div>
       <div class="field">
         <label class="field__label">画像上テキストの処理</label>
@@ -706,35 +726,69 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
         </div>
       </div>
 
-      <div class="section-label">Border Radius</div>
       <div class="field">
-        <label class="field__label">角丸パターン</label>
-        <div class="toggle-row" id="borderRadius">
-          <div class="toggle-item" data-value="0" onclick="toggleSingle(this, 'borderRadius')">0px</div>
-          <div class="toggle-item" data-value="4" onclick="toggleSingle(this, 'borderRadius')">4px</div>
-          <div class="toggle-item active" data-value="8" onclick="toggleSingle(this, 'borderRadius')">8px</div>
-          <div class="toggle-item" data-value="12" onclick="toggleSingle(this, 'borderRadius')">12px</div>
-          <div class="toggle-item" data-value="pill" onclick="toggleSingle(this, 'borderRadius')">Pill</div>
+        <label class="field__label">State Layer Opacity (M3)</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div class="field">
+            <label class="field__label" style="font-size:10px">Hover</label>
+            <input class="field__input" id="stateHover" value="8%" placeholder="8%">
+          </div>
+          <div class="field">
+            <label class="field__label" style="font-size:10px">Focus</label>
+            <input class="field__input" id="stateFocus" value="10%" placeholder="10%">
+          </div>
+          <div class="field">
+            <label class="field__label" style="font-size:10px">Pressed</label>
+            <input class="field__input" id="statePressed" value="10%" placeholder="10%">
+          </div>
+          <div class="field">
+            <label class="field__label" style="font-size:10px">Disabled (container)</label>
+            <input class="field__input" id="stateDisabledContainer" value="12%" placeholder="12%">
+          </div>
+          <div class="field">
+            <label class="field__label" style="font-size:10px">Disabled (content)</label>
+            <input class="field__input" id="stateDisabledContent" value="38%" placeholder="38%">
+          </div>
+          <div class="field">
+            <label class="field__label" style="font-size:10px">Dragged</label>
+            <input class="field__input" id="stateDragged" value="16%" placeholder="16%">
+          </div>
         </div>
       </div>
-      <div class="detail-field">
-        <div class="section-label">BORDER RADIUS VARIANTS</div>
-        <textarea class="field__textarea" id="borderRadiusVariants" placeholder="例: card: 16px, button: pill, input: 12px"></textarea>
+
+      <div class="section-label">Shape Scale (M3)</div>
+      <div class="field">
+        <label class="field__label">Shape Scale (M3)</label>
+        <div class="toggle-group" id="borderRadius">
+          <button class="toggle-item" data-value="0" onclick="setToggle(this)">None (0)</button>
+          <button class="toggle-item" data-value="4" onclick="setToggle(this)">XS (4)</button>
+          <button class="toggle-item active" data-value="8" onclick="setToggle(this)">S (8)</button>
+          <button class="toggle-item" data-value="12" onclick="setToggle(this)">M (12)</button>
+          <button class="toggle-item" data-value="16" onclick="setToggle(this)">L (16)</button>
+          <button class="toggle-item" data-value="28" onclick="setToggle(this)">XL (28)</button>
+          <button class="toggle-item" data-value="9999" onclick="setToggle(this)">Full</button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label">Border-Radius Variants</label>
+        <textarea class="field__textarea" id="borderRadiusVariants" placeholder="例: card: 16px, button: 9999px(pill), dialog: 28px, chip: 8px, input: 4px" rows="2"></textarea>
       </div>
 
       <div class="section-label">Elevation / Shadow</div>
       <div class="field">
-        <label class="field__label">シャドウレベル</label>
-        <div class="toggle-row" id="elevation">
-          <div class="toggle-item" data-value="none" onclick="toggleSingle(this, 'elevation')">なし</div>
-          <div class="toggle-item active" data-value="subtle" onclick="toggleSingle(this, 'elevation')">微細</div>
-          <div class="toggle-item" data-value="medium" onclick="toggleSingle(this, 'elevation')">中程度</div>
-          <div class="toggle-item" data-value="strong" onclick="toggleSingle(this, 'elevation')">強め</div>
+        <label class="field__label">Elevation Level (M3)</label>
+        <div class="toggle-group" id="elevation">
+          <button class="toggle-item active" data-value="0" onclick="setToggle(this)">Lv0</button>
+          <button class="toggle-item" data-value="1" onclick="setToggle(this)">Lv1</button>
+          <button class="toggle-item" data-value="2" onclick="setToggle(this)">Lv2</button>
+          <button class="toggle-item" data-value="3" onclick="setToggle(this)">Lv3</button>
+          <button class="toggle-item" data-value="4" onclick="setToggle(this)">Lv4</button>
+          <button class="toggle-item" data-value="5" onclick="setToggle(this)">Lv5</button>
         </div>
       </div>
-      <div class="detail-field">
-        <div class="section-label">SHADOW DETAIL</div>
-        <textarea class="field__textarea" id="shadowDetail" placeholder="例: 0 4px 12px rgba(0,0,0,0.1)"></textarea>
+      <div class="field">
+        <label class="field__label">シャドウ詳細</label>
+        <textarea class="field__textarea" id="shadowDetail" placeholder="例: Lv1: 0px 1px 2px rgba(0,0,0,0.3), 0px 1px 3px 1px rgba(0,0,0,0.15)&#10;Lv3: 0px 1px 3px rgba(0,0,0,0.3), 0px 4px 8px 3px rgba(0,0,0,0.15)" rows="2"></textarea>
       </div>
 
       <div class="section-label">Button Style</div>
@@ -984,8 +1038,17 @@ function selectTemplate(el) {
   generatePrompt();
 }
 
-function setToggle(groupId, value) {
-  document.querySelectorAll(`#${groupId} .toggle-item`).forEach(i => {
+function setToggle(groupIdOrEl, value) {
+  // Support both setToggle(element) for onclick and setToggle(groupId, value) for programmatic use
+  if (typeof groupIdOrEl === 'object' && groupIdOrEl.nodeType) {
+    const el = groupIdOrEl;
+    const parent = el.parentElement;
+    parent.querySelectorAll('.toggle-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    generatePrompt();
+    return;
+  }
+  document.querySelectorAll(`#${groupIdOrEl} .toggle-item`).forEach(i => {
     i.classList.toggle('active', i.dataset.value === value);
   });
 }
@@ -1136,12 +1199,12 @@ function generatePrompt() {
   if (states.length || br || elev || buttons.length || motion) {
     p += `## コンポーネント仕様\n`;
     if (br) {
-      const brMap = { '0':'0px（シャープ）', '4':'4px', '8':'8px', '12':'12px', pill:'Pill（完全丸）' };
-      p += `border-radius: ${brMap[br] || br}\n`;
+      const brMap = { '0':'None (0px)', '4':'XS (4px)', '8':'S (8px)', '12':'M (12px)', '16':'L (16px)', '28':'XL (28px)', '9999':'Full (pill)', pill:'Pill（完全丸）' };
+      p += `Shape Scale: ${brMap[br] || br + 'px'}\n`;
     }
     if (elev) {
-      const elevMap = { none:'なし', subtle:'0 2px 4px rgba(0,0,0,0.06)', medium:'0 4px 12px rgba(0,0,0,0.1)', strong:'0 8px 24px rgba(0,0,0,0.15)' };
-      p += `シャドウ: ${elevMap[elev] || elev}\n`;
+      const elevMap = { '0':'Lv0（なし）', '1':'Lv1', '2':'Lv2', '3':'Lv3', '4':'Lv4', '5':'Lv5', none:'なし', subtle:'Lv1', medium:'Lv3', strong:'Lv5' };
+      p += `Elevation: ${elevMap[elev] || 'Lv' + elev}\n`;
     }
     if (buttons.length) p += `ボタン種類: ${buttons.join(', ')}\n`;
     if (states.length) p += `状態表現: ${states.join(', ')}\n`;
@@ -1188,28 +1251,51 @@ function generatePrompt() {
   p += `- 日本語コメントでセクション分けする\n`;
 
   // === DETAILED DESIGN SPECS (Figma) ===
-  var shadowDetail = getVal('shadowDetail');
-  var gradientDefs = getVal('gradientDefs');
-  var blurValues = getVal('blurValues');
-  var opacityValues = getVal('opacityValues');
-  var borderRadiusVariants = getVal('borderRadiusVariants');
+  var gradientDef = getVal('gradientDef');
+  var blurDef = getVal('blurDef');
+  var opacityMap = getVal('opacityMap');
   var elementHierarchy = getVal('elementHierarchy');
+  var borderRadiusVariants = getVal('borderRadiusVariants');
+  var shadowDetail = getVal('shadowDetail');
 
-  var hasDetailedSpecs = shadowDetail || gradientDefs || blurValues || opacityValues || borderRadiusVariants || elementHierarchy;
-
-  if (hasDetailedSpecs) {
-    p += '\n';
-    p += '## 詳細デザイン仕様（Figma抽出）\n';
-    p += '以下の値を正確に再現すること。概算値ではなく、指定値をそのまま使用する。\n';
-    if (shadowDetail) { p += '\n### シャドウ\n' + shadowDetail + '\n'; }
-    if (gradientDefs) { p += '\n### グラデーション\n' + gradientDefs + '\n'; }
-    if (blurValues) { p += '\n### ブラー効果\n' + blurValues + '\n'; }
-    if (opacityValues) { p += '\n### 不透明度マップ\n' + opacityValues + '\n'; }
-    if (borderRadiusVariants) { p += '\n### 要素別border-radius\n' + borderRadiusVariants + '\n'; }
-    if (elementHierarchy) { p += '\n### 要素階層構造\n以下のネスト構造に従ってHTML要素を組み立てること:\n' + elementHierarchy + '\n'; }
+  var detailSpec = '';
+  if (gradientDef || blurDef || opacityMap || elementHierarchy || borderRadiusVariants || shadowDetail) {
+    detailSpec = '\n\n## 詳細デザイン仕様（Figma抽出）\n';
+    detailSpec += '以下の値を正確に再現すること。概算値ではなく、指定値をそのまま使用する。\n';
+    if (elementHierarchy) detailSpec += '\n### 要素階層\n' + elementHierarchy + '\n';
+    if (gradientDef) detailSpec += '\n### グラデーション\n' + gradientDef + '\n';
+    if (blurDef) detailSpec += '\n### ブラー/エフェクト\n' + blurDef + '\n';
+    if (opacityMap) detailSpec += '\n### 不透明度マップ\n' + opacityMap + '\n';
+    if (borderRadiusVariants) detailSpec += '\n### Border-Radius Variants\n' + borderRadiusVariants + '\n';
+    if (shadowDetail) detailSpec += '\n### シャドウ詳細\n' + shadowDetail + '\n';
   }
 
-  document.getElementById('outputBox').textContent = p;
+  // M3 State Layer
+  var stateHover = getVal('stateHover');
+  var stateFocus = getVal('stateFocus');
+  var statePressed = getVal('statePressed');
+  if (stateHover || stateFocus || statePressed) {
+    detailSpec += '\n### State Layer Opacity\n';
+    detailSpec += 'Hover: ' + (stateHover || '8%') + ', Focus: ' + (stateFocus || '10%') + ', Pressed: ' + (statePressed || '10%');
+    detailSpec += '\nDisabled: container ' + (getVal('stateDisabledContainer') || '12%') + ', content ' + (getVal('stateDisabledContent') || '38%');
+    detailSpec += '\n';
+  }
+
+  // M3 Surface colors
+  var surfaceColor = getVal('colorSurfaceHex');
+  var onSurfaceColor = getVal('colorOnSurfaceHex');
+  var surfaceContainerColor = getVal('colorSurfaceContainerHex');
+  var outlineColor = getVal('colorOutlineHex');
+  if (surfaceColor && surfaceColor !== '#FFFBFE') {
+    detailSpec += '\n### Surface System\n';
+    detailSpec += 'Surface: ' + surfaceColor;
+    if (onSurfaceColor) detailSpec += ', On-Surface: ' + onSurfaceColor;
+    if (surfaceContainerColor) detailSpec += ', Container: ' + surfaceContainerColor;
+    if (outlineColor) detailSpec += ', Outline: ' + outlineColor;
+    detailSpec += '\n';
+  }
+
+  document.getElementById('outputBox').textContent = p + detailSpec;
 
   // Stats
   const lines = p.split('\n').length;
@@ -1278,7 +1364,7 @@ function resetForm() {
   setToggle('spacingSibling', 'M');
   setToggle('spacingInner', 'S');
   setToggle('borderRadius', '8');
-  setToggle('elevation', 'subtle');
+  setToggle('elevation', '0');
   setToggle('motionStyle', 'subtle');
   setToggle('transitionSpeed', '0.3s');
   setToggle('textOnImage', 'gradient');
@@ -1292,8 +1378,16 @@ function resetForm() {
   document.getElementById('importSummary').innerHTML = '';
   figmaImported = false;
   // Clear detail fields
-  var detailFields = ['shadowDetail', 'gradientDefs', 'blurValues', 'opacityValues', 'borderRadiusVariants', 'elementHierarchy'];
+  var detailFields = ['shadowDetail', 'gradientDef', 'blurDef', 'opacityMap', 'borderRadiusVariants', 'elementHierarchy'];
   detailFields.forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ''; });
+  // Reset M3 State Layer defaults
+  var stateDefaults = { stateHover:'8%', stateFocus:'10%', statePressed:'10%', stateDisabledContainer:'12%', stateDisabledContent:'38%', stateDragged:'16%' };
+  Object.entries(stateDefaults).forEach(function(e) { var el = document.getElementById(e[0]); if (el) el.value = e[1]; });
+  // Reset M3 Surface colors
+  var surfaceDefaults = { colorSurfaceHex:'#FFFBFE', colorOnSurfaceHex:'#1C1B1F', colorSurfaceContainerHex:'#F3EDF7', colorOutlineHex:'#79747E' };
+  Object.entries(surfaceDefaults).forEach(function(e) { var el = document.getElementById(e[0]); if (el) el.value = e[1]; });
+  var surfaceSwatches = { colorSurface:'#FFFBFE', colorOnSurface:'#1C1B1F', colorSurfaceContainer:'#F3EDF7', colorOutline:'#79747E' };
+  Object.entries(surfaceSwatches).forEach(function(e) { var el = document.getElementById(e[0]); if (el) el.value = e[1]; });
   generatePrompt();
 }
 
@@ -1411,13 +1505,13 @@ const checklistRules = [
   // Layout
   { toggle: 'layoutRatio', template: 'レイアウト比率が {value} になっているか', category: 'layout' },
   { field: 'breakpoint',   template: 'SPブレイクポイント {value} で切り替わるか', category: 'layout' },
-  // Figma detail checks
-  { field: 'shadowDetail', template: 'シャドウ値 {value} が正確に適用されているか', category: 'parts' },
-  { field: 'gradientDefs', template: 'グラデーション定義が適用されているか', category: 'color', type: 'visual' },
-  { field: 'blurValues', template: 'ブラー効果 {value} が適用されているか', category: 'taste', type: 'visual' },
-  { field: 'borderRadiusVariants', template: '要素別border-radiusが一致しているか', category: 'parts', type: 'visual' },
-  { field: 'elementHierarchy', template: '要素の階層構造がFigmaと一致しているか', category: 'layout', type: 'visual' },
-  { field: 'opacityValues', template: '透過度がFigmaと一致しているか', category: 'taste', type: 'visual' },
+  // v4 fields
+  { field: 'gradientDef', template: 'グラデーション「{value}」が適用されているか', category: 'taste', type: 'visual' },
+  { field: 'blurDef', template: 'ブラー「{value}」が適用されているか', category: 'taste', type: 'visual' },
+  { field: 'opacityMap', template: '不透明度マップが仕様通りか', category: 'taste', type: 'visual' },
+  { field: 'elementHierarchy', template: '要素階層がFigma通りか', category: 'layout', type: 'visual' },
+  { field: 'borderRadiusVariants', template: 'Border-radius variantsが仕様通りか', category: 'parts' },
+  { field: 'shadowDetail', template: 'シャドウ詳細が仕様通りか', category: 'parts' },
 ];
 
 function generateChecklist() {
@@ -1500,9 +1594,9 @@ function copyForClaude() {
   var spec = getDesignSpec();
   var detailedSpecs = '';
   var sd = getVal('shadowDetail'); if (sd) detailedSpecs += '\n### シャドウ\n' + sd;
-  var gd = getVal('gradientDefs'); if (gd) detailedSpecs += '\n### グラデーション\n' + gd;
-  var bv = getVal('blurValues'); if (bv) detailedSpecs += '\n### ブラー\n' + bv;
-  var ov = getVal('opacityValues'); if (ov) detailedSpecs += '\n### 不透明度\n' + ov;
+  var gd = getVal('gradientDef'); if (gd) detailedSpecs += '\n### グラデーション\n' + gd;
+  var bv = getVal('blurDef'); if (bv) detailedSpecs += '\n### ブラー\n' + bv;
+  var ov = getVal('opacityMap'); if (ov) detailedSpecs += '\n### 不透明度\n' + ov;
   var brv = getVal('borderRadiusVariants'); if (brv) detailedSpecs += '\n### 要素別border-radius\n' + brv;
   var eh = getVal('elementHierarchy'); if (eh) detailedSpecs += '\n### 要素階層\n' + eh;
 
@@ -1701,13 +1795,13 @@ function importFigmaData() {
         var stops = g.stops.map(function(s) { return s.color + ' ' + s.position + '%'; }).join(', ');
         return (g.name || '') + ': ' + g.type + '-gradient(' + (g.angle || 0) + 'deg, ' + stops + ')';
       }).join('\n');
-      setField('gradientDefs', gradStr); filled++;
+      setField('gradientDef', gradStr); filled++;
     }
     if (data.effects.blurs && data.effects.blurs.length > 0) {
       var blurStr = data.effects.blurs.map(function(b) {
         return (b.name || '') + ': ' + (b.type === 'background' ? 'backdrop-filter' : 'filter') + ': blur(' + b.radius + 'px)';
       }).join('\n');
-      setField('blurValues', blurStr); filled++;
+      setField('blurDef', blurStr); filled++;
     }
   }
 
@@ -1738,7 +1832,7 @@ function importFigmaData() {
   // Opacity
   if (data.opacity) {
     var opStr = Object.entries(data.opacity).map(function(e) { return e[0] + ': ' + e[1]; }).join('\n');
-    setField('opacityValues', opStr); filled++;
+    setField('opacityMap', opStr); filled++;
   }
 
   // Hierarchy
