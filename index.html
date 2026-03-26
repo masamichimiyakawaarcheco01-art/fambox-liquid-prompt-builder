@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Liquid Prompt Builder - Shopify Section Generator</title>
+<title>Liquid Prompt Builder v2 - Design-Driven Section Generator</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -11,11 +11,14 @@
   --orange: #FB4C15;
   --dark: #1B1D1A;
   --gray: #888;
+  --gray-light: #bbb;
   --light: #f5f5f5;
   --border: rgba(0,0,0,0.08);
   --radius: 12px;
   --font-ja: "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
   --font-en: 'Poppins', sans-serif;
+  --blue: #3B82F6;
+  --green: #10B981;
 }
 body {
   font-family: var(--font-ja);
@@ -29,436 +32,669 @@ body {
 .header {
   background: var(--dark);
   color: #fff;
-  padding: 20px 32px;
+  padding: 16px 32px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
   position: sticky;
   top: 0;
   z-index: 100;
 }
-.header__logo {
-  font-family: var(--font-en);
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
+.header__left { display: flex; align-items: center; gap: 16px; }
+.header__logo { font-family: var(--font-en); font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
 .header__logo span { color: var(--orange); }
-.header__sub {
-  font-size: 12px;
-  opacity: 0.5;
-  font-weight: 400;
+.header__badge {
+  font-family: var(--font-en);
+  font-size: 10px;
+  font-weight: 600;
+  background: var(--orange);
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
 }
+.header__sub { font-size: 11px; opacity: 0.4; }
 
 /* ===== LAYOUT ===== */
-.app {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  min-height: calc(100vh - 64px);
-}
-@media (max-width: 960px) {
-  .app { grid-template-columns: 1fr; }
-}
+.app { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 56px); }
+@media (max-width: 960px) { .app { grid-template-columns: 1fr; } }
 
 /* ===== PANEL ===== */
-.panel {
-  padding: 32px;
-  overflow-y: auto;
-  max-height: calc(100vh - 64px);
-}
+.panel { padding: 28px; overflow-y: auto; max-height: calc(100vh - 56px); }
 .panel--form { background: #fff; border-right: 1px solid var(--border); }
 .panel--output { background: var(--light); }
-.panel__title {
-  font-family: var(--font-en);
-  font-size: 14px;
+
+/* ===== TABS NAV ===== */
+.tab-nav { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
+.tab-btn {
+  padding: 10px 20px;
+  font-size: 13px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
   color: var(--gray);
-  margin-bottom: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  font-family: var(--font-ja);
+  transition: color 0.2s;
+  white-space: nowrap;
 }
+.tab-btn:hover { color: var(--dark); }
+.tab-btn.active { color: var(--orange); }
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--orange);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
 /* ===== FORM ===== */
-.field { margin-bottom: 20px; }
-.field__label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: var(--dark);
+.field { margin-bottom: 16px; }
+.field__label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--dark); }
+.field__hint { font-size: 10px; color: var(--gray); margin-bottom: 5px; line-height: 1.5; }
+.field__input, .field__select, .field__textarea {
+  width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px;
+  font-size: 13px; font-family: var(--font-ja); background: #fff; transition: border-color 0.2s; outline: none;
 }
-.field__hint {
-  font-size: 11px;
-  color: var(--gray);
-  margin-bottom: 6px;
-}
-.field__input,
-.field__select,
-.field__textarea {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 14px;
-  font-family: var(--font-ja);
-  background: #fff;
-  transition: border-color 0.2s;
-  outline: none;
-}
-.field__input:focus,
-.field__select:focus,
-.field__textarea:focus {
-  border-color: var(--orange);
-}
-.field__textarea { resize: vertical; min-height: 80px; }
+.field__select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+.field__input:focus, .field__select:focus, .field__textarea:focus { border-color: var(--orange); }
+.field__textarea { resize: vertical; min-height: 64px; }
+.field-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field-group-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
-.field-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+/* ===== SECTION LABEL ===== */
+.section-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--gray); margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
 }
+.section-label:first-child { margin-top: 0; }
 
 /* ===== CHIPS ===== */
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 14px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: #fff;
-  user-select: none;
+  display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 16px;
+  border: 1px solid var(--border); font-size: 12px; cursor: pointer; transition: all 0.2s;
+  background: #fff; user-select: none;
 }
 .chip:hover { border-color: var(--orange); }
-.chip.active {
-  background: var(--orange);
-  color: #fff;
-  border-color: var(--orange);
-}
+.chip.active { background: var(--orange); color: #fff; border-color: var(--orange); }
 
-/* ===== SECTION DIVIDER ===== */
-.divider {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 28px 0;
+/* ===== TOGGLE ROW ===== */
+.toggle-row { display: flex; gap: 6px; }
+.toggle-item {
+  flex: 1; padding: 8px; text-align: center; font-size: 12px; font-weight: 500;
+  border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s;
+  background: #fff;
 }
+.toggle-item:hover { border-color: var(--orange); }
+.toggle-item.active { background: var(--dark); color: #fff; border-color: var(--dark); }
 
-/* ===== SETTINGS BLOCK ===== */
-.settings-block { margin-bottom: 16px; }
-.settings-block__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
+/* ===== SPACING PREVIEW ===== */
+.spacing-preview {
+  display: flex; align-items: flex-end; gap: 8px; padding: 12px; background: #f9f9f9;
+  border-radius: 6px; margin-top: 8px;
 }
-.settings-block__header::after {
-  content: '\25BC';
-  font-size: 10px;
-  color: var(--gray);
-  transition: transform 0.2s;
-}
-.settings-block__header.open::after { transform: rotate(180deg); }
-.settings-block__body {
-  display: none;
-  padding-top: 12px;
-}
-.settings-block__body.open { display: block; }
+.spacing-bar { background: var(--orange); border-radius: 3px; width: 32px; transition: height 0.3s; opacity: 0.7; }
+.spacing-bar-label { font-size: 9px; color: var(--gray); text-align: center; margin-top: 4px; }
 
 /* ===== BUTTONS ===== */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border-radius: 8px;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: var(--font-ja);
-  cursor: pointer;
-  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 6px;
+  border: none; font-size: 13px; font-weight: 600; font-family: var(--font-ja); cursor: pointer; transition: all 0.2s;
 }
-.btn--primary {
-  background: var(--orange);
-  color: #fff;
-}
+.btn--primary { background: var(--orange); color: #fff; }
 .btn--primary:hover { background: #e04010; }
-.btn--secondary {
-  background: var(--dark);
-  color: #fff;
-}
+.btn--secondary { background: var(--dark); color: #fff; }
 .btn--secondary:hover { background: #333; }
-.btn--ghost {
-  background: transparent;
-  color: var(--dark);
-  border: 1px solid var(--border);
-}
+.btn--ghost { background: transparent; color: var(--dark); border: 1px solid var(--border); }
 .btn--ghost:hover { border-color: var(--dark); }
-.btn-group {
-  display: flex;
-  gap: 8px;
-  margin-top: 24px;
-}
+.btn-group { display: flex; gap: 8px; margin-top: 20px; }
 
 /* ===== OUTPUT ===== */
+.output-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.output-header__title { font-family: var(--font-en); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); }
+.output-stats { font-size: 11px; color: var(--gray); font-family: var(--font-en); }
 .output-box {
-  background: var(--dark);
-  color: #e0e0e0;
-  border-radius: var(--radius);
-  padding: 24px;
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 13px;
-  line-height: 1.7;
-  white-space: pre-wrap;
-  word-break: break-word;
-  min-height: 200px;
-  position: relative;
+  background: var(--dark); color: #e0e0e0; border-radius: var(--radius); padding: 20px;
+  font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; line-height: 1.7;
+  white-space: pre-wrap; word-break: break-word; min-height: 200px; position: relative;
 }
-.output-box__placeholder {
-  color: rgba(255,255,255,0.3);
-  font-style: italic;
-}
-.output-box .tag { color: #FF9F43; }
-.output-box .key { color: #54A0FF; }
-.output-box .val { color: #5EE6B7; }
+.output-box__placeholder { color: rgba(255,255,255,0.3); font-style: italic; }
 
-/* ===== COPY TOAST ===== */
+/* ===== TEMPLATES ===== */
+.templates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+.template-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px;
+  cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.template-card:hover { border-color: var(--orange); box-shadow: 0 2px 8px rgba(251,76,21,0.08); }
+.template-card.active { border-color: var(--orange); background: #FFF5F2; }
+.template-card__icon { font-size: 20px; margin-bottom: 4px; }
+.template-card__name { font-size: 12px; font-weight: 600; }
+.template-card__desc { font-size: 10px; color: var(--gray); margin-top: 2px; }
+
+/* ===== TOAST ===== */
 .toast {
-  position: fixed;
-  bottom: 32px;
-  left: 50%;
+  position: fixed; bottom: 32px; left: 50%;
   transform: translateX(-50%) translateY(100px);
-  background: var(--dark);
-  color: #fff;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  transition: transform 0.3s ease;
-  z-index: 999;
+  background: var(--dark); color: #fff; padding: 10px 20px; border-radius: 6px;
+  font-size: 13px; font-weight: 500; transition: transform 0.3s ease; z-index: 999;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
-/* ===== TEMPLATE CARDS ===== */
-.templates {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
-}
-.template-card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.template-card:hover {
-  border-color: var(--orange);
-  box-shadow: 0 2px 8px rgba(251,76,21,0.1);
-}
-.template-card.active {
-  border-color: var(--orange);
-  background: #FFF5F2;
-}
-.template-card__icon { font-size: 24px; margin-bottom: 8px; }
-.template-card__name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-.template-card__desc { font-size: 11px; color: var(--gray); line-height: 1.5; }
-
 /* ===== SCROLLBAR ===== */
-.panel::-webkit-scrollbar { width: 6px; }
-.panel::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.15);
-  border-radius: 3px;
+.panel::-webkit-scrollbar { width: 5px; }
+.panel::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+
+/* ===== COLOR SWATCH ===== */
+.color-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.color-swatch {
+  width: 24px; height: 24px; border-radius: 4px; border: 1px solid var(--border);
+  flex-shrink: 0; cursor: pointer;
 }
+.color-row .field__input { flex: 1; }
+.color-row .color-label { font-size: 11px; color: var(--gray); width: 64px; flex-shrink: 0; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="header">
-  <div>
-    <div class="header__logo">Liquid <span>Prompt</span> Builder</div>
-    <div class="header__sub">Shopify Section Prompt Generator for Claude</div>
+  <div class="header__left">
+    <div>
+      <div class="header__logo">Liquid <span>Prompt</span> Builder</div>
+      <div class="header__sub">Design-Driven Shopify Section Generator</div>
+    </div>
+    <span class="header__badge">v2</span>
   </div>
 </header>
 
-<!-- APP -->
 <div class="app">
   <!-- LEFT: FORM -->
   <div class="panel panel--form">
-    <div class="panel__title">Section Settings</div>
+    <!-- TAB NAVIGATION -->
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('basic')">Basic</button>
+      <button class="tab-btn" onclick="switchTab('taste')">Taste</button>
+      <button class="tab-btn" onclick="switchTab('typography')">Type</button>
+      <button class="tab-btn" onclick="switchTab('spacing')">Spacing</button>
+      <button class="tab-btn" onclick="switchTab('color')">Color</button>
+      <button class="tab-btn" onclick="switchTab('components')">Parts</button>
+      <button class="tab-btn" onclick="switchTab('schema')">Schema</button>
+    </div>
 
-    <!-- TEMPLATE SELECT -->
-    <div class="field">
-      <label class="field__label">テンプレート</label>
+    <!-- ==================== TAB: BASIC ==================== -->
+    <div class="tab-content active" id="tab-basic">
+      <div class="section-label">Template</div>
       <div class="templates" id="templates">
         <div class="template-card" data-template="hero" onclick="selectTemplate(this)">
           <div class="template-card__icon">🎬</div>
           <div class="template-card__name">Hero</div>
-          <div class="template-card__desc">ビデオ/画像ヒーローバナー</div>
+          <div class="template-card__desc">ヒーローバナー</div>
         </div>
         <div class="template-card" data-template="features" onclick="selectTemplate(this)">
           <div class="template-card__icon">✨</div>
           <div class="template-card__name">Features</div>
-          <div class="template-card__desc">特徴・バリュー訴求カード</div>
+          <div class="template-card__desc">バリュー訴求</div>
         </div>
         <div class="template-card" data-template="carousel" onclick="selectTemplate(this)">
           <div class="template-card__icon">🎠</div>
           <div class="template-card__name">Carousel</div>
-          <div class="template-card__desc">横スクロールカルーセル</div>
+          <div class="template-card__desc">横スクロール</div>
         </div>
         <div class="template-card" data-template="faq" onclick="selectTemplate(this)">
           <div class="template-card__icon">❓</div>
           <div class="template-card__name">FAQ</div>
-          <div class="template-card__desc">アコーディオンFAQ</div>
+          <div class="template-card__desc">アコーディオン</div>
         </div>
         <div class="template-card" data-template="profile" onclick="selectTemplate(this)">
           <div class="template-card__icon">👤</div>
           <div class="template-card__name">Profile</div>
-          <div class="template-card__desc">人物紹介・プロフィール</div>
+          <div class="template-card__desc">人物紹介</div>
         </div>
         <div class="template-card" data-template="custom" onclick="selectTemplate(this)">
           <div class="template-card__icon">🔧</div>
           <div class="template-card__name">Custom</div>
-          <div class="template-card__desc">自由入力でカスタム</div>
+          <div class="template-card__desc">自由入力</div>
+        </div>
+      </div>
+
+      <div class="section-label">Section Info</div>
+      <div class="field">
+        <label class="field__label">セクション名（英語）</label>
+        <input type="text" class="field__input" id="sectionName" placeholder="fambox-section-name" oninput="generatePrompt()">
+      </div>
+      <div class="field">
+        <label class="field__label">セクションの目的・概要</label>
+        <textarea class="field__textarea" id="sectionPurpose" placeholder="このセクションが何を表示し、どんな役割を果たすか" oninput="generatePrompt()"></textarea>
+      </div>
+
+      <div class="section-label">Layout Composition</div>
+      <div class="field">
+        <label class="field__label">レイアウト比率（PC）</label>
+        <div class="field__hint">コンテナの分割比率。要素間の関係性で決める（任意のpx値は避ける）</div>
+        <div class="toggle-row" id="layoutRatio">
+          <div class="toggle-item" data-value="1:1" onclick="toggleSingle(this, 'layoutRatio')">1:1</div>
+          <div class="toggle-item" data-value="1:2" onclick="toggleSingle(this, 'layoutRatio')">1:2</div>
+          <div class="toggle-item" data-value="1:3" onclick="toggleSingle(this, 'layoutRatio')">1:3</div>
+          <div class="toggle-item" data-value="2:3" onclick="toggleSingle(this, 'layoutRatio')">2:3</div>
+          <div class="toggle-item" data-value="full" onclick="toggleSingle(this, 'layoutRatio')">Full</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label">レイアウト構成（詳細）</label>
+        <textarea class="field__textarea" id="layout" placeholder="PC: 2カラム（左テキスト / 右画像）&#10;SP: 1カラム（画像→テキスト）" oninput="generatePrompt()"></textarea>
+      </div>
+      <div class="field-group">
+        <div class="field">
+          <label class="field__label">PC 最大幅</label>
+          <input type="text" class="field__input" id="maxWidth" placeholder="1200px" oninput="generatePrompt()">
+        </div>
+        <div class="field">
+          <label class="field__label">SP ブレイクポイント</label>
+          <input type="text" class="field__input" id="breakpoint" placeholder="749px" value="749px" oninput="generatePrompt()">
+        </div>
+      </div>
+
+      <div class="section-label">Features</div>
+      <div class="field">
+        <div class="chips" id="featureChips">
+          <div class="chip" data-value="scroll-animation" onclick="toggleChip(this)">スクロールアニメ</div>
+          <div class="chip" data-value="video-bg" onclick="toggleChip(this)">動画背景</div>
+          <div class="chip" data-value="accordion" onclick="toggleChip(this)">アコーディオン</div>
+          <div class="chip" data-value="carousel" onclick="toggleChip(this)">カルーセル</div>
+          <div class="chip" data-value="tabs" onclick="toggleChip(this)">タブ切替</div>
+          <div class="chip" data-value="modal" onclick="toggleChip(this)">モーダル</div>
+          <div class="chip" data-value="lazy-load" onclick="toggleChip(this)">遅延読込</div>
+          <div class="chip" data-value="parallax" onclick="toggleChip(this)">パララックス</div>
+          <div class="chip" data-value="snap-scroll" onclick="toggleChip(this)">スナップスクロール</div>
+          <div class="chip" data-value="hover-effect" onclick="toggleChip(this)">ホバーエフェクト</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label">追加要件</label>
+        <textarea class="field__textarea" id="additionalReqs" placeholder="その他の機能要件" oninput="generatePrompt()" style="min-height:48px"></textarea>
+      </div>
+    </div>
+
+    <!-- ==================== TAB: DESIGN TASTE ==================== -->
+    <div class="tab-content" id="tab-taste">
+      <div class="section-label">Design Taste</div>
+      <div class="field">
+        <label class="field__label">デザインテイスト名</label>
+        <div class="field__hint">目標とする世界観を一言で。テイストが全パラメータの判断基準になる</div>
+        <input type="text" class="field__input" id="tasteName" placeholder="例: ミニマル / グラッシー / オーガニック / メトロ" oninput="generatePrompt()">
+      </div>
+
+      <div class="field">
+        <label class="field__label">形状（Shape）</label>
+        <div class="toggle-row" id="shapeStyle">
+          <div class="toggle-item" data-value="rounded" onclick="toggleSingle(this, 'shapeStyle')">丸み</div>
+          <div class="toggle-item" data-value="angular" onclick="toggleSingle(this, 'shapeStyle')">角ばり</div>
+          <div class="toggle-item" data-value="geometric" onclick="toggleSingle(this, 'shapeStyle')">幾何学</div>
+          <div class="toggle-item" data-value="organic" onclick="toggleSingle(this, 'shapeStyle')">有機的</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label">ジャンプ率</label>
+        <div class="field__hint">要素サイズの差。高い=躍動感、低い=整然・高級感</div>
+        <div class="toggle-row" id="jumpRate">
+          <div class="toggle-item" data-value="low" onclick="toggleSingle(this, 'jumpRate')">低い（高級感）</div>
+          <div class="toggle-item" data-value="medium" onclick="toggleSingle(this, 'jumpRate')">中間</div>
+          <div class="toggle-item" data-value="high" onclick="toggleSingle(this, 'jumpRate')">高い（躍動感）</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label">エフェクト</label>
+        <div class="chips" id="effectChips">
+          <div class="chip" data-value="drop-shadow" onclick="toggleChip(this)">ドロップシャドウ</div>
+          <div class="chip" data-value="inner-shadow" onclick="toggleChip(this)">インナーシャドウ</div>
+          <div class="chip" data-value="bg-blur" onclick="toggleChip(this)">背景ブラー</div>
+          <div class="chip" data-value="layer-blur" onclick="toggleChip(this)">レイヤーブラー</div>
+          <div class="chip" data-value="gradient" onclick="toggleChip(this)">グラデーション</div>
+          <div class="chip" data-value="glass" onclick="toggleChip(this)">グラス効果</div>
+          <div class="chip" data-value="noise-texture" onclick="toggleChip(this)">ノイズテクスチャ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label">必須の構成要素</label>
+        <div class="field__hint">このテイストに必ず必要な要素（省略するとテイストが崩れるもの）</div>
+        <textarea class="field__textarea" id="requiredElements" placeholder="例: 背景の有機的な曲線イラスト&#10;例: グラスモーフィズムのカード" oninput="generatePrompt()" style="min-height:48px"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field__label">写真/イラスト方針</label>
+        <input type="text" class="field__input" id="imageryDirection" placeholder="例: 温かみのある自然光の食事写真 / フラットイラスト" oninput="generatePrompt()">
+      </div>
+
+      <div class="field">
+        <label class="field__label">背景の扱い</label>
+        <input type="text" class="field__input" id="bgTreatment" placeholder="例: 単色 / グラデーション / パターン / 写真ぼかし" oninput="generatePrompt()">
+      </div>
+    </div>
+
+    <!-- ==================== TAB: TYPOGRAPHY ==================== -->
+    <div class="tab-content" id="tab-typography">
+      <div class="section-label">Font Family</div>
+      <div class="field-group">
+        <div class="field">
+          <label class="field__label">日本語フォント</label>
+          <select class="field__select" id="fontJA" onchange="generatePrompt()">
+            <option value="">選択してください</option>
+            <option value="Hiragino Sans" selected>Hiragino Sans</option>
+            <option value="Noto Sans JP">Noto Sans JP</option>
+            <option value="YuGothic">游ゴシック</option>
+            <option value="Hiragino Mincho">ヒラギノ明朝</option>
+            <option value="Noto Serif JP">Noto Serif JP</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">英語フォント</label>
+          <select class="field__select" id="fontEN" onchange="generatePrompt()">
+            <option value="">選択してください</option>
+            <option value="Poppins" selected>Poppins</option>
+            <option value="Inter">Inter</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Playfair Display">Playfair Display</option>
+            <option value="DM Sans">DM Sans</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-label">Type Scale</div>
+      <div class="field__hint" style="margin-bottom:10px">6段階のフォントスケールを定義。ジャンプ率とセットで設計する</div>
+
+      <div class="field-group-3">
+        <div class="field">
+          <label class="field__label">大 (H1)</label>
+          <input type="text" class="field__input" id="typeH1" placeholder="32px" oninput="generatePrompt()">
+        </div>
+        <div class="field">
+          <label class="field__label">大中 (H2)</label>
+          <input type="text" class="field__input" id="typeH2" placeholder="24px" oninput="generatePrompt()">
+        </div>
+        <div class="field">
+          <label class="field__label">中 (H3)</label>
+          <input type="text" class="field__input" id="typeH3" placeholder="18px" oninput="generatePrompt()">
+        </div>
+      </div>
+      <div class="field-group-3">
+        <div class="field">
+          <label class="field__label">中小 (Body)</label>
+          <input type="text" class="field__input" id="typeBody" placeholder="14px" oninput="generatePrompt()">
+        </div>
+        <div class="field">
+          <label class="field__label">最小 (Small)</label>
+          <input type="text" class="field__input" id="typeSmall" placeholder="12px" oninput="generatePrompt()">
+        </div>
+        <div class="field">
+          <label class="field__label">飾り (Display)</label>
+          <input type="text" class="field__input" id="typeDisplay" placeholder="48px" oninput="generatePrompt()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label">行間 (line-height)</label>
+        <div class="field__hint">75%以下は窮屈な印象になる。最低1:1（=100%）以上を推奨</div>
+        <div class="toggle-row" id="lineHeight">
+          <div class="toggle-item" data-value="1.4" onclick="toggleSingle(this, 'lineHeight')">1.4 (狭め)</div>
+          <div class="toggle-item active" data-value="1.6" onclick="toggleSingle(this, 'lineHeight')">1.6 (標準)</div>
+          <div class="toggle-item" data-value="1.8" onclick="toggleSingle(this, 'lineHeight')">1.8 (広め)</div>
+          <div class="toggle-item" data-value="2.0" onclick="toggleSingle(this, 'lineHeight')">2.0 (ゆとり)</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label">font-weight ポリシー</label>
+        <div class="toggle-row" id="fontWeight">
+          <div class="toggle-item" data-value="light" onclick="toggleSingle(this, 'fontWeight')">細め (300/400)</div>
+          <div class="toggle-item active" data-value="normal" onclick="toggleSingle(this, 'fontWeight')">標準 (400/600)</div>
+          <div class="toggle-item" data-value="bold" onclick="toggleSingle(this, 'fontWeight')">太め (600/700)</div>
         </div>
       </div>
     </div>
 
-    <hr class="divider">
+    <!-- ==================== TAB: SPACING ==================== -->
+    <div class="tab-content" id="tab-spacing">
+      <div class="section-label">Spacing Scale (S / M / L)</div>
+      <div class="field__hint" style="margin-bottom:10px">等差(10/20/30)ではなく等比(1.5x/2x)で定義する。サイズ差が明確になる</div>
 
-    <!-- BASIC INFO -->
-    <div class="field">
-      <label class="field__label">セクション名（英語）</label>
-      <div class="field__hint">例: fambox-hero, fam-case-study</div>
-      <input type="text" class="field__input" id="sectionName" placeholder="fambox-section-name" oninput="generatePrompt()">
-    </div>
+      <div class="field">
+        <label class="field__label">スペーシング比率</label>
+        <div class="toggle-row" id="spacingRatio">
+          <div class="toggle-item active" data-value="1.5" onclick="toggleSingle(this, 'spacingRatio'); updateSpacingPreview()">1.5x</div>
+          <div class="toggle-item" data-value="2" onclick="toggleSingle(this, 'spacingRatio'); updateSpacingPreview()">2x</div>
+          <div class="toggle-item" data-value="custom" onclick="toggleSingle(this, 'spacingRatio'); updateSpacingPreview()">カスタム</div>
+        </div>
+      </div>
 
-    <div class="field">
-      <label class="field__label">セクションの目的・概要</label>
-      <textarea class="field__textarea" id="sectionPurpose" placeholder="このセクションが何を表示し、どんな役割を果たすか" oninput="generatePrompt()"></textarea>
-    </div>
-
-    <hr class="divider">
-
-    <!-- DESIGN SPECS -->
-    <div class="settings-block">
-      <div class="settings-block__header open" onclick="toggleBlock(this)">デザイン仕様</div>
-      <div class="settings-block__body open">
-        <div class="field-group">
-          <div class="field">
-            <label class="field__label">背景色</label>
-            <input type="text" class="field__input" id="bgColor" placeholder="#1B1D1A" oninput="generatePrompt()">
-          </div>
-          <div class="field">
-            <label class="field__label">テキスト色</label>
-            <input type="text" class="field__input" id="textColor" placeholder="#FFFFFF" oninput="generatePrompt()">
-          </div>
+      <div class="field-group-3">
+        <div class="field">
+          <label class="field__label">S (Small)</label>
+          <input type="text" class="field__input" id="spacingS" placeholder="16px" value="16px" oninput="updateSpacingPreview(); generatePrompt()">
         </div>
         <div class="field">
-          <label class="field__label">アクセントカラー</label>
-          <input type="text" class="field__input" id="accentColor" placeholder="#FB4C15" value="#FB4C15" oninput="generatePrompt()">
-        </div>
-        <div class="field-group">
-          <div class="field">
-            <label class="field__label">PC 最大幅</label>
-            <input type="text" class="field__input" id="maxWidth" placeholder="1200px" oninput="generatePrompt()">
-          </div>
-          <div class="field">
-            <label class="field__label">SP ブレイクポイント</label>
-            <input type="text" class="field__input" id="breakpoint" placeholder="749px" value="749px" oninput="generatePrompt()">
-          </div>
+          <label class="field__label">M (Medium)</label>
+          <input type="text" class="field__input" id="spacingM" placeholder="24px" value="24px" oninput="generatePrompt()">
         </div>
         <div class="field">
-          <label class="field__label">レイアウト構成</label>
-          <textarea class="field__textarea" id="layout" placeholder="PC: 2カラム (左テキスト / 右画像)&#10;SP: 1カラム (画像→テキスト)" oninput="generatePrompt()"></textarea>
+          <label class="field__label">L (Large)</label>
+          <input type="text" class="field__input" id="spacingL" placeholder="36px" value="36px" oninput="generatePrompt()">
+        </div>
+      </div>
+
+      <div class="spacing-preview" id="spacingPreview">
+        <div style="text-align:center"><div class="spacing-bar" style="height:32px"></div><div class="spacing-bar-label">S</div></div>
+        <div style="text-align:center"><div class="spacing-bar" style="height:48px"></div><div class="spacing-bar-label">M</div></div>
+        <div style="text-align:center"><div class="spacing-bar" style="height:72px"></div><div class="spacing-bar-label">L</div></div>
+      </div>
+
+      <div class="section-label">Spacing Policy</div>
+      <div class="field__hint" style="margin-bottom:10px">同じ意味の要素には同じ値、異なる意味には異なる値を割り当てる</div>
+
+      <div class="field">
+        <label class="field__label">コンテナ → 子要素（padding）</label>
+        <div class="toggle-row" id="spacingContainer">
+          <div class="toggle-item" data-value="S" onclick="toggleSingle(this, 'spacingContainer')">S</div>
+          <div class="toggle-item" data-value="M" onclick="toggleSingle(this, 'spacingContainer')">M</div>
+          <div class="toggle-item active" data-value="L" onclick="toggleSingle(this, 'spacingContainer')">L</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label">兄弟要素間（margin）</label>
+        <div class="toggle-row" id="spacingSibling">
+          <div class="toggle-item" data-value="S" onclick="toggleSingle(this, 'spacingSibling')">S</div>
+          <div class="toggle-item active" data-value="M" onclick="toggleSingle(this, 'spacingSibling')">M</div>
+          <div class="toggle-item" data-value="L" onclick="toggleSingle(this, 'spacingSibling')">L</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label">コンポーネント内部（gap）</label>
+        <div class="toggle-row" id="spacingInner">
+          <div class="toggle-item active" data-value="S" onclick="toggleSingle(this, 'spacingInner')">S</div>
+          <div class="toggle-item" data-value="M" onclick="toggleSingle(this, 'spacingInner')">M</div>
+          <div class="toggle-item" data-value="L" onclick="toggleSingle(this, 'spacingInner')">L</div>
         </div>
       </div>
     </div>
 
-    <hr class="divider">
+    <!-- ==================== TAB: COLOR ==================== -->
+    <div class="tab-content" id="tab-color">
+      <div class="section-label">Brand Colors</div>
+      <div class="color-row">
+        <span class="color-label">Primary</span>
+        <input type="color" class="color-swatch" id="colorPrimarySwatch" value="#FB4C15" oninput="syncColor(this,'colorPrimary')">
+        <input type="text" class="field__input" id="colorPrimary" value="#FB4C15" oninput="syncSwatch(this,'colorPrimarySwatch'); generatePrompt()">
+      </div>
+      <div class="color-row">
+        <span class="color-label">Secondary</span>
+        <input type="color" class="color-swatch" id="colorSecondarySwatch" value="#1B1D1A" oninput="syncColor(this,'colorSecondary')">
+        <input type="text" class="field__input" id="colorSecondary" value="#1B1D1A" oninput="syncSwatch(this,'colorSecondarySwatch'); generatePrompt()">
+      </div>
+      <div class="color-row">
+        <span class="color-label">Inactive</span>
+        <input type="color" class="color-swatch" id="colorInactiveSwatch" value="#CCCCCC" oninput="syncColor(this,'colorInactive')">
+        <input type="text" class="field__input" id="colorInactive" value="#CCCCCC" oninput="syncSwatch(this,'colorInactiveSwatch'); generatePrompt()">
+      </div>
+      <div class="color-row">
+        <span class="color-label">Error</span>
+        <input type="color" class="color-swatch" id="colorErrorSwatch" value="#E53E3E" oninput="syncColor(this,'colorError')">
+        <input type="text" class="field__input" id="colorError" value="#E53E3E" oninput="syncSwatch(this,'colorErrorSwatch'); generatePrompt()">
+      </div>
 
-    <!-- FEATURES -->
-    <div class="settings-block">
-      <div class="settings-block__header open" onclick="toggleBlock(this)">機能要件</div>
-      <div class="settings-block__body open">
-        <div class="field">
-          <label class="field__label">機能チップ（複数選択可）</label>
-          <div class="chips" id="featureChips">
-            <div class="chip" data-value="scroll-animation" onclick="toggleChip(this)">スクロールアニメ</div>
-            <div class="chip" data-value="video-bg" onclick="toggleChip(this)">動画背景</div>
-            <div class="chip" data-value="accordion" onclick="toggleChip(this)">アコーディオン</div>
-            <div class="chip" data-value="carousel" onclick="toggleChip(this)">カルーセル</div>
-            <div class="chip" data-value="tabs" onclick="toggleChip(this)">タブ切替</div>
-            <div class="chip" data-value="modal" onclick="toggleChip(this)">モーダル</div>
-            <div class="chip" data-value="lazy-load" onclick="toggleChip(this)">遅延読込</div>
-            <div class="chip" data-value="parallax" onclick="toggleChip(this)">パララックス</div>
-          </div>
-        </div>
-        <div class="field">
-          <label class="field__label">追加要件</label>
-          <textarea class="field__textarea" id="additionalReqs" placeholder="その他の機能要件を記入" oninput="generatePrompt()"></textarea>
+      <div class="section-label">Background & Gray Scale</div>
+      <div class="color-row">
+        <span class="color-label">BG (Gray1)</span>
+        <input type="color" class="color-swatch" id="colorGray1Swatch" value="#F5F5F5" oninput="syncColor(this,'colorGray1')">
+        <input type="text" class="field__input" id="colorGray1" value="#F5F5F5" oninput="syncSwatch(this,'colorGray1Swatch'); generatePrompt()">
+      </div>
+      <div class="color-row">
+        <span class="color-label">Gray2</span>
+        <input type="color" class="color-swatch" id="colorGray2Swatch" value="#E0E0E0" oninput="syncColor(this,'colorGray2')">
+        <input type="text" class="field__input" id="colorGray2" value="#E0E0E0" oninput="syncSwatch(this,'colorGray2Swatch'); generatePrompt()">
+      </div>
+      <div class="color-row">
+        <span class="color-label">Gray3</span>
+        <input type="color" class="color-swatch" id="colorGray3Swatch" value="#AAAAAA" oninput="syncColor(this,'colorGray3')">
+        <input type="text" class="field__input" id="colorGray3" value="#AAAAAA" oninput="syncSwatch(this,'colorGray3Swatch'); generatePrompt()">
+      </div>
+      <div class="color-row">
+        <span class="color-label">Gray4</span>
+        <input type="color" class="color-swatch" id="colorGray4Swatch" value="#888888" oninput="syncColor(this,'colorGray4')">
+        <input type="text" class="field__input" id="colorGray4" value="#888888" oninput="syncSwatch(this,'colorGray4Swatch'); generatePrompt()">
+      </div>
+
+      <div class="section-label">Text on Image</div>
+      <div class="field">
+        <label class="field__label">画像上テキストの処理</label>
+        <div class="toggle-row" id="textOnImage">
+          <div class="toggle-item active" data-value="gradient" onclick="toggleSingle(this, 'textOnImage')">グラデOL</div>
+          <div class="toggle-item" data-value="solid" onclick="toggleSingle(this, 'textOnImage')">単色OL</div>
+          <div class="toggle-item" data-value="shadow" onclick="toggleSingle(this, 'textOnImage')">テキストシャドウ</div>
+          <div class="toggle-item" data-value="none" onclick="toggleSingle(this, 'textOnImage')">なし</div>
         </div>
       </div>
     </div>
 
-    <hr class="divider">
-
-    <!-- SCHEMA -->
-    <div class="settings-block">
-      <div class="settings-block__header" onclick="toggleBlock(this)">Schema 設定</div>
-      <div class="settings-block__body">
-        <div class="field">
-          <label class="field__label">カスタマイザー設定項目</label>
-          <div class="field__hint">セクションのカスタマイザーで編集可能にする項目</div>
-          <div class="chips" id="schemaChips">
-            <div class="chip" data-value="heading" onclick="toggleChip(this)">見出し</div>
-            <div class="chip" data-value="subheading" onclick="toggleChip(this)">サブ見出し</div>
-            <div class="chip" data-value="bg_color" onclick="toggleChip(this)">背景色</div>
-            <div class="chip" data-value="text_color" onclick="toggleChip(this)">テキスト色</div>
-            <div class="chip" data-value="image" onclick="toggleChip(this)">画像</div>
-            <div class="chip" data-value="video" onclick="toggleChip(this)">動画URL</div>
-            <div class="chip" data-value="padding" onclick="toggleChip(this)">余白</div>
-            <div class="chip" data-value="button" onclick="toggleChip(this)">ボタン</div>
-            <div class="chip" data-value="blocks" onclick="toggleChip(this)">ブロック</div>
-          </div>
+    <!-- ==================== TAB: COMPONENTS ==================== -->
+    <div class="tab-content" id="tab-components">
+      <div class="section-label">Component States</div>
+      <div class="field__hint" style="margin-bottom:10px">全インタラクティブ要素は Default / Pressed / Disabled を持つ</div>
+      <div class="field">
+        <label class="field__label">状態の表現方法</label>
+        <div class="chips" id="stateChips">
+          <div class="chip active" data-value="hover-darken" onclick="toggleChip(this)">Hover: 暗くする</div>
+          <div class="chip" data-value="hover-scale" onclick="toggleChip(this)">Hover: 拡大</div>
+          <div class="chip active" data-value="hover-shadow" onclick="toggleChip(this)">Hover: 影追加</div>
+          <div class="chip active" data-value="disabled-opacity" onclick="toggleChip(this)">Disabled: 透過</div>
+          <div class="chip" data-value="pressed-halo" onclick="toggleChip(this)">Pressed: ハロー</div>
+          <div class="chip" data-value="focus-ring" onclick="toggleChip(this)">Focus: リング</div>
         </div>
-        <div class="field">
-          <label class="field__label">ブロックタイプ（使用する場合）</label>
-          <textarea class="field__textarea" id="blockTypes" placeholder="例: card（画像・タイトル・説明文）&#10;例: faq_item（質問・回答）" oninput="generatePrompt()"></textarea>
+      </div>
+
+      <div class="section-label">Border Radius</div>
+      <div class="field">
+        <label class="field__label">角丸パターン</label>
+        <div class="toggle-row" id="borderRadius">
+          <div class="toggle-item" data-value="0" onclick="toggleSingle(this, 'borderRadius')">0px</div>
+          <div class="toggle-item" data-value="4" onclick="toggleSingle(this, 'borderRadius')">4px</div>
+          <div class="toggle-item active" data-value="8" onclick="toggleSingle(this, 'borderRadius')">8px</div>
+          <div class="toggle-item" data-value="12" onclick="toggleSingle(this, 'borderRadius')">12px</div>
+          <div class="toggle-item" data-value="pill" onclick="toggleSingle(this, 'borderRadius')">Pill</div>
+        </div>
+      </div>
+
+      <div class="section-label">Elevation / Shadow</div>
+      <div class="field">
+        <label class="field__label">シャドウレベル</label>
+        <div class="toggle-row" id="elevation">
+          <div class="toggle-item" data-value="none" onclick="toggleSingle(this, 'elevation')">なし</div>
+          <div class="toggle-item active" data-value="subtle" onclick="toggleSingle(this, 'elevation')">微細</div>
+          <div class="toggle-item" data-value="medium" onclick="toggleSingle(this, 'elevation')">中程度</div>
+          <div class="toggle-item" data-value="strong" onclick="toggleSingle(this, 'elevation')">強め</div>
+        </div>
+      </div>
+
+      <div class="section-label">Button Style</div>
+      <div class="field">
+        <label class="field__label">ボタン種類</label>
+        <div class="chips" id="buttonChips">
+          <div class="chip active" data-value="filled" onclick="toggleChip(this)">Filled (Primary)</div>
+          <div class="chip" data-value="outlined" onclick="toggleChip(this)">Outlined</div>
+          <div class="chip" data-value="text-only" onclick="toggleChip(this)">Text Only</div>
+          <div class="chip" data-value="icon-btn" onclick="toggleChip(this)">Icon Button</div>
+        </div>
+      </div>
+
+      <div class="section-label">Animation / Motion</div>
+      <div class="field">
+        <label class="field__label">アニメーション方針</label>
+        <div class="toggle-row" id="motionStyle">
+          <div class="toggle-item" data-value="none" onclick="toggleSingle(this, 'motionStyle')">なし</div>
+          <div class="toggle-item active" data-value="subtle" onclick="toggleSingle(this, 'motionStyle')">控えめ</div>
+          <div class="toggle-item" data-value="playful" onclick="toggleSingle(this, 'motionStyle')">遊び心</div>
+          <div class="toggle-item" data-value="dramatic" onclick="toggleSingle(this, 'motionStyle')">ドラマチック</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label">トランジション速度</label>
+        <div class="toggle-row" id="transitionSpeed">
+          <div class="toggle-item" data-value="0.15s" onclick="toggleSingle(this, 'transitionSpeed')">0.15s</div>
+          <div class="toggle-item active" data-value="0.3s" onclick="toggleSingle(this, 'transitionSpeed')">0.3s</div>
+          <div class="toggle-item" data-value="0.5s" onclick="toggleSingle(this, 'transitionSpeed')">0.5s</div>
+          <div class="toggle-item" data-value="0.8s" onclick="toggleSingle(this, 'transitionSpeed')">0.8s</div>
         </div>
       </div>
     </div>
 
-    <hr class="divider">
+    <!-- ==================== TAB: SCHEMA ==================== -->
+    <div class="tab-content" id="tab-schema">
+      <div class="section-label">Customizer Settings</div>
+      <div class="field">
+        <label class="field__label">カスタマイザー設定項目</label>
+        <div class="chips" id="schemaChips">
+          <div class="chip" data-value="heading" onclick="toggleChip(this)">見出し</div>
+          <div class="chip" data-value="subheading" onclick="toggleChip(this)">サブ見出し</div>
+          <div class="chip" data-value="body_text" onclick="toggleChip(this)">本文</div>
+          <div class="chip" data-value="bg_color" onclick="toggleChip(this)">背景色</div>
+          <div class="chip" data-value="text_color" onclick="toggleChip(this)">テキスト色</div>
+          <div class="chip" data-value="image" onclick="toggleChip(this)">画像</div>
+          <div class="chip" data-value="video" onclick="toggleChip(this)">動画URL</div>
+          <div class="chip" data-value="padding_top" onclick="toggleChip(this)">上余白</div>
+          <div class="chip" data-value="padding_bottom" onclick="toggleChip(this)">下余白</div>
+          <div class="chip" data-value="button_text" onclick="toggleChip(this)">ボタン文言</div>
+          <div class="chip" data-value="button_url" onclick="toggleChip(this)">ボタンURL</div>
+          <div class="chip" data-value="blocks" onclick="toggleChip(this)">ブロック</div>
+        </div>
+      </div>
 
-    <!-- CODING RULES -->
-    <div class="settings-block">
-      <div class="settings-block__header" onclick="toggleBlock(this)">コーディングルール</div>
-      <div class="settings-block__body">
-        <div class="field">
-          <label class="field__label">適用ルール</label>
-          <div class="chips" id="ruleChips">
-            <div class="chip active" data-value="scoped-css" onclick="toggleChip(this)">Scoped CSS</div>
-            <div class="chip active" data-value="no-external-js" onclick="toggleChip(this)">外部JS不使用</div>
-            <div class="chip active" data-value="responsive" onclick="toggleChip(this)">レスポンシブ</div>
-            <div class="chip active" data-value="ja-comments" onclick="toggleChip(this)">日本語コメント</div>
-            <div class="chip" data-value="intersection-observer" onclick="toggleChip(this)">Intersection Observer</div>
-            <div class="chip" data-value="css-variables" onclick="toggleChip(this)">CSS変数</div>
-          </div>
+      <div class="section-label">Block Types</div>
+      <div class="field">
+        <label class="field__label">ブロックタイプ定義</label>
+        <textarea class="field__textarea" id="blockTypes" placeholder="例: card（画像・タイトル・説明文・リンクURL）&#10;例: faq_item（質問テキスト・回答テキスト）" oninput="generatePrompt()"></textarea>
+      </div>
+
+      <div class="section-label">Coding Rules</div>
+      <div class="field">
+        <div class="chips" id="ruleChips">
+          <div class="chip active" data-value="scoped-css" onclick="toggleChip(this)">Scoped CSS</div>
+          <div class="chip active" data-value="no-external-js" onclick="toggleChip(this)">外部JS不使用</div>
+          <div class="chip active" data-value="responsive" onclick="toggleChip(this)">レスポンシブ</div>
+          <div class="chip active" data-value="ja-comments" onclick="toggleChip(this)">日本語コメント</div>
+          <div class="chip" data-value="intersection-observer" onclick="toggleChip(this)">Intersection Observer</div>
+          <div class="chip active" data-value="css-variables" onclick="toggleChip(this)">CSS変数</div>
+          <div class="chip" data-value="prefers-reduced-motion" onclick="toggleChip(this)">モーション軽減対応</div>
         </div>
       </div>
     </div>
 
+    <!-- GENERATE BUTTON (always visible) -->
     <div class="btn-group">
       <button class="btn btn--primary" onclick="generatePrompt()">プロンプト生成</button>
       <button class="btn btn--ghost" onclick="resetForm()">リセット</button>
@@ -467,10 +703,13 @@ body {
 
   <!-- RIGHT: OUTPUT -->
   <div class="panel panel--output">
-    <div class="panel__title">Generated Prompt</div>
-    <div class="btn-group" style="margin-top: 0; margin-bottom: 16px;">
-      <button class="btn btn--secondary" onclick="copyPrompt()">クリップボードにコピー</button>
-      <button class="btn btn--ghost" onclick="copyAsMarkdown()">Markdown形式</button>
+    <div class="output-header">
+      <div class="output-header__title">Generated Prompt</div>
+      <div class="output-stats" id="outputStats"></div>
+    </div>
+    <div class="btn-group" style="margin-top:0; margin-bottom:12px;">
+      <button class="btn btn--secondary" onclick="copyPrompt()">コピー</button>
+      <button class="btn btn--ghost" onclick="copyAsMarkdown()">Markdown</button>
     </div>
     <div class="output-box" id="outputBox">
       <span class="output-box__placeholder">左のフォームに入力すると、ここにプロンプトが生成されます</span>
@@ -478,207 +717,297 @@ body {
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast">コピーしました</div>
 
 <script>
-// ===== STATE =====
-let selectedTemplate = null;
+// ===== TAB SWITCHING =====
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
+  document.getElementById('tab-' + tabId).classList.add('active');
+}
 
-const templates = {
-  hero: {
-    name: 'fambox-hero',
-    purpose: 'ファーストビューのヒーローセクション。動画またはメイン画像を全幅で表示し、キャッチコピーとCTAボタンを重ねる。',
-    bgColor: '#1B1D1A',
-    textColor: '#FFFFFF',
-    layout: 'PC: フル幅背景 + 中央テキストオーバーレイ\nSP: 縦積み（画像→テキスト→CTA）',
-    features: ['video-bg', 'scroll-animation', 'lazy-load'],
-    schema: ['heading', 'subheading', 'image', 'video', 'button', 'bg_color'],
-  },
-  features: {
-    name: 'fambox-value-proposition',
-    purpose: '商品やサービスの特徴・バリューを複数カードで訴求するセクション。アイコン・画像付きのカードを並べて表示。',
-    bgColor: '#FFFFFF',
-    textColor: '#1B1D1A',
-    layout: 'PC: 3カラムグリッド\nSP: 1カラム縦積み',
-    features: ['scroll-animation'],
-    schema: ['heading', 'subheading', 'bg_color', 'text_color', 'padding', 'blocks'],
-    blockTypes: 'feature_card（アイコン画像・タイトル・説明文）',
-  },
-  carousel: {
-    name: 'fambox-carousel',
-    purpose: '横スクロールで複数アイテムを表示するカルーセルセクション。ドラッグ操作とスナップスクロールに対応。',
-    bgColor: '#F5F5F5',
-    textColor: '#1B1D1A',
-    layout: 'PC: 横スクロール（3〜4枚表示）+ 左右ナビ\nSP: 横スワイプ（1.2枚表示）',
-    features: ['carousel', 'lazy-load'],
-    schema: ['heading', 'bg_color', 'padding', 'blocks'],
-    blockTypes: 'slide（画像・タイトル・説明文・リンクURL）',
-  },
-  faq: {
-    name: 'fambox-faq',
-    purpose: 'よくある質問をアコーディオン形式で表示するFAQセクション。',
-    bgColor: '#FFFFFF',
-    textColor: '#1B1D1A',
-    layout: 'PC: 中央寄せ（max-width: 800px）\nSP: フル幅',
-    features: ['accordion'],
-    schema: ['heading', 'subheading', 'bg_color', 'padding', 'blocks'],
-    blockTypes: 'faq_item（質問・回答テキスト）',
-  },
-  profile: {
-    name: 'fambox-profile',
-    purpose: '人物紹介・シェフ/スタッフプロフィールセクション。写真と経歴・肩書きを表示。',
-    bgColor: '#1B1D1A',
-    textColor: '#FFFFFF',
-    layout: 'PC: 2カラム（左: 写真 / 右: テキスト）\nSP: 縦積み（写真→テキスト）',
-    features: ['scroll-animation'],
-    schema: ['heading', 'image', 'bg_color', 'text_color', 'padding', 'blocks'],
-    blockTypes: 'profile_item（写真・名前・肩書き・紹介文）',
-  },
-  custom: {
-    name: '',
-    purpose: '',
-    bgColor: '',
-    textColor: '',
-    layout: '',
-    features: [],
-    schema: [],
-  },
-};
+// ===== CHIPS =====
+function toggleChip(el) { el.classList.toggle('active'); generatePrompt(); }
+
+// ===== SINGLE SELECT TOGGLE =====
+function toggleSingle(el, groupId) {
+  document.querySelectorAll(`#${groupId} .toggle-item`).forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  generatePrompt();
+}
+
+// ===== COLOR SYNC =====
+function syncColor(swatch, inputId) {
+  document.getElementById(inputId).value = swatch.value.toUpperCase();
+  generatePrompt();
+}
+function syncSwatch(input, swatchId) {
+  const v = input.value;
+  if (/^#[0-9A-Fa-f]{6}$/.test(v)) document.getElementById(swatchId).value = v;
+}
+
+// ===== SPACING PREVIEW =====
+function updateSpacingPreview() {
+  const ratio = getToggleValue('spacingRatio');
+  const sVal = parseInt(document.getElementById('spacingS').value) || 16;
+  if (ratio !== 'custom') {
+    const r = parseFloat(ratio);
+    document.getElementById('spacingM').value = Math.round(sVal * r) + 'px';
+    document.getElementById('spacingL').value = Math.round(sVal * r * r) + 'px';
+  }
+  const s = parseInt(document.getElementById('spacingS').value) || 16;
+  const m = parseInt(document.getElementById('spacingM').value) || 24;
+  const l = parseInt(document.getElementById('spacingL').value) || 36;
+  const bars = document.querySelectorAll('#spacingPreview .spacing-bar');
+  bars[0].style.height = s + 'px';
+  bars[1].style.height = m + 'px';
+  bars[2].style.height = l + 'px';
+  generatePrompt();
+}
 
 // ===== TEMPLATE =====
+let selectedTemplate = null;
+const templates = {
+  hero: { name:'fambox-hero', purpose:'ファーストビューのヒーローセクション。動画またはメイン画像を全幅で表示し、キャッチコピーとCTAボタンを重ねる。', layout:'PC: フル幅背景 + 中央テキストオーバーレイ\nSP: 縦積み（画像→テキスト→CTA）', features:['video-bg','scroll-animation','lazy-load'], schema:['heading','subheading','image','video','button_text','button_url','bg_color'], layoutRatio:'full', tasteName:'ダイナミック', shapeStyle:'angular', jumpRate:'high' },
+  features: { name:'fambox-value-proposition', purpose:'商品やサービスの特徴・バリューを複数カードで訴求するセクション。', layout:'PC: 3カラムグリッド\nSP: 1カラム縦積み', features:['scroll-animation'], schema:['heading','subheading','bg_color','text_color','padding_top','padding_bottom','blocks'], blockTypes:'feature_card（アイコン画像・タイトル・説明文）', layoutRatio:'1:1', tasteName:'クリーン', shapeStyle:'rounded', jumpRate:'medium' },
+  carousel: { name:'fambox-carousel', purpose:'横スクロールで複数アイテムを表示するカルーセル。ドラッグ操作とスナップスクロール対応。', layout:'PC: 横スクロール（3〜4枚表示）+ 左右ナビ\nSP: 横スワイプ（1.2枚表示）', features:['carousel','lazy-load','snap-scroll'], schema:['heading','bg_color','padding_top','padding_bottom','blocks'], blockTypes:'slide（画像・タイトル・説明文・リンクURL）', layoutRatio:'full', tasteName:'', shapeStyle:'rounded', jumpRate:'medium' },
+  faq: { name:'fambox-faq', purpose:'よくある質問をアコーディオン形式で表示するFAQセクション。', layout:'PC: 中央寄せ（max-width: 800px）\nSP: フル幅', features:['accordion'], schema:['heading','subheading','bg_color','padding_top','padding_bottom','blocks'], blockTypes:'faq_item（質問テキスト・回答テキスト）', layoutRatio:'full', tasteName:'ミニマル', shapeStyle:'angular', jumpRate:'low' },
+  profile: { name:'fambox-profile', purpose:'人物紹介・シェフ/スタッフプロフィールセクション。写真と経歴・肩書きを表示。', layout:'PC: 2カラム（左: 写真 / 右: テキスト）\nSP: 縦積み（写真→テキスト）', features:['scroll-animation'], schema:['heading','image','bg_color','text_color','padding_top','padding_bottom','blocks'], blockTypes:'profile_item（写真・名前・肩書き・紹介文）', layoutRatio:'1:2', tasteName:'', shapeStyle:'rounded', jumpRate:'medium' },
+  custom: { name:'', purpose:'', layout:'', features:[], schema:[], layoutRatio:'', tasteName:'', shapeStyle:'', jumpRate:'' },
+};
+
 function selectTemplate(el) {
   document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
   selectedTemplate = el.dataset.template;
-
   const t = templates[selectedTemplate];
   if (!t) return;
-
   document.getElementById('sectionName').value = t.name || '';
   document.getElementById('sectionPurpose').value = t.purpose || '';
-  document.getElementById('bgColor').value = t.bgColor || '';
-  document.getElementById('textColor').value = t.textColor || '';
   document.getElementById('layout').value = t.layout || '';
   document.getElementById('blockTypes').value = t.blockTypes || '';
-
-  // Reset & set feature chips
-  document.querySelectorAll('#featureChips .chip').forEach(c => {
-    c.classList.toggle('active', (t.features || []).includes(c.dataset.value));
-  });
-  document.querySelectorAll('#schemaChips .chip').forEach(c => {
-    c.classList.toggle('active', (t.schema || []).includes(c.dataset.value));
-  });
-
+  if (t.tasteName) document.getElementById('tasteName').value = t.tasteName;
+  // Set toggles
+  if (t.layoutRatio) setToggle('layoutRatio', t.layoutRatio);
+  if (t.shapeStyle) setToggle('shapeStyle', t.shapeStyle);
+  if (t.jumpRate) setToggle('jumpRate', t.jumpRate);
+  // Set chips
+  document.querySelectorAll('#featureChips .chip').forEach(c => c.classList.toggle('active', (t.features||[]).includes(c.dataset.value)));
+  document.querySelectorAll('#schemaChips .chip').forEach(c => c.classList.toggle('active', (t.schema||[]).includes(c.dataset.value)));
   generatePrompt();
 }
 
-// ===== CHIPS =====
-function toggleChip(el) {
-  el.classList.toggle('active');
-  generatePrompt();
+function setToggle(groupId, value) {
+  document.querySelectorAll(`#${groupId} .toggle-item`).forEach(i => {
+    i.classList.toggle('active', i.dataset.value === value);
+  });
 }
 
-// ===== ACCORDION =====
-function toggleBlock(header) {
-  header.classList.toggle('open');
-  header.nextElementSibling.classList.toggle('open');
+// ===== HELPERS =====
+function getVal(id) { return (document.getElementById(id)?.value || '').trim(); }
+function getToggleValue(groupId) {
+  const active = document.querySelector(`#${groupId} .toggle-item.active`);
+  return active ? active.dataset.value : '';
+}
+function getActiveChips(containerId) {
+  return Array.from(document.querySelectorAll(`#${containerId} .chip.active`)).map(c => c.textContent.trim());
+}
+function getActiveChipValues(containerId) {
+  return Array.from(document.querySelectorAll(`#${containerId} .chip.active`)).map(c => c.dataset.value);
 }
 
-// ===== COLLECT DATA =====
-function collectFormData() {
-  const getActiveChips = (containerId) => {
-    return Array.from(document.querySelectorAll(`#${containerId} .chip.active`))
-      .map(c => c.textContent.trim());
-  };
-
-  return {
-    name: document.getElementById('sectionName').value.trim(),
-    purpose: document.getElementById('sectionPurpose').value.trim(),
-    bgColor: document.getElementById('bgColor').value.trim(),
-    textColor: document.getElementById('textColor').value.trim(),
-    accentColor: document.getElementById('accentColor').value.trim(),
-    maxWidth: document.getElementById('maxWidth').value.trim(),
-    breakpoint: document.getElementById('breakpoint').value.trim(),
-    layout: document.getElementById('layout').value.trim(),
-    features: getActiveChips('featureChips'),
-    additionalReqs: document.getElementById('additionalReqs').value.trim(),
-    schema: getActiveChips('schemaChips'),
-    blockTypes: document.getElementById('blockTypes').value.trim(),
-    rules: getActiveChips('ruleChips'),
-  };
-}
-
-// ===== GENERATE =====
+// ===== GENERATE PROMPT =====
 function generatePrompt() {
-  const d = collectFormData();
-  if (!d.name && !d.purpose) {
-    document.getElementById('outputBox').innerHTML =
-      '<span class="output-box__placeholder">左のフォームに入力すると、ここにプロンプトが生成されます</span>';
+  const name = getVal('sectionName');
+  const purpose = getVal('sectionPurpose');
+  if (!name && !purpose) {
+    document.getElementById('outputBox').innerHTML = '<span class="output-box__placeholder">左のフォームに入力すると、ここにプロンプトが生成されます</span>';
+    document.getElementById('outputStats').textContent = '';
     return;
   }
 
-  let prompt = '';
+  let p = '';
 
-  // Header
-  prompt += `Shopify Liquidセクションファイルを作成してください。\n`;
-  prompt += `ファイル名: sections/${d.name || 'section-name'}.liquid\n\n`;
+  // === HEADER ===
+  p += `Shopify Liquidセクションファイルを作成してください。\n`;
+  p += `ファイル名: sections/${name || 'section-name'}.liquid\n\n`;
 
-  // Purpose
-  if (d.purpose) {
-    prompt += `## セクション概要\n${d.purpose}\n\n`;
+  // === PURPOSE ===
+  if (purpose) p += `## セクション概要\n${purpose}\n\n`;
+
+  // === DESIGN TASTE ===
+  const taste = getVal('tasteName');
+  const shape = getToggleValue('shapeStyle');
+  const jump = getToggleValue('jumpRate');
+  const effects = getActiveChips('effectChips');
+  const required = getVal('requiredElements');
+  const imagery = getVal('imageryDirection');
+  const bgTreat = getVal('bgTreatment');
+
+  if (taste || shape || jump || effects.length || required) {
+    p += `## デザインテイスト\n`;
+    if (taste) p += `テイスト: ${taste}\n`;
+    const shapeMap = { rounded:'丸みを帯びた形状', angular:'角ばった形状', geometric:'幾何学的な形状', organic:'有機的な形状' };
+    if (shape) p += `形状: ${shapeMap[shape] || shape}\n`;
+    const jumpMap = { low:'低い（整然・高級感）', medium:'中間', high:'高い（躍動感）' };
+    if (jump) p += `ジャンプ率: ${jumpMap[jump] || jump}\n`;
+    if (effects.length) p += `エフェクト: ${effects.join(', ')}\n`;
+    if (imagery) p += `写真/イラスト: ${imagery}\n`;
+    if (bgTreat) p += `背景: ${bgTreat}\n`;
+    if (required) p += `必須構成要素: ${required}\n`;
+    p += '\n';
   }
 
-  // Design
-  const designLines = [];
-  if (d.bgColor) designLines.push(`背景色: ${d.bgColor}`);
-  if (d.textColor) designLines.push(`テキスト色: ${d.textColor}`);
-  if (d.accentColor) designLines.push(`アクセントカラー: ${d.accentColor}`);
-  if (d.maxWidth) designLines.push(`PC最大幅: ${d.maxWidth}`);
-  if (d.breakpoint) designLines.push(`SPブレイクポイント: ${d.breakpoint}`);
-  if (designLines.length) {
-    prompt += `## デザイン仕様\n${designLines.join('\n')}\n\n`;
-  }
+  // === TYPOGRAPHY ===
+  const fontJA = getVal('fontJA');
+  const fontEN = getVal('fontEN');
+  const h1 = getVal('typeH1'), h2 = getVal('typeH2'), h3 = getVal('typeH3');
+  const body = getVal('typeBody'), small = getVal('typeSmall'), display = getVal('typeDisplay');
+  const lh = getToggleValue('lineHeight');
+  const fw = getToggleValue('fontWeight');
 
-  // Layout
-  if (d.layout) {
-    prompt += `## レイアウト\n${d.layout}\n\n`;
-  }
-
-  // Features
-  if (d.features.length) {
-    prompt += `## 機能要件\n${d.features.map(f => `- ${f}`).join('\n')}\n`;
-    if (d.additionalReqs) prompt += `${d.additionalReqs}\n`;
-    prompt += '\n';
-  }
-
-  // Schema
-  if (d.schema.length || d.blockTypes) {
-    prompt += `## Schema（カスタマイザー設定）\n`;
-    if (d.schema.length) {
-      prompt += `設定項目:\n${d.schema.map(s => `- ${s}`).join('\n')}\n`;
+  if (fontJA || fontEN || h1 || body) {
+    p += `## タイポグラフィ\n`;
+    if (fontJA) p += `日本語: ${fontJA}\n`;
+    if (fontEN) p += `英語: ${fontEN}\n`;
+    if (h1 || h2 || h3 || body || small || display) {
+      p += `フォントスケール:\n`;
+      if (display) p += `  飾り (Display): ${display}\n`;
+      if (h1) p += `  大 (H1): ${h1}\n`;
+      if (h2) p += `  大中 (H2): ${h2}\n`;
+      if (h3) p += `  中 (H3): ${h3}\n`;
+      if (body) p += `  中小 (Body): ${body}\n`;
+      if (small) p += `  最小 (Small): ${small}\n`;
     }
-    if (d.blockTypes) {
-      prompt += `\nブロックタイプ:\n${d.blockTypes}\n`;
+    if (lh) p += `行間: ${lh}\n`;
+    const fwMap = { light:'300/400', normal:'400/600', bold:'600/700' };
+    if (fw) p += `font-weight: ${fwMap[fw] || fw}\n`;
+    p += '\n';
+  }
+
+  // === SPACING ===
+  const sS = getVal('spacingS'), sM = getVal('spacingM'), sL = getVal('spacingL');
+  const sRatio = getToggleValue('spacingRatio');
+  const sCont = getToggleValue('spacingContainer');
+  const sSib = getToggleValue('spacingSibling');
+  const sInner = getToggleValue('spacingInner');
+
+  if (sS || sM || sL) {
+    p += `## スペーシングシステム\n`;
+    p += `スケール: S=${sS} / M=${sM} / L=${sL}`;
+    if (sRatio && sRatio !== 'custom') p += ` (${sRatio}x等比)`;
+    p += '\n';
+    p += `ポリシー:\n`;
+    p += `  コンテナ→子要素 (padding): ${sCont}\n`;
+    p += `  兄弟要素間 (margin): ${sSib}\n`;
+    p += `  コンポーネント内 (gap): ${sInner}\n`;
+    p += '\n';
+  }
+
+  // === COLOR ===
+  const cPri = getVal('colorPrimary'), cSec = getVal('colorSecondary');
+  const cInact = getVal('colorInactive'), cErr = getVal('colorError');
+  const g1 = getVal('colorGray1'), g2 = getVal('colorGray2'), g3 = getVal('colorGray3'), g4 = getVal('colorGray4');
+  const textImg = getToggleValue('textOnImage');
+
+  if (cPri || cSec) {
+    p += `## カラーシステム\n`;
+    if (cPri) p += `Primary: ${cPri}\n`;
+    if (cSec) p += `Secondary: ${cSec}\n`;
+    if (cInact && cInact !== '#CCCCCC') p += `Inactive: ${cInact}\n`;
+    if (cErr && cErr !== '#E53E3E') p += `Error: ${cErr}\n`;
+    p += `グレースケール: ${g1} / ${g2} / ${g3} / ${g4}\n`;
+    const timMap = { gradient:'グラデーションオーバーレイ', solid:'単色オーバーレイ', shadow:'テキストシャドウ', none:'なし' };
+    if (textImg) p += `画像上テキスト: ${timMap[textImg] || textImg}\n`;
+    p += '\n';
+  }
+
+  // === LAYOUT ===
+  const ratio = getToggleValue('layoutRatio');
+  const layoutDetail = getVal('layout');
+  const maxW = getVal('maxWidth');
+  const bp = getVal('breakpoint');
+
+  if (ratio || layoutDetail || maxW) {
+    p += `## レイアウト\n`;
+    const ratioMap = { '1:1':'1:1（均等2分割）', '1:2':'1:2', '1:3':'1:3', '2:3':'2:3', full:'フル幅' };
+    if (ratio) p += `コンテナ比率: ${ratioMap[ratio] || ratio}\n`;
+    if (maxW) p += `PC最大幅: ${maxW}\n`;
+    if (bp) p += `SPブレイクポイント: ${bp}\n`;
+    if (layoutDetail) p += `構成:\n${layoutDetail}\n`;
+    p += '\n';
+  }
+
+  // === COMPONENTS ===
+  const states = getActiveChips('stateChips');
+  const br = getToggleValue('borderRadius');
+  const elev = getToggleValue('elevation');
+  const buttons = getActiveChips('buttonChips');
+  const motion = getToggleValue('motionStyle');
+  const speed = getToggleValue('transitionSpeed');
+
+  if (states.length || br || elev || buttons.length || motion) {
+    p += `## コンポーネント仕様\n`;
+    if (br) {
+      const brMap = { '0':'0px（シャープ）', '4':'4px', '8':'8px', '12':'12px', pill:'Pill（完全丸）' };
+      p += `border-radius: ${brMap[br] || br}\n`;
     }
-    prompt += '\n';
+    if (elev) {
+      const elevMap = { none:'なし', subtle:'0 2px 4px rgba(0,0,0,0.06)', medium:'0 4px 12px rgba(0,0,0,0.1)', strong:'0 8px 24px rgba(0,0,0,0.15)' };
+      p += `シャドウ: ${elevMap[elev] || elev}\n`;
+    }
+    if (buttons.length) p += `ボタン種類: ${buttons.join(', ')}\n`;
+    if (states.length) p += `状態表現: ${states.join(', ')}\n`;
+    if (motion) {
+      const motionMap = { none:'アニメーションなし', subtle:'控えめ（fade + slide）', playful:'遊び心（bounce, scale）', dramatic:'ドラマチック（大きめのスライド、パララックス）' };
+      p += `アニメーション: ${motionMap[motion] || motion}\n`;
+    }
+    if (speed) p += `トランジション: ${speed}\n`;
+    p += '\n';
   }
 
-  // Rules
-  if (d.rules.length) {
-    prompt += `## コーディングルール\n${d.rules.map(r => `- ${r}`).join('\n')}\n\n`;
+  // === FEATURES ===
+  const features = getActiveChips('featureChips');
+  const addReqs = getVal('additionalReqs');
+  if (features.length || addReqs) {
+    p += `## 機能要件\n${features.map(f => `- ${f}`).join('\n')}\n`;
+    if (addReqs) p += `${addReqs}\n`;
+    p += '\n';
   }
 
-  // Standard footer
-  prompt += `## 実装ルール（必須）\n`;
-  prompt += `- 単一の .liquid ファイルに <style>, HTML, <script>, {% schema %} を全て含める\n`;
-  prompt += `- CSSは section.id でスコープする（例: #${d.name || 'section'}-{{ section.id }}）\n`;
-  prompt += `- 外部ライブラリは使用しない（Vanilla JSのみ）\n`;
-  prompt += `- Shopifyカスタマイザーで全テキスト・画像・色を編集可能にする\n`;
-  prompt += `- レスポンシブ対応（PC / SP）\n`;
-  prompt += `- 日本語コメントでセクション分けする\n`;
+  // === SCHEMA ===
+  const schema = getActiveChips('schemaChips');
+  const blocks = getVal('blockTypes');
+  if (schema.length || blocks) {
+    p += `## Schema（カスタマイザー設定）\n`;
+    if (schema.length) p += `設定項目:\n${schema.map(s => `- ${s}`).join('\n')}\n`;
+    if (blocks) p += `\nブロックタイプ:\n${blocks}\n`;
+    p += '\n';
+  }
 
-  document.getElementById('outputBox').textContent = prompt;
+  // === CODING RULES ===
+  const rules = getActiveChips('ruleChips');
+  if (rules.length) p += `## コーディングルール\n${rules.map(r => `- ${r}`).join('\n')}\n\n`;
+
+  // === STANDARD FOOTER ===
+  p += `## 実装ルール（必須）\n`;
+  p += `- 単一の .liquid ファイルに <style>, HTML, <script>, {% schema %} を全て含める\n`;
+  p += `- CSSは section.id でスコープする（例: #${name || 'section'}-{{ section.id }}）\n`;
+  p += `- CSS変数でデザイントークンを定義し、schema値を反映する\n`;
+  p += `- 外部ライブラリは使用しない（Vanilla JSのみ）\n`;
+  p += `- Shopifyカスタマイザーで全テキスト・画像・色を編集可能にする\n`;
+  p += `- レスポンシブ対応（PC / SP）\n`;
+  p += `- スペーシングはS/M/Lスケールに従い、任意のpx値を避ける\n`;
+  p += `- 日本語コメントでセクション分けする\n`;
+
+  document.getElementById('outputBox').textContent = p;
+
+  // Stats
+  const lines = p.split('\n').length;
+  const chars = p.length;
+  document.getElementById('outputStats').textContent = `${lines} lines / ${chars} chars`;
 }
 
 // ===== COPY =====
@@ -687,35 +1016,62 @@ function copyPrompt() {
   if (!text || text.includes('左のフォームに入力すると')) return;
   navigator.clipboard.writeText(text).then(() => showToast('コピーしました'));
 }
-
 function copyAsMarkdown() {
   const text = document.getElementById('outputBox').textContent;
   if (!text || text.includes('左のフォームに入力すると')) return;
-  const md = '```\n' + text + '\n```';
-  navigator.clipboard.writeText(md).then(() => showToast('Markdown形式でコピーしました'));
+  navigator.clipboard.writeText('```\n' + text + '\n```').then(() => showToast('Markdown形式でコピーしました'));
 }
 
 // ===== TOAST =====
 function showToast(msg) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2000);
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
 
 // ===== RESET =====
 function resetForm() {
   document.querySelectorAll('.field__input, .field__textarea').forEach(el => el.value = '');
-  document.getElementById('accentColor').value = '#FB4C15';
-  document.getElementById('breakpoint').value = '749px';
+  document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
   document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  // Re-activate default rules
-  document.querySelectorAll('#ruleChips .chip').forEach(c => {
-    if (['Scoped CSS', '外部JS不使用', 'レスポンシブ', '日本語コメント'].includes(c.textContent.trim())) {
-      c.classList.add('active');
-    }
-  });
+  document.querySelectorAll('.toggle-item').forEach(i => i.classList.remove('active'));
   document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active'));
+  // Re-set defaults
+  document.getElementById('breakpoint').value = '749px';
+  document.getElementById('colorPrimary').value = '#FB4C15';
+  document.getElementById('colorSecondary').value = '#1B1D1A';
+  document.getElementById('colorInactive').value = '#CCCCCC';
+  document.getElementById('colorError').value = '#E53E3E';
+  document.getElementById('colorGray1').value = '#F5F5F5';
+  document.getElementById('colorGray2').value = '#E0E0E0';
+  document.getElementById('colorGray3').value = '#AAAAAA';
+  document.getElementById('colorGray4').value = '#888888';
+  document.getElementById('spacingS').value = '16px';
+  document.getElementById('spacingM').value = '24px';
+  document.getElementById('spacingL').value = '36px';
+  // Default active chips
+  ['scoped-css','no-external-js','responsive','ja-comments','css-variables'].forEach(v => {
+    const c = document.querySelector(`#ruleChips .chip[data-value="${v}"]`);
+    if (c) c.classList.add('active');
+  });
+  ['hover-darken','hover-shadow','disabled-opacity'].forEach(v => {
+    const c = document.querySelector(`#stateChips .chip[data-value="${v}"]`);
+    if (c) c.classList.add('active');
+  });
+  document.querySelector('#buttonChips .chip[data-value="filled"]')?.classList.add('active');
+  // Default toggles
+  setToggle('lineHeight', '1.6');
+  setToggle('fontWeight', 'normal');
+  setToggle('spacingRatio', '1.5');
+  setToggle('spacingContainer', 'L');
+  setToggle('spacingSibling', 'M');
+  setToggle('spacingInner', 'S');
+  setToggle('borderRadius', '8');
+  setToggle('elevation', 'subtle');
+  setToggle('motionStyle', 'subtle');
+  setToggle('transitionSpeed', '0.3s');
+  setToggle('textOnImage', 'gradient');
   selectedTemplate = null;
   generatePrompt();
 }
