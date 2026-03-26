@@ -384,6 +384,28 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
         <label class="field__label">要素階層（Figma抽出）</label>
         <textarea class="field__textarea" id="elementHierarchy" placeholder="depth 0: wrapper (1920x1080, #020214)&#10;depth 1: card (1192x268, rgba(255,255,255,0.1))&#10;depth 2: metric-pill (160x160, rgba(255,255,255,0.05))" rows="4"></textarea>
       </div>
+
+      <label class="field__label" style="margin-top:16px">セクション構造</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="field">
+          <label class="field__label" style="font-size:10px">セクション高さ</label>
+          <input class="field__input" id="sectionHeight" placeholder="例: 896px" oninput="generatePrompt()">
+        </div>
+        <div class="field">
+          <label class="field__label" style="font-size:10px">上余白</label>
+          <input class="field__input" id="sectionPaddingTop" placeholder="例: 120px" oninput="generatePrompt()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label" style="margin-top:12px">ブロック定義</label>
+        <textarea class="field__textarea" id="blockDefinition" placeholder="例:&#10;イシューブロック: 640×660px, 3つ横並び, 間に1px線(#ECECEC)&#10;上ブロック: padding 64px, 高さ464px&#10;下ブロック: padding 左右64px 上下32px" rows="4" oninput="generatePrompt()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field__label" style="margin-top:12px">レスポンシブ動作</label>
+        <textarea class="field__textarea" id="responsiveBehavior" placeholder="例:&#10;1920以上: 3ブロック均等横並び&#10;1920以下: ブロック幅640px固定、左詰め横スクロール&#10;1280以下: カード型（テキスト上+動画下）横スワイプ&#10;SP: 左右24px余白のカード、フリック切替" rows="4" oninput="generatePrompt()"></textarea>
+      </div>
       <div class="field-group">
         <div class="field">
           <label class="field__label">PC 最大幅</label>
@@ -590,6 +612,16 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
       <div class="field">
         <label class="field__label">要素別タイポグラフィ（詳細指定）</label>
         <textarea class="field__textarea" id="perElementTypography" placeholder="例:&#10;セクションタイトル: W5(500), 40px, #1B1D1A&#10;ラベル(ISSUES): Poppins Medium, 32px, #FB4C15&#10;名前: W6(600), 16px, #FB4C15&#10;本文: W5(500), 24px, 180%, #1B1D1A&#10;リード文: W4(400), 16px, 180%, #1B1D1A" rows="6" oninput="generatePrompt()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field__label" style="margin-top:16px">要素別タイポグラフィ</label>
+        <textarea class="field__textarea" id="elementTypography" placeholder="例:&#10;セクションタイトル: hiragino sans W5 40px #1B1D1A (SP: 28px)&#10;ラベル: Poppins Medium 16px #FB4C15&#10;見出し: hiragino sans W5 48px 180% #FB4C15 (SP: 28px)&#10;リード文: hiragino sans W4 18px 180% #1B1D1A (SP: 14px)&#10;所属名: hiragino sans W5 12px #FB4C15" rows="5" oninput="generatePrompt()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field__label" style="margin-top:12px">要素間スペーシング</label>
+        <textarea class="field__textarea" id="elementSpacing" placeholder="例:&#10;タイトル下: 56px&#10;ラベル→見出し: 8px&#10;見出し→リード文: 16px&#10;リード文→ボタン: 可変（flexbox space-between）&#10;テキスト→動画: 56px min（可変）" rows="4" oninput="generatePrompt()"></textarea>
       </div>
     </div>
 
@@ -865,6 +897,28 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
           <div class="toggle-item" data-value="0.5s" onclick="toggleSingle(this, 'transitionSpeed')">0.5s</div>
           <div class="toggle-item" data-value="0.8s" onclick="toggleSingle(this, 'transitionSpeed')">0.8s</div>
         </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label" style="margin-top:16px">インタラクション</label>
+        <div class="chips" id="interactionChips">
+          <div class="chip" data-value="carousel" onclick="toggleChip(this)">カルーセル</div>
+          <div class="chip" data-value="swipe" onclick="toggleChip(this)">スワイプ</div>
+          <div class="chip" data-value="horizontal-scroll" onclick="toggleChip(this)">横スクロール</div>
+          <div class="chip" data-value="accordion" onclick="toggleChip(this)">アコーディオン</div>
+          <div class="chip" data-value="tab-switch" onclick="toggleChip(this)">タブ切替</div>
+          <div class="chip" data-value="modal" onclick="toggleChip(this)">モーダル</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label" style="margin-top:12px">装飾要素</label>
+        <textarea class="field__textarea" id="decorativeElements" placeholder="例:&#10;左縦線: 8×84px #FB4C15（ブロック左上配置）&#10;角ブラケット: 32×32 SVG #FB4C15（動画四隅）&#10;区切り線: 1px #ECECEC（ブロック間、border-collapse対応）&#10;カルーセルドット: 8px丸 #D9D9D9 / アクティブ24×8px #FB4C15" rows="4" oninput="generatePrompt()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field__label" style="margin-top:12px">ナビゲーション要素</label>
+        <textarea class="field__textarea" id="navElements" placeholder="例:&#10;矢印ボタン: 64×64px #FB4C15 角丸4px 白矢印&#10;PC: テキストブロック下部に配置&#10;SP: 非表示（スワイプに切替）" rows="3" oninput="generatePrompt()"></textarea>
       </div>
     </div>
 
@@ -1340,6 +1394,36 @@ function generatePrompt() {
     if (verticalAlign) detailSpec += '\n### 垂直配置\n' + verticalAlign + '\n';
   }
 
+  // Section structure & interaction fields (v4.1)
+  var sectionHeight = getVal('sectionHeight');
+  var sectionPaddingTop = getVal('sectionPaddingTop');
+  var blockDefinition = getVal('blockDefinition');
+  var responsiveBehavior = getVal('responsiveBehavior');
+  var elementTypography = getVal('elementTypography');
+  var elementSpacing = getVal('elementSpacing');
+  var decorativeElements = getVal('decorativeElements');
+  var navElements = getVal('navElements');
+  var interactionChips = getActiveChips('interactionChips');
+
+  if (sectionHeight || sectionPaddingTop || blockDefinition || responsiveBehavior || elementTypography || elementSpacing || interactionChips.length || decorativeElements || navElements) {
+    if (!detailSpec) {
+      detailSpec = '\n\n## 詳細デザイン仕様（Figma抽出）\n';
+      detailSpec += '以下の値を正確に再現すること。概算値ではなく、指定値をそのまま使用する。\n';
+    }
+    if (sectionHeight || sectionPaddingTop) {
+      detailSpec += '\n### セクション構造\n';
+      if (sectionHeight) detailSpec += 'セクション高さ: ' + sectionHeight + '\n';
+      if (sectionPaddingTop) detailSpec += '上余白: ' + sectionPaddingTop + '\n';
+    }
+    if (blockDefinition) detailSpec += '\n### ブロック定義\n' + blockDefinition + '\n';
+    if (responsiveBehavior) detailSpec += '\n### レスポンシブ動作\n' + responsiveBehavior + '\n';
+    if (elementTypography) detailSpec += '\n### 要素別タイポグラフィ\n' + elementTypography + '\n';
+    if (elementSpacing) detailSpec += '\n### 要素間スペーシング\n' + elementSpacing + '\n';
+    if (interactionChips.length) detailSpec += '\n### インタラクション\n' + interactionChips.join(', ') + '\n';
+    if (decorativeElements) detailSpec += '\n### 装飾要素\n' + decorativeElements + '\n';
+    if (navElements) detailSpec += '\n### ナビゲーション要素\n' + navElements + '\n';
+  }
+
   // M3 State Layer
   var stateHover = getVal('stateHover');
   var stateFocus = getVal('stateFocus');
@@ -1449,7 +1533,8 @@ function resetForm() {
   figmaImported = false;
   // Clear detail fields
   var detailFields = ['shadowDetail', 'gradientDef', 'blurDef', 'opacityMap', 'borderRadiusVariants', 'elementHierarchy',
-    'containerHeights', 'responsiveBehaviors', 'perElementTypography', 'blockPadding', 'borderSpec', 'bgImageSpec', 'verticalAlign'];
+    'containerHeights', 'responsiveBehaviors', 'perElementTypography', 'blockPadding', 'borderSpec', 'bgImageSpec', 'verticalAlign',
+    'sectionHeight', 'sectionPaddingTop', 'blockDefinition', 'responsiveBehavior', 'elementTypography', 'elementSpacing', 'decorativeElements', 'navElements'];
   detailFields.forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ''; });
   setToggle('spInteraction', 'stack');
   // Reset M3 State Layer defaults
@@ -1592,6 +1677,15 @@ const checklistRules = [
   { field: 'borderSpec', template: 'ボーダー/区切り線が仕様通りか', category: 'parts' },
   { field: 'bgImageSpec', template: '背景画像の配置が仕様通りか', category: 'parts', type: 'visual' },
   { field: 'verticalAlign', template: '垂直配置が仕様通りか', category: 'layout', type: 'visual' },
+  // v4.1 section structure & interaction fields
+  { field: 'sectionHeight', template: 'セクション高さが {value} か', category: 'layout' },
+  { field: 'sectionPaddingTop', template: '上余白が {value} か', category: 'layout' },
+  { field: 'blockDefinition', template: 'ブロック構造が仕様通りか', category: 'layout', type: 'visual' },
+  { field: 'responsiveBehavior', template: 'レスポンシブ動作が仕様通りか', category: 'layout', type: 'visual' },
+  { field: 'elementTypography', template: '要素別タイポグラフィが仕様通りか', category: 'typography', type: 'visual' },
+  { field: 'elementSpacing', template: '要素間スペーシングが仕様通りか', category: 'spacing', type: 'visual' },
+  { field: 'decorativeElements', template: '装飾要素が仕様通りか', category: 'parts', type: 'visual' },
+  { field: 'navElements', template: 'ナビゲーション要素が仕様通りか', category: 'parts', type: 'visual' },
 ];
 
 function generateChecklist() {
