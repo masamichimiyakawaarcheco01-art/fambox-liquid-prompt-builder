@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Liquid Prompt Builder v2 - Design-Driven Section Generator</title>
+<title>Liquid Prompt Builder v3 - Design-Driven Section Generator</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,13 +55,15 @@ body {
 .header__sub { font-size: 11px; opacity: 0.4; }
 
 /* ===== LAYOUT ===== */
-.app { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 56px); }
+.app { display: grid; grid-template-columns: 3fr 3fr 4fr; min-height: calc(100vh - 56px); }
+@media (max-width: 1440px) { .app { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 960px) { .app { grid-template-columns: 1fr; } }
 
 /* ===== PANEL ===== */
-.panel { padding: 28px; overflow-y: auto; max-height: calc(100vh - 56px); }
+.panel { padding: 28px; overflow-y: auto; max-height: calc(100vh - 56px - 48px); }
 .panel--form { background: #fff; border-right: 1px solid var(--border); }
 .panel--output { background: var(--light); }
+.panel--verify { background: var(--light); border-left: 1px solid var(--border); }
 
 /* ===== TABS NAV ===== */
 .tab-nav { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
@@ -198,6 +200,22 @@ body {
 }
 .color-row .field__input { flex: 1; }
 .color-row .color-label { font-size: 11px; color: var(--gray); width: 64px; flex-shrink: 0; }
+
+/* ===== VERIFY PANEL ===== */
+.verify-section { margin-bottom: 20px; }
+.image-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+.image-tab { padding: 4px 16px; font-size: 11px; font-weight: 600; border: 1px solid var(--border); border-radius: 4px; background: #fff; cursor: pointer; font-family: var(--font-en); }
+.image-tab.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+.drop-zone { border: 2px dashed var(--border); border-radius: 8px; padding: 32px; text-align: center; cursor: pointer; transition: all 0.2s; }
+.drop-zone:hover, .drop-zone.drag-over { border-color: var(--orange); background: #FFF5F2; }
+.drop-zone__text { font-size: 12px; color: var(--gray); line-height: 1.8; }
+.design-preview-wrap { position: relative; }
+.design-preview { width: 100%; border-radius: 6px; border: 1px solid var(--border); }
+.design-preview__clear { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border-radius: 50%; border: none; background: rgba(0,0,0,0.6); color: #fff; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.preview-size-toggle { display: flex; gap: 4px; margin-bottom: 8px; }
+.preview-frame-wrap { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: #fff; margin-top: 8px; }
+.preview-frame { width: 100%; height: 400px; border: none; }
+.preview-notice { font-size: 10px; color: var(--gray); margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -715,6 +733,38 @@ body {
       <span class="output-box__placeholder">左のフォームに入力すると、ここにプロンプトが生成されます</span>
     </div>
   </div>
+
+  <!-- RIGHT: VERIFY -->
+  <div class="panel panel--verify" id="verifyPanel">
+    <div class="verify-section">
+      <div class="section-label">Design Image</div>
+      <div class="image-tabs">
+        <button class="image-tab active" onclick="switchImageTab('pc')">PC</button>
+        <button class="image-tab" onclick="switchImageTab('sp')">SP</button>
+      </div>
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone__text">Figma画像をドロップ<br>または クリック / Cmd+V</div>
+        <input type="file" id="imageInput" accept="image/png,image/jpeg,image/webp" hidden>
+      </div>
+      <div class="design-preview-wrap" id="designPreviewWrap" hidden>
+        <img class="design-preview" id="designPreview">
+        <button class="design-preview__clear" onclick="clearDesignImage()" title="画像を削除">&#10005;</button>
+      </div>
+    </div>
+
+    <div class="verify-section">
+      <div class="section-label">Code Preview</div>
+      <div class="preview-size-toggle">
+        <button class="toggle-item active" onclick="setPreviewSize('pc')">PC (1200px)</button>
+        <button class="toggle-item" onclick="setPreviewSize('sp')">SP (375px)</button>
+      </div>
+      <textarea class="field__textarea" id="codeInput" placeholder="生成されたコードを貼り付け" style="min-height:80px;font-family:'SF Mono','Fira Code',monospace;font-size:11px" oninput="updatePreview()"></textarea>
+      <div class="preview-frame-wrap">
+        <iframe id="previewFrame" sandbox="allow-scripts" class="preview-frame"></iframe>
+      </div>
+      <div class="preview-notice">外部リソース（フォント・画像URL）はsandbox内で読み込まれません</div>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast">コピーしました</div>
@@ -1074,6 +1124,86 @@ function resetForm() {
   setToggle('textOnImage', 'gradient');
   selectedTemplate = null;
   generatePrompt();
+}
+
+// ===== IMAGE UPLOAD (Task 2) =====
+const dropZone = document.getElementById('dropZone');
+const designImages = { pc: null, sp: null };
+let currentImageTab = 'pc';
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); handleImageFile(e.dataTransfer.files[0]); });
+dropZone.addEventListener('click', () => document.getElementById('imageInput').click());
+document.getElementById('imageInput').addEventListener('change', e => handleImageFile(e.target.files[0]));
+
+// Paste — skip if focus is on textarea/input
+document.addEventListener('paste', e => {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+  const item = Array.from(e.clipboardData.items).find(i => i.type.startsWith('image/'));
+  if (item) handleImageFile(item.getAsFile());
+});
+
+function handleImageFile(file) {
+  if (!file) return;
+  if (!file.type.match(/^image\/(png|jpeg|webp)$/)) { showToast('PNG/JPEG/WebP画像のみ対応'); return; }
+  if (file.size > 5 * 1024 * 1024) { showToast('5MB以下の画像を選択してください'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    designImages[currentImageTab] = e.target.result;
+    showDesignImage();
+  };
+  reader.readAsDataURL(file);
+}
+
+function showDesignImage() {
+  const img = document.getElementById('designPreview');
+  const wrap = document.getElementById('designPreviewWrap');
+  const src = designImages[currentImageTab];
+  if (src) { img.src = src; wrap.hidden = false; dropZone.hidden = true; }
+  else { wrap.hidden = true; dropZone.hidden = false; }
+}
+
+function clearDesignImage() {
+  designImages[currentImageTab] = null;
+  showDesignImage();
+}
+
+function switchImageTab(tab) {
+  currentImageTab = tab;
+  document.querySelectorAll('.image-tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase() === tab));
+  showDesignImage();
+}
+
+// ===== CODE PREVIEW (Task 3) =====
+function stripLiquid(code) {
+  let c = code;
+  c = c.replace(/\{%-?\s*schema\s*-?%\}[\s\S]*?\{%-?\s*endschema\s*-?%\}/g, '');
+  c = c.replace(/\{%-?\s*liquid[\s\S]*?-?%\}/g, '');
+  c = c.replace(/\{%-?\s*for\s+\w+\s+in\s+[\w.]+\s*-?%\}([\s\S]*?)\{%-?\s*endfor\s*-?%\}/g, (_, inner) => inner.repeat(3));
+  c = c.replace(/\{%-?\s*(?:if|unless|elsif|else|endif|endunless)\s*.*?-?%\}/g, '');
+  c = c.replace(/\{%-?\s*(?:render|include)\s+'([^']+)'.*?-?%\}/g, '[partial: $1]');
+  c = c.replace(/\{\{\s*'[^']*'\s*\|\s*asset_url\s*\}\}/g, '#');
+  c = c.replace(/\{\{\s*(?:section\.settings\.)?(\w+)[\w.]*\s*(?:\|[^}]*)?\}\}/g, '[$1]');
+  c = c.replace(/\{%-?.*?-?%\}/g, '');
+  return c;
+}
+
+function updatePreview() {
+  const code = document.getElementById('codeInput').value;
+  if (!code.trim()) return;
+  const stripped = stripLiquid(code);
+  const frame = document.getElementById('previewFrame');
+  const doc = frame.contentDocument || frame.contentWindow.document;
+  doc.open();
+  doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>' + stripped + '</body></html>');
+  doc.close();
+}
+
+function setPreviewSize(size) {
+  const frame = document.getElementById('previewFrame');
+  frame.style.width = size === 'pc' ? '100%' : '375px';
+  document.querySelectorAll('.preview-size-toggle .toggle-item').forEach(b => b.classList.toggle('active', b.textContent.includes(size.toUpperCase())));
 }
 </script>
 </body>
