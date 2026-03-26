@@ -216,6 +216,15 @@ body {
 .preview-frame-wrap { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: #fff; margin-top: 8px; }
 .preview-frame { width: 100%; height: 400px; border: none; }
 .preview-notice { font-size: 10px; color: var(--gray); margin-top: 4px; }
+
+/* ===== CHECKLIST ===== */
+.checklist-item { display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid var(--border); font-size:12px; }
+.checklist-item input[type="checkbox"] { margin-top:2px; accent-color:var(--green); flex-shrink:0; }
+.checklist-item.checked label { color:var(--gray); text-decoration:line-through; }
+.checklist-item .badge { font-size:9px; padding:1px 6px; border-radius:8px; background:var(--light); color:var(--gray); margin-left:auto; flex-shrink:0; }
+.checklist-item .badge--visual { background:#FFF3E0; color:#E65100; }
+.check-count { font-size:11px; color:var(--gray); font-weight:400; }
+.checklist__empty { font-size:12px; color:var(--gray); padding:12px 0; }
 </style>
 </head>
 <body>
@@ -764,6 +773,25 @@ body {
       </div>
       <div class="preview-notice">外部リソース（フォント・画像URL）はsandbox内で読み込まれません</div>
     </div>
+
+    <div class="verify-section">
+      <div class="section-label">Checklist <span class="check-count" id="checkCount">0/0</span></div>
+      <div class="checklist" id="checklist">
+        <div class="checklist__empty">入力フォームに値を設定するとチェック項目が生成されます</div>
+      </div>
+    </div>
+
+    <div class="verify-section">
+      <div class="section-label">Diff Report</div>
+      <div class="diff-report" id="diffReport">
+        <div class="checklist__empty">チェックリストの未チェック項目から差分レポートを生成します</div>
+      </div>
+      <div class="btn-group" style="margin-top:12px">
+        <button class="btn btn--secondary" onclick="copyForClaude()" title="修正指示" style="font-size:11px;padding:6px 14px">Claude</button>
+        <button class="btn btn--ghost" onclick="copyForGemini()" title="デザイン比較" style="font-size:11px;padding:6px 14px">Gemini</button>
+        <button class="btn btn--ghost" onclick="copyForChatGPT()" title="原因分析" style="font-size:11px;padding:6px 14px">ChatGPT</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1058,6 +1086,8 @@ function generatePrompt() {
   const lines = p.split('\n').length;
   const chars = p.length;
   document.getElementById('outputStats').textContent = `${lines} lines / ${chars} chars`;
+
+  generateChecklist();
 }
 
 // ===== COPY =====
@@ -1204,6 +1234,141 @@ function setPreviewSize(size) {
   const frame = document.getElementById('previewFrame');
   frame.style.width = size === 'pc' ? '100%' : '375px';
   document.querySelectorAll('.preview-size-toggle .toggle-item').forEach(b => b.classList.toggle('active', b.textContent.includes(size.toUpperCase())));
+}
+
+// ===== CHECKLIST (Task 4) =====
+const checklistRules = [
+  // Color
+  { field: 'colorPrimary',   template: 'Primary色 {value} がメイン要素に使われているか', category: 'color' },
+  { field: 'colorSecondary', template: 'Secondary色 {value} が使われているか', category: 'color' },
+  { field: 'colorInactive',  template: 'Inactive色 {value} が無効状態に使われているか', category: 'color', skipDefault: '#CCCCCC' },
+  { field: 'colorError',     template: 'Error色 {value} がエラー表示に使われているか', category: 'color', skipDefault: '#E53E3E' },
+  { toggle: 'textOnImage',   template: '画像上テキスト: {label} が適用されているか', category: 'color' },
+  // Typography
+  { field: 'typeH1',    template: 'H1が {value} で表示されているか', category: 'typography' },
+  { field: 'typeH2',    template: 'H2が {value} で表示されているか', category: 'typography' },
+  { field: 'typeH3',    template: 'H3が {value} で表示されているか', category: 'typography' },
+  { field: 'typeBody',  template: 'Body文字が {value} で表示されているか', category: 'typography' },
+  { select: 'fontJA',   template: '日本語フォント: {value} が適用されているか', category: 'typography' },
+  { select: 'fontEN',   template: '英語フォント: {value} が適用されているか', category: 'typography' },
+  { toggle: 'lineHeight', template: '行間 {value} が適用されているか', category: 'typography' },
+  // Spacing
+  { field: 'spacingS', template: 'Small余白 {value} が使われているか', category: 'spacing' },
+  { field: 'spacingM', template: 'Medium余白 {value} が使われているか', category: 'spacing' },
+  { field: 'spacingL', template: 'Large余白 {value} が使われているか', category: 'spacing' },
+  { toggle: 'spacingContainer', template: 'コンテナpaddingが {value} サイズか', category: 'spacing' },
+  { toggle: 'spacingSibling',   template: '兄弟要素marginが {value} サイズか', category: 'spacing' },
+  // Parts
+  { toggle: 'borderRadius', template: 'border-radiusが {value}px か', category: 'parts' },
+  { toggle: 'elevation',    template: 'シャドウが {label} レベルか', category: 'parts' },
+  { toggle: 'transitionSpeed', template: 'トランジション速度が {value} か', category: 'parts' },
+  // Taste (visual checks)
+  { toggle: 'shapeStyle', template: '形状: {label} になっているか', category: 'taste', type: 'visual' },
+  { toggle: 'jumpRate',   template: 'ジャンプ率: {label} か', category: 'taste', type: 'visual' },
+  { field: 'tasteName',   template: 'デザインテイスト「{value}」の世界観が表現されているか', category: 'taste', type: 'visual' },
+  // Layout
+  { toggle: 'layoutRatio', template: 'レイアウト比率が {value} になっているか', category: 'layout' },
+  { field: 'breakpoint',   template: 'SPブレイクポイント {value} で切り替わるか', category: 'layout' },
+];
+
+function generateChecklist() {
+  const container = document.getElementById('checklist');
+  const items = [];
+
+  checklistRules.forEach((rule, idx) => {
+    let value = '', label = '';
+    if (rule.field) {
+      value = getVal(rule.field);
+      if (!value) return;
+      if (rule.skipDefault && value === rule.skipDefault) return;
+      label = value;
+    } else if (rule.toggle) {
+      const active = document.querySelector('#' + rule.toggle + ' .toggle-item.active');
+      if (!active) return;
+      value = active.dataset.value;
+      label = active.textContent.trim();
+    } else if (rule.select) {
+      const sel = document.getElementById(rule.select);
+      if (!sel || !sel.value) return;
+      value = sel.value;
+      label = sel.value;
+    }
+    const text = rule.template.replace('{value}', value).replace('{label}', label);
+    items.push({ text, category: rule.category, type: rule.type || 'numeric', id: 'check-' + idx });
+  });
+
+  if (items.length === 0) {
+    container.innerHTML = '<div class="checklist__empty">入力フォームに値を設定するとチェック項目が生成されます</div>';
+    document.getElementById('checkCount').textContent = '0/0';
+    return;
+  }
+
+  container.innerHTML = items.map(item =>
+    '<div class="checklist-item" data-id="' + item.id + '">' +
+    '<input type="checkbox" id="' + item.id + '" onchange="toggleCheck(this)">' +
+    '<label for="' + item.id + '">' + item.text + '</label>' +
+    '<span class="badge ' + (item.type === 'visual' ? 'badge--visual' : '') + '">' + (item.type === 'visual' ? '目視' : '数値') + '</span>' +
+    '</div>'
+  ).join('');
+  updateCheckCount();
+}
+
+function toggleCheck(cb) {
+  cb.closest('.checklist-item').classList.toggle('checked', cb.checked);
+  updateCheckCount();
+}
+
+function updateCheckCount() {
+  const all = document.querySelectorAll('#checklist input[type="checkbox"]');
+  const checked = document.querySelectorAll('#checklist input[type="checkbox"]:checked');
+  document.getElementById('checkCount').textContent = checked.length + '/' + all.length;
+}
+
+// ===== DIFF REPORT & LLM PROMPTS (Task 5) =====
+function generateDiffReport() {
+  const unchecked = Array.from(document.querySelectorAll('#checklist input[type="checkbox"]:not(:checked)'))
+    .map(cb => cb.nextElementSibling.textContent.trim());
+  const container = document.getElementById('diffReport');
+  if (unchecked.length === 0) {
+    container.innerHTML = '<div style="color:var(--green);font-weight:600;font-size:13px">✓ 全項目合格</div>';
+    return unchecked;
+  }
+  container.innerHTML = '<div style="font-size:12px;line-height:1.8">' +
+    unchecked.map(item => '<div style="color:#E53E3E">✗ ' + item + '</div>').join('') + '</div>';
+  return unchecked;
+}
+
+function getDesignSpec() {
+  return document.getElementById('outputBox').textContent;
+}
+
+function copyForClaude() {
+  const unchecked = generateDiffReport();
+  if (unchecked.length === 0) { showToast('全項目合格です'); return; }
+  const code = document.getElementById('codeInput').value;
+  const prompt = '以下のコードを修正してください。\n\n## 現在のコード\n' + code +
+    '\n\n## 修正が必要な項目\n' + unchecked.map(i => '- ' + i).join('\n') +
+    '\n\n## デザイン仕様\n' + getDesignSpec() +
+    '\n\n元のコードを直接編集し、修正済みコードを出力してください。';
+  navigator.clipboard.writeText(prompt).then(() => showToast('Claude用プロンプトをコピー'));
+}
+
+function copyForGemini() {
+  generateDiffReport();
+  const prompt = '以下のUIデザイン画像と実装コードのスクリーンショットを比較し、差異を列挙してください。\n\n' +
+    '## デザイン仕様\n' + getDesignSpec() +
+    '\n\n## チェック観点\n1. カラーの一致（Primary/Secondary/Gray）\n2. フォントサイズ・ウェイトの一致\n3. 余白・スペーシングの一致\n4. レイアウト比率の一致\n5. 角丸・シャドウの一致\n6. 全体的な印象・世界観の一致\n\n差異ごとに「箇所」「期待値」「実際の値」「重要度(高/中/低)」を表形式で出力してください。\n\n※ Figmaデザイン画像とプレビューのスクリーンショットを添付してください。';
+  navigator.clipboard.writeText(prompt).then(() => showToast('Gemini用プロンプトをコピー'));
+}
+
+function copyForChatGPT() {
+  const unchecked = generateDiffReport();
+  if (unchecked.length === 0) { showToast('全項目合格です'); return; }
+  const prompt = 'UIの実装コードがデザイン仕様と一致しない原因を分析してください。\n\n' +
+    '## 不一致項目\n' + unchecked.map(i => '- ' + i).join('\n') +
+    '\n\n## 使用したプロンプト\n' + getDesignSpec() +
+    '\n\n以下を分析してください:\n1. プロンプトのどの記述が不十分だったか\n2. どう書き換えればLLMが正確に実装するか\n3. Prompt Builderの入力項目として何を追加すべきか\n\n改善案を具体的に提示してください。';
+  navigator.clipboard.writeText(prompt).then(() => showToast('ChatGPT用プロンプトをコピー'));
 }
 </script>
 </body>
