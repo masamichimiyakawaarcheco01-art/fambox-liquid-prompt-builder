@@ -12,6 +12,15 @@
 
 ---
 
+## 既存ヘルパー関数（v2で定義済み）
+
+以下の関数はv2のindex.htmlに既に存在する。新規タスクで定義不要:
+- `getVal(id)` - input要素の値をtrimして返す
+- `showToast(msg)` - 画面下部にトースト通知を表示
+- `getToggleValue(groupId)` - toggle-rowの選択値を返す
+- `getActiveChips(containerId)` - チップの選択テキストを配列で返す
+- `generatePrompt()` - プロンプト生成（末尾にgenerateChecklist()呼び出しを追加する）
+
 ## File Map
 
 全て `index.html` 内で完結（単一ファイル制約）。変更は以下のセクション:
@@ -83,7 +92,10 @@ git add index.html && git commit -m "feat: expand layout to 3 columns for verify
     <div class="drop-zone__text">Figma画像をドロップ<br>またはクリック / Cmd+V</div>
     <input type="file" id="imageInput" accept="image/png,image/jpeg,image/webp" hidden>
   </div>
-  <img class="design-preview" id="designPreview" hidden>
+  <div class="design-preview-wrap" id="designPreviewWrap" hidden>
+    <img class="design-preview" id="designPreview">
+    <button class="design-preview__clear" onclick="clearDesignImage()" title="画像を削除">✕</button>
+  </div>
 </div>
 ```
 
@@ -102,8 +114,9 @@ dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.
 dropZone.addEventListener('click', () => document.getElementById('imageInput').click());
 document.getElementById('imageInput').addEventListener('change', e => handleImageFile(e.target.files[0]));
 
-// Cmd+V
+// Cmd+V（テキスト入力欄にフォーカス中は無視）
 document.addEventListener('paste', e => {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
   const item = Array.from(e.clipboardData.items).find(i => i.type.startsWith('image/'));
   if (item) handleImageFile(item.getAsFile());
 });
@@ -112,7 +125,9 @@ document.addEventListener('paste', e => {
 const designImages = { pc: null, sp: null };
 let currentImageTab = 'pc';
 function handleImageFile(file) {
-  if (!file || file.size > 5 * 1024 * 1024) { showToast('5MB以下の画像を選択してください'); return; }
+  if (!file) return;
+  if (!file.type.match(/^image\/(png|jpeg|webp)$/)) { showToast('PNG/JPEG/WebP画像のみ対応'); return; }
+  if (file.size > 5 * 1024 * 1024) { showToast('5MB以下の画像を選択してください'); return; }
   const reader = new FileReader();
   reader.onload = e => {
     designImages[currentImageTab] = e.target.result;
@@ -123,9 +138,14 @@ function handleImageFile(file) {
 }
 function showDesignImage() {
   const img = document.getElementById('designPreview');
+  const wrap = document.getElementById('designPreviewWrap');
   const src = designImages[currentImageTab];
-  if (src) { img.src = src; img.hidden = false; dropZone.hidden = true; }
-  else { img.hidden = true; dropZone.hidden = false; }
+  if (src) { img.src = src; wrap.hidden = false; dropZone.hidden = true; }
+  else { wrap.hidden = true; dropZone.hidden = false; }
+}
+function clearDesignImage() {
+  designImages[currentImageTab] = null;
+  showDesignImage();
 }
 function switchImageTab(tab) {
   currentImageTab = tab;
@@ -388,20 +408,20 @@ function copyForClaude() {
   if (unchecked.length === 0) { showToast('全項目合格です'); return; }
   const code = document.getElementById('codeInput').value;
   const prompt = `以下のコードを修正してください。\n\n## 現在のコード\n${code}\n\n## 修正が必要な項目\n${unchecked.map(i => '- ' + i).join('\n')}\n\n## デザイン仕様\n${getDesignSpec()}\n\n元のコードを直接編集し、修正済みコードを出力してください。`;
-  navigator.clipboard.writeText(prompt).then(() => showToast('Claude用プロンプトをコピー'));
+  navigator.clipboard.writeText(prompt).then(() => { enterActPhase(); showToast('Claude用プロンプトをコピー'); });
 }
 
 function copyForGemini() {
   const unchecked = generateDiffReport();
   const prompt = `以下のUIデザイン画像と実装コードのスクリーンショットを比較し、差異を列挙してください。\n\n## デザイン仕様\n${getDesignSpec()}\n\n## チェック観点\n1. カラーの一致\n2. フォントサイズ・ウェイトの一致\n3. 余白・スペーシングの一致\n4. レイアウト比率の一致\n5. 角丸・シャドウの一致\n6. 全体的な印象・世界観の一致\n\n差異ごとに「箇所」「期待値」「実際の値」「重要度(高/中/低)」を表形式で出力してください。\n\n※ Figmaデザイン画像とプレビューのスクリーンショットを添付してください。`;
-  navigator.clipboard.writeText(prompt).then(() => showToast('Gemini用プロンプトをコピー'));
+  navigator.clipboard.writeText(prompt).then(() => { enterActPhase(); showToast('Gemini用プロンプトをコピー'); });
 }
 
 function copyForChatGPT() {
   const unchecked = generateDiffReport();
   if (unchecked.length === 0) { showToast('全項目合格です'); return; }
   const prompt = `UIの実装コードがデザイン仕様と一致しない原因を分析してください。\n\n## 不一致項目\n${unchecked.map(i => '- ' + i).join('\n')}\n\n## 使用したプロンプト\n${getDesignSpec()}\n\n以下を分析してください:\n1. プロンプトのどの記述が不十分だったか\n2. どう書き換えればLLMが正確に実装するか\n3. Prompt Builderの入力項目として何を追加すべきか\n\n改善案を具体的に提示してください。`;
-  navigator.clipboard.writeText(prompt).then(() => showToast('ChatGPT用プロンプトをコピー'));
+  navigator.clipboard.writeText(prompt).then(() => { enterActPhase(); showToast('ChatGPT用プロンプトをコピー'); });
 }
 ```
 
@@ -437,7 +457,7 @@ git add index.html && git commit -m "feat: add diff report and LLM prompt genera
   </div>
   <div class="pdca-info">
     <span id="cycleCount">Cycle #1</span>
-    <button class="btn btn--ghost" style="padding:4px 12px;font-size:11px" onclick="completeCycle()">サイクル完了</button>
+    <button class="btn btn--ghost" style="padding:4px 12px;font-size:11px" id="completeCycleBtn" onclick="completeCycle()" disabled>サイクル完了</button>
     <button class="btn btn--ghost" style="padding:4px 12px;font-size:11px" onclick="resetPDCA()">リセット</button>
   </div>
 </div>
@@ -467,24 +487,39 @@ let pdcaState = JSON.parse(localStorage.getItem('pdca_history')) || {
 };
 
 function updatePDCA() {
-  const name = getVal('sectionName');
-  const prompt = document.getElementById('outputBox').textContent;
-  const code = document.getElementById('codeInput')?.value || '';
+  const hasPrompt = !document.getElementById('outputBox').textContent.includes('左のフォームに入力すると');
+  const hasCode = (document.getElementById('codeInput')?.value || '').trim().length > 0;
   const allChecks = document.querySelectorAll('#checklist input[type="checkbox"]');
   const checkedCount = document.querySelectorAll('#checklist input[type="checkbox"]:checked').length;
+  const allPassed = allChecks.length > 0 && checkedCount === allChecks.length;
+  const hasUnchecked = allChecks.length > 0 && checkedCount < allChecks.length;
 
-  // 自動遷移
-  if (name && prompt && !prompt.includes('左のフォームに入力すると')) pdcaState.phase = 'plan';
-  if (pdcaState.phase === 'plan' && prompt && !prompt.includes('左のフォームに入力すると')) pdcaState.phase = 'do';
-  if (code.trim()) pdcaState.phase = 'check';
-  if (allChecks.length > 0 && checkedCount === allChecks.length) {
-    pdcaState.phase = 'complete';
-  } else if (allChecks.length > 0 && checkedCount > 0 && checkedCount < allChecks.length) {
+  // 状態遷移（前のフェーズの完了条件を満たした場合のみ次へ進む）
+  // Plan: プロンプトが生成されたら完了 → Do へ
+  if (pdcaState.phase === 'plan' && hasPrompt) {
+    pdcaState.phase = 'do';
+  }
+  // Do: コードが貼り付けられたら完了 → Check へ
+  if (pdcaState.phase === 'do' && hasCode) {
     pdcaState.phase = 'check';
+  }
+  // Check: 全チェック完了 → complete（Actスキップ）、未チェックあり → Act へ
+  // ※ Act への遷移は generateDiffReport() 呼び出し時に行う
+  if (pdcaState.phase === 'check' && allPassed) {
+    pdcaState.phase = 'complete';
   }
 
   renderPDCA();
   savePDCA();
+}
+
+// Act フェーズへの遷移: LLMコピーボタン押下時に呼ばれる
+function enterActPhase() {
+  if (pdcaState.phase === 'check') {
+    pdcaState.phase = 'act';
+    renderPDCA();
+    savePDCA();
+  }
 }
 
 function renderPDCA() {
@@ -500,6 +535,13 @@ function renderPDCA() {
     document.querySelectorAll('.pdca-step').forEach(s => s.classList.add('done'));
   }
   document.getElementById('cycleCount').textContent = `Cycle #${pdcaState.currentCycle}`;
+
+  // サイクル完了ボタンは act または complete フェーズのみ有効
+  const completeBtn = document.getElementById('completeCycleBtn');
+  if (completeBtn) {
+    completeBtn.disabled = !['act', 'complete'].includes(pdcaState.phase);
+    completeBtn.style.opacity = completeBtn.disabled ? '0.3' : '1';
+  }
 }
 
 function completeCycle() {
