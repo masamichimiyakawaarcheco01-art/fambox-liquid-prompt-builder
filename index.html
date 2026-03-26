@@ -251,6 +251,21 @@ body {
 .pdca-info .btn--ghost { color: #fff; border-color: rgba(255,255,255,0.2); }
 .pdca-info .btn--ghost:hover { border-color: rgba(255,255,255,0.5); }
 .drawer-toggle { display: none; }
+
+/* Import Tab */
+.import-zone { border: 2px dashed var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.import-zone textarea { width: 100%; min-height: 200px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; background: #1a1a2e; color: #06c352; border: none; border-radius: 6px; padding: 12px; resize: vertical; line-height: 1.5; }
+.import-zone textarea::placeholder { color: rgba(6,195,82,0.3); }
+.import-status { display: flex; align-items: center; gap: 8px; font-size: 12px; margin-top: 8px; }
+.import-status__dot { width: 8px; height: 8px; border-radius: 50%; }
+.import-status__dot--ok { background: #10B981; }
+.import-status__dot--err { background: #E53E3E; }
+.import-status__dot--idle { background: var(--gray); }
+.import-summary { font-size: 11px; color: var(--gray); margin-top: 8px; line-height: 1.6; }
+.figma-badge { display: inline-block; font-size: 9px; background: #06c352; color: #fff; padding: 1px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+.detail-field { margin-top: 8px; }
+.detail-field textarea { width: 100%; min-height: 60px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: #fafafa; resize: vertical; line-height: 1.5; }
+.detail-field .section-label { font-size: 11px; color: var(--gray); margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -270,6 +285,7 @@ body {
   <div class="panel panel--form">
     <!-- TAB NAVIGATION -->
     <div class="tab-nav">
+      <button class="tab-btn" onclick="switchTab('import')">Import</button>
       <button class="tab-btn active" onclick="switchTab('basic')">Basic</button>
       <button class="tab-btn" onclick="switchTab('taste')">Taste</button>
       <button class="tab-btn" onclick="switchTab('typography')">Type</button>
@@ -277,6 +293,29 @@ body {
       <button class="tab-btn" onclick="switchTab('color')">Color</button>
       <button class="tab-btn" onclick="switchTab('components')">Parts</button>
       <button class="tab-btn" onclick="switchTab('schema')">Schema</button>
+    </div>
+
+    <!-- ==================== TAB: IMPORT ==================== -->
+    <div class="tab-content" id="tab-import" style="display:none">
+      <div class="section-label">FIGMA IMPORT</div>
+      <div class="field">
+        <label class="field__label">Figma URL</label>
+        <input type="text" class="field__input" id="figmaUrl" placeholder="https://www.figma.com/design/FILEKEY/...?node-id=X-Y">
+      </div>
+      <div class="import-zone">
+        <div class="section-label">Design Token JSON</div>
+        <textarea id="figmaJson" placeholder='{ "meta": { ... }, "colors": { ... }, "typography": { ... } }
+Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください'></textarea>
+        <div class="import-status">
+          <span class="import-status__dot import-status__dot--idle" id="importDot"></span>
+          <span id="importMsg">JSONを貼り付けてください</span>
+        </div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn--primary" onclick="importFigmaData()">取り込み</button>
+        <button class="btn btn--ghost" onclick="clearImport()">クリア</button>
+      </div>
+      <div class="import-summary" id="importSummary"></div>
     </div>
 
     <!-- ==================== TAB: BASIC ==================== -->
@@ -340,6 +379,10 @@ body {
       <div class="field">
         <label class="field__label">レイアウト構成（詳細）</label>
         <textarea class="field__textarea" id="layout" placeholder="PC: 2カラム（左テキスト / 右画像）&#10;SP: 1カラム（画像→テキスト）" oninput="generatePrompt()"></textarea>
+      </div>
+      <div class="detail-field">
+        <div class="section-label">ELEMENT HIERARCHY</div>
+        <textarea class="field__textarea" id="elementHierarchy" placeholder="Figmaのレイヤー構造（自動入力）"></textarea>
       </div>
       <div class="field-group">
         <div class="field">
@@ -429,6 +472,18 @@ body {
       <div class="field">
         <label class="field__label">背景の扱い</label>
         <input type="text" class="field__input" id="bgTreatment" placeholder="例: 単色 / グラデーション / パターン / 写真ぼかし" oninput="generatePrompt()">
+      </div>
+      <div class="detail-field">
+        <div class="section-label">GRADIENT DEFINITIONS</div>
+        <textarea class="field__textarea" id="gradientDefs" placeholder="例: linear-gradient(135deg, rgb(5,181,75), rgb(5,222,92))"></textarea>
+      </div>
+      <div class="detail-field">
+        <div class="section-label">BLUR / BACKDROP VALUES</div>
+        <textarea class="field__textarea" id="blurValues" placeholder="例: backdrop-filter: blur(12px)"></textarea>
+      </div>
+      <div class="detail-field">
+        <div class="section-label">OPACITY MAP</div>
+        <textarea class="field__textarea" id="opacityValues" placeholder="例: card-bg: 0.1, text-secondary: 0.5"></textarea>
       </div>
     </div>
 
@@ -662,6 +717,10 @@ body {
           <div class="toggle-item" data-value="pill" onclick="toggleSingle(this, 'borderRadius')">Pill</div>
         </div>
       </div>
+      <div class="detail-field">
+        <div class="section-label">BORDER RADIUS VARIANTS</div>
+        <textarea class="field__textarea" id="borderRadiusVariants" placeholder="例: card: 16px, button: pill, input: 12px"></textarea>
+      </div>
 
       <div class="section-label">Elevation / Shadow</div>
       <div class="field">
@@ -672,6 +731,10 @@ body {
           <div class="toggle-item" data-value="medium" onclick="toggleSingle(this, 'elevation')">中程度</div>
           <div class="toggle-item" data-value="strong" onclick="toggleSingle(this, 'elevation')">強め</div>
         </div>
+      </div>
+      <div class="detail-field">
+        <div class="section-label">SHADOW DETAIL</div>
+        <textarea class="field__textarea" id="shadowDetail" placeholder="例: 0 4px 12px rgba(0,0,0,0.1)"></textarea>
       </div>
 
       <div class="section-label">Button Style</div>
@@ -1124,6 +1187,28 @@ function generatePrompt() {
   p += `- スペーシングはS/M/Lスケールに従い、任意のpx値を避ける\n`;
   p += `- 日本語コメントでセクション分けする\n`;
 
+  // === DETAILED DESIGN SPECS (Figma) ===
+  var shadowDetail = getVal('shadowDetail');
+  var gradientDefs = getVal('gradientDefs');
+  var blurValues = getVal('blurValues');
+  var opacityValues = getVal('opacityValues');
+  var borderRadiusVariants = getVal('borderRadiusVariants');
+  var elementHierarchy = getVal('elementHierarchy');
+
+  var hasDetailedSpecs = shadowDetail || gradientDefs || blurValues || opacityValues || borderRadiusVariants || elementHierarchy;
+
+  if (hasDetailedSpecs) {
+    p += '\n';
+    p += '## 詳細デザイン仕様（Figma抽出）\n';
+    p += '以下の値を正確に再現すること。概算値ではなく、指定値をそのまま使用する。\n';
+    if (shadowDetail) { p += '\n### シャドウ\n' + shadowDetail + '\n'; }
+    if (gradientDefs) { p += '\n### グラデーション\n' + gradientDefs + '\n'; }
+    if (blurValues) { p += '\n### ブラー効果\n' + blurValues + '\n'; }
+    if (opacityValues) { p += '\n### 不透明度マップ\n' + opacityValues + '\n'; }
+    if (borderRadiusVariants) { p += '\n### 要素別border-radius\n' + borderRadiusVariants + '\n'; }
+    if (elementHierarchy) { p += '\n### 要素階層構造\n以下のネスト構造に従ってHTML要素を組み立てること:\n' + elementHierarchy + '\n'; }
+  }
+
   document.getElementById('outputBox').textContent = p;
 
   // Stats
@@ -1513,6 +1598,213 @@ function savePDCA() {
 // ===== DRAWER (Task 7) =====
 function toggleDrawer() {
   document.querySelector('.panel--verify').classList.toggle('drawer-open');
+}
+
+// === FIGMA IMPORT ===
+let figmaImported = false;
+
+function importFigmaData() {
+  const raw = document.getElementById('figmaJson').value.trim();
+  const dot = document.getElementById('importDot');
+  const msg = document.getElementById('importMsg');
+  const summary = document.getElementById('importSummary');
+
+  if (!raw) { showImportError('JSONを入力してください'); return; }
+
+  let data;
+  try { data = JSON.parse(raw); } catch(e) { showImportError('JSONの解析に失敗: ' + e.message); return; }
+
+  let filled = 0;
+
+  // Colors
+  if (data.colors) {
+    if (data.colors.primary) { setField('colorPrimary', data.colors.primary); filled++; }
+    if (data.colors.secondary) { setField('colorSecondary', data.colors.secondary); filled++; }
+    if (data.colors.inactive) { setField('colorInactive', data.colors.inactive); filled++; }
+    if (data.colors.error) { setField('colorError', data.colors.error); filled++; }
+    if (data.colors.grays && data.colors.grays.length >= 4) {
+      setField('colorGray1', data.colors.grays[0]); setField('colorGray2', data.colors.grays[1]);
+      setField('colorGray3', data.colors.grays[2]); setField('colorGray4', data.colors.grays[3]);
+      filled += 4;
+    }
+    // Sync color swatches
+    document.querySelectorAll('.color-sync').forEach(function(input) {
+      var target = document.getElementById(input.dataset.sync);
+      if (target) input.value = target.value;
+    });
+  }
+
+  // Typography
+  if (data.typography) {
+    if (data.typography.fontFamilyJA) { selectOption('fontJA', data.typography.fontFamilyJA); filled++; }
+    if (data.typography.fontFamilyEN) { selectOption('fontEN', data.typography.fontFamilyEN); filled++; }
+    if (data.typography.scale) {
+      var s = data.typography.scale;
+      if (s.display) { setField('typeDisplay', s.display.size); filled++; }
+      if (s.h1) { setField('typeH1', s.h1.size); filled++; }
+      if (s.h2) { setField('typeH2', s.h2.size); filled++; }
+      if (s.h3) { setField('typeH3', s.h3.size); filled++; }
+      if (s.body) { setField('typeBody', s.body.size); filled++; }
+      if (s.small) { setField('typeSmall', s.small.size); filled++; }
+    }
+    if (data.typography.lineHeight) { activateToggle('lineHeight', String(data.typography.lineHeight)); filled++; }
+  }
+
+  // Spacing
+  if (data.spacing) {
+    if (data.spacing.s) { setField('spacingS', parseInt(data.spacing.s)); filled++; }
+    if (data.spacing.m) { setField('spacingM', parseInt(data.spacing.m)); filled++; }
+    if (data.spacing.l) { setField('spacingL', parseInt(data.spacing.l)); filled++; }
+  }
+
+  // Effects
+  if (data.effects) {
+    if (data.effects.shadows && data.effects.shadows.length > 0) {
+      var shadowStr = data.effects.shadows.map(function(sh) {
+        return (sh.name || '') + ': ' + sh.x + 'px ' + sh.y + 'px ' + sh.blur + 'px ' + (sh.spread || 0) + 'px ' + sh.color;
+      }).join('\n');
+      setField('shadowDetail', shadowStr); filled++;
+    }
+    if (data.effects.gradients && data.effects.gradients.length > 0) {
+      var gradStr = data.effects.gradients.map(function(g) {
+        var stops = g.stops.map(function(s) { return s.color + ' ' + s.position + '%'; }).join(', ');
+        return (g.name || '') + ': ' + g.type + '-gradient(' + (g.angle || 0) + 'deg, ' + stops + ')';
+      }).join('\n');
+      setField('gradientDefs', gradStr); filled++;
+    }
+    if (data.effects.blurs && data.effects.blurs.length > 0) {
+      var blurStr = data.effects.blurs.map(function(b) {
+        return (b.name || '') + ': ' + (b.type === 'background' ? 'backdrop-filter' : 'filter') + ': blur(' + b.radius + 'px)';
+      }).join('\n');
+      setField('blurValues', blurStr); filled++;
+    }
+  }
+
+  // Border Radius
+  if (data.borderRadius) {
+    if (data.borderRadius.default) { activateToggle('borderRadius', data.borderRadius.default.replace('px', '')); filled++; }
+    if (data.borderRadius.variants) {
+      var brStr = Object.entries(data.borderRadius.variants).map(function(e) { return e[0] + ': ' + e[1]; }).join('\n');
+      setField('borderRadiusVariants', brStr); filled++;
+    }
+  }
+
+  // Taste
+  if (data.taste) {
+    if (data.taste.name) { setField('tasteName', data.taste.name); filled++; }
+    if (data.taste.shape) { activateToggle('shapeStyle', data.taste.shape); filled++; }
+    if (data.taste.jumpRate) { activateToggle('jumpRate', data.taste.jumpRate); filled++; }
+    if (data.taste.requiredElements) { setField('requiredElements', data.taste.requiredElements); filled++; }
+    if (data.taste.imageryDirection) { setField('imageryDirection', data.taste.imageryDirection); filled++; }
+    if (data.taste.bgTreatment) { setField('bgTreatment', data.taste.bgTreatment); filled++; }
+    // Activate effect chips
+    if (data.taste.effects) {
+      data.taste.effects.forEach(function(eff) { activateChip('effectChips', eff); });
+      filled++;
+    }
+  }
+
+  // Opacity
+  if (data.opacity) {
+    var opStr = Object.entries(data.opacity).map(function(e) { return e[0] + ': ' + e[1]; }).join('\n');
+    setField('opacityValues', opStr); filled++;
+  }
+
+  // Hierarchy
+  if (data.hierarchy) {
+    var hierStr = data.hierarchy.map(function(h) {
+      var indent = '  '.repeat(h.depth);
+      var dims = h.w && h.h ? ' (' + h.w + '×' + h.h + ')' : '';
+      var extra = h.fill ? ' fill:' + h.fill : '';
+      extra += h.borderRadius ? ' radius:' + h.borderRadius : '';
+      extra += h.fontSize ? ' font:' + h.fontSize + 'px' : '';
+      return indent + h.name + ' [' + h.type + ']' + dims + extra;
+    }).join('\n');
+    setField('elementHierarchy', hierStr); filled++;
+  }
+
+  // Text on image
+  if (data.textOnImage) { activateToggle('textOnImage', data.textOnImage); filled++; }
+
+  // Section name from meta
+  if (data.meta && data.meta.nodeName) {
+    if (!getVal('sectionName')) setField('sectionName', data.meta.nodeName.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
+  }
+
+  // Success
+  figmaImported = true;
+  dot.className = 'import-status__dot import-status__dot--ok';
+  msg.textContent = '取り込み成功';
+  msg.style.color = '#10B981';
+  summary.innerHTML = '<strong>' + filled + '項目</strong>を自動入力しました。各タブで確認・調整してください。';
+
+  generatePrompt();
+  showToast('Figmaデータを取り込みました (' + filled + '項目)');
+}
+
+function showImportError(message) {
+  var dot = document.getElementById('importDot');
+  var msg = document.getElementById('importMsg');
+  dot.className = 'import-status__dot import-status__dot--err';
+  msg.textContent = message;
+  msg.style.color = '#E53E3E';
+}
+
+function clearImport() {
+  document.getElementById('figmaJson').value = '';
+  document.getElementById('figmaUrl').value = '';
+  document.getElementById('importDot').className = 'import-status__dot import-status__dot--idle';
+  document.getElementById('importMsg').textContent = 'JSONを貼り付けてください';
+  document.getElementById('importMsg').style.color = '';
+  document.getElementById('importSummary').innerHTML = '';
+  figmaImported = false;
+  showToast('インポートデータをクリアしました');
+}
+
+// Helper: set field value
+function setField(id, value) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.value = value;
+  // Trigger input event for reactive updates
+  el.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+// Helper: select option in <select>
+function selectOption(id, value) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  // Try exact match first
+  for (var i = 0; i < el.options.length; i++) {
+    if (el.options[i].value === value || el.options[i].text.includes(value)) {
+      el.selectedIndex = i; return;
+    }
+  }
+}
+
+// Helper: activate a toggle button by data-value
+function activateToggle(groupId, value) {
+  var group = document.getElementById(groupId);
+  if (!group) return;
+  group.querySelectorAll('.toggle-item').forEach(function(item) {
+    if (item.dataset.value === value || item.textContent.trim().toLowerCase().includes(value.toLowerCase())) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+}
+
+// Helper: activate a chip by text content
+function activateChip(containerId, text) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  container.querySelectorAll('.chip').forEach(function(chip) {
+    var chipText = chip.textContent.trim().toLowerCase();
+    if (chipText.includes(text.toLowerCase()) || text.toLowerCase().includes(chipText)) {
+      chip.classList.add('active');
+    }
+  });
 }
 
 // ===== INIT =====
