@@ -90,12 +90,43 @@ body {
   flex-direction: column;
 }
 
+.solution-heading {
+  display: flex;
+  flex-direction: column;
+}
+
 .solution-label {
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
   font-size: 16px;
   color: #FB4C15;
   margin-bottom: 8px;
+}
+
+/* Carousel dots */
+.carousel-dots {
+  display: none;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding-bottom: 24px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #D9D9D9;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.3s, width 0.3s;
+}
+
+.carousel-dot.active {
+  width: 24px;
+  border-radius: 4px;
+  background: #FB4C15;
 }
 
 .solution-title {
@@ -213,9 +244,13 @@ body {
   }
 
   .carousel-track {
-    gap: 16px;
+    gap: 24px;
     scroll-snap-type: x mandatory;
     overflow-x: auto;
+  }
+
+  .carousel-dots {
+    display: flex;
   }
 
   .solution-block {
@@ -227,7 +262,7 @@ body {
     scroll-snap-align: start;
   }
 
-  /* Hide the original left line — replaced by card-header line */
+  /* Hide the original left line — replaced by heading box */
   .solution-left-line {
     display: none;
   }
@@ -236,8 +271,11 @@ body {
     display: none;
   }
 
-  /* Card header: orange line left of label+title only */
+  /* Card header: orange line + label + title in one box */
   .solution-heading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     border-left: 8px solid #FB4C15;
     padding-left: 16px;
   }
@@ -249,10 +287,12 @@ body {
 
   .solution-title {
     font-size: 28px;
+    margin-bottom: 0;
   }
 
   .solution-lead {
     margin-top: 16px;
+    font-size: 14px;
   }
 
   .solution-nav {
@@ -389,6 +429,11 @@ body {
       </div>
 
     </div>
+    <div class="carousel-dots" id="carouselDots">
+      <button class="carousel-dot active" data-dot="0" onclick="goToSlide(0)"></button>
+      <button class="carousel-dot" data-dot="1" onclick="goToSlide(1)"></button>
+      <button class="carousel-dot" data-dot="2" onclick="goToSlide(2)"></button>
+    </div>
   </div>
 </section>
 
@@ -398,50 +443,57 @@ body {
   let currentSlide = 0;
   const totalSlides = 3;
 
+  function updateDots() {
+    document.querySelectorAll('.carousel-dot').forEach(function(dot, i) {
+      dot.classList.toggle('active', i === currentSlide);
+    });
+  }
+
+  function scrollToSlide(idx) {
+    const blocks = track.querySelectorAll('.solution-block');
+    if (blocks[idx]) {
+      const gap = window.innerWidth <= 1280 ? 24 : 64;
+      track.scrollTo({ left: idx * (blocks[0].offsetWidth + gap), behavior: 'smooth' });
+    }
+  }
+
   window.navigateSlide = function(direction) {
     currentSlide += direction;
     if (currentSlide < 0) currentSlide = 0;
     if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
-
-    const blocks = track.querySelectorAll('.solution-block');
-    if (blocks[currentSlide]) {
-      blocks[currentSlide].scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'start'
-      });
-    }
+    scrollToSlide(currentSlide);
+    updateDots();
   };
 
-  // Touch swipe support for SP
-  let touchStartX = 0;
-  let touchEndX = 0;
+  window.goToSlide = function(idx) {
+    currentSlide = idx;
+    scrollToSlide(currentSlide);
+    updateDots();
+  };
 
+  // Touch swipe support
+  let touchStartX = 0;
   track.addEventListener('touchstart', function(e) {
     touchStartX = e.changedTouches[0].screenX;
   }, { passive: true });
 
   track.addEventListener('touchend', function(e) {
-    touchEndX = e.changedTouches[0].screenX;
-    const diff = touchStartX - touchEndX;
+    const diff = touchStartX - e.changedTouches[0].screenX;
     if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        navigateSlide(1);
-      } else {
-        navigateSlide(-1);
-      }
+      navigateSlide(diff > 0 ? 1 : -1);
     }
   }, { passive: true });
 
-  // Update current slide on scroll
+  // Update current slide and dots on scroll
   track.addEventListener('scroll', function() {
-    const scrollLeft = track.scrollLeft;
     const blocks = track.querySelectorAll('.solution-block');
     if (blocks.length === 0) return;
-    const blockWidth = blocks[0].offsetWidth + 64; // block width + gap
-    const newSlide = Math.round(scrollLeft / blockWidth);
+    const gap = window.innerWidth <= 1280 ? 24 : 64;
+    const blockWidth = blocks[0].offsetWidth + gap;
+    const newSlide = Math.round(track.scrollLeft / blockWidth);
     if (newSlide !== currentSlide && newSlide >= 0 && newSlide < totalSlides) {
       currentSlide = newSlide;
+      updateDots();
     }
   }, { passive: true });
 })();
