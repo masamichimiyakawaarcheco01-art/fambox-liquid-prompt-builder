@@ -395,6 +395,26 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
         </div>
       </div>
 
+      <div class="field">
+        <label class="field__label">コンテナ高さ</label>
+        <textarea class="field__textarea" id="containerHeights" placeholder="例:&#10;セクション全体: 896px (PC), auto (SP)&#10;上ブロック: 464px (PC), 400px (SP)&#10;下ブロック: auto" rows="3" oninput="generatePrompt()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field__label">ブレイクポイント別の動作</label>
+        <textarea class="field__textarea" id="responsiveBehaviors" placeholder="例:&#10;≥1920px: 3カラム均等分割&#10;768-1919px: 640px固定幅、横スクロール&#10;≤767px: フリックカルーセル、左右24px余白" rows="4" oninput="generatePrompt()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field__label">SP操作パターン</label>
+        <div class="toggle-group" id="spInteraction">
+          <button class="toggle-item active" data-value="stack" onclick="setToggle(this)">縦積み</button>
+          <button class="toggle-item" data-value="flick" onclick="setToggle(this)">フリック</button>
+          <button class="toggle-item" data-value="tab" onclick="setToggle(this)">タブ切替</button>
+          <button class="toggle-item" data-value="accordion" onclick="setToggle(this)">アコーディオン</button>
+        </div>
+      </div>
+
       <div class="section-label">Features</div>
       <div class="field">
         <div class="chips" id="featureChips">
@@ -566,6 +586,11 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
           <div class="toggle-item" data-value="bold" onclick="toggleSingle(this, 'fontWeight')">太め (600/700)</div>
         </div>
       </div>
+
+      <div class="field">
+        <label class="field__label">要素別タイポグラフィ（詳細指定）</label>
+        <textarea class="field__textarea" id="perElementTypography" placeholder="例:&#10;セクションタイトル: W5(500), 40px, #1B1D1A&#10;ラベル(ISSUES): Poppins Medium, 32px, #FB4C15&#10;名前: W6(600), 16px, #FB4C15&#10;本文: W5(500), 24px, 180%, #1B1D1A&#10;リード文: W4(400), 16px, 180%, #1B1D1A" rows="6" oninput="generatePrompt()"></textarea>
+      </div>
     </div>
 
     <!-- ==================== TAB: SPACING ==================== -->
@@ -629,6 +654,11 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
           <div class="toggle-item" data-value="M" onclick="toggleSingle(this, 'spacingInner')">M</div>
           <div class="toggle-item" data-value="L" onclick="toggleSingle(this, 'spacingInner')">L</div>
         </div>
+      </div>
+
+      <div class="field">
+        <label class="field__label">ブロック別パディング（詳細）</label>
+        <textarea class="field__textarea" id="blockPadding" placeholder="例:&#10;上ブロック(PC): 64px all&#10;下ブロック(PC): 32px 64px (上下 左右)&#10;上ブロック(SP): 24px all&#10;下ブロック(SP): 24px all&#10;セクションタイトル(PC): 0 64px&#10;セクションタイトル(SP): 0 24px" rows="5" oninput="generatePrompt()"></textarea>
       </div>
     </div>
 
@@ -789,6 +819,21 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
       <div class="field">
         <label class="field__label">シャドウ詳細</label>
         <textarea class="field__textarea" id="shadowDetail" placeholder="例: Lv1: 0px 1px 2px rgba(0,0,0,0.3), 0px 1px 3px 1px rgba(0,0,0,0.15)&#10;Lv3: 0px 1px 3px rgba(0,0,0,0.3), 0px 4px 8px 3px rgba(0,0,0,0.15)" rows="2"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field__label">ボーダー / 区切り線</label>
+        <textarea class="field__textarea" id="borderSpec" placeholder="例:&#10;ブロック外枠: 1px solid #ECECEC&#10;上下ブロック間: 1px solid #ECECEC&#10;隣接ブロック: border-collapse (margin-left: -1px)&#10;SP隣接: margin-top: -1px" rows="3" oninput="generatePrompt()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field__label">背景画像の配置</label>
+        <textarea class="field__textarea" id="bgImageSpec" placeholder="例:&#10;PC: 400x400, center bottom, no-repeat&#10;SP: contain, center bottom&#10;表示方法: background-image (imgタグではない)" rows="3" oninput="generatePrompt()"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="field__label">垂直配置ルール</label>
+        <textarea class="field__textarea" id="verticalAlign" placeholder="例:&#10;上ブロック: ISSUES番号は上端、名前〜引用は下端揃え&#10;下ブロック: 上揃え（デフォルト）" rows="2" oninput="generatePrompt()"></textarea>
       </div>
 
       <div class="section-label">Button Style</div>
@@ -1270,6 +1315,31 @@ function generatePrompt() {
     if (shadowDetail) detailSpec += '\n### シャドウ詳細\n' + shadowDetail + '\n';
   }
 
+  // Lesson-learned precision fields
+  var containerHeights = getVal('containerHeights');
+  var responsiveBehaviors = getVal('responsiveBehaviors');
+  var spInteraction = getToggleValue('spInteraction');
+  var perElementTypography = getVal('perElementTypography');
+  var blockPadding = getVal('blockPadding');
+  var borderSpec = getVal('borderSpec');
+  var bgImageSpec = getVal('bgImageSpec');
+  var verticalAlign = getVal('verticalAlign');
+
+  if (containerHeights || responsiveBehaviors || spInteraction || perElementTypography || blockPadding || borderSpec || bgImageSpec || verticalAlign) {
+    if (!detailSpec) {
+      detailSpec = '\n\n## 詳細デザイン仕様（Figma抽出）\n';
+      detailSpec += '以下の値を正確に再現すること。概算値ではなく、指定値をそのまま使用する。\n';
+    }
+    if (containerHeights) detailSpec += '\n### コンテナ高さ\n' + containerHeights + '\n';
+    if (responsiveBehaviors) detailSpec += '\n### レスポンシブ動作\n' + responsiveBehaviors + '\n';
+    if (spInteraction) detailSpec += '\n### SP操作: ' + spInteraction + '\n';
+    if (perElementTypography) detailSpec += '\n### 要素別タイポグラフィ\n' + perElementTypography + '\n';
+    if (blockPadding) detailSpec += '\n### ブロック別パディング\n' + blockPadding + '\n';
+    if (borderSpec) detailSpec += '\n### ボーダー/区切り線\n' + borderSpec + '\n';
+    if (bgImageSpec) detailSpec += '\n### 背景画像配置\n' + bgImageSpec + '\n';
+    if (verticalAlign) detailSpec += '\n### 垂直配置\n' + verticalAlign + '\n';
+  }
+
   // M3 State Layer
   var stateHover = getVal('stateHover');
   var stateFocus = getVal('stateFocus');
@@ -1378,8 +1448,10 @@ function resetForm() {
   document.getElementById('importSummary').innerHTML = '';
   figmaImported = false;
   // Clear detail fields
-  var detailFields = ['shadowDetail', 'gradientDef', 'blurDef', 'opacityMap', 'borderRadiusVariants', 'elementHierarchy'];
+  var detailFields = ['shadowDetail', 'gradientDef', 'blurDef', 'opacityMap', 'borderRadiusVariants', 'elementHierarchy',
+    'containerHeights', 'responsiveBehaviors', 'perElementTypography', 'blockPadding', 'borderSpec', 'bgImageSpec', 'verticalAlign'];
   detailFields.forEach(function(id) { var el = document.getElementById(id); if (el) el.value = ''; });
+  setToggle('spInteraction', 'stack');
   // Reset M3 State Layer defaults
   var stateDefaults = { stateHover:'8%', stateFocus:'10%', statePressed:'10%', stateDisabledContainer:'12%', stateDisabledContent:'38%', stateDragged:'16%' };
   Object.entries(stateDefaults).forEach(function(e) { var el = document.getElementById(e[0]); if (el) el.value = e[1]; });
@@ -1512,6 +1584,14 @@ const checklistRules = [
   { field: 'elementHierarchy', template: '要素階層がFigma通りか', category: 'layout', type: 'visual' },
   { field: 'borderRadiusVariants', template: 'Border-radius variantsが仕様通りか', category: 'parts' },
   { field: 'shadowDetail', template: 'シャドウ詳細が仕様通りか', category: 'parts' },
+  // v4 lesson-learned fields
+  { field: 'containerHeights', template: 'コンテナ高さが仕様通りか', category: 'layout' },
+  { field: 'responsiveBehaviors', template: 'レスポンシブ動作が仕様通りか', category: 'layout', type: 'visual' },
+  { field: 'perElementTypography', template: '要素別フォントが仕様通りか', category: 'typography' },
+  { field: 'blockPadding', template: 'ブロック別パディングが仕様通りか', category: 'spacing' },
+  { field: 'borderSpec', template: 'ボーダー/区切り線が仕様通りか', category: 'parts' },
+  { field: 'bgImageSpec', template: '背景画像の配置が仕様通りか', category: 'parts', type: 'visual' },
+  { field: 'verticalAlign', template: '垂直配置が仕様通りか', category: 'layout', type: 'visual' },
 ];
 
 function generateChecklist() {
@@ -1599,6 +1679,13 @@ function copyForClaude() {
   var ov = getVal('opacityMap'); if (ov) detailedSpecs += '\n### 不透明度\n' + ov;
   var brv = getVal('borderRadiusVariants'); if (brv) detailedSpecs += '\n### 要素別border-radius\n' + brv;
   var eh = getVal('elementHierarchy'); if (eh) detailedSpecs += '\n### 要素階層\n' + eh;
+  var ch = getVal('containerHeights'); if (ch) detailedSpecs += '\n### コンテナ高さ\n' + ch;
+  var rb = getVal('responsiveBehaviors'); if (rb) detailedSpecs += '\n### レスポンシブ動作\n' + rb;
+  var pet = getVal('perElementTypography'); if (pet) detailedSpecs += '\n### 要素別タイポグラフィ\n' + pet;
+  var bp2 = getVal('blockPadding'); if (bp2) detailedSpecs += '\n### ブロック別パディング\n' + bp2;
+  var bs = getVal('borderSpec'); if (bs) detailedSpecs += '\n### ボーダー/区切り線\n' + bs;
+  var bgi = getVal('bgImageSpec'); if (bgi) detailedSpecs += '\n### 背景画像配置\n' + bgi;
+  var va = getVal('verticalAlign'); if (va) detailedSpecs += '\n### 垂直配置\n' + va;
 
   var prompt = '以下のコードを修正してください。\n\n## 現在のコード\n' + code +
     '\n\n## 修正が必要な項目\n' + unchecked.map(function(i) { return '- ' + i; }).join('\n') +
