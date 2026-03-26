@@ -58,6 +58,17 @@ body {
 .app { display: grid; grid-template-columns: 3fr 3fr 4fr; min-height: calc(100vh - 56px); }
 @media (max-width: 1440px) { .app { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 960px) { .app { grid-template-columns: 1fr; } }
+@media (max-width: 1440px) and (min-width: 961px) {
+  .panel--verify {
+    position: fixed; bottom: 48px; left: 0; right: 0; max-height: 50vh;
+    transform: translateY(100%); transition: transform 0.3s ease;
+    z-index: 50; border-top: 2px solid var(--orange);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    overflow-y: auto;
+  }
+  .panel--verify.drawer-open { transform: translateY(0); }
+  .drawer-toggle { display: inline-flex; }
+}
 
 /* ===== PANEL ===== */
 .panel { padding: 28px; overflow-y: auto; max-height: calc(100vh - 56px - 48px); }
@@ -225,6 +236,21 @@ body {
 .checklist-item .badge--visual { background:#FFF3E0; color:#E65100; }
 .check-count { font-size:11px; color:var(--gray); font-weight:400; }
 .checklist__empty { font-size:12px; color:var(--gray); padding:12px 0; }
+
+/* ===== PDCA BAR ===== */
+.pdca-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 48px; background: var(--dark); color: #fff;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100;
+}
+.pdca-steps { display: flex; align-items: center; gap: 4px; }
+.pdca-step { font-family: var(--font-en); font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 12px; opacity: 0.4; transition: all 0.3s; }
+.pdca-step.active { opacity: 1; background: var(--orange); }
+.pdca-step.done { opacity: 1; color: var(--green); }
+.pdca-connector { color: rgba(255,255,255,0.2); font-size: 10px; }
+.pdca-info { display: flex; align-items: center; gap: 8px; font-size: 12px; font-family: var(--font-en); }
+.pdca-info .btn--ghost { color: #fff; border-color: rgba(255,255,255,0.2); }
+.pdca-info .btn--ghost:hover { border-color: rgba(255,255,255,0.5); }
+.drawer-toggle { display: none; }
 </style>
 </head>
 <body>
@@ -795,6 +821,24 @@ body {
   </div>
 </div>
 
+<div class="pdca-bar" id="pdcaBar">
+  <div class="pdca-steps">
+    <span class="pdca-step active" data-phase="plan">Plan</span>
+    <span class="pdca-connector">━━</span>
+    <span class="pdca-step" data-phase="do">Do</span>
+    <span class="pdca-connector">━━</span>
+    <span class="pdca-step" data-phase="check">Check</span>
+    <span class="pdca-connector">━━</span>
+    <span class="pdca-step" data-phase="act">Act</span>
+  </div>
+  <div class="pdca-info">
+    <span id="cycleCount">Cycle #1</span>
+    <button class="btn btn--ghost drawer-toggle" style="padding:4px 12px;font-size:11px" onclick="toggleDrawer()">検証パネル</button>
+    <button class="btn btn--ghost" style="padding:4px 12px;font-size:11px" id="completeCycleBtn" onclick="completeCycle()" disabled>サイクル完了</button>
+    <button class="btn btn--ghost" style="padding:4px 12px;font-size:11px" onclick="resetPDCA()">リセット</button>
+  </div>
+</div>
+
 <div class="toast" id="toast">コピーしました</div>
 
 <script>
@@ -1088,6 +1132,7 @@ function generatePrompt() {
   document.getElementById('outputStats').textContent = `${lines} lines / ${chars} chars`;
 
   generateChecklist();
+  updatePDCA();
 }
 
 // ===== COPY =====
@@ -1228,6 +1273,7 @@ function updatePreview() {
   doc.open();
   doc.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>' + stripped + '</body></html>');
   doc.close();
+  updatePDCA();
 }
 
 function setPreviewSize(size) {
@@ -1316,6 +1362,7 @@ function generateChecklist() {
 function toggleCheck(cb) {
   cb.closest('.checklist-item').classList.toggle('checked', cb.checked);
   updateCheckCount();
+  updatePDCA();
 }
 
 function updateCheckCount() {
@@ -1350,6 +1397,7 @@ function copyForClaude() {
     '\n\n## 修正が必要な項目\n' + unchecked.map(i => '- ' + i).join('\n') +
     '\n\n## デザイン仕様\n' + getDesignSpec() +
     '\n\n元のコードを直接編集し、修正済みコードを出力してください。';
+  enterActPhase();
   navigator.clipboard.writeText(prompt).then(() => showToast('Claude用プロンプトをコピー'));
 }
 
@@ -1358,6 +1406,7 @@ function copyForGemini() {
   const prompt = '以下のUIデザイン画像と実装コードのスクリーンショットを比較し、差異を列挙してください。\n\n' +
     '## デザイン仕様\n' + getDesignSpec() +
     '\n\n## チェック観点\n1. カラーの一致（Primary/Secondary/Gray）\n2. フォントサイズ・ウェイトの一致\n3. 余白・スペーシングの一致\n4. レイアウト比率の一致\n5. 角丸・シャドウの一致\n6. 全体的な印象・世界観の一致\n\n差異ごとに「箇所」「期待値」「実際の値」「重要度(高/中/低)」を表形式で出力してください。\n\n※ Figmaデザイン画像とプレビューのスクリーンショットを添付してください。';
+  enterActPhase();
   navigator.clipboard.writeText(prompt).then(() => showToast('Gemini用プロンプトをコピー'));
 }
 
@@ -1368,8 +1417,106 @@ function copyForChatGPT() {
     '## 不一致項目\n' + unchecked.map(i => '- ' + i).join('\n') +
     '\n\n## 使用したプロンプト\n' + getDesignSpec() +
     '\n\n以下を分析してください:\n1. プロンプトのどの記述が不十分だったか\n2. どう書き換えればLLMが正確に実装するか\n3. Prompt Builderの入力項目として何を追加すべきか\n\n改善案を具体的に提示してください。';
+  enterActPhase();
   navigator.clipboard.writeText(prompt).then(() => showToast('ChatGPT用プロンプトをコピー'));
 }
+
+// ===== PDCA STATE MACHINE (Task 6) =====
+let pdcaState = JSON.parse(localStorage.getItem('pdca_history')) || {
+  currentCycle: 1,
+  phase: 'plan',
+  cycles: []
+};
+
+function updatePDCA() {
+  const hasPrompt = !document.getElementById('outputBox').textContent.includes('左のフォームに入力すると');
+  const hasCode = (document.getElementById('codeInput')?.value || '').trim().length > 0;
+  const allChecks = document.querySelectorAll('#checklist input[type="checkbox"]');
+  const checkedCount = document.querySelectorAll('#checklist input[type="checkbox"]:checked').length;
+  const allPassed = allChecks.length > 0 && checkedCount === allChecks.length;
+
+  if (pdcaState.phase === 'plan' && hasPrompt) pdcaState.phase = 'do';
+  if (pdcaState.phase === 'do' && hasCode) pdcaState.phase = 'check';
+  if (pdcaState.phase === 'check' && allPassed) pdcaState.phase = 'complete';
+
+  renderPDCA();
+  savePDCA();
+}
+
+function enterActPhase() {
+  if (pdcaState.phase === 'check') {
+    pdcaState.phase = 'act';
+    renderPDCA();
+    savePDCA();
+  }
+}
+
+function renderPDCA() {
+  const phases = ['plan', 'do', 'check', 'act'];
+  const currentIdx = pdcaState.phase === 'complete' ? 4 : phases.indexOf(pdcaState.phase);
+  document.querySelectorAll('.pdca-step').forEach(step => {
+    const idx = phases.indexOf(step.dataset.phase);
+    step.classList.remove('active', 'done');
+    if (pdcaState.phase === 'complete') { step.classList.add('done'); }
+    else if (idx < currentIdx) step.classList.add('done');
+    else if (idx === currentIdx) step.classList.add('active');
+  });
+  document.getElementById('cycleCount').textContent = 'Cycle #' + pdcaState.currentCycle;
+
+  const completeBtn = document.getElementById('completeCycleBtn');
+  if (completeBtn) {
+    completeBtn.disabled = !['act', 'complete'].includes(pdcaState.phase);
+    completeBtn.style.opacity = completeBtn.disabled ? '0.3' : '1';
+  }
+}
+
+function completeCycle() {
+  const unchecked = Array.from(document.querySelectorAll('#checklist input[type="checkbox"]:not(:checked)'))
+    .map(cb => cb.nextElementSibling.textContent.trim());
+  const all = document.querySelectorAll('#checklist input[type="checkbox"]');
+
+  pdcaState.cycles.push({
+    id: pdcaState.currentCycle,
+    timestamp: new Date().toISOString(),
+    phase: pdcaState.phase,
+    totalChecks: all.length,
+    passedChecks: all.length - unchecked.length,
+    failedItems: unchecked,
+    sectionName: getVal('sectionName')
+  });
+
+  pdcaState.currentCycle++;
+  pdcaState.phase = 'plan';
+
+  document.querySelectorAll('#checklist input[type="checkbox"]').forEach(cb => {
+    cb.checked = false;
+    cb.closest('.checklist-item').classList.remove('checked');
+  });
+  updateCheckCount();
+  savePDCA();
+  renderPDCA();
+  showToast('Cycle #' + (pdcaState.currentCycle - 1) + ' 完了 → Cycle #' + pdcaState.currentCycle + ' 開始');
+}
+
+function resetPDCA() {
+  pdcaState = { currentCycle: 1, phase: 'plan', cycles: [] };
+  savePDCA();
+  renderPDCA();
+  showToast('PDCA履歴をリセットしました');
+}
+
+function savePDCA() {
+  if (pdcaState.cycles.length > 20) pdcaState.cycles = pdcaState.cycles.slice(-20);
+  localStorage.setItem('pdca_history', JSON.stringify(pdcaState));
+}
+
+// ===== DRAWER (Task 7) =====
+function toggleDrawer() {
+  document.querySelector('.panel--verify').classList.toggle('drawer-open');
+}
+
+// ===== INIT =====
+renderPDCA();
 </script>
 </body>
 </html>
