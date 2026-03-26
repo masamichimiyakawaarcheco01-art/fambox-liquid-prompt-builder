@@ -1,0 +1,276 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap">
+
+<section class="fam-issues" id="fam-issues-{{ section.id }}">
+  <div class="fam-issues__inner">
+    <h2 class="fam-issues__title">{{ section.settings.section_title }}</h2>
+    <div class="fam-issues__blocks">
+      {% for block in section.blocks %}
+        <div class="fam-issues__block" {{ block.shopify_attributes }}>
+          <div class="fam-issues__upper">
+            <p class="fam-issues__issue-number">ISSUES {{ block.settings.issue_number }}</p>
+            <p class="fam-issues__coach-name">{{ block.settings.coach_name }}</p>
+            <p class="fam-issues__organization">{{ block.settings.organization }}</p>
+            <p class="fam-issues__quote">{{ block.settings.quote }}</p>
+          </div>
+          <div class="fam-issues__lower">
+            <p class="fam-issues__mission-label">{{ block.settings.mission_label }}</p>
+            <p class="fam-issues__mission-title">{{ block.settings.mission_title }}</p>
+            <p class="fam-issues__lead-text">{{ block.settings.lead_text }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .fam-issues {
+    background: #FFFFFF;
+    padding-top: 120px;
+    height: 896px;
+    box-sizing: border-box;
+  }
+
+  .fam-issues__inner {
+    width: 100%;
+  }
+
+  .fam-issues__title {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+    font-weight: 600;
+    font-size: 40px;
+    color: #1B1D1A;
+    text-align: center;
+    margin: 0 0 56px 0;
+  }
+
+  .fam-issues__blocks {
+    display: flex;
+  }
+
+  .fam-issues__block {
+    border: 1px solid #ECECEC;
+    box-sizing: border-box;
+  }
+
+  /* Upper Block */
+  .fam-issues__upper {
+    padding: 64px;
+  }
+
+  .fam-issues__issue-number {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    color: #FB4C15;
+    margin: 0;
+  }
+
+  .fam-issues__coach-name {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #FB4C15;
+    margin: 0;
+  }
+
+  .fam-issues__organization {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: #FB4C15;
+    margin: 24px 0 0 0;
+  }
+
+  .fam-issues__quote {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 180%;
+    color: #1B1D1A;
+    margin: 24px 0 0 0;
+  }
+
+  /* Lower Block */
+  .fam-issues__lower {
+    padding: 32px 64px;
+  }
+
+  .fam-issues__mission-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #FB4C15;
+    margin: 0;
+  }
+
+  .fam-issues__mission-title {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: #FB4C15;
+    margin: 24px 0 0 0;
+  }
+
+  .fam-issues__lead-text {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 180%;
+    color: #1B1D1A;
+    margin: 24px 0 0 0;
+  }
+
+  /* >= 1920px: blocks evenly fill width (each 1/3) */
+  @media (min-width: 1920px) {
+    .fam-issues__blocks {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+
+    .fam-issues__block {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+
+  /* 768px - 1919px: each block fixed 640px, aligned from left */
+  @media (min-width: 768px) and (max-width: 1919px) {
+    .fam-issues__blocks {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+
+    .fam-issues__block {
+      flex: 0 0 640px;
+      width: 640px;
+    }
+  }
+
+  /* SP: <= 767px */
+  @media (max-width: 767px) {
+    .fam-issues {
+      height: auto;
+    }
+
+    .fam-issues__blocks {
+      display: flex;
+      flex-direction: column;
+      padding: 0 24px;
+    }
+
+    .fam-issues__block {
+      width: 100%;
+    }
+
+    .fam-issues__upper {
+      padding: 24px;
+    }
+
+    .fam-issues__lower {
+      padding: 24px;
+    }
+
+    .fam-issues__lead-text {
+      font-size: 14px;
+      line-height: 180%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "FAM Issues",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "アスリートの現場を見てわかった直面している3つの課題"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "issue",
+      "name": "Issue Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "issue_number",
+          "label": "Issue Number",
+          "default": "01"
+        },
+        {
+          "type": "text",
+          "id": "coach_name",
+          "label": "Coach Name",
+          "default": "コーチ 細山田武史"
+        },
+        {
+          "type": "text",
+          "id": "organization",
+          "label": "Organization",
+          "default": "トヨタ自動車硬式野球部 TOYOTA RED CRUISERS"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "自炊選手が多く、補食のタイミングや食事の準備が難しい環境。"
+        },
+        {
+          "type": "text",
+          "id": "mission_label",
+          "label": "Mission Label",
+          "default": "FAM MISSION"
+        },
+        {
+          "type": "text",
+          "id": "mission_title",
+          "label": "Mission Title",
+          "default": "食事準備の負担軽減"
+        },
+        {
+          "type": "textarea",
+          "id": "lead_text",
+          "label": "Lead Text",
+          "default": "忙しいアスリートでも手軽に栄養バランスの取れた食事を摂れるよう、準備の手間を最小限にするソリューションを提供します。"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAM Issues",
+      "blocks": [
+        {
+          "type": "issue",
+          "settings": {
+            "issue_number": "01",
+            "coach_name": "コーチ 細山田武史",
+            "organization": "トヨタ自動車硬式野球部 TOYOTA RED CRUISERS",
+            "quote": "自炊選手が多く、補食のタイミングや食事の準備が難しい環境。",
+            "mission_label": "FAM MISSION",
+            "mission_title": "食事準備の負担軽減",
+            "lead_text": "忙しいアスリートでも手軽に栄養バランスの取れた食事を摂れるよう、準備の手間を最小限にするソリューションを提供します。"
+          }
+        },
+        {
+          "type": "issue",
+          "settings": {
+            "issue_number": "02"
+          }
+        },
+        {
+          "type": "issue",
+          "settings": {
+            "issue_number": "03"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
