@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solution Section Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+  background: #F5F5F5;
+}
+
+.solution-section {
+  min-height: 875px;
+  background: #FFFFFF;
+  padding-top: 120px;
+}
+
+.solution-section-title {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+  font-weight: 500;
+  font-size: 40px;
+  color: #1B1D1A;
+  text-align: center;
+  padding-left: 64px;
+  padding-right: 64px;
+  margin-bottom: 56px;
+}
+
+.carousel-container {
+  padding-left: 64px;
+  padding-right: 64px;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 64px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.solution-block {
+  flex: 0 0 1312px;
+  max-width: 1312px;
+  width: 1312px;
+  height: 480px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  scroll-snap-align: start;
+}
+
+.solution-left-line {
+  width: 8px;
+  height: 84px;
+  background: #FB4C15;
+  flex-shrink: 0;
+}
+
+.solution-gap-left {
+  width: 48px;
+  flex-shrink: 0;
+}
+
+.solution-text-block {
+  width: 480px;
+  flex-shrink: 0;
+  height: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.solution-text-top {
+  display: flex;
+  flex-direction: column;
+}
+
+.solution-label {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #FB4C15;
+  margin-bottom: 8px;
+}
+
+.solution-title {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 180%;
+  color: #FB4C15;
+  margin-bottom: 16px;
+}
+
+.solution-lead {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 180%;
+  color: #1B1D1A;
+}
+
+.solution-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.solution-nav-btn {
+  width: 64px;
+  height: 64px;
+  background: #FB4C15;
+  border: none;
+  border-radius: 4px;
+  color: #FFFFFF;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solution-nav-btn:hover {
+  opacity: 0.9;
+}
+
+.solution-gap-middle {
+  flex: 1;
+  min-width: 56px;
+}
+
+.solution-circle-wrapper {
+  width: 480px;
+  height: 480px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.solution-circle {
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: #E0E0E0;
+  overflow: hidden;
+}
+
+.corner-bracket {
+  position: absolute;
+}
+
+.corner-bracket--tl {
+  top: 0;
+  left: 0;
+}
+
+.corner-bracket--tr {
+  top: 0;
+  right: 0;
+}
+
+.corner-bracket--bl {
+  bottom: 0;
+  left: 0;
+}
+
+.corner-bracket--br {
+  bottom: 0;
+  right: 0;
+}
+
+/* Responsive: shrink gap between text and circle */
+@media (max-width: 1439px) {
+  .solution-block {
+    width: calc(100vw - 128px);
+    max-width: 1312px;
+    flex: 0 0 calc(100vw - 128px);
+  }
+}
+
+/* SP mode */
+@media (max-width: 900px) {
+  .solution-section-title {
+    font-size: 28px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .carousel-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .solution-block {
+    flex: 0 0 100vw;
+    width: 100vw;
+    max-width: 100vw;
+    height: auto;
+    flex-direction: column;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .solution-left-line {
+    margin-bottom: 0;
+  }
+
+  .solution-block-inner-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .solution-gap-left {
+    width: 48px;
+  }
+
+  .solution-text-block {
+    width: calc(100% - 56px);
+    height: auto;
+  }
+
+  .solution-title {
+    font-size: 28px;
+  }
+
+  .solution-nav {
+    display: none;
+  }
+
+  .solution-gap-middle {
+    display: none;
+  }
+
+  .solution-circle-wrapper {
+    width: calc(100vw - 48px);
+    height: calc(100vw - 48px);
+    margin: 32px auto 0;
+    align-self: center;
+  }
+
+  .solution-circle {
+    width: 100%;
+    height: 100%;
+  }
+
+  .carousel-track {
+    scroll-snap-type: x mandatory;
+  }
+}
+</style>
+</head>
+<body>
+
+<section class="solution-section">
+  <h2 class="solution-section-title">FAMはこれらの課題を解決できる</h2>
+
+  <div class="carousel-container">
+    <div class="carousel-track" id="carouselTrack">
+
+      <!-- Slide 1 -->
+      <div class="solution-block" data-slide="0">
+        <div class="solution-left-line"></div>
+        <div class="solution-gap-left"></div>
+        <div class="solution-text-block">
+          <div class="solution-text-top">
+            <p class="solution-label">Solution 01.</p>
+            <h3 class="solution-title">5分で栄養が整う</h3>
+            <p class="solution-lead">冷凍パウチを温めるだけ。専属の栄養士も専用食堂も必要ない。スポーツ栄養アドバイザーが設計した食事を、選手がそのまま受け取れる仕組みで、チームの食環境を変える。</p>
+          </div>
+          <div class="solution-nav">
+            <button class="solution-nav-btn" onclick="navigateSlide(-1)" aria-label="Previous slide">&#8592;</button>
+            <button class="solution-nav-btn" onclick="navigateSlide(1)" aria-label="Next slide">&#8594;</button>
+          </div>
+        </div>
+        <div class="solution-gap-middle"></div>
+        <div class="solution-circle-wrapper">
+          <svg class="corner-bracket corner-bracket--tl" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M0 32V0H32" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <svg class="corner-bracket corner-bracket--tr" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M32 32V0H0" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <svg class="corner-bracket corner-bracket--bl" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M0 0V32H32" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <svg class="corner-bracket corner-bracket--br" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M32 0V32H0" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <div class="solution-circle"></div>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="solution-block" data-slide="1">
+        <div class="solution-left-line"></div>
+        <div class="solution-gap-left"></div>
+        <div class="solution-text-block">
+          <div class="solution-text-top">
+            <p class="solution-label">Solution 02.</p>
+            <h3 class="solution-title">栄養設計された食事</h3>
+            <p class="solution-lead">すべてのメニューはスポーツ栄養学に基づき設計。たんぱく質・炭水化物・脂質のバランスだけでなく、ビタミン・ミネラルまで計算された食事が届く。</p>
+          </div>
+          <div class="solution-nav">
+            <button class="solution-nav-btn" onclick="navigateSlide(-1)" aria-label="Previous slide">&#8592;</button>
+            <button class="solution-nav-btn" onclick="navigateSlide(1)" aria-label="Next slide">&#8594;</button>
+          </div>
+        </div>
+        <div class="solution-gap-middle"></div>
+        <div class="solution-circle-wrapper">
+          <svg class="corner-bracket corner-bracket--tl" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M0 32V0H32" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <svg class="corner-bracket corner-bracket--tr" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M32 32V0H0" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <svg class="corner-bracket corner-bracket--bl" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M0 0V32H32" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <svg class="corner-bracket corner-bracket--br" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M32 0V32H0" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <div class="solution-circle"></div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="solution-block" data-slide="2">
+        <div class="solution-left-line"></div>
+        <div class="solution-gap-left"></div>
+        <div class="solution-text-block">
+          <div class="solution-text-top">
+            <p class="solution-label">Solution 03.</p>
+            <h3 class="solution-title">場所を選ばない</h3>
+            <p class="solution-lead">練習場でも遠征先でも、冷凍庫と電子レンジがあれば提供可能。場所や時間の制約を超え、すべての選手に均一な栄養サポートを届ける。</p>
+          </div>
+          <div class="solution-nav">
+            <button class="solution-nav-btn" onclick="navigateSlide(-1)" aria-label="Previous slide">&#8592;</button>
+            <button class="solution-nav-btn" onclick="navigateSlide(1)" aria-label="Next slide">&#8594;</button>
+          </div>
+        </div>
+        <div class="solution-gap-middle"></div>
+        <div class="solution-circle-wrapper">
+          <svg class="corner-bracket corner-bracket--tl" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M0 32V0H32" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <svg class="corner-bracket corner-bracket--tr" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M32 32V0H0" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <svg class="corner-bracket corner-bracket--bl" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M0 0V32H32" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <svg class="corner-bracket corner-bracket--br" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M32 0V32H0" stroke="#FB4C15" stroke-width="3" fill="none"/></svg>
+          <div class="solution-circle"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const track = document.getElementById('carouselTrack');
+  let currentSlide = 0;
+  const totalSlides = 3;
+
+  window.navigateSlide = function(direction) {
+    currentSlide += direction;
+    if (currentSlide < 0) currentSlide = 0;
+    if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+
+    const blocks = track.querySelectorAll('.solution-block');
+    if (blocks[currentSlide]) {
+      blocks[currentSlide].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start'
+      });
+    }
+  };
+
+  // Touch swipe support for SP
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  track.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  track.addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        navigateSlide(1);
+      } else {
+        navigateSlide(-1);
+      }
+    }
+  }, { passive: true });
+
+  // Update current slide on scroll
+  track.addEventListener('scroll', function() {
+    const scrollLeft = track.scrollLeft;
+    const blocks = track.querySelectorAll('.solution-block');
+    if (blocks.length === 0) return;
+    const blockWidth = blocks[0].offsetWidth + 64; // block width + gap
+    const newSlide = Math.round(scrollLeft / blockWidth);
+    if (newSlide !== currentSlide && newSlide >= 0 && newSlide < totalSlides) {
+      currentSlide = newSlide;
+    }
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>
