@@ -299,6 +299,7 @@ body {
       <button class="tab-btn" onclick="switchTab('color')">Color</button>
       <button class="tab-btn" onclick="switchTab('components')">Parts</button>
       <button class="tab-btn" onclick="switchTab('schema')">Schema</button>
+      <button class="tab-btn" onclick="switchTab('section')">Section</button>
     </div>
 
     <!-- ==================== TAB: IMPORT ==================== -->
@@ -969,6 +970,117 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
       </div>
     </div>
 
+    <!-- ==================== TAB: SECTION ==================== -->
+    <div class="tab-content" id="tab-section">
+      <div class="section-label">Section Template</div>
+
+      <label class="field__label">セクションパターン</label>
+      <div class="toggle-group" id="sectionPattern">
+        <button class="toggle-item active" data-value="custom" onclick="setToggle(this); applySectionTemplate()">Custom</button>
+        <button class="toggle-item" data-value="2col-list" onclick="setToggle(this); applySectionTemplate()">2カラム+リスト</button>
+        <button class="toggle-item" data-value="card-carousel" onclick="setToggle(this); applySectionTemplate()">カードカルーセル</button>
+        <button class="toggle-item" data-value="hero-overlay" onclick="setToggle(this); applySectionTemplate()">Hero+オーバーレイ</button>
+        <button class="toggle-item" data-value="3col-equal" onclick="setToggle(this); applySectionTemplate()">3カラム等幅</button>
+      </div>
+
+      <div class="section-label" style="margin-top:24px">Container</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="field">
+          <label class="field__label">セクション高さ</label>
+          <input class="field__input" id="secHeight" placeholder="例: 728px / 可変">
+        </div>
+        <div class="field">
+          <label class="field__label">最大横幅</label>
+          <input class="field__input" id="secMaxWidth" placeholder="例: 1312px">
+        </div>
+        <div class="field">
+          <label class="field__label">上余白</label>
+          <input class="field__input" id="secPaddingTop" placeholder="例: 120px">
+        </div>
+        <div class="field">
+          <label class="field__label">下余白</label>
+          <input class="field__input" id="secPaddingBottom" placeholder="例: 120px">
+        </div>
+        <div class="field">
+          <label class="field__label">PC左右余白</label>
+          <input class="field__input" id="secPaddingLR" placeholder="例: 64px">
+        </div>
+        <div class="field">
+          <label class="field__label">SP左右余白</label>
+          <input class="field__input" id="secPaddingLRSP" placeholder="例: 24px">
+        </div>
+      </div>
+
+      <label class="field__label" style="margin-top:16px">背景色</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="color" id="secBgColor" value="#FFFFFF" style="width:32px;height:32px;border:none;padding:0;cursor:pointer">
+        <input class="field__input" id="secBgColorHex" value="#FFFFFF" style="flex:1" oninput="document.getElementById('secBgColor').value=this.value">
+      </div>
+
+      <div class="section-label" style="margin-top:24px">Section Title</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="field">
+          <label class="field__label">タイトルテキスト</label>
+          <input class="field__input" id="secTitleText" placeholder="例: FAMが選ばれる理由">
+        </div>
+        <div class="field">
+          <label class="field__label">フォントサイズ</label>
+          <input class="field__input" id="secTitleSize" placeholder="例: 40px">
+        </div>
+        <div class="field">
+          <label class="field__label">ウェイト</label>
+          <select class="field__select" id="secTitleWeight">
+            <option value="300">W3 (300)</option>
+            <option value="400">W4 (400)</option>
+            <option value="500" selected>W5 (500)</option>
+            <option value="600">W6 (600)</option>
+            <option value="700">W7 (700)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label">SP時サイズ</label>
+          <input class="field__input" id="secTitleSizeSP" placeholder="例: 28px">
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:24px">構造テキスト入力</div>
+      <label class="field__label">セクション仕様（自然言語）</label>
+      <textarea class="field__textarea" id="secSpec" rows="12" placeholder="ここにセクションの仕様を貼り付けると、プロンプトに自動変換されます。&#10;&#10;例:&#10;左右の箱に分かれます。横幅624px高さは可変、箱の余白は64px&#10;&#10;左の箱は&#10;セクションタイトル：hiragino sans W5 40px 行間180% 1B1D1A&#10;32px余白&#10;リード文：hiragino sans W5 18px 行間180% 1B1D1A&#10;32px余白&#10;リストが3つ縦並び、クリックで右側の箱が切り替わる&#10;&#10;右側の箱は&#10;画像624×400、32pxの余白&#10;画像タイトル：W5 24px FB4C15&#10;&#10;1440以下でリスト非表示、カルーセルに変化&#10;SP版は左右24pxの余白"></textarea>
+
+      <div class="section-label" style="margin-top:24px">レスポンシブ動作</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="field">
+          <label class="field__label">ブレイクポイント1</label>
+          <input class="field__input" id="secBP1" placeholder="例: 1440px">
+        </div>
+        <div class="field">
+          <label class="field__label">動作</label>
+          <input class="field__input" id="secBP1Action" placeholder="例: リスト非表示+カルーセル">
+        </div>
+        <div class="field">
+          <label class="field__label">ブレイクポイント2</label>
+          <input class="field__input" id="secBP2" placeholder="例: 767px">
+        </div>
+        <div class="field">
+          <label class="field__label">動作</label>
+          <input class="field__input" id="secBP2Action" placeholder="例: 24px余白+縦積み">
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:24px">インタラクション</div>
+      <div class="chip-container" id="secInteractionChips">
+        <button class="chip" onclick="toggleChip(this)">クリック切替</button>
+        <button class="chip" onclick="toggleChip(this)">カルーセル</button>
+        <button class="chip" onclick="toggleChip(this)">横スクロール</button>
+        <button class="chip" onclick="toggleChip(this)">アコーディオン</button>
+        <button class="chip" onclick="toggleChip(this)">タブ切替</button>
+        <button class="chip" onclick="toggleChip(this)">フリック/スワイプ</button>
+        <button class="chip" onclick="toggleChip(this)">ドットナビ</button>
+        <button class="chip" onclick="toggleChip(this)">矢印ナビ</button>
+      </div>
+    </div>
+
     <!-- GENERATE BUTTON (always visible) -->
     <div class="btn-group">
       <button class="btn btn--primary" onclick="generatePrompt()">プロンプト生成</button>
@@ -1171,6 +1283,88 @@ function getActiveChipValues(containerId) {
   return Array.from(document.querySelectorAll(`#${containerId} .chip.active`)).map(c => c.dataset.value);
 }
 
+// ===== SECTION TEMPLATE =====
+function applySectionTemplate() {
+  const pattern = getToggleValue('sectionPattern');
+  if (pattern === 'custom') return;
+
+  const templates = {
+    '2col-list': {
+      secMaxWidth: '1312',
+      secPaddingTop: '120',
+      secPaddingBottom: '120',
+      secPaddingLR: '64',
+      secPaddingLRSP: '24',
+      secBP1: '1440',
+      secBP1Action: 'リスト非表示、カルーセル+ドット表示',
+      secBP2: '767',
+      secBP2Action: '24px余白、縦積み',
+      secSpec: '左右の箱に分かれます。横幅624px高さは可変、箱の余白は64px\n\n左の箱は\nセクションタイトル\n32px余白\nリード文\n32px余白\nリスト72px高×3つ縦並び、クリックで右パネル切替\nリスト内：32×32アイコン、24px余白、テキスト\n活性時は#FB4C15\n\n右側の箱は\n画像624×400\n32px余白\n画像タイトル\n16px余白\nリード文\n16px余白\nキャプション',
+      interactions: ['クリック切替', 'カルーセル', 'ドットナビ']
+    },
+    'card-carousel': {
+      secMaxWidth: '1920',
+      secPaddingTop: '120',
+      secPaddingBottom: '120',
+      secPaddingLR: '64',
+      secPaddingLRSP: '24',
+      secBP1: '1440',
+      secBP1Action: '左64px余白保持、横スクロール',
+      secBP2: '767',
+      secBP2Action: '24px余白、カルーセル+ドット',
+      secSpec: 'セクションタイトル中央揃え\n40px余白\nリード文中央揃え\n56px余白\nカードが横並び（カード間32px）\n\nカード仕様：\n400×400画像\n24pxパディング\nカードタイトル\n16px余白\nカードリード文\n区切り線2px\nリスト項目\n区切り線2px\n補足情報',
+      interactions: ['横スクロール', 'フリック/スワイプ', 'ドットナビ']
+    },
+    'hero-overlay': {
+      secHeight: '728',
+      secMaxWidth: '1312',
+      secPaddingTop: '104',
+      secPaddingBottom: '0',
+      secPaddingLR: '64',
+      secPaddingLRSP: '24',
+      secBP1: '1280',
+      secBP1Action: 'テキスト+画像縦積み、960px最大幅',
+      secBP2: '767',
+      secBP2Action: '24px余白、フォント縮小',
+      secSpec: '背景色付きセクション\n大文字デコレーションテキスト（背景レイヤー）\n中央に画像（底揃え）\n画像の上に左右テキストボックス\n\n左ボックス：名前、肩書き、リード文\n右ボックス：プロフィール文\n下部にナビゲーションボタン',
+      interactions: ['カルーセル', '矢印ナビ', 'ドットナビ']
+    },
+    '3col-equal': {
+      secMaxWidth: '1920',
+      secPaddingTop: '120',
+      secPaddingBottom: '120',
+      secPaddingLR: '64',
+      secPaddingLRSP: '24',
+      secBP1: '1440',
+      secBP1Action: 'カード640px固定、横スクロール',
+      secBP2: '767',
+      secBP2Action: 'カード型、左右24px余白、フリック',
+      secSpec: 'セクションタイトル中央揃え\n56px余白\n3つのブロック横並び\n各ブロックは1px #ECECEC ボーダー\n\nブロック内：上下2分割\n上ブロック：64pxパディング、ラベル、画像、テキスト\n下ブロック：64px左右32px上下パディング、ラベル、タイトル、リード文',
+      interactions: ['横スクロール', 'フリック/スワイプ', 'ドットナビ']
+    }
+  };
+
+  const tmpl = templates[pattern];
+  if (!tmpl) return;
+
+  // Fill fields
+  Object.keys(tmpl).forEach(key => {
+    if (key === 'interactions') return;
+    const el = document.getElementById(key);
+    if (el) el.value = tmpl[key];
+  });
+
+  // Set interaction chips
+  if (tmpl.interactions) {
+    document.querySelectorAll('#secInteractionChips .chip').forEach(chip => {
+      chip.classList.toggle('active', tmpl.interactions.includes(chip.textContent));
+    });
+  }
+
+  generatePrompt();
+  showToast('テンプレート適用: ' + pattern);
+}
+
 // ===== GENERATE PROMPT =====
 function generatePrompt() {
   const name = getVal('sectionName');
@@ -1355,6 +1549,62 @@ function generatePrompt() {
   p += `- スペーシングはS/M/Lスケールに従い、任意のpx値を避ける\n`;
   p += `- 日本語コメントでセクション分けする\n`;
 
+  // === SECTION TAB DATA ===
+  const secSpec = getVal('secSpec');
+  const secHeight = getVal('secHeight');
+  const secMaxWidth = getVal('secMaxWidth');
+  const secPaddingTop = getVal('secPaddingTop');
+  const secPaddingBottom = getVal('secPaddingBottom');
+  const secPaddingLR = getVal('secPaddingLR');
+  const secPaddingLRSP = getVal('secPaddingLRSP');
+  const secBgColorHex = getVal('secBgColorHex');
+  const secTitleText = getVal('secTitleText');
+  const secTitleSize = getVal('secTitleSize');
+  const secTitleWeight = document.getElementById('secTitleWeight')?.value;
+  const secTitleSizeSP = getVal('secTitleSizeSP');
+  const secBP1 = getVal('secBP1');
+  const secBP1Action = getVal('secBP1Action');
+  const secBP2 = getVal('secBP2');
+  const secBP2Action = getVal('secBP2Action');
+  const secInteractions = getActiveChips('secInteractionChips');
+
+  let sectionSpec = '';
+  if (secSpec || secHeight || secMaxWidth) {
+    sectionSpec = '\n\n## セクション構造仕様\n';
+
+    if (secHeight || secMaxWidth || secPaddingTop) {
+      sectionSpec += '\n### コンテナ\n';
+      if (secHeight) sectionSpec += '- 高さ: ' + secHeight + 'px\n';
+      if (secMaxWidth) sectionSpec += '- 最大横幅: ' + secMaxWidth + 'px\n';
+      if (secPaddingTop) sectionSpec += '- 上余白: ' + secPaddingTop + 'px\n';
+      if (secPaddingBottom) sectionSpec += '- 下余白: ' + secPaddingBottom + 'px\n';
+      if (secPaddingLR) sectionSpec += '- PC左右余白: ' + secPaddingLR + 'px\n';
+      if (secPaddingLRSP) sectionSpec += '- SP左右余白: ' + secPaddingLRSP + 'px\n';
+      if (secBgColorHex && secBgColorHex !== '#FFFFFF') sectionSpec += '- 背景色: ' + secBgColorHex + '\n';
+    }
+
+    if (secTitleText || secTitleSize) {
+      sectionSpec += '\n### セクションタイトル\n';
+      if (secTitleText) sectionSpec += '- テキスト: ' + secTitleText + '\n';
+      if (secTitleSize) sectionSpec += '- サイズ: ' + secTitleSize + 'px (SP: ' + (secTitleSizeSP || '28') + 'px)\n';
+      if (secTitleWeight) sectionSpec += '- ウェイト: ' + secTitleWeight + '\n';
+    }
+
+    if (secSpec) {
+      sectionSpec += '\n### 構造詳細\n' + secSpec + '\n';
+    }
+
+    if (secBP1 || secBP2) {
+      sectionSpec += '\n### レスポンシブ\n';
+      if (secBP1) sectionSpec += '- ' + secBP1 + 'px以下: ' + (secBP1Action || '') + '\n';
+      if (secBP2) sectionSpec += '- ' + secBP2 + 'px以下: ' + (secBP2Action || '') + '\n';
+    }
+
+    if (secInteractions.length) {
+      sectionSpec += '\n### インタラクション\n- ' + secInteractions.join(', ') + '\n';
+    }
+  }
+
   // === DETAILED DESIGN SPECS (Figma) ===
   var gradientDef = getVal('gradientDef');
   var blurDef = getVal('blurDef');
@@ -1455,7 +1705,7 @@ function generatePrompt() {
     detailSpec += '\n';
   }
 
-  document.getElementById('outputBox').textContent = p + detailSpec;
+  document.getElementById('outputBox').textContent = p + sectionSpec + detailSpec;
 
   // Stats
   const lines = p.split('\n').length;
@@ -1692,6 +1942,13 @@ const checklistRules = [
   { field: 'elementSpacing', template: '要素間スペーシングが仕様通りか', category: 'spacing', type: 'visual' },
   { field: 'decorativeElements', template: '装飾要素が仕様通りか', category: 'parts', type: 'visual' },
   { field: 'navElements', template: 'ナビゲーション要素が仕様通りか', category: 'parts', type: 'visual' },
+  // Section tab fields
+  { field: 'secHeight', template: 'セクション高さが {value}px か', category: 'layout' },
+  { field: 'secMaxWidth', template: '最大横幅が {value}px か', category: 'layout' },
+  { field: 'secPaddingTop', template: '上余白が {value}px か', category: 'spacing' },
+  { field: 'secPaddingLR', template: 'PC左右余白が {value}px か', category: 'spacing' },
+  { field: 'secPaddingLRSP', template: 'SP左右余白が {value}px か', category: 'spacing' },
+  { field: 'secBP1', template: '{value}px以下でレスポンシブ変化するか', category: 'layout', type: 'visual' },
 ];
 
 function generateChecklist() {
