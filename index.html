@@ -78,8 +78,69 @@ body {
 .panel--verify { background: var(--light); border-left: 1px solid var(--border); }
 
 /* ===== TABS NAV ===== */
-.tab-nav { display: flex; gap: 4px; margin-bottom: 28px; border-bottom: 2px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+.tab-nav {
+  display: flex;
+  gap: 2px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
 .tab-nav::-webkit-scrollbar { display: none; }
+.tab-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.tab-group__label {
+  font-family: var(--font-en);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(29,29,31,0.35);
+  padding: 0 8px;
+}
+.tab-group__buttons {
+  display: flex;
+  gap: 2px;
+}
+.tab-group + .tab-group {
+  margin-left: 4px;
+  padding-left: 8px;
+  border-left: 1px solid var(--border);
+}
+/* ===== GLOBAL SAVE BAR ===== */
+.global-save-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(251,76,21,0.04);
+  border-bottom: 1px solid rgba(251,76,21,0.1);
+  font-size: 11px;
+}
+.global-save-bar__label {
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--orange);
+}
+.global-save-bar__status {
+  font-size: 10px;
+  color: rgba(29,29,31,0.56);
+  margin-left: auto;
+}
+/* ===== HIERARCHY HINT ===== */
+.form-hierarchy-hint {
+  font-size: 10px;
+  color: rgba(29,29,31,0.56);
+  padding: 4px 16px;
+  background: var(--light);
+  border-bottom: 1px solid var(--border);
+}
 .tab-btn {
   padding: 12px 24px;
   font-size: 14px;
@@ -289,21 +350,56 @@ body {
 <div class="app">
   <!-- LEFT: FORM -->
   <div class="panel panel--form">
-    <!-- TAB NAVIGATION -->
-    <div class="tab-nav">
-      <button class="tab-btn" onclick="switchTab('import')">Import</button>
-      <button class="tab-btn active" onclick="switchTab('basic')">Basic</button>
-      <button class="tab-btn" onclick="switchTab('taste')">Taste</button>
-      <button class="tab-btn" onclick="switchTab('typography')">Type</button>
-      <button class="tab-btn" onclick="switchTab('spacing')">Spacing</button>
-      <button class="tab-btn" onclick="switchTab('color')">Color</button>
-      <button class="tab-btn" onclick="switchTab('components')">Parts</button>
-      <button class="tab-btn" onclick="switchTab('schema')">Schema</button>
-      <button class="tab-btn" onclick="switchTab('section')">Section</button>
+    <!-- HIERARCHY HINT -->
+    <div class="form-hierarchy-hint">
+      <span style="color:var(--orange)">●</span> Global = 全セクション共通
+      <span style="color:rgba(29,29,31,0.35);margin:0 4px">|</span>
+      <span style="color:var(--orange)">●</span> Section = セクション固有
     </div>
 
+    <!-- GLOBAL SAVE BAR -->
+    <div class="global-save-bar">
+      <span class="global-save-bar__label">Global Rules</span>
+      <button class="btn btn--ghost" style="font-size:11px;padding:4px 12px" onclick="saveGlobalRules()">Save</button>
+      <button class="btn btn--ghost" style="font-size:11px;padding:4px 12px" onclick="loadGlobalRules()">Load</button>
+      <span class="global-save-bar__status" id="globalStatus"></span>
+    </div>
+
+    <!-- TAB NAVIGATION -->
+    <nav class="tab-nav" id="tabNav">
+      <div class="tab-group">
+        <span class="tab-group__label">Global</span>
+        <div class="tab-group__buttons">
+          <button class="tab-btn" onclick="switchTab('typography')" data-tab="typography">Type</button>
+          <button class="tab-btn" onclick="switchTab('color')" data-tab="color">Color</button>
+          <button class="tab-btn" onclick="switchTab('spacing')" data-tab="spacing">Spacing</button>
+          <button class="tab-btn" onclick="switchTab('components')" data-tab="components">Parts</button>
+        </div>
+      </div>
+      <div class="tab-group">
+        <span class="tab-group__label">Page</span>
+        <div class="tab-group__buttons">
+          <button class="tab-btn" onclick="switchTab('basic')" data-tab="basic">Layout</button>
+        </div>
+      </div>
+      <div class="tab-group">
+        <span class="tab-group__label">Section</span>
+        <div class="tab-group__buttons">
+          <button class="tab-btn active" onclick="switchTab('section')" data-tab="section">Structure</button>
+          <button class="tab-btn" onclick="switchTab('taste')" data-tab="taste">Taste</button>
+        </div>
+      </div>
+      <div class="tab-group">
+        <span class="tab-group__label">Component</span>
+        <div class="tab-group__buttons">
+          <button class="tab-btn" onclick="switchTab('schema')" data-tab="schema">Schema</button>
+          <button class="tab-btn" onclick="switchTab('import')" data-tab="import">Import</button>
+        </div>
+      </div>
+    </nav>
+
     <!-- ==================== TAB: IMPORT ==================== -->
-    <div class="tab-content" id="tab-import" style="display:none">
+    <div class="tab-content" id="tab-import">
       <div class="section-label">FIGMA IMPORT</div>
       <div class="field">
         <label class="field__label">Figma URL</label>
@@ -326,7 +422,7 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
     </div>
 
     <!-- ==================== TAB: BASIC ==================== -->
-    <div class="tab-content active" id="tab-basic">
+    <div class="tab-content" id="tab-basic">
       <div class="section-label">Template</div>
       <div class="templates" id="templates">
         <div class="template-card" data-template="hero" onclick="selectTemplate(this)">
@@ -971,7 +1067,7 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
     </div>
 
     <!-- ==================== TAB: SECTION ==================== -->
-    <div class="tab-content" id="tab-section">
+    <div class="tab-content active" id="tab-section">
       <div class="section-label">Section Template</div>
 
       <label class="field__label">セクションパターン</label>
@@ -1179,9 +1275,11 @@ Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください
 // ===== TAB SWITCHING =====
 function switchTab(tabId) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
-  document.getElementById('tab-' + tabId).classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(c => { c.classList.remove('active'); c.style.display = 'none'; });
+  const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+  if (btn) btn.classList.add('active');
+  const content = document.getElementById('tab-' + tabId);
+  if (content) { content.classList.add('active'); content.style.display = 'block'; }
 }
 
 // ===== CHIPS =====
@@ -2376,8 +2474,138 @@ function activateChip(containerId, text) {
   });
 }
 
+// ===== GLOBAL RULES SAVE/LOAD =====
+function saveGlobalRules() {
+  const globalFields = {
+    // Type tab
+    fontJA: document.getElementById('fontJA')?.value || '',
+    fontEN: document.getElementById('fontEN')?.value || '',
+    typeDisplay: getVal('typeDisplay'),
+    typeH1: getVal('typeH1'),
+    typeH2: getVal('typeH2'),
+    typeH3: getVal('typeH3'),
+    typeBody: getVal('typeBody'),
+    typeSmall: getVal('typeSmall'),
+    lineHeight: getToggleValue('lineHeight'),
+    fontWeight: getToggleValue('fontWeight'),
+    // Color tab
+    colorPrimary: getVal('colorPrimary'),
+    colorSecondary: getVal('colorSecondary'),
+    colorInactive: getVal('colorInactive'),
+    colorError: getVal('colorError'),
+    colorGray1: getVal('colorGray1'),
+    colorGray2: getVal('colorGray2'),
+    colorGray3: getVal('colorGray3'),
+    colorGray4: getVal('colorGray4'),
+    colorSurfaceHex: getVal('colorSurfaceHex'),
+    colorOnSurfaceHex: getVal('colorOnSurfaceHex'),
+    colorSurfaceContainerHex: getVal('colorSurfaceContainerHex'),
+    colorOutlineHex: getVal('colorOutlineHex'),
+    textOnImage: getToggleValue('textOnImage'),
+    // Spacing tab
+    spacingS: getVal('spacingS'),
+    spacingM: getVal('spacingM'),
+    spacingL: getVal('spacingL'),
+    spacingRatio: getToggleValue('spacingRatio'),
+    spacingContainer: getToggleValue('spacingContainer'),
+    spacingSibling: getToggleValue('spacingSibling'),
+    spacingIntra: getToggleValue('spacingInner'),
+    // Parts tab
+    borderRadius: getToggleValue('borderRadius'),
+    borderRadiusVariants: getVal('borderRadiusVariants'),
+    elevation: getToggleValue('elevation'),
+    shadowDetail: getVal('shadowDetail'),
+    transitionSpeed: getToggleValue('transitionSpeed'),
+    stateHover: getVal('stateHover'),
+    stateFocus: getVal('stateFocus'),
+    statePressed: getVal('statePressed'),
+    stateDisabledContainer: getVal('stateDisabledContainer'),
+    stateDisabledContent: getVal('stateDisabledContent'),
+    stateDragged: getVal('stateDragged'),
+    // Page tab (Basic)
+    maxWidth: getVal('maxWidth'),
+    breakpoint: getVal('breakpoint'),
+  };
+  localStorage.setItem('lpb_global_rules', JSON.stringify(globalFields));
+  document.getElementById('globalStatus').textContent = 'Saved ' + new Date().toLocaleTimeString();
+  showToast('Global Rules を保存しました');
+}
+
+function loadGlobalRules() {
+  const saved = localStorage.getItem('lpb_global_rules');
+  if (!saved) { showToast('保存されたGlobal Rulesがありません'); return; }
+  const rules = JSON.parse(saved);
+
+  Object.keys(rules).forEach(key => {
+    const val = rules[key];
+    if (!val) return;
+
+    // Handle select elements
+    const selectEl = document.getElementById(key);
+    if (selectEl && selectEl.tagName === 'SELECT') {
+      selectEl.value = val;
+      return;
+    }
+
+    // Handle input/textarea elements
+    const inputEl = document.getElementById(key);
+    if (inputEl && (inputEl.tagName === 'INPUT' || inputEl.tagName === 'TEXTAREA')) {
+      inputEl.value = val;
+      return;
+    }
+
+    // Handle toggle groups
+    const toggleGroup = document.getElementById(key);
+    if (toggleGroup && (toggleGroup.classList.contains('toggle-group') || toggleGroup.classList.contains('toggle-row'))) {
+      const items = toggleGroup.querySelectorAll('.toggle-item');
+      items.forEach(item => {
+        item.classList.toggle('active', item.dataset.value === val);
+      });
+      return;
+    }
+  });
+
+  // Sync color swatches for main colors
+  ['colorPrimary', 'colorSecondary', 'colorInactive', 'colorError', 'colorGray1', 'colorGray2', 'colorGray3', 'colorGray4'].forEach(id => {
+    const input = document.getElementById(id);
+    const swatch = document.getElementById(id + 'Swatch');
+    if (input && swatch && /^#[0-9A-Fa-f]{6}$/.test(input.value)) {
+      swatch.value = input.value;
+    }
+  });
+
+  // Sync M3 Surface color pickers
+  ['colorSurface', 'colorOnSurface', 'colorSurfaceContainer', 'colorOutline'].forEach(id => {
+    const hex = document.getElementById(id + 'Hex');
+    const picker = document.getElementById(id);
+    if (hex && picker && /^#[0-9A-Fa-f]{6}$/.test(hex.value)) {
+      picker.value = hex.value;
+    }
+  });
+
+  // Handle spacingIntra -> spacingInner mapping
+  if (rules.spacingIntra) {
+    const innerGroup = document.getElementById('spacingInner');
+    if (innerGroup) {
+      innerGroup.querySelectorAll('.toggle-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.value === rules.spacingIntra);
+      });
+    }
+  }
+
+  document.getElementById('globalStatus').textContent = 'Loaded ' + new Date().toLocaleTimeString();
+  showToast('Global Rules を読み込みました');
+  generatePrompt();
+}
+
 // ===== INIT =====
 renderPDCA();
+
+// Auto-load global rules on page init
+if (localStorage.getItem('lpb_global_rules')) {
+  loadGlobalRules();
+  document.getElementById('globalStatus').textContent = 'Auto-loaded';
+}
 </script>
 </body>
 </html>
