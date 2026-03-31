@@ -400,22 +400,48 @@ body {
 
     <!-- ==================== TAB: IMPORT ==================== -->
     <div class="tab-content" id="tab-import">
-      <div class="section-label">FIGMA IMPORT</div>
-      <div class="field">
-        <label class="field__label">Figma URL</label>
-        <input type="text" class="field__input" id="figmaUrl" placeholder="https://www.figma.com/design/FILEKEY/...?node-id=X-Y">
+      <div class="section-label">Figma API Connect</div>
+
+      <label class="field__label">Personal Access Token</label>
+      <div style="display:flex;gap:8px">
+        <input class="field__input" id="figmaToken" type="password" placeholder="figd_xxxxxxxxxxxx" style="flex:1;font-family:'SF Mono',monospace;font-size:11px">
+        <button class="btn btn--ghost" style="padding:4px 12px;font-size:11px" onclick="toggleTokenVisibility()">Show</button>
+        <button class="btn btn--ghost" style="padding:4px 12px;font-size:11px" onclick="saveFigmaToken()">Save</button>
       </div>
-      <div class="import-zone">
-        <div class="section-label">Design Token JSON</div>
-        <textarea id="figmaJson" placeholder='{ "meta": { ... }, "colors": { ... }, "typography": { ... } }
-Claude Codeで生成されたFigmaDesignToken JSONを貼り付けてください'></textarea>
-        <div class="import-status">
-          <span class="import-status__dot import-status__dot--idle" id="importDot"></span>
-          <span id="importMsg">JSONを貼り付けてください</span>
+      <div class="field__hint">Figma > Settings > Personal Access Tokens で生成。ブラウザのlocalStorageに保存されます。</div>
+
+      <label class="field__label" style="margin-top:16px">Figma URL</label>
+      <div style="display:flex;gap:8px">
+        <input class="field__input" id="figmaUrl" placeholder="https://www.figma.com/design/XXXXX/File?node-id=0-1" style="flex:1;font-size:12px">
+        <button class="btn btn--secondary" style="padding:6px 16px;font-size:12px" onclick="fetchFigmaDesign()" id="fetchBtn">Fetch</button>
+      </div>
+
+      <div class="field__hint" id="figmaUrlParsed"></div>
+
+      <div id="figmaFetchStatus" style="margin-top:12px"></div>
+
+      <div id="figmaResultPanel" style="margin-top:16px;display:none">
+        <div class="section-label">取得結果</div>
+
+        <div id="figmaScreenshot" style="margin-bottom:12px"></div>
+
+        <div class="section-label" style="margin-top:12px">抽出データ</div>
+        <div id="figmaExtractedSummary" style="font-size:12px;line-height:1.8"></div>
+
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <button class="btn btn--secondary" style="font-size:12px" onclick="applyFigmaData()">フォームに適用</button>
+          <button class="btn btn--ghost" style="font-size:12px" onclick="copyFigmaJSON()">JSONコピー</button>
         </div>
+
+        <label class="field__label" style="margin-top:16px">Raw JSON</label>
+        <textarea class="field__textarea" id="figmaRawJSON" rows="8" style="font-family:'SF Mono',monospace;font-size:10px" readonly></textarea>
       </div>
-      <div class="btn-group">
-        <button class="btn btn--primary" onclick="importFigmaData()">取り込み</button>
+
+      <div class="section-label" style="margin-top:24px">手動インポート</div>
+      <label class="field__label">FigmaDesignToken JSON（手動貼り付け）</label>
+      <textarea class="field__textarea" id="figmaJson" rows="6" placeholder='{"meta":{"nodeId":"3:625"},"colors":{...},...}' style="font-family:'SF Mono',monospace;font-size:11px"></textarea>
+      <div class="btn-group" style="margin-top:8px">
+        <button class="btn btn--primary" onclick="importFigmaData()">手動インポート</button>
         <button class="btn btn--ghost" onclick="clearImport()">クリア</button>
       </div>
       <div class="import-summary" id="importSummary"></div>
@@ -1880,10 +1906,12 @@ function resetForm() {
   // Clear Figma import fields
   document.getElementById('figmaJson').value = '';
   document.getElementById('figmaUrl').value = '';
-  document.getElementById('importDot').className = 'import-status__dot import-status__dot--idle';
-  document.getElementById('importMsg').textContent = 'JSONを貼り付けてください';
-  document.getElementById('importMsg').style.color = '';
   document.getElementById('importSummary').innerHTML = '';
+  var _rp = document.getElementById('figmaResultPanel'); if (_rp) _rp.style.display = 'none';
+  var _rj = document.getElementById('figmaRawJSON'); if (_rj) _rj.value = '';
+  var _fs = document.getElementById('figmaFetchStatus'); if (_fs) _fs.innerHTML = '';
+  var _ph = document.getElementById('figmaUrlParsed'); if (_ph) _ph.textContent = '';
+  window._figmaExtracted = null;
   figmaImported = false;
   // Clear detail fields
   var detailFields = ['shadowDetail', 'gradientDef', 'blurDef', 'opacityMap', 'borderRadiusVariants', 'elementHierarchy',
@@ -2272,11 +2300,9 @@ let figmaImported = false;
 
 function importFigmaData() {
   const raw = document.getElementById('figmaJson').value.trim();
-  const dot = document.getElementById('importDot');
-  const msg = document.getElementById('importMsg');
   const summary = document.getElementById('importSummary');
 
-  if (!raw) { showImportError('JSONを入力してください'); return; }
+  if (!raw) { showToast('JSONを入力してください'); return; }
 
   let data;
   try { data = JSON.parse(raw); } catch(e) { showImportError('JSONの解析に失敗: ' + e.message); return; }
@@ -2400,9 +2426,6 @@ function importFigmaData() {
 
   // Success
   figmaImported = true;
-  dot.className = 'import-status__dot import-status__dot--ok';
-  msg.textContent = '取り込み成功';
-  msg.style.color = '#10B981';
   summary.innerHTML = '<strong>' + filled + '項目</strong>を自動入力しました。各タブで確認・調整してください。';
 
   generatePrompt();
@@ -2410,20 +2433,28 @@ function importFigmaData() {
 }
 
 function showImportError(message) {
-  var dot = document.getElementById('importDot');
-  var msg = document.getElementById('importMsg');
-  dot.className = 'import-status__dot import-status__dot--err';
-  msg.textContent = message;
-  msg.style.color = '#E53E3E';
+  showToast(message);
 }
 
 function clearImport() {
   document.getElementById('figmaJson').value = '';
   document.getElementById('figmaUrl').value = '';
-  document.getElementById('importDot').className = 'import-status__dot import-status__dot--idle';
-  document.getElementById('importMsg').textContent = 'JSONを貼り付けてください';
-  document.getElementById('importMsg').style.color = '';
   document.getElementById('importSummary').innerHTML = '';
+  // Clear API result panel
+  var resultPanel = document.getElementById('figmaResultPanel');
+  if (resultPanel) resultPanel.style.display = 'none';
+  var rawJSON = document.getElementById('figmaRawJSON');
+  if (rawJSON) rawJSON.value = '';
+  var ssEl = document.getElementById('figmaScreenshot');
+  if (ssEl) ssEl.innerHTML = '';
+  var summaryEl = document.getElementById('figmaExtractedSummary');
+  if (summaryEl) summaryEl.innerHTML = '';
+  var statusEl = document.getElementById('figmaFetchStatus');
+  if (statusEl) statusEl.innerHTML = '';
+  var parsedHint = document.getElementById('figmaUrlParsed');
+  if (parsedHint) parsedHint.textContent = '';
+  window._figmaExtracted = null;
+  window._figmaImageUrl = null;
   figmaImported = false;
   showToast('インポートデータをクリアしました');
 }
@@ -2596,6 +2627,387 @@ function loadGlobalRules() {
   document.getElementById('globalStatus').textContent = 'Loaded ' + new Date().toLocaleTimeString();
   showToast('Global Rules を読み込みました');
   generatePrompt();
+}
+
+// ===== FIGMA REST API =====
+
+// Helper: RGB float (0-1) to hex
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map(function(v) {
+    var hex = Math.round(v * 255).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  }).join('').toUpperCase();
+}
+
+// Helper: hex to RGB object
+function hexToRgbObj(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null;
+}
+
+// Figma Token management
+function saveFigmaToken() {
+  var token = getVal('figmaToken');
+  if (!token) { showToast('トークンを入力してください'); return; }
+  localStorage.setItem('lpb_figma_token', token);
+  showToast('トークンを保存しました');
+}
+
+function toggleTokenVisibility() {
+  var input = document.getElementById('figmaToken');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+// Load saved token on init
+(function loadFigmaToken() {
+  var saved = localStorage.getItem('lpb_figma_token');
+  if (saved) {
+    var el = document.getElementById('figmaToken');
+    if (el) el.value = saved;
+  }
+})();
+
+// Parse Figma URL
+function parseFigmaUrl(url) {
+  var match = url.match(/figma\.com\/(?:design|file)\/([a-zA-Z0-9]+)(?:\/[^?]*)?(?:\?.*node-id=([0-9]+-[0-9]+))?/);
+  if (!match) return null;
+  return {
+    fileKey: match[1],
+    nodeId: match[2] ? match[2].replace('-', ':') : null,
+    nodeIdDash: match[2] || null
+  };
+}
+
+// Watch URL input for auto-parse
+document.getElementById('figmaUrl')?.addEventListener('input', function() {
+  var parsed = parseFigmaUrl(this.value);
+  var hint = document.getElementById('figmaUrlParsed');
+  if (parsed) {
+    hint.textContent = 'File: ' + parsed.fileKey + (parsed.nodeId ? ' | Node: ' + parsed.nodeId : ' | Node: (root)');
+    hint.style.color = 'var(--green)';
+  } else if (this.value.trim()) {
+    hint.textContent = 'URLの形式が正しくありません';
+    hint.style.color = '#E53E3E';
+  } else {
+    hint.textContent = '';
+  }
+});
+
+// Fetch from Figma REST API
+async function fetchFigmaDesign() {
+  var token = getVal('figmaToken') || localStorage.getItem('lpb_figma_token');
+  if (!token) { showToast('Figma Personal Access Token を設定してください'); return; }
+
+  var url = getVal('figmaUrl');
+  var parsed = parseFigmaUrl(url);
+  if (!parsed) { showToast('有効なFigma URLを入力してください'); return; }
+
+  var statusEl = document.getElementById('figmaFetchStatus');
+  var fetchBtn = document.getElementById('fetchBtn');
+  fetchBtn.disabled = true;
+  fetchBtn.textContent = '...';
+  statusEl.innerHTML = '<div style="font-size:12px;color:var(--gray)">Fetching node data...</div>';
+
+  try {
+    // Step 1: Get node data
+    var nodeParam = parsed.nodeId ? '?ids=' + encodeURIComponent(parsed.nodeId) : '';
+    var nodesUrl = 'https://api.figma.com/v1/files/' + parsed.fileKey + '/nodes' + nodeParam;
+
+    var nodeRes = await fetch(nodesUrl, {
+      headers: { 'X-Figma-Token': token }
+    });
+
+    if (!nodeRes.ok) {
+      var errText = await nodeRes.text();
+      throw new Error('API Error ' + nodeRes.status + ': ' + errText);
+    }
+
+    var nodeData = await nodeRes.json();
+    statusEl.innerHTML = '<div style="font-size:12px;color:var(--gray)">Extracting design tokens...</div>';
+
+    // Step 2: Get image
+    var imageUrl = null;
+    if (parsed.nodeId) {
+      statusEl.innerHTML += '<div style="font-size:12px;color:var(--gray)">Fetching screenshot...</div>';
+      try {
+        var imgRes = await fetch('https://api.figma.com/v1/images/' + parsed.fileKey + '?ids=' + encodeURIComponent(parsed.nodeId) + '&format=png&scale=1', {
+          headers: { 'X-Figma-Token': token }
+        });
+        if (imgRes.ok) {
+          var imgData = await imgRes.json();
+          imageUrl = imgData.images?.[parsed.nodeId] || null;
+        }
+      } catch(e) { /* image fetch is optional */ }
+    }
+
+    // Step 3: Extract design tokens from node tree
+    var nodeKey = Object.keys(nodeData.nodes)[0];
+    var rootNode = nodeData.nodes[nodeKey]?.document;
+    if (!rootNode) throw new Error('Node data not found');
+
+    var extracted = extractDesignTokens(rootNode, nodeData.nodes[nodeKey]?.styles || {});
+
+    // Store for later use
+    window._figmaExtracted = extracted;
+    window._figmaImageUrl = imageUrl;
+
+    // Step 4: Display results
+    var resultPanel = document.getElementById('figmaResultPanel');
+    resultPanel.style.display = 'block';
+
+    // Screenshot
+    var ssEl = document.getElementById('figmaScreenshot');
+    if (imageUrl) {
+      ssEl.innerHTML = '<img src="' + imageUrl + '" style="width:100%;border-radius:6px;border:1px solid var(--border)">';
+      // Also set as design image for verification
+      var img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        try {
+          designImages.pc = canvas.toDataURL('image/png');
+          showDesignImage();
+        } catch(e) { /* CORS may block */ }
+      };
+      img.src = imageUrl;
+    } else {
+      ssEl.innerHTML = '';
+    }
+
+    // Summary
+    var summaryEl = document.getElementById('figmaExtractedSummary');
+    var summary = '<div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px">';
+    summary += '<strong>Name:</strong><span>' + (extracted.meta?.nodeName || '-') + '</span>';
+    summary += '<strong>Size:</strong><span>' + (extracted.meta?.width || '?') + ' × ' + (extracted.meta?.height || '?') + '</span>';
+    if (extracted.colors?.primary) summary += '<strong>Primary:</strong><span><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:' + extracted.colors.primary + ';vertical-align:middle;margin-right:4px"></span>' + extracted.colors.primary + '</span>';
+    if (extracted.typography?.fontFamilyEN) summary += '<strong>Font EN:</strong><span>' + extracted.typography.fontFamilyEN + '</span>';
+    if (extracted.typography?.fontFamilyJA) summary += '<strong>Font JA:</strong><span>' + extracted.typography.fontFamilyJA + '</span>';
+    var colorCount = (extracted.colors?.additional?.length || 0) + (extracted.colors?.grays?.length || 0);
+    summary += '<strong>Colors:</strong><span>' + colorCount + ' colors extracted</span>';
+    var effectCount = (extracted.effects?.shadows?.length || 0) + (extracted.effects?.blurs?.length || 0) + (extracted.effects?.gradients?.length || 0);
+    summary += '<strong>Effects:</strong><span>' + effectCount + ' effects extracted</span>';
+    summary += '<strong>Hierarchy:</strong><span>' + (extracted.hierarchy?.length || 0) + ' layers</span>';
+    summary += '</div>';
+    summaryEl.innerHTML = summary;
+
+    // Raw JSON
+    document.getElementById('figmaRawJSON').value = JSON.stringify(extracted, null, 2);
+
+    statusEl.innerHTML = '<div style="font-size:12px;color:var(--green);font-weight:600">✓ 取得完了</div>';
+
+  } catch (err) {
+    statusEl.innerHTML = '<div style="font-size:12px;color:#E53E3E">✗ ' + err.message + '</div>';
+  } finally {
+    fetchBtn.disabled = false;
+    fetchBtn.textContent = 'Fetch';
+  }
+}
+
+// Extract design tokens from Figma node tree
+function extractDesignTokens(node, styles) {
+  var tokens = {
+    meta: { nodeId: node.id, nodeName: node.name, width: Math.round(node.absoluteBoundingBox?.width || 0), height: Math.round(node.absoluteBoundingBox?.height || 0) },
+    colors: { primary: null, secondary: null, grays: [], additional: [] },
+    typography: { fontFamilyJA: null, fontFamilyEN: null, scale: {} },
+    spacing: { s: null, m: null, l: null },
+    effects: { shadows: [], blurs: [], gradients: [] },
+    borderRadius: { default: null, variants: {} },
+    taste: { name: '', shape: 'rounded', jumpRate: 'mid' },
+    opacity: {},
+    hierarchy: []
+  };
+
+  var allColors = {};
+  var allFonts = {};
+  var allFontSizes = [];
+  var allRadii = {};
+  var allGaps = [];
+
+  function walkNode(n, depth) {
+    if (depth > 8) return;
+    if (!n) return;
+
+    // Hierarchy
+    if (depth <= 3) {
+      var entry = { depth: depth, name: n.name, type: n.type, w: Math.round(n.absoluteBoundingBox?.width || 0), h: Math.round(n.absoluteBoundingBox?.height || 0) };
+      var hFills = (n.fills || []).filter(function(f) { return f.visible !== false; });
+      if (hFills.length > 0 && hFills[0].type === 'SOLID') {
+        var c = hFills[0].color;
+        var a = hFills[0].opacity !== undefined ? hFills[0].opacity : 1;
+        if (a < 1) {
+          entry.fill = 'rgba(' + Math.round(c.r*255) + ',' + Math.round(c.g*255) + ',' + Math.round(c.b*255) + ',' + a.toFixed(2) + ')';
+        } else {
+          entry.fill = rgbToHex(c.r, c.g, c.b);
+        }
+      }
+      tokens.hierarchy.push(entry);
+    }
+
+    // Colors from fills
+    var fills = (n.fills || []).filter(function(f) { return f.visible !== false; });
+    fills.forEach(function(fill) {
+      if (fill.type === 'SOLID' && fill.color) {
+        var hex = rgbToHex(fill.color.r, fill.color.g, fill.color.b);
+        var opacity = fill.opacity !== undefined ? fill.opacity : 1;
+        allColors[hex] = (allColors[hex] || 0) + 1;
+        if (opacity < 1) {
+          tokens.opacity[n.name] = opacity.toFixed(2);
+          tokens.colors.additional.push({ name: n.name, hex: hex, opacity: parseFloat(opacity.toFixed(2)) });
+        }
+      }
+      if (fill.type === 'GRADIENT_LINEAR' && fill.gradientStops) {
+        var stops = fill.gradientStops.map(function(s) {
+          return {
+            color: 'rgb(' + Math.round(s.color.r*255) + ',' + Math.round(s.color.g*255) + ',' + Math.round(s.color.b*255) + ')',
+            position: Math.round(s.position * 100)
+          };
+        });
+        tokens.effects.gradients.push({ name: n.name, type: 'linear', stops: stops });
+      }
+    });
+
+    // Typography
+    if (n.type === 'TEXT' && n.style) {
+      var family = n.style.fontFamily || '';
+      var size = n.style.fontSize || 0;
+      var weight = n.style.fontWeight || 400;
+      var lh = n.style.lineHeightPercentFontSize ? (n.style.lineHeightPercentFontSize / 100).toFixed(1) : null;
+
+      if (family) {
+        allFonts[family] = (allFonts[family] || 0) + 1;
+      }
+      if (size > 0) {
+        allFontSizes.push({ size: size, weight: weight, lineHeight: lh ? parseFloat(lh) : null, name: n.name });
+      }
+    }
+
+    // Border radius
+    if (n.cornerRadius !== undefined && n.cornerRadius > 0) {
+      var r = Math.round(n.cornerRadius);
+      allRadii[r] = (allRadii[r] || 0) + 1;
+      tokens.borderRadius.variants[n.name] = r + 'px';
+    }
+
+    // Effects
+    (n.effects || []).forEach(function(eff) {
+      if (!eff.visible && eff.visible !== undefined) return;
+      if (eff.type === 'DROP_SHADOW' || eff.type === 'INNER_SHADOW') {
+        var ec = eff.color;
+        tokens.effects.shadows.push({
+          name: n.name,
+          type: eff.type === 'INNER_SHADOW' ? 'inner' : 'drop',
+          x: Math.round(eff.offset?.x || 0),
+          y: Math.round(eff.offset?.y || 0),
+          blur: Math.round(eff.radius || 0),
+          spread: Math.round(eff.spread || 0),
+          color: 'rgba(' + Math.round(ec.r*255) + ',' + Math.round(ec.g*255) + ',' + Math.round(ec.b*255) + ',' + (ec.a !== undefined ? ec.a.toFixed(2) : '1') + ')'
+        });
+      }
+      if (eff.type === 'LAYER_BLUR' || eff.type === 'BACKGROUND_BLUR') {
+        tokens.effects.blurs.push({
+          name: n.name,
+          type: eff.type === 'BACKGROUND_BLUR' ? 'background' : 'layer',
+          radius: Math.round(eff.radius || 0)
+        });
+      }
+    });
+
+    // Item spacing (auto-layout gaps)
+    if (n.itemSpacing !== undefined && n.itemSpacing > 0) {
+      allGaps.push(Math.round(n.itemSpacing));
+    }
+
+    // Recurse children
+    (n.children || []).forEach(function(child) { walkNode(child, depth + 1); });
+  }
+
+  walkNode(node, 0);
+
+  // Post-process: determine primary/secondary colors
+  var colorEntries = Object.entries(allColors).sort(function(a, b) { return b[1] - a[1]; });
+  var grays = [];
+  var chromatic = [];
+  colorEntries.forEach(function(entry) {
+    var hex = entry[0];
+    var rgb = hexToRgbObj(hex);
+    if (rgb) {
+      var saturation = Math.max(rgb.r, rgb.g, rgb.b) - Math.min(rgb.r, rgb.g, rgb.b);
+      if (saturation < 30) grays.push(hex);
+      else chromatic.push(hex);
+    }
+  });
+  if (chromatic.length > 0) tokens.colors.primary = chromatic[0];
+  if (chromatic.length > 1) tokens.colors.secondary = chromatic[1];
+  tokens.colors.grays = grays.slice(0, 4);
+
+  // Fonts: detect JA vs EN
+  Object.entries(allFonts).sort(function(a, b) { return b[1] - a[1]; }).forEach(function(entry) {
+    var family = entry[0];
+    var isJA = /hiragino|noto sans jp|yu gothic|meiryo|kozuka|source han/i.test(family);
+    if (isJA && !tokens.typography.fontFamilyJA) tokens.typography.fontFamilyJA = family;
+    else if (!isJA && !tokens.typography.fontFamilyEN) tokens.typography.fontFamilyEN = family;
+  });
+
+  // Font scale: map to categories
+  var sorted = allFontSizes.sort(function(a, b) { return b.size - a.size; });
+  var uniqueSizes = [];
+  sorted.forEach(function(s) { if (uniqueSizes.indexOf(s.size) === -1) uniqueSizes.push(s.size); });
+  var sizeMap = ['display', 'h1', 'h2', 'h3', 'body', 'small'];
+  uniqueSizes.slice(0, 6).forEach(function(size, i) {
+    var match = sorted.find(function(s) { return s.size === size; });
+    tokens.typography.scale[sizeMap[i]] = { size: size + 'px', weight: match.weight, lineHeight: match.lineHeight };
+  });
+
+  // Jump rate
+  if (uniqueSizes.length >= 2) {
+    var ratio = uniqueSizes[0] / uniqueSizes[uniqueSizes.length - 1];
+    tokens.taste.jumpRate = ratio > 3 ? 'high' : ratio > 2 ? 'mid' : 'low';
+  }
+
+  // Spacing: derive S/M/L from gaps
+  var uniqueGaps = [];
+  allGaps.forEach(function(g) { if (uniqueGaps.indexOf(g) === -1) uniqueGaps.push(g); });
+  uniqueGaps.sort(function(a, b) { return a - b; });
+  if (uniqueGaps.length >= 3) {
+    tokens.spacing.s = uniqueGaps[0] + 'px';
+    tokens.spacing.m = uniqueGaps[Math.floor(uniqueGaps.length / 2)] + 'px';
+    tokens.spacing.l = uniqueGaps[uniqueGaps.length - 1] + 'px';
+  } else if (uniqueGaps.length === 2) {
+    tokens.spacing.s = uniqueGaps[0] + 'px';
+    tokens.spacing.m = uniqueGaps[1] + 'px';
+  }
+
+  // Border radius: most common as default
+  var radiusEntries = Object.entries(allRadii).sort(function(a, b) { return b[1] - a[1]; });
+  if (radiusEntries.length > 0) tokens.borderRadius.default = radiusEntries[0][0] + 'px';
+
+  // Shape: check if pill shapes exist
+  var hasLargeRadius = radiusEntries.some(function(e) { return parseInt(e[0]) > 50; });
+  if (hasLargeRadius) tokens.taste.shape = 'rounded';
+  else if (radiusEntries.some(function(e) { return parseInt(e[0]) < 8; })) tokens.taste.shape = 'angular';
+
+  return tokens;
+}
+
+// Apply extracted Figma API data to form
+function applyFigmaData() {
+  var data = window._figmaExtracted;
+  if (!data) { showToast('先にFetchを実行してください'); return; }
+
+  // Put JSON into the manual import textarea and trigger existing import
+  document.getElementById('figmaJson').value = JSON.stringify(data, null, 2);
+  importFigmaData();
+  showToast('フォームに適用しました');
+}
+
+// Copy extracted JSON to clipboard
+function copyFigmaJSON() {
+  var json = document.getElementById('figmaRawJSON').value;
+  if (!json) return;
+  navigator.clipboard.writeText(json).then(function() { showToast('JSONをコピーしました'); });
 }
 
 // ===== INIT =====
