@@ -1,0 +1,451 @@
+<!-- ============================================
+     FAMBOX 3つの課題セクション
+     sections/fambox-issues.liquid
+     WF: preview-issues.html
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-issues-' | append: section.id
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+  /* ============================================
+     RESET
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     SECTION BASE
+     ============================================ */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1;
+    background: {{ section.settings.bg_color }} !important;
+    padding-top: 120px;
+    padding-bottom: 120px;
+    height: auto;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #{{ sec_id }} .issues__inner { width: 100%; }
+
+  /* ============================================
+     TITLE
+     ============================================ */
+  #{{ sec_id }} .issues__title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 40px !important;
+    color: #1B1D1A !important;
+    text-align: center;
+    margin: 0 0 56px 0 !important;
+    padding: 0 64px;
+    line-height: 180% !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+
+  /* ============================================
+     BLOCKS CONTAINER
+     ============================================ */
+  #{{ sec_id }} .issues__blocks { display: flex; }
+  #{{ sec_id }} .issues__dots { display: none; }
+
+  /* ============================================
+     BLOCK
+     ============================================ */
+  #{{ sec_id }} .issues__block {
+    border: 1px solid #ECECEC;
+  }
+  #{{ sec_id }} .issues__block + .issues__block {
+    margin-left: -1px;
+  }
+
+  /* ============================================
+     UPPER: 背景画像 下揃え・左右センター
+     ============================================ */
+  #{{ sec_id }} .issues__upper {
+    padding: 64px;
+    height: 464px;
+    background-size: 400px 400px;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+  }
+  #{{ sec_id }} .issues__upper-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  #{{ sec_id }} .issues__upper-bottom {
+    margin-top: auto;
+  }
+
+  /* ============================================
+     LOWER
+     ============================================ */
+  #{{ sec_id }} .issues__lower {
+    padding: 32px 64px;
+    border-top: 1px solid #ECECEC;
+  }
+
+  /* ============================================
+     TEXT STYLES
+     ============================================ */
+  #{{ sec_id }} .issues__issue-number {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 32px !important;
+    color: #FB4C15 !important;
+  }
+  #{{ sec_id }} .issues__coach-name {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    color: #FB4C15 !important;
+  }
+  #{{ sec_id }} .issues__organization {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    color: #FB4C15 !important;
+    margin-top: 4px !important;
+  }
+  #{{ sec_id }} .issues__quote {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 24px !important;
+    line-height: 180% !important;
+    color: #1B1D1A !important;
+    margin-top: 8px !important;
+  }
+  #{{ sec_id }} .issues__mission-label {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    color: #FB4C15 !important;
+  }
+  #{{ sec_id }} .issues__mission-title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 20px !important;
+    color: #FB4C15 !important;
+    margin-top: 4px !important;
+  }
+  #{{ sec_id }} .issues__lead-text {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 16px !important;
+    line-height: 180% !important;
+    color: #1B1D1A !important;
+    margin-top: 8px !important;
+  }
+
+  /* ============================================
+     PC ≥1920px: 均等3分割
+     ============================================ */
+  @media (min-width: 1920px) {
+    #{{ sec_id }} .issues__blocks { display: flex; flex-wrap: nowrap; }
+    #{{ sec_id }} .issues__block { flex: 1 1 0; min-width: 0; }
+  }
+
+  /* ============================================
+     タブレット〜PC 768-1919px: 固定640px、横スクロール
+     ============================================ */
+  @media (min-width: 768px) and (max-width: 1919px) {
+    #{{ sec_id }} .issues__blocks {
+      display: flex; flex-wrap: nowrap;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    #{{ sec_id }} .issues__blocks::-webkit-scrollbar { height: 4px; }
+    #{{ sec_id }} .issues__blocks::-webkit-scrollbar-track { background: transparent; }
+    #{{ sec_id }} .issues__blocks::-webkit-scrollbar-thumb { background: #ECECEC; border-radius: 2px; }
+    #{{ sec_id }} .issues__block { flex: 0 0 640px; width: 640px; }
+  }
+
+  /* ============================================
+     SP ≤767px
+     ============================================ */
+  @media (max-width: 767px) {
+    #{{ sec_id }} { height: auto; padding-top: 80px; padding-bottom: 80px; }
+    #{{ sec_id }} .issues__title { font-size: 28px !important; padding: 0 24px; text-align: left !important; }
+    #{{ sec_id }} .issues__blocks {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      padding: 0 24px;
+    }
+    #{{ sec_id }} .issues__blocks::-webkit-scrollbar { display: none; }
+    #{{ sec_id }} .issues__block {
+      flex: 0 0 calc(100vw - 48px);
+      width: calc(100vw - 48px);
+      scroll-snap-align: center;
+    }
+    #{{ sec_id }} .issues__block + .issues__block { margin-left: -1px; margin-top: 0; }
+    #{{ sec_id }} .issues__upper {
+      padding: 24px;
+      height: 400px;
+      background-size: contain;
+      background-position: center bottom;
+    }
+    #{{ sec_id }} .issues__lower { padding: 24px; }
+    #{{ sec_id }} .issues__lead-text { font-size: 14px !important; }
+
+    /* SP ドット */
+    #{{ sec_id }} .issues__dots {
+      display: flex !important;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    #{{ sec_id }} .issues__dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #ECECEC !important;
+      border: none !important;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #{{ sec_id }} .issues__dot--active { background: #FB4C15 !important; }
+  }
+</style>
+
+<section id="{{ sec_id }}" data-section-name="corp-issues">
+  <div class="issues__inner">
+
+    <!-- TITLE -->
+    <h2 class="issues__title">{{ section.settings.title | newline_to_br }}</h2>
+
+    <!-- BLOCKS -->
+    <div class="issues__blocks" id="issuesBlocks-{{ section.id }}">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'issue_card' -%}
+          <div class="issues__block" {{ block.shopify_attributes }}
+            {%- if block.settings.bg_image != blank %}
+              style="--bg-url: url('{{ block.settings.bg_image | image_url: width: 800 }}')"
+            {%- endif %}>
+            <div class="issues__upper"
+              {%- if block.settings.bg_image != blank %}
+                style="background-image: url('{{ block.settings.bg_image | image_url: width: 800 }}')"
+              {%- endif %}>
+              <div class="issues__upper-content">
+                <p class="issues__issue-number">{{ block.settings.issue_number }}</p>
+                <div class="issues__upper-bottom">
+                  {%- if block.settings.coach_name != blank -%}
+                    <p class="issues__coach-name">{{ block.settings.coach_name }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.organization != blank -%}
+                    <p class="issues__organization">{{ block.settings.organization }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.quote != blank -%}
+                    <p class="issues__quote">{{ block.settings.quote | newline_to_br }}</p>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+            <div class="issues__lower">
+              {%- if block.settings.mission_label != blank -%}
+                <p class="issues__mission-label">{{ block.settings.mission_label }}</p>
+              {%- endif -%}
+              {%- if block.settings.mission_title != blank -%}
+                <p class="issues__mission-title">{{ block.settings.mission_title }}</p>
+              {%- endif -%}
+              {%- if block.settings.lead_text != blank -%}
+                <p class="issues__lead-text">{{ block.settings.lead_text | newline_to_br }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <!-- DOTS (SP only) -->
+    <div class="issues__dots" id="issuesDots-{{ section.id }}">{%- comment -%}not empty{%- endcomment -%}</div>
+
+  </div>
+</section>
+
+<script>
+(function() {
+  var secId = '{{ section.id }}';
+  var blocks = document.getElementById('issuesBlocks-' + secId);
+  var dotsWrap = document.getElementById('issuesDots-' + secId);
+  if (!blocks || !dotsWrap) return;
+
+  var cards = blocks.querySelectorAll('.issues__block');
+  if (cards.length === 0) return;
+
+  // ドット生成
+  for (var i = 0; i < cards.length; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'issues__dot' + (i === 0 ? ' issues__dot--active' : '');
+    dot.dataset.index = i;
+    (function(idx) {
+      dot.addEventListener('click', function() {
+        var card = cards[idx];
+        if (card) card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      });
+    })(i);
+    dotsWrap.appendChild(dot);
+  }
+
+  // スクロールでドット更新
+  var ticking = false;
+  blocks.addEventListener('scroll', function() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function() {
+      var scrollLeft = blocks.scrollLeft;
+      var cardWidth = cards[0].offsetWidth;
+      var activeIdx = Math.round(scrollLeft / cardWidth);
+      var dots = dotsWrap.querySelectorAll('.issues__dot');
+      dots.forEach(function(d, i) {
+        d.classList.toggle('issues__dot--active', i === activeIdx);
+      });
+      ticking = false;
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "3つの課題",
+  "tag": "section",
+  "class": "fambox-issues-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "セクションタイトル（改行可）",
+      "default": "アスリートの現場を見てわかった\n直面している3つの課題"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "issue_card",
+      "name": "課題カード",
+      "settings": [
+        {
+          "type": "header",
+          "content": "── 上部（背景画像エリア） ──"
+        },
+        {
+          "type": "text",
+          "id": "issue_number",
+          "label": "課題番号（例: ISSUES 01）",
+          "default": "ISSUES 01"
+        },
+        {
+          "type": "image_picker",
+          "id": "bg_image",
+          "label": "背景画像（400×400推奨）"
+        },
+        {
+          "type": "text",
+          "id": "coach_name",
+          "label": "コーチ名",
+          "default": "コーチ 細山田武史"
+        },
+        {
+          "type": "text",
+          "id": "organization",
+          "label": "所属組織",
+          "default": "トヨタ自動車硬式野球部 TOYOTA RED CRUISERS"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "課題の声（改行可）",
+          "default": "自炊選手が多く、補食のタイミングや食事の準備が難しい環境。"
+        },
+        {
+          "type": "header",
+          "content": "── 下部（FAM MISSION） ──"
+        },
+        {
+          "type": "text",
+          "id": "mission_label",
+          "label": "ミッションラベル",
+          "default": "FAM MISSION"
+        },
+        {
+          "type": "text",
+          "id": "mission_title",
+          "label": "ミッションタイトル",
+          "default": "食事準備の負担軽減"
+        },
+        {
+          "type": "textarea",
+          "id": "lead_text",
+          "label": "ミッション説明文（改行可）",
+          "default": "自炊環境でも、栄養バランスが設計された食事を手軽に摂れる仕組みが必要だ。選手が食事を「考える負担」を減らし、スポーツ栄養アドバイザーが携わった食事設計ですべての選手に質の高い栄養を届ける。"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "3つの課題",
+      "blocks": [
+        {
+          "type": "issue_card",
+          "settings": {
+            "issue_number": "ISSUES 01",
+            "coach_name": "コーチ 細山田武史",
+            "organization": "トヨタ自動車硬式野球部 TOYOTA RED CRUISERS",
+            "quote": "自炊選手が多く、補食のタイミングや食事の準備が難しい環境。",
+            "mission_label": "FAM MISSION",
+            "mission_title": "食事準備の負担軽減",
+            "lead_text": "自炊環境でも、栄養バランスが設計された食事を手軽に摂れる仕組みが必要だ。選手が食事を「考える負担」を減らし、スポーツ栄養アドバイザーが携わった食事設計ですべての選手に質の高い栄養を届ける。"
+          }
+        },
+        {
+          "type": "issue_card",
+          "settings": {
+            "issue_number": "ISSUES 02",
+            "coach_name": "コーチ 細山田武史",
+            "organization": "トヨタ自動車硬式野球部 TOYOTA RED CRUISERS",
+            "quote": "オンシーズンの練習・遠征で忙しく体重が落ちる",
+            "mission_label": "FAM MISSION",
+            "mission_title": "オンシーズンの栄養不足の解消",
+            "lead_text": "ハードな練習・遠征が続く環境でも、不足する栄養を確実に補える食事が必要だ。場所や時間を選ばず使えるサポートとして、日常のどの場面でも栄養の空白をつくらない。"
+          }
+        },
+        {
+          "type": "issue_card",
+          "settings": {
+            "issue_number": "ISSUES 03",
+            "coach_name": "コーチ 細山田武史",
+            "organization": "トヨタ自動車硬式野球部 TOYOTA RED CRUISERS",
+            "quote": "疲労によって食欲が落ちる",
+            "mission_label": "FAM MISSION",
+            "mission_title": "継続可能なメニュー数とおいしさの探求",
+            "lead_text": "疲れている時ほど食事が後回しになる。しかしその瞬間こそ、栄養が体と頭の回復を支える最も重要なタイミングだ。FAMは豊富なメニューとおいしさを両立し、疲れた日でも自然と手が伸びる食事を実現する。"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

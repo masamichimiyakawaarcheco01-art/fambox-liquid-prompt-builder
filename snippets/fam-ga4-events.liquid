@@ -1,0 +1,105 @@
+{% comment %}
+  GA4カスタムイベント送信（全ページ共通）
+  snippets/fam-ga4-events.liquid
+
+  使い方:
+  1. theme.liquid の </body> 直前に {% render 'fam-ga4-events' %} を追加
+  2. 各CTAに data-gtag-cta="cta_name" data-gtag-location="location" を追加
+  3. ナビリンクに data-gtag-nav="nav_item_name" を追加
+  4. フッターリンクに data-gtag-footer="footer_item_name" を追加
+  5. 問い合わせフォーム送信ボタンに data-gtag-lead="form_type" を追加
+  6. DLリンクに data-gtag-download="file_name" を追加
+{% endcomment %}
+
+<script>
+(function() {
+  'use strict';
+
+  /* ── gtag存在チェック ── */
+  if (typeof gtag !== 'function') return;
+
+  /* ── ヘルパー: ページパス取得 ── */
+  var pagePath = window.location.pathname;
+
+  /* ══════════════════════════════
+     1. CTAクリック計測
+     data-gtag-cta="cta_name"
+     data-gtag-location="location"
+     ══════════════════════════════ */
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest('[data-gtag-cta]');
+    if (!el) return;
+    gtag('event', 'cta_click', {
+      cta_name: el.getAttribute('data-gtag-cta'),
+      location: el.getAttribute('data-gtag-location') || '',
+      page_path: pagePath
+    });
+  });
+
+  /* ══════════════════════════════
+     2. ナビゲーションクリック計測
+     data-gtag-nav="nav_item_name"
+     ══════════════════════════════ */
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest('[data-gtag-nav]');
+    if (!el) return;
+    gtag('event', 'nav_click', {
+      nav_item: el.getAttribute('data-gtag-nav'),
+      page_path: pagePath
+    });
+  });
+
+  /* ══════════════════════════════
+     3. フッターリンククリック計測
+     data-gtag-footer="footer_item_name"
+     ══════════════════════════════ */
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest('[data-gtag-footer]');
+    if (!el) return;
+    gtag('event', 'footer_click', {
+      footer_item: el.getAttribute('data-gtag-footer'),
+      page_path: pagePath
+    });
+  });
+
+  /* ══════════════════════════════
+     4. 問い合わせフォーム送信計測
+     data-gtag-lead="form_type"
+     ══════════════════════════════ */
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest('[data-gtag-lead]');
+    if (!el) return;
+    gtag('event', 'generate_lead', {
+      form_type: el.getAttribute('data-gtag-lead'),
+      page_path: pagePath
+    });
+  });
+
+  /* ══════════════════════════════
+     5. 資料ダウンロード計測
+     data-gtag-download="file_name"
+     ══════════════════════════════ */
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest('[data-gtag-download]');
+    if (!el) return;
+    gtag('event', 'file_download_custom', {
+      file_name: el.getAttribute('data-gtag-download'),
+      page_path: pagePath
+    });
+  });
+
+  /* ══════════════════════════════
+     6. メニューを見るボタン計測
+     data-gtag-menu="location"
+     ══════════════════════════════ */
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest('[data-gtag-menu]');
+    if (!el) return;
+    gtag('event', 'view_menu', {
+      location: el.getAttribute('data-gtag-menu'),
+      page_path: pagePath
+    });
+  });
+
+})();
+</script>

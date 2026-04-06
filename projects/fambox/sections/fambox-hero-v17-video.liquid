@@ -1,0 +1,578 @@
+<style>
+  /* ============================================================
+     FAMBOX Hero v17  |  Figma node:10168-3544 準拠
+     PC: 1440 × 650px（フッター60px含む）
+     SP: 390 × 650px
+  ============================================================ */
+.fv17 {
+--orange: #FB4C15;
+--dark:   #1B1D1A;
+position: relative;
+z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
+width: 100%;
+height: 650px;
+overflow: hidden;
+background: #FAFAFA;
+font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+-webkit-font-smoothing: antialiased;
+  }
+/* ── 背景動画（PC: 左右2分割） ── */
+.fv17-bg {
+position: absolute;
+inset: 0 0 60px 0;
+/* z-index なし: stacking context を形成させない */
+pointer-events: none;
+  }
+.fv17-bg-video {
+position: absolute;
+top: 0;
+height: 100%;
+object-fit: cover;
+  }
+.fv17-bg-video--left  { left: 0;  width: 50%; }
+.fv17-bg-video--right { right: 0; width: 50%; }
+/* ── 四隅コーナーアイコン ──
+     SVGをShopifyにアップロードしてimage_pickerで差し替え
+     PC: 全4隅 表示 / SP: 右上のみ表示
+  ── */
+.fv17-corner {
+position: absolute;
+z-index: 10;
+pointer-events: none;
+width: 64px;
+height: 64px;
+display: block;
+  }
+.fv17-corner img {
+display: block;
+width: 64px;
+height: 64px;
+object-fit: contain;
+  }
+.fv17-corner--tl { top: 0;       left: 0; }
+.fv17-corner--tr { top: 0;       right: 0; }
+.fv17-corner--bl { bottom: 60px; left: 0; }
+.fv17-corner--br { bottom: 60px; right: 0; }
+/* ── テキストブロック（PC: left:64px / top:184px） ── */
+.fv17-text {
+position: absolute;
+left: 64px;
+top: 184px;
+z-index: 10;
+pointer-events: none;
+  }
+.fv17-h1 {
+font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+font-weight: 600;
+font-size: 48px;
+line-height: 1.7;
+color: var(--dark);
+margin: 0 0 12px 0;
+white-space: nowrap;
+  }
+.fv17-sub {
+font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+font-weight: 500;
+font-size: 20px;
+line-height: 1.2;
+color: var(--dark);
+margin: 0;
+white-space: pre-wrap;
+  }
+/* ── CTAボタン（PC: 水平中央 / フッター上） ── */
+.fv17-cta-wrap {
+position: absolute;
+left: 50%;
+transform: translateX(-50%);
+bottom: 72px;
+z-index: 15;
+pointer-events: auto;
+  }
+.fv17-cta {
+position: relative;
+display: inline-flex;
+align-items: center;
+justify-content: center;  /* テキストを左右中央に */
+width: 320px;
+height: 48px;
+border-radius: 4px;
+border: 1px solid rgba(255,255,255,0.1);
+background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95));
+color: #fff !important;
+font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+font-size: 14px;
+font-weight: 700;
+text-decoration: none !important;
+letter-spacing: 0.08em;
+overflow: hidden;
+pointer-events: auto;
+transition: filter 0.3s ease;
+z-index: 1;
+box-shadow: 0 16px 16px -8px rgba(251,76,21,0.35);
+  }
+.fv17-cta:hover { filter: brightness(1.12); }
+.fv17-cta:active { filter: brightness(0.95); }
+/* テキスト: ボタン幅に対して左右センター（デフォルトのflex中央揃えで対応） */
+.fv17-cta-text {
+position: relative;
+z-index: 1;
+  }
+/* アイコン: ボタン右端から16px固定 */
+.fv17-cta-arrow {
+position: absolute;
+right: 16px;
+top: 50%;
+transform: translateY(-50%);
+display: inline-flex;
+align-items: center;
+flex-shrink: 0;
+transition: transform 0.3s ease;
+  }
+.fv17-cta-arrow img,
+.fv17-cta-arrow svg {
+display: block;
+width: 36px;
+height: 14px;
+  }
+.fv17-cta:hover .fv17-cta-arrow,
+.fv17-cta:active .fv17-cta-arrow {
+transform: translateY(-50%) translateX(4px);
+  }
+/* ── 皿フェードアニメーション ──
+     フェードイン0.8s → 2秒表示 → フェードアウト0.8s → 次へ
+     4枚 × 1サイクル = (0.8 + 2.0 + 0.8) = 3.6s × 4 = 14.4s
+  ── */
+.fv17-dish-wrap {
+position: absolute;
+top: calc(50% - 30px);
+left: 50%;
+transform: translate(-50%, -50%);
+z-index: 5;
+pointer-events: none;
+  }
+.fv17-dish-viewport {
+position: relative;
+width: 360px;
+height: 360px;
+  }
+@media (min-width: 1400px) {
+.fv17-dish-viewport { width: 420px; height: 420px; }
+  }
+@media (max-width: 1200px) {
+.fv17-dish-viewport { width: 300px; height: 300px; }
+  }
+@media (max-width: 900px) {
+.fv17-dish-viewport { width: 260px; height: 260px; }
+  }
+.fv17-dish-slide {
+position: absolute;
+inset: 0;
+opacity: 0;
+  }
+.fv17-dish-slide img {
+width: 100%;
+height: 100%;
+object-fit: contain;
+  }
+/* フェードイン → 表示 → フェードアウト
+     1サイクル = 14.4s
+     各スライドの表示タイミング:
+       --1: delay 0s
+       --2: delay 3.6s
+       --3: delay 7.2s
+       --4: delay 10.8s
+  */
+@keyframes fv17fade {
+    0%                  { opacity: 0; }          /* 開始: 非表示 */
+    5.56%               { opacity: 1; }          /* 0.8s: フェードイン完了 */
+    19.44%              { opacity: 1; }          /* 2.8s: 2秒表示 */
+    25%                 { opacity: 0; }          /* 3.6s: フェードアウト完了 */
+    100%                { opacity: 0; }          /* 残り非表示 */
+  }
+.fv17-dish-slide--1 { animation: fv17fade 14.4s ease-in-out infinite 0s; }
+.fv17-dish-slide--2 { animation: fv17fade 14.4s ease-in-out infinite -10.8s; }
+.fv17-dish-slide--3 { animation: fv17fade 14.4s ease-in-out infinite -7.2s; }
+.fv17-dish-slide--4 { animation: fv17fade 14.4s ease-in-out infinite -3.6s; }
+@media (prefers-reduced-motion: reduce) {
+.fv17-dish-slide { animation: none !important; opacity: 0; }
+.fv17-dish-slide--1 { opacity: 1; }
+  }
+/* ── 皿の上ロゴ（上下左右中央） ── */
+.fv17-dish-logo {
+position: absolute;
+inset: 0;
+z-index: 8;
+display: flex;
+align-items: center;
+justify-content: center;
+pointer-events: none;
+  }
+.fv17-dish-logo img {
+display: block;
+max-width: 55%;
+height: auto;
+  }
+/* ── アクター画像（中央下固定・高解像度） ── */
+.fv17-actors {
+position: absolute;
+bottom: 60px;
+left: 50%;
+transform: translateX(-50%);
+width: 42%;
+max-width: 600px;
+z-index: 6;
+pointer-events: none;
+line-height: 0;
+  }
+.fv17-actors img {
+display: block;
+width: 100%;
+height: auto;
+image-rendering: -webkit-optimize-contrast; /* Safari/Chrome 画質向上 */
+image-rendering: crisp-edges;
+  }
+/* ── フッター（PC: 静止テキスト中央） ── */
+.fv17-footer {
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+height: 60px;
+background: var(--dark);
+z-index: 20;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+  }
+.fv17-credit {
+color: #fff;
+font-size: 14px;
+font-weight: 600;
+letter-spacing: 0.04em;
+white-space: nowrap;
+text-align: center;
+  }
+/* SP専用CTAラップ（PC非表示） */
+.fv17-cta-sp-wrap { display: none; }
+/* ============================================================
+     SP スタイル（max-width: 767px）
+  ============================================================ */
+/* SPグラデーション: SP時のみ .fv17::before で描画 */
+@media (max-width: 767px) {
+.fv17 { height: 650px; }
+/* ── 背景動画 SP: 左のみ全画面、右は非表示 ── */
+.fv17-bg { inset: 0 0 60px 0; }
+.fv17-bg-video--left {
+left: 0; top: 0;
+width: 100%; height: 100%;
+object-fit: cover;
+object-position: center center;
+    }
+.fv17-bg-video--right { display: none; }
+/* ── グラデーション: ::before 疑似要素で確実に表示 ──
+       外部要素・z-index競合・stacking context 問題をすべて回避
+       高さ325px、#FAFAFA 100% → 透明 0%
+    ── */
+.fv17::before {
+content: '';
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 325px;
+background: linear-gradient(to bottom, #FAFAFA 0%, rgba(250,250,250,0) 100%);
+z-index: 3;
+pointer-events: none;
+    }
+/* ── SP z-index レイヤー構造 ──
+       .fv17::before  z3  グラデーション（疑似要素）
+       ┌ z1  動画 (.fv17-bg)
+       ├ z2  皿アニメーション / 皿ロゴ / アクター画像
+       ├ z3  .fv17::before グラデーション
+       ├ z4  テキスト（h1・サブ）← グラデの上・最前面
+       ├ z5  コーナーアイコン / CTAボタン
+       └ z6  フッター黒帯
+    ── */
+.fv17-bg          { z-index: 1; }
+.fv17-dish-wrap   { z-index: 2; }
+.fv17-dish-logo   { z-index: 2; }
+.fv17-actors      { z-index: 2; }
+.fv17-text        { z-index: 4; }
+.fv17-corner      { z-index: 5; }
+.fv17-cta-wrap    { z-index: 5; }
+.fv17-cta-sp-wrap { z-index: 5; }
+.fv17-footer      { z-index: 6; }
+/* 四隅: 左上・左下・右下非表示、右上のみ表示 */
+.fv17-corner--tl,
+.fv17-corner--bl,
+.fv17-corner--br { display: none; }
+/* テキスト */
+.fv17-text { left: 24px; top: 46px; right: 24px; }
+.fv17-h1 { font-size: 32px; font-weight: 600; line-height: 1.7; white-space: normal; margin-bottom: 8px; }
+.fv17-sub { font-size: 14px; line-height: 1.2; }
+/* PC版CTA非表示 */
+.fv17-cta-wrap { display: none; }
+/* SP専用CTA */
+.fv17-cta-sp-wrap {
+display: flex;
+justify-content: center;
+position: absolute;
+left: 16px; right: 16px;
+bottom: 72px;
+    }
+.fv17-cta-sp-wrap .fv17-cta { width: 100%; max-width: 358px; font-size: 14px; }
+/* 皿: 280px、動画エリア（高さ590px）の上下左右中央 */
+.fv17-dish-wrap {
+top: 0;
+left: 0;
+right: 0;
+bottom: 60px;         /* フッター分を除いた動画エリア */
+transform: none;
+display: flex;
+align-items: center;
+justify-content: center;
+    }
+.fv17-dish-viewport { width: 280px; height: 280px; }
+/* SP: ロゴを皿より小さく（PCの55% → SP 38%） */
+.fv17-dish-logo img { max-width: 38%; }
+/* アクター */
+.fv17-actors { width: 75%; max-width: 300px; bottom: 60px; }
+/* SP フッター: マーキー */
+.fv17-footer { justify-content: flex-start; overflow: hidden; }
+.fv17-credit {
+font-size: 12px;
+white-space: nowrap;
+padding-left: 100%;
+animation: fv17marquee 22s linear infinite;
+    }
+@keyframes fv17marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+  }
+</style>
+<div class="fv17" data-section-name="hero-video">
+<!-- 背景動画（左・右）+ SPグラデーション -->
+<div class="fv17-bg" aria-hidden="true">
+<video
+class="fv17-bg-video fv17-bg-video--left"
+src="{{ '26_0306_TOP_PC&SP_Left.mp4' | file_url }}"
+autoplay muted loop playsinline preload="auto"
+></video>
+<video
+class="fv17-bg-video fv17-bg-video--right"
+src="{{ '26_0306_TOP_PC&SP_Right.mp4' | file_url }}"
+autoplay muted loop playsinline preload="auto"
+></video>
+</div>
+<!-- 四隅コーナーアイコン（SVGをShopify Filesにアップロードして差し替え）
+       PC: 全4隅 / SP: 右上のみ
+  -->
+{%- if section.settings.corner_icon != blank -%}
+<span class="fv17-corner fv17-corner--tl" aria-hidden="true">
+<img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+</span>
+<span class="fv17-corner fv17-corner--tr" aria-hidden="true">
+<img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+</span>
+<span class="fv17-corner fv17-corner--bl" aria-hidden="true">
+<img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+</span>
+<span class="fv17-corner fv17-corner--br" aria-hidden="true">
+<img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+</span>
+{%- endif -%}
+<!-- テキストブロック -->
+<div class="fv17-text">
+<h1 class="fv17-h1">{{ section.settings.h1_line1 }}<br>{{ section.settings.h1_line2 }}</h1>
+<p class="fv17-sub">{{ section.settings.sub_text | newline_to_br }}</p>
+</div>
+<!-- CTAボタン（PC: 水平中央） -->
+<div class="fv17-cta-wrap">
+<a href="{{ section.settings.cta_url }}" class="fv17-cta" data-gtag-cta="hero_main_cta" data-gtag-location="top_hero">
+<span class="fv17-cta-text">{{ section.settings.cta_text }}</span>
+<span class="fv17-cta-arrow">
+{%- if section.settings.cta_arrow_svg != blank -%}
+{{ section.settings.cta_arrow_svg }}
+{%- elsif section.settings.cta_arrow_icon != blank -%}
+<img src="{{ section.settings.cta_arrow_icon | image_url: width: 80 }}" alt="" width="40" height="14">
+{%- else -%}
+<svg width="40" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="5" width="46" height="2" fill="white"/>
+<path d="M46 0L53 6L46 12V0Z" fill="white"/>
+</svg>
+{%- endif -%}
+</span>
+</a>
+</div>
+<!-- SP専用CTAボタン -->
+<div class="fv17-cta-sp-wrap">
+<a href="{{ section.settings.cta_url }}" class="fv17-cta" data-gtag-cta="hero_main_cta" data-gtag-location="top_hero">
+<span class="fv17-cta-text">{{ section.settings.cta_text }}</span>
+<span class="fv17-cta-arrow">
+{%- if section.settings.cta_arrow_svg != blank -%}
+{{ section.settings.cta_arrow_svg }}
+{%- elsif section.settings.cta_arrow_icon != blank -%}
+<img src="{{ section.settings.cta_arrow_icon | image_url: width: 80 }}" alt="" width="40" height="14">
+{%- else -%}
+<svg width="40" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="5" width="46" height="2" fill="white"/>
+<path d="M46 0L53 6L46 12V0Z" fill="white"/>
+</svg>
+{%- endif -%}
+</span>
+</a>
+</div>
+<!-- 皿フェードアニメーション（中央）
+       フェードイン0.8s → 2秒表示 → フェードアウト0.8s → 次の画像へ
+  -->
+<div class="fv17-dish-wrap" aria-hidden="true">
+<div class="fv17-dish-viewport">
+<div class="fv17-dish-slide fv17-dish-slide--1">
+<img src="{{ section.settings.dish_1 | image_url: width: 800 }}" alt="" width="800" height="800" loading="eager">
+</div>
+<div class="fv17-dish-slide fv17-dish-slide--2">
+<img src="{{ section.settings.dish_2 | image_url: width: 800 }}" alt="" width="800" height="800" loading="eager">
+</div>
+<div class="fv17-dish-slide fv17-dish-slide--3">
+<img src="{{ section.settings.dish_3 | image_url: width: 800 }}" alt="" width="800" height="800" loading="eager">
+</div>
+<div class="fv17-dish-slide fv17-dish-slide--4">
+<img src="{{ section.settings.dish_4 | image_url: width: 800 }}" alt="" width="800" height="800" loading="eager">
+</div>
+</div>
+<!-- FAMBOXロゴ（皿の上・中央） -->
+{%- if section.settings.dish_logo != blank -%}
+<div class="fv17-dish-logo" aria-hidden="true">
+<img src="{{ section.settings.dish_logo | image_url: width: 400 }}" alt="" width="200" height="80">
+</div>
+{%- endif -%}
+</div>
+<!-- アクター画像（大前さん・和田さん：中央下固定・高解像度） -->
+<div class="fv17-actors" aria-hidden="true">
+<img src="{{ section.settings.actors_image | image_url: width: 1200 }}" alt="" width="1200" height="800">
+</div>
+<!-- フッタークレジット（PC: 静止 / SP: マーキー） -->
+<footer class="fv17-footer" aria-label="監修クレジット">
+<p class="fv17-credit">{{ section.settings.footer_credit }}</p>
+</footer>
+</div>
+{% schema %}
+{
+"name": "Hero v17（動画背景）",
+"tag": "section",
+"class": "fambox-hero-v17",
+"settings": [
+    {
+"type": "header",
+"content": "見出しテキスト"
+    },
+    {
+"type": "text",
+"id": "h1_line1",
+"label": "H1 1行目",
+"default": "栄養を、"
+    },
+    {
+"type": "text",
+"id": "h1_line2",
+"label": "H1 2行目",
+"default": "最強の武器に。"
+    },
+    {
+"type": "textarea",
+"id": "sub_text",
+"label": "サブテキスト（改行可）",
+"default": "トップアスリートの栄養戦略から、\n生まれた冷凍宅配食FAMBOX。"
+    },
+    {
+"type": "header",
+"content": "CTAボタン"
+    },
+    {
+"type": "text",
+"id": "cta_text",
+"label": "ボタンテキスト",
+"default": "メニューを見る"
+    },
+    {
+"type": "text",
+"id": "cta_url",
+"label": "ボタンリンク先（例: /collections/frontpage）",
+"default": "/collections/frontpage"
+    },
+    {
+"type": "html",
+"id": "cta_arrow_svg",
+"label": "CTAボタン 矢印SVGコード（最優先）",
+"info": "FigmaからSVGをコピーして貼り付け。空欄の場合は下の画像またはデフォルトSVGを使用"
+    },
+    {
+"type": "image_picker",
+"id": "cta_arrow_icon",
+"label": "CTAボタン 矢印アイコン画像（SVG未設定時に使用）"
+    },
+    {
+"type": "header",
+"content": "四隅コーナーアイコン"
+    },
+    {
+"type": "paragraph",
+"content": "SVGファイルをShopify管理画面「コンテンツ → ファイル」にアップロードし、ここで選択してください。PC全4隅 / SP右上のみ表示されます。"
+    },
+    {
+"type": "image_picker",
+"id": "corner_icon",
+"label": "コーナーアイコン（64×64px推奨）"
+    },
+    {
+"type": "header",
+"content": "画像設定"
+    },
+    {
+"type": "image_picker",
+"id": "dish_logo",
+"label": "皿アニメーション上のロゴ（FAMBOXロゴ推奨・PNG/SVG）"
+    },
+    {
+"type": "image_picker",
+"id": "dish_1",
+"label": "料理皿画像 1枚目"
+    },
+    {
+"type": "image_picker",
+"id": "dish_2",
+"label": "料理皿画像 2枚目"
+    },
+    {
+"type": "image_picker",
+"id": "dish_3",
+"label": "料理皿画像 3枚目"
+    },
+    {
+"type": "image_picker",
+"id": "dish_4",
+"label": "料理皿画像 4枚目"
+    },
+    {
+"type": "image_picker",
+"id": "actors_image",
+"label": "人物画像（大前さん・和田さん）"
+    },
+    {
+"type": "header",
+"content": "フッタークレジット"
+    },
+    {
+"type": "text",
+"id": "footer_credit",
+"label": "クレジットテキスト",
+"default": "監修 | FAMスポーツ栄養アドバイザー　大前恵 | 球団統括本部アドバイザー福岡ソフトバンクホークス　和田毅"
+    }
+  ],
+"presets": [
+    {
+"name": "Hero v17（動画背景）"
+    }
+  ]
+}
+{% endschema %}

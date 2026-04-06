@@ -1,0 +1,506 @@
+<!-- ============================================
+     FAMBOX 定期便プランセクション
+     sections/fambox-subscription-plan.liquid
+     WF: preview-plan-sections.html (Section 1)
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-sub-' | append: section.id
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap');
+
+  /* ============================================
+     RESET
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     SECTION BASE
+     ============================================ */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
+    width: 100%;
+    background: {{ section.settings.bg_color }} !important;
+    overflow: hidden;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============================================
+     INNER: 2カラム
+     ============================================ */
+  #{{ sec_id }} .sub__inner {
+    width: 100%;
+    display: flex !important;
+  }
+
+  /* ============================================
+     左: テキスト（50%幅、1440px基準で左64pxパディング）
+     ============================================ */
+  #{{ sec_id }} .sub__left {
+    width: 50%;
+    flex-shrink: 0;
+    padding: 120px 56px 120px max(64px, calc((100vw - 1440px) / 2 + 64px));
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ============================================
+     右: 動画（ブラウザ幅に応じて可変、見切れなし）
+     ============================================ */
+  #{{ sec_id }} .sub__right {
+    width: 50%;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  #{{ sec_id }} .sub__video {
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    object-fit: cover;
+    display: block !important;
+  }
+  #{{ sec_id }} .sub__video-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    background: linear-gradient(135deg, #2a2c2a 0%, #1a1c1a 50%, #2a2c2a 100%);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.15) !important;
+    font-size: 14px !important;
+  }
+
+  /* ============================================
+     中央画像（320×320、セクション上下左右センター）
+     ============================================ */
+  #{{ sec_id }} .sub__center-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    height: 320px;
+    z-index: 5;
+    pointer-events: none;
+  }
+  #{{ sec_id }} .sub__center-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block !important;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.35));
+  }
+
+  /* ============================================
+     KICKER
+     ============================================ */
+  #{{ sec_id }} .sub__kicker {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: rgba(255,255,255,0.45) !important;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 24px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* ============================================
+     TITLE
+     ============================================ */
+  #{{ sec_id }} .sub__title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 40px !important;
+    font-weight: 500 !important;
+    color: #fff !important;
+    line-height: 180% !important;
+    margin-bottom: 16px !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+
+  /* ============================================
+     DESC
+     ============================================ */
+  #{{ sec_id }} .sub__desc {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    color: rgba(255,255,255,0.7) !important;
+    line-height: 180% !important;
+    margin-bottom: 40px !important;
+    max-width: 420px;
+  }
+
+  /* ============================================
+     PRICE
+     ============================================ */
+  #{{ sec_id }} .sub__price {
+    margin-bottom: 40px !important;
+  }
+  #{{ sec_id }} .sub__badge {
+    display: inline-block !important;
+    background: #FB4C15 !important;
+    color: #fff !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    padding: 6px 16px;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px !important;
+  }
+  #{{ sec_id }} .sub__price-main {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 48px !important;
+    font-weight: 500 !important;
+    color: #fff !important;
+    line-height: 1 !important;
+  }
+  #{{ sec_id }} .sub__price-main span {
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    color: rgba(255,255,255,0.6) !important;
+  }
+  #{{ sec_id }} .sub__price-note {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 14px !important;
+    color: rgba(255,255,255,0.5) !important;
+    margin-top: 12px !important;
+    line-height: 180% !important;
+    max-width: 420px;
+  }
+
+  /* ============================================
+     CTA: Hero v17ボタンデザイン
+     ============================================ */
+  #{{ sec_id }} .sub__cta {
+    position: relative;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 320px;
+    height: 48px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95)) !important;
+    color: #fff !important;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    letter-spacing: 0.08em;
+    overflow: hidden;
+    transition: filter 0.3s ease;
+    box-shadow: 0 16px 16px -8px rgba(251,76,21,0.35);
+  }
+  #{{ sec_id }} .sub__cta:hover {
+    filter: brightness(1.12);
+    text-decoration: none !important;
+    color: #fff !important;
+  }
+  #{{ sec_id }} .sub__cta-text {
+    position: relative;
+    z-index: 1;
+  }
+  #{{ sec_id }} .sub__cta-arrow {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+  }
+  #{{ sec_id }} .sub__cta-arrow svg,
+  #{{ sec_id }} .sub__cta-arrow img {
+    display: block !important;
+    width: 36px;
+    height: 14px;
+  }
+  #{{ sec_id }} .sub__cta:hover .sub__cta-arrow {
+    transform: translateY(-50%) translateX(4px);
+  }
+
+  /* ============================================
+     SP (max-width: 767px)
+     ============================================ */
+  @media (max-width: 767px) {
+    #{{ sec_id }} .sub__inner {
+      flex-direction: column !important;
+    }
+    /* SP: 動画が上 */
+    #{{ sec_id }} .sub__right {
+      width: 100%;
+      min-width: 0;
+      order: 1;
+      height: 560px;
+    }
+    #{{ sec_id }} .sub__video,
+    #{{ sec_id }} .sub__video-placeholder {
+      min-height: 560px;
+      height: 560px;
+    }
+    /* SP: テキストが下、ボタン中央揃え */
+    #{{ sec_id }} .sub__left {
+      width: 100%;
+      order: 2;
+      padding: 80px 24px 80px;
+      align-items: center;
+      text-align: center;
+    }
+    /* SP: 中央画像を動画エリア内センターに配置 */
+    #{{ sec_id }} .sub__center-img {
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: auto;
+      width: 100%;
+      height: 560px;
+      transform: none;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+    #{{ sec_id }} .sub__center-img img {
+      width: 280px;
+      height: 280px;
+    }
+    /* SP: テキストサイズ調整 */
+    #{{ sec_id }} .sub__title {
+      font-size: 28px !important;
+    }
+    #{{ sec_id }} .sub__desc {
+      font-size: 14px !important;
+    }
+    #{{ sec_id }} .sub__price-main {
+      font-size: 36px !important;
+    }
+    #{{ sec_id }} .sub__price-note {
+      font-size: 13px !important;
+    }
+    #{{ sec_id }} .sub__cta {
+      width: 100%;
+      max-width: 358px;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}" data-section-name="subscription-plan">
+  <div class="sub__inner">
+
+    <!-- ========================================
+         左: テキストコンテンツ
+         ======================================== -->
+    <div class="sub__left">
+      {%- if section.settings.kicker != blank -%}
+        <p class="sub__kicker">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+
+      <h2 class="sub__title">{{ section.settings.title | newline_to_br }}</h2>
+
+      <p class="sub__desc">{{ section.settings.description | newline_to_br }}</p>
+
+      <div class="sub__price">
+        {%- if section.settings.badge_text != blank -%}
+          <div class="sub__badge">{{ section.settings.badge_text }}</div>
+        {%- endif -%}
+
+        <div class="sub__price-main">
+          {{ section.settings.price_text }} <span>{{ section.settings.price_unit }}</span>
+        </div>
+
+        {%- if section.settings.price_note != blank -%}
+          <p class="sub__price-note">{{ section.settings.price_note | newline_to_br }}</p>
+        {%- endif -%}
+      </div>
+
+      <a class="sub__cta" href="{{ section.settings.cta_url }}" data-gtag-cta="subscription_signup" data-gtag-location="subscription_plan">
+        <span class="sub__cta-text">{{ section.settings.cta_text }}</span>
+        <span class="sub__cta-arrow">
+          {%- if section.settings.cta_arrow_svg != blank -%}
+            {{ section.settings.cta_arrow_svg }}
+          {%- else -%}
+            <svg width="36" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="5" width="46" height="2" fill="white"/>
+              <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+            </svg>
+          {%- endif -%}
+        </span>
+      </a>
+    </div>
+
+    <!-- ========================================
+         右: 動画エリア
+         ======================================== -->
+    <div class="sub__right">
+      {%- if section.settings.video_url != blank -%}
+        <video class="sub__video" src="{{ section.settings.video_url }}" autoplay muted loop playsinline preload="auto"></video>
+      {%- elsif section.settings.video_file != blank -%}
+        <video class="sub__video" src="{{ section.settings.video_file | file_url }}" autoplay muted loop playsinline preload="auto"></video>
+      {%- elsif section.settings.bg_image != blank -%}
+        {{ section.settings.bg_image | image_url: width: 1440 | image_tag:
+          class: 'sub__video',
+          alt: section.settings.title,
+          loading: 'lazy'
+        }}
+      {%- else -%}
+        <div class="sub__video-placeholder">動画 / 画像エリア</div>
+      {%- endif -%}
+    </div>
+
+  </div>
+
+  <!-- ========================================
+       中央画像（320×320）
+       ======================================== -->
+  {%- if section.settings.center_image != blank -%}
+    <div class="sub__center-img">
+      {{ section.settings.center_image | image_url: width: 640 | image_tag:
+        alt: '',
+        width: 320,
+        height: 320,
+        loading: 'lazy'
+      }}
+    </div>
+  {%- endif -%}
+
+</section>
+
+{% schema %}
+{
+  "name": "定期便プラン",
+  "tag": "section",
+  "class": "fambox-subscription-plan-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "全体設定"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#1B1D1A"
+    },
+    {
+      "type": "header",
+      "content": "── テキスト ──"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "キッカー（英語ラベル）",
+      "default": "Subscription Plan"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "タイトル（改行可）",
+      "default": "何を食べればいいか、\nもう迷わない。"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "説明文（改行可）",
+      "default": "栄養計算されたアスリート食を、定期的にお届け。\n温めるだけで、トレーニング後も仕事終わりも、\nいつでも理想の食事が手に入る。"
+    },
+    {
+      "type": "header",
+      "content": "── 価格 ──"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "バッジテキスト",
+      "default": "初回購入 50% OFF"
+    },
+    {
+      "type": "text",
+      "id": "price_text",
+      "label": "価格テキスト",
+      "default": "¥950〜"
+    },
+    {
+      "type": "text",
+      "id": "price_unit",
+      "label": "価格単位",
+      "default": "/ 毎週1回のお届け"
+    },
+    {
+      "type": "textarea",
+      "id": "price_note",
+      "label": "価格補足（改行可）",
+      "default": "各プランを毎週1回のお届けで、\n1食から5食までの定期便プランを準備しております。"
+    },
+    {
+      "type": "header",
+      "content": "── CTAボタン ──"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "ボタンテキスト",
+      "default": "定期便を見る"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "ボタンリンク先"
+    },
+    {
+      "type": "html",
+      "id": "cta_arrow_svg",
+      "label": "矢印アイコンSVG（空欄でデフォルト）"
+    },
+    {
+      "type": "header",
+      "content": "── 動画・画像 ──"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "動画URL（外部URL）",
+      "info": "Shopifyファイルにアップした動画のURLを貼り付け"
+    },
+    {
+      "type": "text",
+      "id": "video_file",
+      "label": "動画ファイル名（Shopify Files）",
+      "info": "例: cooking-video.mp4（Shopify管理画面→ファイルにアップ済みの場合）"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "背景画像（動画未設定時に表示）"
+    },
+    {
+      "type": "image_picker",
+      "id": "center_image",
+      "label": "中央画像（320×320推奨）",
+      "info": "セクション上下左右センターに表示"
+    }
+  ],
+  "presets": [
+    {
+      "name": "定期便プラン"
+    }
+  ]
+}
+{% endschema %}

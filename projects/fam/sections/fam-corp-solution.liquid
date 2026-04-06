@@ -1,0 +1,571 @@
+<!-- ============================================
+     FAM Solution Section
+     sections/fam-corp-solution.liquid
+     WF: preview-solution.html
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fam-solution-' | append: section.id
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+  /* ============================================
+     RESET
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     SECTION BASE
+     ============================================ */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1;
+    min-height: 875px;
+    background: {{ section.settings.bg_color }} !important;
+    padding-top: 96px;
+    padding-bottom: 120px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============================================
+     TITLE
+     ============================================ */
+  #{{ sec_id }} .sol__title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 40px !important;
+    color: #1B1D1A !important;
+    text-align: center;
+    padding: 0 64px;
+    margin-bottom: 56px !important;
+    line-height: 180% !important;
+  }
+
+  /* ============================================
+     CAROUSEL
+     ============================================ */
+  #{{ sec_id }} .sol__carousel {
+    overflow: hidden;
+  }
+  #{{ sec_id }} .sol__track {
+    display: flex;
+    gap: 64px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-padding-left: calc((100vw - 1312px) / 2);
+    padding-left: calc((100vw - 1312px) / 2);
+    padding-right: calc((100vw - 1312px) / 2);
+  }
+  #{{ sec_id }} .sol__track::-webkit-scrollbar { display: none; }
+
+  /* ============================================
+     DOTS (SP only)
+     ============================================ */
+  #{{ sec_id }} .sol__dots {
+    display: none;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    padding-bottom: 24px;
+  }
+  #{{ sec_id }} .sol__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #D9D9D9 !important;
+    border: none !important;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.3s, width 0.3s;
+  }
+  #{{ sec_id }} .sol__dot--active {
+    width: 24px;
+    border-radius: 4px;
+    background: #FB4C15 !important;
+  }
+
+  /* ============================================
+     BLOCK: 1312 × 480
+     ============================================ */
+  #{{ sec_id }} .sol__block {
+    flex: 0 0 1312px !important;
+    max-width: 1312px;
+    width: 1312px !important;
+    height: 480px !important;
+    min-height: 480px !important;
+    display: flex !important;
+    align-items: flex-start;
+    scroll-snap-align: start;
+  }
+
+  /* ============================================
+     LEFT LINE
+     ============================================ */
+  #{{ sec_id }} .sol__left-line {
+    width: 8px !important;
+    min-width: 8px !important;
+    height: 84px !important;
+    min-height: 84px !important;
+    background: #FB4C15 !important;
+    flex-shrink: 0 !important;
+    display: block !important;
+  }
+  #{{ sec_id }} .sol__gap-left {
+    width: 48px !important;
+    min-width: 48px !important;
+    flex-shrink: 0 !important;
+    display: block !important;
+  }
+
+  /* ============================================
+     TEXT BLOCK
+     ============================================ */
+  #{{ sec_id }} .sol__text-block {
+    width: 480px !important;
+    min-width: 480px !important;
+    flex-shrink: 0 !important;
+    height: 480px !important;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  #{{ sec_id }} .sol__heading {
+    display: flex;
+    flex-direction: column;
+  }
+  #{{ sec_id }} .sol__label {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    color: #FB4C15 !important;
+    margin-bottom: 8px;
+  }
+  #{{ sec_id }} .sol__block-title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 48px !important;
+    line-height: 180% !important;
+    color: #FB4C15 !important;
+    margin-bottom: 16px;
+  }
+  #{{ sec_id }} .sol__lead {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 18px !important;
+    line-height: 180% !important;
+    color: #1B1D1A !important;
+  }
+
+  /* ============================================
+     NAV BUTTONS
+     ============================================ */
+  #{{ sec_id }} .sol__nav {
+    display: flex;
+    gap: 8px;
+  }
+  #{{ sec_id }} .sol__nav-btn {
+    width: 64px;
+    height: 64px;
+    background: #FB4C15 !important;
+    border: none !important;
+    border-radius: 4px;
+    color: #fff !important;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
+    padding: 0;
+  }
+  #{{ sec_id }} .sol__nav-btn:hover { opacity: 0.9; }
+  #{{ sec_id }} .sol__nav-btn svg,
+  #{{ sec_id }} .sol__nav-btn img {
+    width: 24px;
+    height: 24px;
+    display: block !important;
+  }
+
+  /* ============================================
+     MIDDLE GAP
+     ============================================ */
+  #{{ sec_id }} .sol__gap-middle {
+    flex: 1 !important;
+    min-width: 56px !important;
+    display: block !important;
+  }
+
+  /* ============================================
+     CIRCLE WRAPPER
+     ============================================ */
+  #{{ sec_id }} .sol__circle-wrap {
+    width: 480px !important;
+    min-width: 480px !important;
+    height: 480px !important;
+    min-height: 480px !important;
+    flex-shrink: 0 !important;
+    position: relative;
+  }
+  #{{ sec_id }} .sol__circle {
+    width: 480px !important;
+    height: 480px !important;
+    border-radius: 50%;
+    background: #E0E0E0;
+    overflow: hidden;
+  }
+  #{{ sec_id }} .sol__circle img,
+  #{{ sec_id }} .sol__circle video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block !important;
+  }
+  #{{ sec_id }} .sol__corner {
+    position: absolute;
+  }
+  #{{ sec_id }} .sol__corner--tl { top: 0; left: 0; }
+  #{{ sec_id }} .sol__corner--tr { top: 0; right: 0; }
+  #{{ sec_id }} .sol__corner--bl { bottom: 0; left: 0; }
+  #{{ sec_id }} .sol__corner--br { bottom: 0; right: 0; }
+
+  /* ============================================
+     PC: 1281-1439px
+     ============================================ */
+  @media (max-width: 1439px) and (min-width: 1281px) {
+    #{{ sec_id }} .sol__track {
+      padding-left: 64px;
+      padding-right: 64px;
+      scroll-padding-left: 64px;
+    }
+    #{{ sec_id }} .sol__block {
+      width: calc(100vw - 128px);
+      max-width: 1312px;
+      flex: 0 0 calc(100vw - 128px);
+    }
+  }
+
+  /* ============================================
+     SP/TABLET: 1280px以下
+     ============================================ */
+  @media (max-width: 1280px) {
+    #{{ sec_id }} { padding-top: 80px; padding-bottom: 80px; min-height: auto; }
+    #{{ sec_id }} .sol__title { font-size: 28px !important; padding: 0 24px; text-align: left !important; }
+    #{{ sec_id }} .sol__track {
+      gap: 24px;
+      padding-left: 24px;
+      padding-right: 24px;
+      scroll-padding-left: 24px;
+      overflow-y: hidden !important;
+    }
+    #{{ sec_id }} .sol__dots { display: flex; }
+    #{{ sec_id }} .sol__block {
+      flex: 0 0 calc(100vw - 72px) !important;
+      max-width: 480px;
+      width: calc(100vw - 72px) !important;
+      height: auto !important;
+      min-height: auto !important;
+      flex-direction: column;
+      scroll-snap-align: start;
+      overflow: hidden !important;
+    }
+    #{{ sec_id }} .sol__left-line { display: none !important; }
+    #{{ sec_id }} .sol__gap-left { display: none !important; }
+    #{{ sec_id }} .sol__heading {
+      border-left: 8px solid #FB4C15;
+      padding-left: 16px;
+    }
+    #{{ sec_id }} .sol__text-block { width: 100% !important; min-width: 0 !important; height: auto !important; flex: 1 1 auto !important; justify-content: flex-start !important; }
+    #{{ sec_id }} .sol__block-title { font-size: 28px !important; margin-bottom: 0; }
+    #{{ sec_id }} .sol__lead { margin-top: 16px; font-size: 14px !important; }
+    #{{ sec_id }} .sol__nav { display: none; }
+    #{{ sec_id }} .sol__gap-middle { display: none !important; }
+    #{{ sec_id }} .sol__circle-wrap {
+      width: 100% !important;
+      min-width: 0 !important;
+      height: auto !important;
+      min-height: 0 !important;
+      padding-bottom: 0;
+      margin-top: 24px;
+      align-self: center;
+    }
+    #{{ sec_id }} .sol__circle {
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 1 / 1;
+      position: relative;
+    }
+    #{{ sec_id }} .sol__corner { z-index: 2; }
+  }
+
+  /* ============================================
+     SP: 480px以下
+     ============================================ */
+  @media (max-width: 480px) {
+    #{{ sec_id }} .sol__block {
+      flex: 0 0 calc(100vw - 48px) !important;
+      max-width: calc(100vw - 48px);
+      width: calc(100vw - 48px) !important;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}" data-section-name="corp-solution">
+  <!-- TITLE -->
+  <h2 class="sol__title">{{ section.settings.title | newline_to_br }}</h2>
+
+  <!-- CAROUSEL -->
+  <div class="sol__carousel">
+    <div class="sol__track" id="solTrack-{{ section.id }}">
+
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'solution_card' -%}
+          <div class="sol__block" {{ block.shopify_attributes }}>
+            <!-- Left line -->
+            <div class="sol__left-line">{%- comment -%}line{%- endcomment -%}</div>
+            <div class="sol__gap-left">{%- comment -%}gap{%- endcomment -%}</div>
+
+            <!-- Text -->
+            <div class="sol__text-block">
+              <div>
+                <div class="sol__heading">
+                  <p class="sol__label">{{ block.settings.label }}</p>
+                  <h3 class="sol__block-title">{{ block.settings.block_title | newline_to_br }}</h3>
+                </div>
+                <p class="sol__lead">{{ block.settings.lead | newline_to_br }}</p>
+              </div>
+              <div class="sol__nav">
+                <button class="sol__nav-btn" data-dir="prev" aria-label="前のスライド">
+                  {%- if section.settings.prev_svg != blank -%}
+                    {{ section.settings.prev_svg }}
+                  {%- else -%}
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  {%- endif -%}
+                </button>
+                <button class="sol__nav-btn" data-dir="next" aria-label="次のスライド">
+                  {%- if section.settings.next_svg != blank -%}
+                    {{ section.settings.next_svg }}
+                  {%- else -%}
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  {%- endif -%}
+                </button>
+              </div>
+            </div>
+
+            <!-- Middle gap -->
+            <div class="sol__gap-middle">{%- comment -%}gap{%- endcomment -%}</div>
+
+            <!-- Circle image -->
+            <div class="sol__circle-wrap">
+              <svg class="sol__corner sol__corner--tl" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M0 32V0H32" stroke="#FB4C15" stroke-width="3"/></svg>
+              <svg class="sol__corner sol__corner--tr" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M32 32V0H0" stroke="#FB4C15" stroke-width="3"/></svg>
+              <svg class="sol__corner sol__corner--bl" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M0 0V32H32" stroke="#FB4C15" stroke-width="3"/></svg>
+              <svg class="sol__corner sol__corner--br" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M32 0V32H0" stroke="#FB4C15" stroke-width="3"/></svg>
+              <div class="sol__circle">
+                {%- if block.settings.video_url != blank -%}
+                  <video src="{{ block.settings.video_url }}" autoplay muted loop playsinline preload="auto"></video>
+                {%- elsif block.settings.image != blank -%}
+                  {{ block.settings.image | image_url: width: 960 | image_tag: alt: block.settings.block_title, loading: 'lazy' }}
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+    </div>
+
+    <!-- DOTS -->
+    <div class="sol__dots" id="solDots-{{ section.id }}">{%- comment -%}dots{%- endcomment -%}</div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var secId = '{{ section.id }}';
+  var track = document.getElementById('solTrack-' + secId);
+  var dotsWrap = document.getElementById('solDots-' + secId);
+  if (!track || !dotsWrap) return;
+
+  var blocks = track.querySelectorAll('.sol__block');
+  var total = blocks.length;
+  if (total === 0) return;
+  var currentSlide = 0;
+
+  // ドット生成
+  for (var i = 0; i < total; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'sol__dot' + (i === 0 ? ' sol__dot--active' : '');
+    dot.dataset.idx = i;
+    (function(idx) {
+      dot.addEventListener('click', function() { goToSlide(idx); });
+    })(i);
+    dotsWrap.appendChild(dot);
+  }
+
+  function updateDots() {
+    var dots = dotsWrap.querySelectorAll('.sol__dot');
+    dots.forEach(function(d, i) {
+      d.classList.toggle('sol__dot--active', i === currentSlide);
+    });
+  }
+
+  function goToSlide(idx) {
+    currentSlide = Math.max(0, Math.min(idx, total - 1));
+    var gap = window.innerWidth <= 1280 ? 24 : 64;
+    track.scrollTo({ left: currentSlide * (blocks[0].offsetWidth + gap), behavior: 'smooth' });
+    updateDots();
+  }
+
+  // ナビボタン
+  track.parentElement.addEventListener('click', function(e) {
+    var btn = e.target.closest('.sol__nav-btn');
+    if (!btn) return;
+    var dir = btn.dataset.dir === 'prev' ? -1 : 1;
+    goToSlide(currentSlide + dir);
+  });
+
+  // スクロールでドット更新
+  var ticking = false;
+  track.addEventListener('scroll', function() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function() {
+      var gap = window.innerWidth <= 1280 ? 24 : 64;
+      var blockWidth = blocks[0].offsetWidth + gap;
+      var newSlide = Math.round(track.scrollLeft / blockWidth);
+      if (newSlide !== currentSlide && newSlide >= 0 && newSlide < total) {
+        currentSlide = newSlide;
+        updateDots();
+      }
+      ticking = false;
+    });
+  }, { passive: true });
+
+  // タッチスワイプ
+  var touchStartX = 0;
+  track.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  track.addEventListener('touchend', function(e) {
+    var diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) {
+      goToSlide(currentSlide + (diff > 0 ? 1 : -1));
+    }
+  }, { passive: true });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "FAM Solution",
+  "tag": "section",
+  "class": "fam-corp-solution-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "セクションタイトル（改行可）",
+      "default": "FAMはこれらの課題を解決できる"
+    },
+    {
+      "type": "header",
+      "content": "── ナビボタン ──"
+    },
+    {
+      "type": "html",
+      "id": "prev_svg",
+      "label": "前へボタンSVG（空欄でデフォルト）"
+    },
+    {
+      "type": "html",
+      "id": "next_svg",
+      "label": "次へボタンSVG（空欄でデフォルト）"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "solution_card",
+      "name": "ソリューションカード",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "ラベル（例: Solution 01.）",
+          "default": "Solution 01."
+        },
+        {
+          "type": "text",
+          "id": "block_title",
+          "label": "タイトル",
+          "default": "5分で栄養が整う"
+        },
+        {
+          "type": "textarea",
+          "id": "lead",
+          "label": "リード文（改行可）",
+          "default": "冷凍パウチを温めるだけ。専属の栄養士も専用食堂も必要ない。スポーツ栄養アドバイザーが設計した食事を、選手がそのまま受け取れる仕組みで、チームの食環境を変える。"
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "動画URL（最優先・Shopifyファイルにアップ済みのURL）",
+          "info": "設定時は動画を円形で表示。未設定時は下の画像を表示。"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "円形画像（動画未設定時に表示・480×480推奨）"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAM Solution",
+      "blocks": [
+        {
+          "type": "solution_card",
+          "settings": {
+            "label": "Solution 01.",
+            "block_title": "5分で栄養が整う",
+            "lead": "冷凍パウチを温めるだけ。専属の栄養士も専用食堂も必要ない。スポーツ栄養アドバイザーが設計した食事を、選手がそのまま受け取れる仕組みで、チームの食環境を変える。"
+          }
+        },
+        {
+          "type": "solution_card",
+          "settings": {
+            "label": "Solution 02.",
+            "block_title": "栄養設計された食事",
+            "lead": "すべてのメニューはスポーツ栄養学に基づき設計。たんぱく質・炭水化物・脂質のバランスだけでなく、ビタミン・ミネラルまで計算された食事が届く。"
+          }
+        },
+        {
+          "type": "solution_card",
+          "settings": {
+            "label": "Solution 03.",
+            "block_title": "場所を選ばない",
+            "lead": "練習場でも遠征先でも、冷凍庫と電子レンジがあれば提供可能。場所や時間の制約を超え、すべての選手に均一な栄養サポートを届ける。"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

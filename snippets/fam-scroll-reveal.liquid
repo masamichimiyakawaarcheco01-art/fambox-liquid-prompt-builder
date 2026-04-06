@@ -84,6 +84,14 @@
         if (entry.isIntersecting) {
           entry.target.classList.add('fam-reveal--visible');
 
+          // GA4: セクション表示イベント送信
+          if (typeof gtag === 'function' && entry.target.dataset.sectionName) {
+            gtag('event', 'section_view', {
+              section_name: entry.target.dataset.sectionName,
+              page_path: window.location.pathname
+            });
+          }
+
           // 子要素のディレイ付きアニメーション
           var children = entry.target.querySelectorAll('.fam-reveal-child');
           children.forEach(function(child, index) {

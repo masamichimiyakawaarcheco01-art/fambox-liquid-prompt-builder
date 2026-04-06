@@ -1,0 +1,614 @@
+{% comment %}
+  fam-contact-channels.liquid  v3
+  RemoteAsset 警告対応: *_url フォールバックを削除し image_picker のみに統一
+{% endcomment %}
+
+<section class="fcc" id="{{ section.settings.anchor_id }}">
+  <div class="fcc__grid fcc__grid--{{ section.blocks.size }}">
+
+    {%- for block in section.blocks -%}
+
+      {%- comment -%}====== メール ======{%- endcomment -%}
+      {%- if block.type == 'email' -%}
+        <div class="fcc__col" {{ block.shopify_attributes }}>
+          {%- if block.settings.bg_deco != blank -%}
+            <span class="fcc__deco" style="background-image:url('{{ block.settings.bg_deco | image_url: width: 400 }}')" aria-hidden="true"></span>
+          {%- endif -%}
+          <div class="fcc__body">
+            <div class="fcc__icon-wrap">
+              {%- if block.settings.icon != blank -%}
+                <img src="{{ block.settings.icon | image_url: width: 80 }}" alt="" width="40" height="40" class="fcc__icon-img">
+              {%- else -%}
+                <svg class="fcc__icon-svg" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                  <rect x="4" y="10" width="32" height="22" rx="2" stroke="#1B1D1A" stroke-width="1.5"/>
+                  <path d="M4 15l16 10 16-10" stroke="#1B1D1A" stroke-width="1.5" stroke-linejoin="round"/>
+                </svg>
+              {%- endif -%}
+            </div>
+            <h3 class="fcc__col-title">{{ block.settings.title | default: 'メールでのお問い合わせ' }}</h3>
+            {%- if block.settings.email != blank -%}
+              <a class="fcc__email-link" href="mailto:{{ block.settings.email }}" data-gtag-cta="email_inquiry" data-gtag-location="corp_contact">{{ block.settings.email }}</a>
+            {%- endif -%}
+            {%- if block.settings.note != blank -%}
+              <p class="fcc__note">{{ block.settings.note }}</p>
+            {%- endif -%}
+            {%- if block.settings.btn_label != blank and block.settings.btn_url != blank -%}
+              <div class="fcc__btn-wrap">
+                <a class="fcc__btn" href="{{ block.settings.btn_url }}" data-gtag-lead="corp_inquiry">
+                  <span class="fcc__btn-text">{{ block.settings.btn_label }}</span>
+                  <span class="fcc__btn-arrow">
+                    {%- if block.settings.btn_arrow != blank -%}
+                      <img src="{{ block.settings.btn_arrow | image_url: width: 80 }}" alt="" width="40" height="14">
+                    {%- else -%}
+                      <svg width="40" height="14" viewBox="0 0 53 12" fill="none">
+                        <rect x="0" y="5" width="46" height="2" fill="white"/>
+                        <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                      </svg>
+                    {%- endif -%}
+                  </span>
+                </a>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+
+      {%- comment -%}====== 電話 ======{%- endcomment -%}
+      {%- elsif block.type == 'phone' -%}
+        <div class="fcc__col" {{ block.shopify_attributes }}>
+          {%- if block.settings.bg_deco != blank -%}
+            <span class="fcc__deco" style="background-image:url('{{ block.settings.bg_deco | image_url: width: 400 }}')" aria-hidden="true"></span>
+          {%- endif -%}
+          <div class="fcc__body">
+            <div class="fcc__icon-wrap">
+              {%- if block.settings.icon != blank -%}
+                <img src="{{ block.settings.icon | image_url: width: 80 }}" alt="" width="40" height="40" class="fcc__icon-img">
+              {%- else -%}
+                <svg class="fcc__icon-svg" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                  <path d="M10 9h6l2.5 7-3.5 2A19 19 0 0021 25l2-3.5 7 2.5v6a2 2 0 01-2 2C13 32 8 19 8 11a2 2 0 012-2z" stroke="#1B1D1A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              {%- endif -%}
+            </div>
+            <h3 class="fcc__col-title">{{ block.settings.title | default: 'お電話でのお問い合わせ' }}</h3>
+            {%- if block.settings.phone != blank -%}
+              <a class="fcc__phone-link" href="tel:{{ block.settings.phone | remove: '-' | remove: ' ' }}" data-gtag-cta="phone_call" data-gtag-location="corp_contact">{{ block.settings.phone }}</a>
+            {%- endif -%}
+            {%- if block.settings.hours != blank -%}
+              <p class="fcc__hours">{{ block.settings.hours }}</p>
+            {%- endif -%}
+            {%- if block.settings.note != blank -%}
+              <p class="fcc__note">{{ block.settings.note }}</p>
+            {%- endif -%}
+            {%- if block.settings.btn_label != blank and block.settings.btn_url != blank -%}
+              <div class="fcc__btn-wrap">
+                <a class="fcc__btn" href="{{ block.settings.btn_url }}">
+                  <span class="fcc__btn-text">{{ block.settings.btn_label }}</span>
+                  <span class="fcc__btn-arrow">
+                    {%- if block.settings.btn_arrow != blank -%}
+                      <img src="{{ block.settings.btn_arrow | image_url: width: 80 }}" alt="" width="40" height="14">
+                    {%- else -%}
+                      <svg width="40" height="14" viewBox="0 0 53 12" fill="none">
+                        <rect x="0" y="5" width="46" height="2" fill="white"/>
+                        <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                      </svg>
+                    {%- endif -%}
+                  </span>
+                </a>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+
+      {%- comment -%}====== 資料DL ======{%- endcomment -%}
+      {%- elsif block.type == 'download' -%}
+        <div class="fcc__col" {{ block.shopify_attributes }}>
+          {%- if block.settings.bg_deco != blank -%}
+            <span class="fcc__deco" style="background-image:url('{{ block.settings.bg_deco | image_url: width: 400 }}')" aria-hidden="true"></span>
+          {%- endif -%}
+          <div class="fcc__body">
+            <div class="fcc__icon-wrap">
+              {%- if block.settings.icon != blank -%}
+                <img src="{{ block.settings.icon | image_url: width: 80 }}" alt="" width="40" height="40" class="fcc__icon-img">
+              {%- else -%}
+                <svg class="fcc__icon-svg" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                  <path d="M20 7v22M12 21l8 8 8-8" stroke="#1B1D1A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M7 33h26" stroke="#1B1D1A" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              {%- endif -%}
+            </div>
+            <h3 class="fcc__col-title">{{ block.settings.title | default: '資料で知りたい' }}</h3>
+            {%- if block.settings.note != blank -%}
+              <p class="fcc__note">{{ block.settings.note }}</p>
+            {%- endif -%}
+            {%- if block.settings.btn_label != blank and block.settings.btn_url != blank -%}
+              <div class="fcc__btn-wrap">
+                <a class="fcc__btn" href="{{ block.settings.btn_url }}" data-gtag-download="{{ block.settings.btn_label | escape }}">
+                  <span class="fcc__btn-text">{{ block.settings.btn_label }}</span>
+                  <span class="fcc__btn-arrow fcc__btn-arrow--lg">
+                    {%- if block.settings.btn_arrow != blank -%}
+                      <img src="{{ block.settings.btn_arrow | image_url: width: 80 }}" alt="" width="40" height="14">
+                    {%- else -%}
+                      <svg width="40" height="14" viewBox="0 0 53 12" fill="none">
+                        <rect x="0" y="5" width="46" height="2" fill="white"/>
+                        <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+                      </svg>
+                    {%- endif -%}
+                  </span>
+                </a>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+    {%- endfor -%}
+  </div>
+</section>
+
+<style>
+/* ===== CSS変数 ===== */
+#{{ section.settings.anchor_id }} {
+  --fcc-orange:  #FB4C15;
+  --fcc-dark:    #1B1D1A;
+  --fcc-sub:     #545655;
+  --fcc-border:  #D0D0D0;
+  --fcc-bg:      {{ section.settings.bg_color }};
+  --fcc-font-ja: "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+  --fcc-font-en: 'Poppins', sans-serif;
+  --fcc-gap:     56px;
+}
+
+.fcc {
+  background: var(--fcc-bg);
+  overflow: hidden;
+  padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+}
+
+.fcc__grid {
+  display: grid;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 56px;
+  box-sizing: border-box;
+}
+.fcc__grid--1 { grid-template-columns: 1fr; }
+.fcc__grid--2 { grid-template-columns: 1fr 1fr; }
+.fcc__grid--3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.fcc__col {
+  position: relative;
+  overflow: hidden;
+  padding: var(--fcc-gap) 48px 0;
+  border-right: 1px dashed var(--fcc-border);
+}
+.fcc__col:last-child { border-right: none; }
+
+.fcc__deco {
+  position: absolute;
+  right: 0; top: 0;
+  width: 200px; height: 200px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top right;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.45;
+}
+
+.fcc__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.fcc__icon-wrap {
+  width: 40px; height: 40px;
+  flex-shrink: 0;
+  margin-bottom: 20px;
+}
+.fcc__icon-svg,
+.fcc__icon-img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.fcc__col-title {
+  font-family: var(--fcc-font-ja);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--fcc-dark);
+  margin: 0 0 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed var(--fcc-border);
+}
+
+.fcc__email-link {
+  display: block;
+  font-family: var(--fcc-font-en);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--fcc-dark);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  margin-bottom: 14px;
+  word-break: break-all;
+  transition: color 0.2s;
+}
+.fcc__email-link:hover { color: var(--fcc-orange); }
+
+.fcc__phone-link {
+  display: block;
+  font-family: var(--fcc-font-en);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--fcc-dark);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  transition: color 0.2s;
+}
+.fcc__phone-link:hover { color: var(--fcc-orange); }
+
+.fcc__hours {
+  font-family: var(--fcc-font-ja);
+  font-size: 12px;
+  color: var(--fcc-sub);
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
+
+.fcc__note {
+  font-family: var(--fcc-font-ja);
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--fcc-sub);
+  margin-bottom: var(--fcc-gap);
+  flex-grow: 1;
+}
+
+.fcc__btn-wrap {
+  margin-top: auto;
+  padding-bottom: var(--fcc-gap);
+}
+
+.fcc__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95));
+  border: 1px solid rgba(255,255,255,0.1);
+  font-family: var(--fcc-font-ja);
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  letter-spacing: 0.08em;
+  box-sizing: border-box;
+  box-shadow: 0 16px 16px -8px rgba(251,76,21,0.35);
+  transition: filter 0.3s ease;
+  position: relative;
+}
+.fcc__btn:hover  { filter: brightness(1.12); }
+.fcc__btn:active { filter: brightness(0.95); }
+
+.fcc__btn-text {
+  position: relative;
+  z-index: 1;
+  color: #ffffff;
+  font-family: var(--fcc-font-ja);
+  font-weight: 500;
+}
+
+.fcc__btn-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  transition: transform 0.3s ease;
+}
+.fcc__btn-arrow img,
+.fcc__btn-arrow svg { display: block; width: 36px; height: 14px; }
+.fcc__btn-arrow.fcc__btn-arrow--lg img,
+.fcc__btn-arrow.fcc__btn-arrow--lg svg { width: 64px; height: 24px; }
+.fcc__btn:hover .fcc__btn-arrow,
+.fcc__btn:active .fcc__btn-arrow {
+  transform: translateY(calc(-50% + 4px));
+}
+
+/* ===== タブレット ===== */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .fcc__grid { padding: 0 24px; }
+  .fcc__grid--3 { grid-template-columns: 1fr 1fr; }
+  .fcc__grid--3 .fcc__col:nth-child(2) { border-right: none; }
+  .fcc__grid--3 .fcc__col:nth-child(3) {
+    grid-column: span 2;
+    border-right: none;
+    border-top: 1px dashed var(--fcc-border);
+  }
+  .fcc__col { padding: 40px 32px 0; }
+}
+
+/* ===== SP ===== */
+@media (max-width: 767px) {
+  .fcc {
+    padding: {{ section.settings.padding_top | divided_by: 2 | floor }}px 0 {{ section.settings.padding_bottom | divided_by: 2 | floor }}px;
+  }
+  .fcc__grid {
+    padding: 0;
+    grid-template-columns: 1fr !important;
+  }
+  .fcc__col {
+    padding: 40px 20px 0;
+    border-right: none;
+    border-bottom: 1px dashed var(--fcc-border);
+  }
+  .fcc__col:last-child { border-bottom: none; }
+  .fcc__col-title { font-size: 18px; }
+  .fcc__phone-link { font-size: 28px; }
+  .fcc__btn-wrap { padding-bottom: 40px; }
+}
+</style>
+
+{% schema %}
+{
+  "name": "FAM コンタクトチャンネル",
+  "settings": [
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "アンカー ID",
+      "default": "fam-contact-channels"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "上余白",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 72,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "下余白",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 80,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "email",
+      "name": "メール",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "アイコン"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "アイコン画像（未設定時はデフォルトSVG）"
+        },
+        {
+          "type": "header",
+          "content": "背景デコレーション"
+        },
+        {
+          "type": "image_picker",
+          "id": "bg_deco",
+          "label": "背景イラスト"
+        },
+        {
+          "type": "header",
+          "content": "コンテンツ"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "見出し",
+          "default": "メールでのお問い合わせ"
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "メールアドレス"
+        },
+        {
+          "type": "textarea",
+          "id": "note",
+          "label": "補足テキスト",
+          "default": "お問い合わせフォームからお気軽にご連絡ください。ご2時間以内に返信いたします。"
+        },
+        {
+          "type": "header",
+          "content": "ボタン（任意）"
+        },
+        {
+          "type": "text",
+          "id": "btn_label",
+          "label": "ボタンテキスト"
+        },
+        {
+          "type": "url",
+          "id": "btn_url",
+          "label": "ボタンリンク"
+        },
+        {
+          "type": "image_picker",
+          "id": "btn_arrow",
+          "label": "矢印アイコン（未設定時はデフォルトSVG）"
+        }
+      ]
+    },
+    {
+      "type": "phone",
+      "name": "電話",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "アイコン"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "アイコン画像（未設定時はデフォルトSVG）"
+        },
+        {
+          "type": "header",
+          "content": "背景デコレーション"
+        },
+        {
+          "type": "image_picker",
+          "id": "bg_deco",
+          "label": "背景イラスト"
+        },
+        {
+          "type": "header",
+          "content": "コンテンツ"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "見出し",
+          "default": "お電話でのお問い合わせ"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "電話番号",
+          "default": "000-0000-0000"
+        },
+        {
+          "type": "text",
+          "id": "hours",
+          "label": "受付時間",
+          "default": "平日 10:00～18:00（土日祀日祈日を除く）"
+        },
+        {
+          "type": "textarea",
+          "id": "note",
+          "label": "補足テキスト"
+        },
+        {
+          "type": "header",
+          "content": "ボタン（任意）"
+        },
+        {
+          "type": "text",
+          "id": "btn_label",
+          "label": "ボタンテキスト"
+        },
+        {
+          "type": "url",
+          "id": "btn_url",
+          "label": "ボタンリンク"
+        },
+        {
+          "type": "image_picker",
+          "id": "btn_arrow",
+          "label": "矢印アイコン（未設定時はデフォルトSVG）"
+        }
+      ]
+    },
+    {
+      "type": "download",
+      "name": "資料ダウンロード",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "アイコン"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "アイコン画像（未設定時はデフォルトSVG）"
+        },
+        {
+          "type": "header",
+          "content": "背景デコレーション"
+        },
+        {
+          "type": "image_picker",
+          "id": "bg_deco",
+          "label": "背景イラスト"
+        },
+        {
+          "type": "header",
+          "content": "コンテンツ"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "見出し",
+          "default": "資料で知りたい"
+        },
+        {
+          "type": "textarea",
+          "id": "note",
+          "label": "補足テキスト",
+          "default": "FAMの考え方、導入事例、チーム運用のイメージをまとめた資料をご用意しています。共有にもお使いいただけます。"
+        },
+        {
+          "type": "header",
+          "content": "ボタン"
+        },
+        {
+          "type": "text",
+          "id": "btn_label",
+          "label": "ボタンテキスト",
+          "default": "資料のダウンロード（PDF）"
+        },
+        {
+          "type": "url",
+          "id": "btn_url",
+          "label": "ダウンロードURL"
+        },
+        {
+          "type": "image_picker",
+          "id": "btn_arrow",
+          "label": "矢印アイコン（未設定時はデフォルトSVG）"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAM コンタクトチャンネル",
+      "blocks": [
+        {
+          "type": "email"
+        },
+        {
+          "type": "phone"
+        },
+        {
+          "type": "download"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

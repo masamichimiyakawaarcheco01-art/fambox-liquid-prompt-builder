@@ -1,0 +1,249 @@
+{% assign show_id = section.settings.show_trigger_id | default: 'shopify-section-template--20835094233285__custom_liquid_LDXQA9' %}
+{% assign hide_id = section.settings.hide_trigger_id | default: 'contact' %}
+{% assign fallback_px = section.settings.fallback_scroll_px | default: 600 %}
+
+<div class="fscta3" id="fscta3-{{ section.id }}">
+  <div class="fscta3__gradient">&#8203;</div>
+  <div class="fscta3__inner">
+    <a href="{{ section.settings.cta_url | default: '/pages/company_lp#contact' }}"
+       class="fscta3__btn"
+       id="fscta3-btn-{{ section.id }}"
+       data-gtag-cta="sticky_inquiry" data-gtag-location="sticky_bottom">
+      <span class="fscta3__btn-text">{{ section.settings.cta_label | default: '無料相談はこちら' }}</span>
+      <span class="fscta3__btn-arrow">
+        {%- if section.settings.cta_arrow_icon != blank -%}
+          <img src="{{ section.settings.cta_arrow_icon | image_url: width: 80 }}" alt="" width="40" height="14">
+        {%- else -%}
+          <svg width="40" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="5" width="46" height="2" fill="white"/>
+            <path d="M46 0L53 6L46 12V0Z" fill="white"/>
+          </svg>
+        {%- endif -%}
+      </span>
+    </a>
+  </div>
+</div>
+
+<style>
+/* ===== ラッパー ===== */
+.fscta3 {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9990;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.fscta3.is-active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ===== グラデーション背景（透明→黒） ===== */
+.fscta3__gradient {
+  display: block !important;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== ボタンエリア ===== */
+.fscta3__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding-top: 28px;
+  padding-bottom: 20px;
+}
+
+/* ===== ボタン本体 ===== */
+.fscta3__btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 320px;
+  height: 48px;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95)) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  font-family: "Hiragino Sans", "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  letter-spacing: 0.08em;
+  box-sizing: border-box;
+  box-shadow: 0 16px 16px -8px rgba(251,76,21,0.35);
+  transition: filter 0.3s ease;
+  position: relative;
+}
+.fscta3__btn:hover { filter: brightness(1.12); }
+.fscta3__btn:active { filter: brightness(0.95); }
+
+.fscta3__btn-text {
+  position: relative;
+  z-index: 1;
+  color: #ffffff !important;
+  font-family: "Hiragino Sans", "ヒラギノ角ゴ ProN", "Hiragino Kaku Gothic ProN", sans-serif !important;
+  font-weight: 500 !important;
+}
+
+/* ===== 矢印（ホバーで下方向） ===== */
+.fscta3__btn-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  transition: transform 0.3s ease;
+}
+.fscta3__btn-arrow img,
+.fscta3__btn-arrow svg { display: block; width: 36px; height: 14px; }
+.fscta3__btn:hover .fscta3__btn-arrow {
+  transform: translateY(calc(-50% + 4px));
+}
+
+/* ===== SP ===== */
+@media (max-width: 767px) {
+  .fscta3__btn { width: 280px; font-size: 13px !important; }
+  .fscta3__inner { padding-bottom: 16px; padding-top: 24px; }
+}
+</style>
+
+<script>
+(function () {
+  var el  = document.getElementById('fscta3-{{ section.id }}');
+  var btn = document.getElementById('fscta3-btn-{{ section.id }}');
+  if (!el) return;
+
+  var showId     = '{{ show_id }}';
+  var hideId     = '{{ hide_id }}';
+  var fallbackPx = {{ fallback_px }};
+
+  function update() {
+    var winH   = window.innerHeight;
+    var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+    /* --- 表示トリガー --- */
+    var showEl = document.getElementById(showId);
+    var showReached;
+    if (showEl) {
+      /* 要素が見つかった → ビューポート80%に入ったら表示 */
+      showReached = showEl.getBoundingClientRect().top < winH * 0.8;
+    } else {
+      /* 要素が見つからない → スクロール量フォールバック */
+      showReached = scrollY > fallbackPx;
+    }
+
+    /* --- 非表示トリガー --- */
+    var hideEl = document.getElementById(hideId);
+    var hideReached;
+    if (hideEl) {
+      hideReached = hideEl.getBoundingClientRect().top < winH * 0.8;
+    } else {
+      /* 要素が見つからない → 非表示にしない（常に表示を維持） */
+      hideReached = false;
+    }
+
+    if (showReached && !hideReached) {
+      el.classList.add('is-active');
+    } else {
+      el.classList.remove('is-active');
+    }
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  /* DOMContentLoaded後にも再チェック（遅延レンダリングされる要素対策） */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(update, 100); });
+  } else {
+    setTimeout(update, 100);
+  }
+  setTimeout(update, 400);
+  /* Shopifyセクションの遅延読み込み対策 */
+  setTimeout(update, 1500);
+
+  /* スムーススクロール */
+  if (btn) {
+    btn.addEventListener('click', function (e) {
+      var href   = btn.getAttribute('href') || '';
+      var hash   = href.indexOf('#') !== -1 ? href.split('#').pop() : '';
+      if (!hash) return;
+      var target = document.getElementById(hash);
+      if (!target) return;
+      e.preventDefault();
+      var header = document.querySelector('#shopify-section-sections--17686290825413__header');
+      var offset = header ? header.offsetHeight : 0;
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - offset - 16, behavior: 'smooth' });
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "FAM スティッキーCTA",
+  "settings": [
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "ボタンテキスト",
+      "default": "無料相談はこちら"
+    },
+    {
+      "type": "text",
+      "id": "cta_url",
+      "label": "リンク先URL",
+      "default": "/pages/company_lp#contact"
+    },
+    {
+      "type": "image_picker",
+      "id": "cta_arrow_icon",
+      "label": "矢印アイコン（省略時はデフォルトSVG）"
+    },
+    {
+      "type": "header",
+      "content": "── トリガー設定 ──"
+    },
+    {
+      "type": "text",
+      "id": "show_trigger_id",
+      "label": "表示開始トリガーID",
+      "default": "shopify-section-template--20835094233285__custom_liquid_LDXQA9",
+      "info": "この要素がビューポート80%に入ったら表示。要素が見つからない場合はスクロール量で代替。"
+    },
+    {
+      "type": "text",
+      "id": "hide_trigger_id",
+      "label": "非表示トリガーID",
+      "default": "contact",
+      "info": "この要素がビューポート80%に入ったら非表示。空欄なら常時表示。"
+    },
+    {
+      "type": "range",
+      "id": "fallback_scroll_px",
+      "label": "フォールバック表示スクロール量（px）",
+      "info": "表示トリガー要素が見つからない場合、この距離スクロールしたら表示",
+      "min": 200,
+      "max": 2000,
+      "step": 100,
+      "default": 600,
+      "unit": "px"
+    }
+  ],
+  "presets": [{ "name": "FAM スティッキーCTA" }]
+}
+{% endschema %}

@@ -1,0 +1,492 @@
+<!-- ============================================
+     FAM Supervisor Section
+     sections/fam-corp-supervisor.liquid
+     WF: preview-supervisor-v2.html
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fam-sv-' | append: section.id
+  assign slide_count = section.blocks.size
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+  /* ============================================
+     RESET
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     SECTION
+     ============================================ */
+  #{{ sec_id }} {
+    position: relative;
+    z-index: 1;
+    height: 792px;
+    background: {{ section.settings.bg_color }} !important;
+    overflow: hidden;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============================================
+     BG TEXT
+     ============================================ */
+  #{{ sec_id }} .sv__bg-text {
+    position: absolute;
+    top: 104px; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 400 !important; font-size: 96px !important;
+    color: #FFFFFF !important;
+    letter-spacing: -0.03em;
+    z-index: 1;
+    pointer-events: none; user-select: none;
+  }
+
+  /* ============================================
+     IMAGE AREA (z2)
+     ============================================ */
+  #{{ sec_id }} .sv__image {
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 560px; height: 560px;
+    z-index: 2;
+  }
+  #{{ sec_id }} .sv__img-slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  #{{ sec_id }} .sv__img-slide--active { opacity: 1; }
+  #{{ sec_id }} .sv__img-slide img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block !important;
+  }
+  #{{ sec_id }} .sv__img-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.12) 100%);
+  }
+
+  /* ============================================
+     CONTENT LAYER (z3)
+     ============================================ */
+  #{{ sec_id }} .sv__content {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%; max-width: 1312px;
+    height: 100%; z-index: 3;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ============================================
+     LEFT
+     ============================================ */
+  #{{ sec_id }} .sv__left {
+    width: 400px;
+    flex-shrink: 0;
+    position: relative;
+    padding-top: calc(104px + 96px + 64px + 64px);
+  }
+  #{{ sec_id }} .sv__left-inner { position: relative; }
+  #{{ sec_id }} .sv__text-slide {
+    position: absolute;
+    top: 0; left: 0; width: 100%;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+  }
+  #{{ sec_id }} .sv__text-slide:first-child { position: relative; }
+  #{{ sec_id }} .sv__text-slide--active { opacity: 1; pointer-events: auto; }
+
+  #{{ sec_id }} .sv__name {
+    font-weight: 500 !important; font-size: 32px !important;
+    color: #FFFFFF !important; line-height: 1.4 !important;
+  }
+  #{{ sec_id }} .sv__org {
+    font-weight: 500 !important; font-size: 16px !important;
+    color: #FFFFFF !important; line-height: 1.6 !important;
+    margin-top: 8px !important;
+  }
+  #{{ sec_id }} .sv__lead {
+    font-weight: 500 !important; font-size: 20px !important;
+    color: #FFFFFF !important; line-height: 180% !important;
+    margin-top: 24px !important;
+  }
+
+  /* ============================================
+     RIGHT
+     ============================================ */
+  #{{ sec_id }} .sv__right {
+    width: 400px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  #{{ sec_id }} .sv__right-spacer,
+  #{{ sec_id }} div.sv__right-spacer { flex-shrink: 0; display: block !important; }
+  #{{ sec_id }} .sv__right-inner { position: relative; }
+  #{{ sec_id }} .sv__profile-slide {
+    position: absolute;
+    top: 0; left: 0; width: 100%;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+  }
+  #{{ sec_id }} .sv__profile-slide--active { opacity: 1; pointer-events: auto; }
+
+  #{{ sec_id }} .sv__profile {
+    font-weight: 500 !important; font-size: 16px !important;
+    color: #FFFFFF !important; line-height: 180% !important;
+  }
+
+  /* ============================================
+     NAV BUTTONS
+     ============================================ */
+  #{{ sec_id }} .sv__nav {
+    position: absolute;
+    bottom: 64px; right: 0;
+    display: flex; gap: 8px;
+    z-index: 4;
+  }
+  #{{ sec_id }} .sv__nav-btn {
+    width: 64px; height: 64px;
+    background: #FB4C15 !important; border: none !important; border-radius: 4px;
+    color: #FFFFFF !important; font-size: 24px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.2s;
+    padding: 0;
+  }
+  #{{ sec_id }} .sv__nav-btn:hover { opacity: 0.9; }
+  #{{ sec_id }} .sv__nav-btn svg,
+  #{{ sec_id }} .sv__nav-btn img {
+    width: 24px; height: 24px; display: block !important;
+  }
+
+  /* ============================================
+     DOTS (SP)
+     ============================================ */
+  #{{ sec_id }} .sv__dots {
+    display: none;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 32px;
+  }
+  #{{ sec_id }} .sv__dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3) !important;
+    border: none !important; padding: 0;
+    cursor: pointer;
+    transition: background 0.3s, width 0.3s;
+  }
+  #{{ sec_id }} .sv__dot--active {
+    width: 24px; border-radius: 4px;
+    background: #FB4C15 !important;
+  }
+
+  /* ============================================
+     SP: 1280px以下
+     ============================================ */
+  @media (max-width: 1280px) {
+    #{{ sec_id }} {
+      height: auto;
+      padding-bottom: 64px;
+      overflow: visible;
+    }
+    #{{ sec_id }} .sv__bg-text {
+      position: relative; top: auto;
+      padding-top: 64px; font-size: 56px !important;
+    }
+    #{{ sec_id }} .sv__image {
+      position: relative; bottom: auto; left: auto; transform: none;
+      width: calc(100% - 48px); max-width: 560px;
+      height: auto; aspect-ratio: 1;
+      margin: 0 auto;
+    }
+    #{{ sec_id }} .sv__content {
+      position: relative; top: auto; left: auto; transform: none;
+      max-width: 960px; height: auto;
+      flex-direction: column; padding: 0 24px; margin: 0 auto;
+    }
+    #{{ sec_id }} .sv__left {
+      width: 100%; padding-top: 32px;
+      min-height: 250px;
+    }
+    #{{ sec_id }} .sv__name { font-size: 32px !important; }
+    #{{ sec_id }} .sv__org { margin-top: 24px !important; }
+    #{{ sec_id }} .sv__lead { font-size: 18px !important; margin-top: 32px !important; }
+    #{{ sec_id }} .sv__right {
+      width: 100%; margin-top: 32px;
+      min-height: 120px;
+    }
+    #{{ sec_id }} .sv__right-spacer { display: none; }
+    #{{ sec_id }} .sv__profile { font-size: 14px !important; }
+    #{{ sec_id }} .sv__nav { display: none; }
+    #{{ sec_id }} .sv__dots { display: flex; }
+  }
+</style>
+
+<section id="{{ sec_id }}" data-section-name="corp-supervisor">
+  <!-- BG TEXT -->
+  <div class="sv__bg-text">{{ section.settings.bg_text }}</div>
+
+  <!-- IMAGES -->
+  <div class="sv__image">
+    {%- for block in section.blocks -%}
+      <div class="sv__img-slide{% if forloop.first %} sv__img-slide--active{% endif %}" data-idx="{{ forloop.index0 }}">
+        {%- if block.settings.image != blank -%}
+          {{ block.settings.image | image_url: width: 1120 | image_tag: alt: block.settings.name, loading: 'lazy' }}
+        {%- else -%}
+          <div class="sv__img-placeholder">{%- comment -%}placeholder{%- endcomment -%}</div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <!-- CONTENT -->
+  <div class="sv__content">
+    <!-- LEFT -->
+    <div class="sv__left">
+      <div class="sv__left-inner">
+        {%- for block in section.blocks -%}
+          <div class="sv__text-slide{% if forloop.first %} sv__text-slide--active{% endif %}" data-idx="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            <h3 class="sv__name">{{ block.settings.name }}</h3>
+            <p class="sv__org">{{ block.settings.org | newline_to_br }}</p>
+            <p class="sv__lead">{{ block.settings.lead | newline_to_br }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="sv__right">
+      <div class="sv__right-spacer" id="svSpacer-{{ section.id }}">&nbsp;</div>
+      <div class="sv__right-inner">
+        {%- for block in section.blocks -%}
+          <div class="sv__profile-slide{% if forloop.first %} sv__profile-slide--active{% endif %}" data-idx="{{ forloop.index0 }}">
+            <p class="sv__profile">{{ block.settings.profile | newline_to_br }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="sv__nav">
+        <button class="sv__nav-btn" data-dir="prev" aria-label="前へ">
+          {%- if section.settings.prev_svg != blank -%}
+            {{ section.settings.prev_svg }}
+          {%- else -%}
+            <svg viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {%- endif -%}
+        </button>
+        <button class="sv__nav-btn" data-dir="next" aria-label="次へ">
+          {%- if section.settings.next_svg != blank -%}
+            {{ section.settings.next_svg }}
+          {%- else -%}
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {%- endif -%}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOTS (SP) -->
+  <div class="sv__dots" id="svDots-{{ section.id }}"></div>
+</section>
+
+<script>
+(function() {
+  var secId = '{{ section.id }}';
+  var secEl = document.getElementById('fam-sv-' + secId);
+  if (!secEl) return;
+
+  var current = 0;
+  var total = {{ slide_count }};
+  if (total === 0) return;
+
+  var imgSlides = secEl.querySelectorAll('.sv__img-slide');
+  var textSlides = secEl.querySelectorAll('.sv__text-slide');
+  var profileSlides = secEl.querySelectorAll('.sv__profile-slide');
+  var dotsWrap = document.getElementById('svDots-' + secId);
+
+  // ドット生成
+  for (var i = 0; i < total; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'sv__dot' + (i === 0 ? ' sv__dot--active' : '');
+    dot.dataset.idx = i;
+    (function(idx) {
+      dot.addEventListener('click', function() { goTo(idx); });
+    })(i);
+    dotsWrap.appendChild(dot);
+  }
+
+  function goTo(idx) {
+    current = ((idx % total) + total) % total;
+
+    imgSlides.forEach(function(s, i) {
+      s.classList.toggle('sv__img-slide--active', i === current);
+    });
+    textSlides.forEach(function(s, i) {
+      s.classList.toggle('sv__text-slide--active', i === current);
+    });
+    profileSlides.forEach(function(s, i) {
+      s.classList.toggle('sv__profile-slide--active', i === current);
+    });
+
+    var dots = dotsWrap.querySelectorAll('.sv__dot');
+    dots.forEach(function(d, i) {
+      d.classList.toggle('sv__dot--active', i === current);
+    });
+
+    alignSpacer();
+  }
+
+  // ナビボタン
+  secEl.querySelectorAll('.sv__nav-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var dir = this.dataset.dir === 'prev' ? -1 : 1;
+      goTo(current + dir);
+    });
+  });
+
+  // スペーサー: リード文とプロフィール文の上端を揃える
+  function alignSpacer() {
+    var spacer = document.getElementById('svSpacer-' + secId);
+    if (!spacer) return;
+    if (window.innerWidth <= 1280) {
+      spacer.style.height = '0';
+      return;
+    }
+    var activeLead = secEl.querySelector('.sv__text-slide--active .sv__lead');
+    var rightBox = secEl.querySelector('.sv__right');
+    if (activeLead && rightBox) {
+      var leadRect = activeLead.getBoundingClientRect();
+      var rightRect = rightBox.getBoundingClientRect();
+      spacer.style.height = Math.max(0, leadRect.top - rightRect.top) + 'px';
+    }
+  }
+
+  window.addEventListener('load', alignSpacer);
+  window.addEventListener('resize', alignSpacer);
+
+  // SP: タッチスワイプ
+  var touchStartX = 0;
+  secEl.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  secEl.addEventListener('touchend', function(e) {
+    var diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) {
+      goTo(current + (diff > 0 ? 1 : -1));
+    }
+  }, { passive: true });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "FAM 監修者紹介",
+  "tag": "section",
+  "class": "fam-corp-supervisor-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#1B1D1A"
+    },
+    {
+      "type": "text",
+      "id": "bg_text",
+      "label": "背景装飾テキスト",
+      "default": "Supervisor"
+    },
+    {
+      "type": "header",
+      "content": "── ナビボタン ──"
+    },
+    {
+      "type": "html",
+      "id": "prev_svg",
+      "label": "前へボタンSVG（空欄でデフォルト）"
+    },
+    {
+      "type": "html",
+      "id": "next_svg",
+      "label": "次へボタンSVG（空欄でデフォルト）"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "supervisor",
+      "name": "監修者",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "名前",
+          "default": "和田毅"
+        },
+        {
+          "type": "textarea",
+          "id": "org",
+          "label": "肩書き・所属（改行可）",
+          "default": "球団統括本部付アドバイザー\n福岡ソフトバンクホークス"
+        },
+        {
+          "type": "textarea",
+          "id": "lead",
+          "label": "リード文（改行可）",
+          "default": "トップアスリートに必要な栄養管理を、すべてのチームに届けたい。FAMは「食の専門家がいないチーム」にこそ届けるべきサービスだと確信しています。"
+        },
+        {
+          "type": "textarea",
+          "id": "profile",
+          "label": "プロフィール文（改行可）",
+          "default": "福岡ソフトバンクホークスで20年以上にわたり第一線で活躍。通算148勝を挙げた左腕は、メジャーリーグでの経験も持つ日本球界を代表する投手。現役引退後は球団統括本部付アドバイザーとして後進の育成に携わる。"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "写真（560×560推奨）"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAM 監修者紹介",
+      "blocks": [
+        {
+          "type": "supervisor",
+          "settings": {
+            "name": "和田毅",
+            "org": "球団統括本部付アドバイザー\n福岡ソフトバンクホークス",
+            "lead": "トップアスリートに必要な栄養管理を、すべてのチームに届けたい。FAMは「食の専門家がいないチーム」にこそ届けるべきサービスだと確信しています。",
+            "profile": "福岡ソフトバンクホークスで20年以上にわたり第一線で活躍。通算148勝を挙げた左腕は、メジャーリーグでの経験も持つ日本球界を代表する投手。現役引退後は球団統括本部付アドバイザーとして後進の育成に携わる。"
+          }
+        },
+        {
+          "type": "supervisor",
+          "settings": {
+            "name": "大前 恵",
+            "org": "FAMスポーツ栄養アドバイザー\n管理栄養士",
+            "lead": "アスリートの身体は食事で変わる。一人ひとりの目標と体質に合わせた食事設計で、パフォーマンスを最大化する。",
+            "profile": "プロ野球選手をはじめ、トップアスリートの栄養管理を15年以上担当。個々の体質や競技特性に応じた食事プランの設計を専門とし、FAMBOXのメニュー監修を手がける。"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
