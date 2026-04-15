@@ -1,0 +1,70 @@
+{
+  "description": "GA4のページパスとShopify Liquidセクションファイルの対応マッピング。直帰率やPVが問題のあるページを特定した際、どのセクションを改修すべきかを特定するための基礎データ。",
+  "routes": [
+    {
+      "path": "/",
+      "label": "トップページ",
+      "sections": [
+        "fambox-hero-v17-video.liquid",
+        "fambox-plan-features.liquid",
+        "fambox-menu-showcase.liquid",
+        "fambox-value-proposition.liquid",
+        "fambox-easy-cooking.liquid",
+        "fambox-faq.liquid",
+        "fambox-profile.liquid",
+        "fambox-model-case.liquid",
+        "fambox-interview.liquid",
+        "fambox-spirit.liquid",
+        "fambox-subscription-plan.liquid",
+        "fambox-active-plans-v2.liquid",
+        "fambox-nutrition-service.liquid",
+        "fambox-blog-carousel.liquid"
+      ]
+    },
+    {
+      "path": "/pages/company",
+      "label": "法人LP",
+      "sections": [
+        "fam-corp-hero.liquid",
+        "fam-corp-issues.liquid",
+        "fam-corp-solution.liquid",
+        "fam-corp-supervisor.liquid",
+        "fam-case-study.liquid"
+      ]
+    },
+    {
+      "path": "/pages/contact",
+      "label": "お問い合わせ",
+      "sections": ["fam-contact-channels.liquid"]
+    },
+    {
+      "path": "/collections/plan30",
+      "label": "プラン30",
+      "sections": ["fam-collection-plan.liquid"]
+    },
+    {
+      "path": "/collections/plan40",
+      "label": "プラン40",
+      "sections": ["fam-collection-plan.liquid"]
+    },
+    {
+      "path": "/collections/plan50",
+      "label": "プラン50",
+      "sections": ["fam-collection-plan.liquid"]
+    },
+    {
+      "path": "/collections/plan60",
+      "label": "プラン60",
+      "sections": ["fam-collection-plan.liquid"]
+    },
+    {
+      "path": "/blogs/news",
+      "label": "Blog一覧",
+      "sections": ["fam-blog-posts.liquid"]
+    }
+  ],
+  "generic_sections": {
+    "header": "header.liquid",
+    "footer": "fam-footer-v2.liquid"
+  }
+}
