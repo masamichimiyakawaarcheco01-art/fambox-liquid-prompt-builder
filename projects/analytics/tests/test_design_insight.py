@@ -161,3 +161,46 @@ def test_generate_proposals_strips_markdown_fences(monkeypatch):
         "sys",
     )
     assert result["summary"] == "x"
+
+
+# ===========================
+# シート書き込み
+# ===========================
+
+def test_build_sheet_rows_includes_all_proposal_fields():
+    from design_insight import build_sheet_rows
+
+    proposals_data = {
+        "summary": "今週は直帰率が高い傾向",
+        "proposals": [
+            {
+                "priority": "高",
+                "effort": "小",
+                "page_path": "/pages/company",
+                "page_label": "法人LP",
+                "section_file": "fam-corp-hero.liquid",
+                "metric": "直帰率",
+                "current_value": "78%",
+                "benchmark": "平均65%",
+                "problem_hypothesis": "CTA不在",
+                "proposal": "CTAボタンをFV上部に配置",
+                "expected_impact": "直帰率-10%",
+                "kr_alignment": "KR-3",
+            }
+        ],
+    }
+
+    rows = build_sheet_rows(proposals_data, week_label="W15")
+
+    # ヘッダー + サマリー行 + 空行 + テーブルヘッダー + 1件
+    assert len(rows) >= 5
+    # ヘッダー行にW15を含む
+    assert any("W15" in " ".join(str(c) for c in r) for r in rows)
+    # 提案行に法人LPが含まれる
+    assert any("fam-corp-hero.liquid" in " ".join(str(c) for c in r) for r in rows)
+
+
+def test_make_sheet_name_uses_iso_week():
+    from design_insight import make_sheet_name
+    assert make_sheet_name(date(2026, 4, 15)) == "UI改善提案_W16"
+    assert make_sheet_name(date(2026, 1, 5)) == "UI改善提案_W02"

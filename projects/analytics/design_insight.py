@@ -227,3 +227,59 @@ def generate_proposals(config, context, mapping, system_prompt):
             text += block.text
     text = _strip_code_fences(text)
     return json.loads(text)
+
+
+# ===========================
+# シート書き込み
+# ===========================
+
+SHEET_HEADERS = [
+    "優先度", "工数", "ページ", "セクション", "指標",
+    "今週実績", "ベンチマーク", "問題仮説", "改善案", "期待効果", "KR紐付け",
+]
+
+
+def make_sheet_name(ref_date: date) -> str:
+    monday = ref_date - timedelta(days=ref_date.weekday())
+    iso_week = monday.isocalendar()[1]
+    return f"UI改善提案_W{iso_week:02d}"
+
+
+def build_sheet_rows(proposals_data: dict, week_label: str) -> list:
+    rows = []
+    rows.append([f"FAMBOX UI改善提案 {week_label}"])
+    rows.append([f"生成日時: {datetime.now().strftime('%Y-%m-%d %H:%M')}"])
+    rows.append([f"サマリー: {proposals_data.get('summary', '')}"])
+    rows.append([""])
+    rows.append(SHEET_HEADERS)
+    for p in proposals_data.get("proposals", []):
+        rows.append([
+            p.get("priority", ""),
+            p.get("effort", ""),
+            f"{p.get('page_label', '')}（{p.get('page_path', '')}）",
+            p.get("section_file", ""),
+            p.get("metric", ""),
+            p.get("current_value", ""),
+            p.get("benchmark", ""),
+            p.get("problem_hypothesis", ""),
+            p.get("proposal", ""),
+            p.get("expected_impact", ""),
+            p.get("kr_alignment", ""),
+        ])
+    return rows
+
+
+def write_to_spreadsheet(spreadsheet, sheet_name: str, rows: list) -> str:
+    """シートが存在すれば _v2, _v3 ...で重複回避"""
+    final_name = sheet_name
+    suffix = 2
+    while True:
+        try:
+            spreadsheet.worksheet(final_name)
+            final_name = f"{sheet_name}_v{suffix}"
+            suffix += 1
+        except Exception:
+            break
+    sheet = spreadsheet.add_worksheet(title=final_name, rows=max(50, len(rows) + 10), cols=len(SHEET_HEADERS))
+    sheet.update(range_name="A1", values=rows)
+    return final_name
