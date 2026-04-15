@@ -106,3 +106,58 @@ def test_collect_week_data_reads_all_sheets():
     assert len(result["daily"]) == 1
     assert result["daily"][0]["訪問回数（セッション）"] == 42
     assert len(result["page_views"]) == 1
+
+
+# ===========================
+# Claude APIラッパー
+# ===========================
+
+def test_generate_proposals_parses_json_response(monkeypatch):
+    """Claude APIがJSON文字列を返す想定でパースできることを検証"""
+    from design_insight import generate_proposals
+
+    fake_block = MagicMock()
+    fake_block.type = "text"
+    fake_block.text = '{"summary":"改善点3件","proposals":[{"priority":"高","effort":"小","page_path":"/pages/company","page_label":"法人LP","section_file":"fam-corp-hero.liquid","metric":"直帰率","current_value":"78%","benchmark":"平均65%","problem_hypothesis":"CTA不在","proposal":"CTA追加","expected_impact":"直帰率-10%","kr_alignment":"KR-3"}]}'
+
+    fake_response = MagicMock()
+    fake_response.content = [fake_block]
+
+    fake_client = MagicMock()
+    fake_client.messages.create.return_value = fake_response
+
+    monkeypatch.setattr("design_insight._build_client", lambda cfg: fake_client)
+
+    context = {"totals": {}, "pages": [], "sources": [], "keywords": []}
+    mapping = {"routes": []}
+    system_prompt = "test"
+    config = {"claude": {"model": "claude-opus-4-6", "max_tokens": 1000}}
+
+    result = generate_proposals(config, context, mapping, system_prompt)
+
+    assert result["summary"] == "改善点3件"
+    assert len(result["proposals"]) == 1
+    assert result["proposals"][0]["section_file"] == "fam-corp-hero.liquid"
+
+
+def test_generate_proposals_strips_markdown_fences(monkeypatch):
+    """Claudeが ```json ... ``` で囲んで返した場合もパースできる"""
+    from design_insight import generate_proposals
+
+    fake_block = MagicMock()
+    fake_block.type = "text"
+    fake_block.text = '```json\n{"summary":"x","proposals":[]}\n```'
+
+    fake_response = MagicMock()
+    fake_response.content = [fake_block]
+    fake_client = MagicMock()
+    fake_client.messages.create.return_value = fake_response
+    monkeypatch.setattr("design_insight._build_client", lambda cfg: fake_client)
+
+    result = generate_proposals(
+        {"claude": {"model": "m", "max_tokens": 100}},
+        {"totals": {}, "pages": [], "sources": [], "keywords": []},
+        {"routes": []},
+        "sys",
+    )
+    assert result["summary"] == "x"

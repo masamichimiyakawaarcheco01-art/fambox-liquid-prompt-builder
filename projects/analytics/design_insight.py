@@ -177,3 +177,53 @@ def collect_week_data(spreadsheet, config, start: date, end: date):
         "sources": _filter_by_dates(src_rows, start, end),
         "keywords": _filter_by_dates(kw_rows, start, end),
     }
+
+
+# ===========================
+# Claude APIラッパー
+# ===========================
+
+def _build_client(config):
+    import anthropic
+    api_key = os.environ.get(config["claude"]["api_key_env"], "")
+    if not api_key:
+        raise RuntimeError(f"環境変数 {config['claude']['api_key_env']} が未設定です")
+    return anthropic.Anthropic(api_key=api_key)
+
+
+def _strip_code_fences(text: str) -> str:
+    t = text.strip()
+    if t.startswith("```"):
+        # 最初の行（```json など）と最後の ``` を除去
+        lines = t.splitlines()
+        if lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        t = "\n".join(lines)
+    return t
+
+
+def generate_proposals(config, context, mapping, system_prompt):
+    """Claude APIを呼び出しデザイン改善提案JSONを得る"""
+    client = _build_client(config)
+    user_content = (
+        "# 対象週データ\n\n"
+        f"```json\n{json.dumps(context, ensure_ascii=False, indent=2)}\n```\n\n"
+        "# セクションマッピング\n\n"
+        f"```json\n{json.dumps(mapping, ensure_ascii=False, indent=2)}\n```\n\n"
+        "上記データから、システムプロンプトのJSONスキーマに従って改善提案を生成してください。"
+    )
+    response = client.messages.create(
+        model=config["claude"]["model"],
+        max_tokens=config["claude"]["max_tokens"],
+        system=system_prompt,
+        messages=[{"role": "user", "content": user_content}],
+    )
+    # content は TextBlock のリスト
+    text = ""
+    for block in response.content:
+        if getattr(block, "type", None) == "text":
+            text += block.text
+    text = _strip_code_fences(text)
+    return json.loads(text)
