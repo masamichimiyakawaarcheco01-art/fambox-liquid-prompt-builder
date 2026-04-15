@@ -64,3 +64,45 @@ def test_aggregate_context_sorts_sources_by_sessions():
     )
     assert ctx["sources"][0]["label"] == "ブックマーク・直接アクセス"
     assert ctx["sources"][0]["sessions"] == 18
+
+
+# ===========================
+# スプレッドシート読み込み
+# ===========================
+
+from unittest.mock import MagicMock
+
+
+def test_collect_week_data_reads_all_sheets():
+    from design_insight import collect_week_data
+
+    mock_sheet_daily = MagicMock()
+    mock_sheet_daily.get_all_records.return_value = [
+        {"日付": "2026-04-08", "訪問回数（セッション）": 42},
+        {"日付": "2026-04-15", "訪問回数（セッション）": 50},  # 範囲外
+    ]
+    mock_sheet_pv = MagicMock()
+    mock_sheet_pv.get_all_records.return_value = [
+        {"日付": "2026-04-08", "ページパス": "/"},
+    ]
+    mock_sheet_sources = MagicMock()
+    mock_sheet_sources.get_all_records.return_value = []
+    mock_sheet_keywords = MagicMock()
+    mock_sheet_keywords.get_all_records.return_value = []
+
+    mock_ss = MagicMock()
+    def worksheet_side_effect(name):
+        return {
+            "デイリーログv2": mock_sheet_daily,
+            "ページ別ビュー": mock_sheet_pv,
+            "流入元別": mock_sheet_sources,
+            "検索キーワード": mock_sheet_keywords,
+        }[name]
+    mock_ss.worksheet.side_effect = worksheet_side_effect
+
+    config = {"spreadsheet": {"sheet_daily": "デイリーログv2"}}
+    result = collect_week_data(mock_ss, config, date(2026, 4, 8), date(2026, 4, 14))
+
+    assert len(result["daily"]) == 1
+    assert result["daily"][0]["訪問回数（セッション）"] == 42
+    assert len(result["page_views"]) == 1

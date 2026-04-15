@@ -122,3 +122,58 @@ def aggregate_context(daily, page_views, sources, keywords):
         "sources": src_list[:10],
         "keywords": kw_list[:15],
     }
+
+
+# ===========================
+# スプレッドシート読み込み
+# ===========================
+
+def get_spreadsheet(config):
+    import gspread
+    from google.oauth2 import service_account
+
+    sa_path = os.path.join(BASE_DIR, config["ga4"]["service_account_json"])
+    credentials = service_account.Credentials.from_service_account_file(
+        sa_path,
+        scopes=[
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive",
+        ],
+    )
+    gc = gspread.authorize(credentials)
+    return gc.open_by_key(config["spreadsheet"]["id"])
+
+
+def _filter_by_dates(rows, start: date, end: date):
+    target = set()
+    d = start
+    while d <= end:
+        target.add(d.strftime("%Y-%m-%d"))
+        d += timedelta(days=1)
+    return [r for r in rows if r.get("日付") in target]
+
+
+def collect_week_data(spreadsheet, config, start: date, end: date):
+    daily_sheet = spreadsheet.worksheet(config["spreadsheet"]["sheet_daily"])
+    try:
+        pv_sheet = spreadsheet.worksheet("ページ別ビュー")
+        pv_rows = pv_sheet.get_all_records()
+    except Exception:
+        pv_rows = []
+    try:
+        src_sheet = spreadsheet.worksheet("流入元別")
+        src_rows = src_sheet.get_all_records()
+    except Exception:
+        src_rows = []
+    try:
+        kw_sheet = spreadsheet.worksheet("検索キーワード")
+        kw_rows = kw_sheet.get_all_records()
+    except Exception:
+        kw_rows = []
+
+    return {
+        "daily": _filter_by_dates(daily_sheet.get_all_records(), start, end),
+        "page_views": _filter_by_dates(pv_rows, start, end),
+        "sources": _filter_by_dates(src_rows, start, end),
+        "keywords": _filter_by_dates(kw_rows, start, end),
+    }
