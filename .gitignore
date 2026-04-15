@@ -1,6 +1,12 @@
 .DS_Store
 *.MOV
 *.mov
-tmp_audio/
-tmp_transcripts/
+tmp/
 .claude/settings.local.json
+
+# Sensitive: analytics configs and tokens
+projects/analytics/config.json
+projects/analytics/ga4_service_account.json
+projects/analytics/shopify_token.txt
+projects/analytics/*.plist
+

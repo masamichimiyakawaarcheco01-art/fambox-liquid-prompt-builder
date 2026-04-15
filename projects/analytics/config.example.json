@@ -1,0 +1,36 @@
+{
+  "ga4": {
+    "property_id": "YOUR_GA4_PROPERTY_ID",
+    "service_account_json": "ga4_service_account.json"
+  },
+  "gsc": {
+    "site_url": "https://example.com/",
+    "service_account_json": "ga4_service_account.json"
+  },
+  "shopify": {
+    "shop": "your-store.myshopify.com",
+    "token_file": "shopify_token.txt"
+  },
+  "spreadsheet": {
+    "id": "YOUR_SPREADSHEET_ID",
+    "sheet_daily": "デイリーログv2",
+    "sheet_weekly": "週次サマリー"
+  },
+  "slack": {
+    "webhook_url": "https://hooks.slack.com/services/XXX/YYY/ZZZ",
+    "user_id_for_dm": "U01234ABCDE"
+  },
+  "claude": {
+    "api_key_env": "ANTHROPIC_API_KEY",
+    "model": "claude-opus-4-6",
+    "max_tokens": 4096
+  },
+  "report": {
+    "timezone": "Asia/Tokyo",
+    "daily_collect_hour": 2,
+    "weekly_report_day": "Monday",
+    "weekly_report_hour": 9,
+    "monthly_report_day": 1,
+    "monthly_report_hour": 9
+  }
+}
