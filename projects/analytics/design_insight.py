@@ -283,3 +283,99 @@ def write_to_spreadsheet(spreadsheet, sheet_name: str, rows: list) -> str:
     sheet = spreadsheet.add_worksheet(title=final_name, rows=max(50, len(rows) + 10), cols=len(SHEET_HEADERS))
     sheet.update(range_name="A1", values=rows)
     return final_name
+
+
+# ===========================
+# メインフロー
+# ===========================
+
+def load_system_prompt():
+    path = os.path.join(BASE_DIR, "prompts", "design_insight_system.md")
+    with open(path, encoding="utf-8") as f:
+        return f.read()
+
+
+def load_section_mapping():
+    path = os.path.join(BASE_DIR, "section_mapping.json")
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def run(ref_date: date, verbose: bool = True) -> dict:
+    """メインフロー。Slack通知のため結果dictを返す"""
+    config = load_config()
+    monday, sunday = get_week_range(ref_date)
+    sheet_name_base = make_sheet_name(ref_date)
+
+    if verbose:
+        print(f"[design_insight] 対象週: {monday} 〜 {sunday}")
+
+    spreadsheet = get_spreadsheet(config)
+    raw = collect_week_data(spreadsheet, config, monday, sunday)
+
+    if not raw["daily"]:
+        msg = f"対象週({monday}〜{sunday})のデイリーデータが見つかりません。先にdaily_collect.pyを実行してください。"
+        print(msg, file=sys.stderr)
+        return {"status": "no_data", "message": msg}
+
+    context = aggregate_context(**raw)
+    if verbose:
+        print(f"[design_insight] セッション合計: {context['totals']['sessions']}")
+
+    mapping = load_section_mapping()
+    system_prompt = load_system_prompt()
+
+    if verbose:
+        print(f"[design_insight] Claude APIに提案生成を依頼中...")
+    proposals = generate_proposals(config, context, mapping, system_prompt)
+
+    proposal_count = len(proposals.get("proposals", []))
+    if verbose:
+        print(f"[design_insight] {proposal_count}件の提案を受信")
+
+    rows = build_sheet_rows(proposals, week_label=sheet_name_base.split("_")[-1])
+    final_sheet_name = write_to_spreadsheet(spreadsheet, sheet_name_base, rows)
+
+    sheet_url = f"https://docs.google.com/spreadsheets/d/{config['spreadsheet']['id']}/edit"
+
+    result = {
+        "status": "ok",
+        "week_start": monday.isoformat(),
+        "week_end": sunday.isoformat(),
+        "sheet_name": final_sheet_name,
+        "sheet_url": sheet_url,
+        "proposal_count": proposal_count,
+        "summary": proposals.get("summary", ""),
+        "top_priority": [
+            {
+                "section": p.get("section_file"),
+                "proposal": p.get("proposal"),
+            }
+            for p in proposals.get("proposals", [])
+            if p.get("priority") == "高"
+        ][:3],
+    }
+
+    if verbose:
+        print(f"[design_insight] 完了: {final_sheet_name}")
+        print(f"[design_insight] URL: {sheet_url}")
+
+    return result
+
+
+def main():
+    if len(sys.argv) > 1:
+        ref = date.fromisoformat(sys.argv[1])
+    else:
+        # 直近完了週（先週の日曜を含む週）
+        today = date.today()
+        ref = today - timedelta(days=today.weekday() + 1)
+    result = run(ref, verbose=True)
+    # スクリプト末尾で結果をJSONとして標準出力
+    print("---RESULT_JSON_BEGIN---")
+    print(json.dumps(result, ensure_ascii=False))
+    print("---RESULT_JSON_END---")
+
+
+if __name__ == "__main__":
+    main()
