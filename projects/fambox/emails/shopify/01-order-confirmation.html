@@ -30,7 +30,7 @@
 
   <!-- Preheader -->
   <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#FAFAFA;">
-    ご注文 {{ order_name }} を承りました。発送準備が整い次第、改めてご連絡いたします。
+    ご注文 {{ name }} を承りました。発送準備が整い次第、改めてご連絡いたします。
   </div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FAFAFA;">
@@ -101,7 +101,7 @@
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td align="left" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">注文番号</td>
-                        <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;font-weight:600;color:#1B1D1A;">{{ order_name }}</td>
+                        <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;font-weight:600;color:#1B1D1A;">{{ name }}</td>
                       </tr>
                       <tr>
                         <td align="left" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">注文日</td>
@@ -169,10 +169,10 @@
                         <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1B1D1A;">{{ shipping_price | money }}</td>
                       </tr>
                       {% endif %}
-                      {% if tax_price > 0 %}
+                      {% if total_tax > 0 %}
                       <tr>
                         <td align="left" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#545655;">消費税</td>
-                        <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1B1D1A;">{{ tax_price | money }}</td>
+                        <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1B1D1A;">{{ total_tax | money }}</td>
                       </tr>
                       {% endif %}
                       {% if total_discounts > 0 %}
