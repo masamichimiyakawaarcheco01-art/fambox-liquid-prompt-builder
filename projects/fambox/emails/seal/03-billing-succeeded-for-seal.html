@@ -15,7 +15,7 @@
 </style>
 
 <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#FAFAFA;">
-  カード情報をご確認のうえ、情報の更新をお願いいたします。
+  定期便の決済が完了し、まもなく発送準備に入ります。
 </div>
 
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FAFAFA;">
@@ -30,31 +30,32 @@
           </td>
         </tr>
 
-        <!-- Error アクセント帯（赤） -->
+        <!-- Drive Orange アクセント帯 -->
         <tr>
-          <td style="height:4px;line-height:4px;font-size:0;background:#DC2626;">&nbsp;</td>
+          <td style="height:4px;line-height:4px;font-size:0;background:#FB4C15;">&nbsp;</td>
         </tr>
 
         <!-- Hero -->
         <tr>
           <td class="fam-px-pc" style="padding:40px 32px 8px 32px;background:#FFFFFF;">
-            <p style="margin:0 0 16px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:600;line-height:1;letter-spacing:0.15em;color:#DC2626;">
-              ACTION REQUIRED
+            <p style="margin:0 0 16px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:600;line-height:1;letter-spacing:0.15em;color:#FB4C15;">
+              ORDER CONFIRMED
             </p>
             <h1 class="fam-h1" style="margin:0 0 20px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;font-size:24px;font-weight:600;line-height:1.45;color:#1B1D1A;">
-              お支払いの確認ができませんでした。
+              今回のご注文が確定しました。
             </h1>
             <p style="margin:0 0 24px 0;">
-              <span style="display:inline-block;padding:4px 12px;background:rgba(220,38,38,0.12);color:#B4261F;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:11px;font-weight:600;line-height:1;letter-spacing:0.08em;border-radius:9999px;">
-                お支払い未完了
+              <span style="display:inline-block;padding:4px 12px;background:rgba(16,185,129,0.12);color:#0B7D59;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:11px;font-weight:600;line-height:1;letter-spacing:0.08em;border-radius:9999px;">
+                決済完了
               </span>
             </p>
             <p class="fam-body" style="margin:0 0 8px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;font-size:15px;font-weight:400;line-height:1.8;color:#1B1D1A;">
               {{ customer.last_name }} {{ customer.first_name }} 様
             </p>
             <p class="fam-body" style="margin:0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;font-size:15px;font-weight:400;line-height:1.8;color:#545655;">
-              本日の定期便のお支払いが完了できませんでした。<br>
-              お届けを止めないためにも、カードの有効期限・限度額・残高をご確認のうえ、<strong style="color:#1B1D1A;font-weight:600;">お早めにお支払い情報のご更新</strong>をお願いいたします。
+              いつも FAMBOX をご利用いただきありがとうございます。<br>
+              定期便のお支払いが完了しましたのでご案内いたします。<br>
+              発送準備が整い次第、追跡番号つきの配送通知を別途お送りします。
             </p>
           </td>
         </tr>
@@ -63,14 +64,14 @@
         <tr>
           <td class="fam-px-pc" align="left" style="padding:32px 32px 16px 32px;background:#FFFFFF;">
             <!--[if mso]>
-            <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ subscription.url }}" style="height:50px;v-text-anchor:middle;width:320px;" arcsize="8%" strokecolor="#FB4C15" fillcolor="#FB4C15">
+            <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ subscription.url }}" style="height:50px;v-text-anchor:middle;width:280px;" arcsize="8%" strokecolor="#FB4C15" fillcolor="#FB4C15">
               <w:anchorlock/>
-              <center style="color:#FFFFFF;font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;">お支払い方法を更新する</center>
+              <center style="color:#FFFFFF;font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;">定期便の管理はこちら</center>
             </v:roundrect>
             <![endif]-->
             <!--[if !mso]><!-- -->
             <a href="{{ subscription.url }}" class="fam-cta" style="display:inline-block;padding:16px 32px;background:#FB4C15;color:#FFFFFF;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1;letter-spacing:0.02em;text-decoration:none;border-radius:4px;">
-              お支払い方法を更新する　→
+              定期便の管理はこちら　→
             </a>
             <!--<![endif]-->
           </td>
@@ -85,12 +86,8 @@
                 <td style="padding:24px 24px 12px 24px;">
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
-                      <td align="left" style="font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;font-weight:400;color:#888888;">
-                        定期便 ID
-                      </td>
-                      <td align="right" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;font-weight:600;color:#1B1D1A;letter-spacing:0.02em;">
-                        #{{ subscription.id }}
-                      </td>
+                      <td align="left" style="font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">定期便 ID</td>
+                      <td align="right" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;font-weight:600;color:#1B1D1A;">#{{ subscription.id }}</td>
                     </tr>
                   </table>
                 </td>
@@ -123,10 +120,10 @@
               {% endunless %}
               {% endfor %}
 
-              <tr><td style="padding:0 24px;"><div style="height:1px;background:#1B1D1A;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
+              <tr><td style="padding:0 24px;"><div style="height:1px;background:#ECECEC;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
 
               <tr>
-                <td style="padding:16px 24px 24px 24px;">
+                <td style="padding:16px 24px;">
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                       <td align="left" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#545655;">小計</td>
@@ -136,11 +133,20 @@
                       <td align="left" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#545655;">配送料</td>
                       <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1B1D1A;">¥{{ subscription.delivery_price_number }}</td>
                     </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <tr><td style="padding:0 24px;"><div style="height:1px;background:#1B1D1A;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
+
+              <tr>
+                <td style="padding:16px 24px 24px 24px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
-                      <td align="left" style="padding:12px 0 4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:15px;font-weight:600;color:#1B1D1A;">
-                        お支払い予定額
+                      <td align="left" style="font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:15px;font-weight:600;color:#1B1D1A;">
+                        合計
                       </td>
-                      <td align="right" class="fam-price" style="padding:12px 0 4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20px;font-weight:600;color:#1B1D1A;">
+                      <td align="right" class="fam-price" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:20px;font-weight:600;color:#1B1D1A;">
                         ¥{{ subscription.total_amount_with_delivery_number }}
                       </td>
                     </tr>
@@ -152,18 +158,17 @@
           </td>
         </tr>
 
-        <!-- よくある失敗理由 -->
+        <!-- 補助リンク群 -->
         <tr>
           <td class="fam-px-pc" style="padding:24px 32px 8px 32px;background:#FFFFFF;">
             <p style="margin:0 0 12px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;font-weight:600;color:#1B1D1A;">
-              よくあるお支払い失敗の原因
+              マイページからできること
             </p>
-            <ul style="margin:0;padding:0 0 0 20px;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;line-height:1.8;color:#545655;">
-              <li>カードの有効期限切れ</li>
-              <li>カード利用限度額の超過</li>
-              <li>セキュリティ上の一時的なロック</li>
-              <li>カード番号・名義・CVC の変更</li>
-            </ul>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr><td style="padding:8px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;line-height:1.6;"><a href="{{ subscription.url }}" style="color:#545655;text-decoration:underline;">次回のお届けをスキップする</a></td></tr>
+              <tr><td style="padding:8px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;line-height:1.6;"><a href="{{ subscription.url }}" style="color:#545655;text-decoration:underline;">定期便を一時停止する</a></td></tr>
+              <tr><td style="padding:8px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;line-height:1.6;"><a href="{{ subscription.url }}" style="color:#545655;text-decoration:underline;">お届け先・お支払い方法を変更する</a></td></tr>
+            </table>
           </td>
         </tr>
 
@@ -178,7 +183,7 @@
         <tr>
           <td class="fam-px-pc" style="padding:24px 32px 0 32px;background:#FFFFFF;">
             <p style="margin:0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;line-height:1.7;color:#545655;">
-              お支払いに関してご不明な点がございましたら、<a href="mailto:fam.athletefood.frozen@gmail.com" style="color:#FB4C15;text-decoration:underline;">fam.athletefood.frozen@gmail.com</a> までお問い合わせください。迅速にご対応いたします。
+              ご不明な点がございましたら、<a href="mailto:fam.athletefood.frozen@gmail.com" style="color:#FB4C15;text-decoration:underline;">fam.athletefood.frozen@gmail.com</a> までお問い合わせください。
             </p>
           </td>
         </tr>
