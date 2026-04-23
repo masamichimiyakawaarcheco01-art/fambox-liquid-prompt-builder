@@ -228,19 +228,32 @@
                   <td valign="top" style="padding:6px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:14px;color:#1B1D1A;">{{ shipping_method.title }}</td>
                 </tr>
                 {% endif %}
-                {% if transactions.size > 0 %}
-                {% for transaction in transactions %}{% if transaction.status == "success" and transaction.kind != "refund" %}
+                {% assign paid_transaction = nil %}
+                {% for transaction in transactions %}
+                  {% if transaction.status == "success" and transaction.kind != "refund" and transaction.kind != "authorization" and transaction.kind != "void" and transaction.gateway != "bogus" and transaction.payment_details.credit_card_company %}
+                    {% assign paid_transaction = transaction %}
+                    {% break %}
+                  {% endif %}
+                {% endfor %}
+                {% if paid_transaction == nil %}
+                  {% for transaction in transactions %}
+                    {% if transaction.status == "success" and transaction.kind != "refund" and transaction.kind != "authorization" and transaction.kind != "void" and transaction.gateway != "bogus" %}
+                      {% assign paid_transaction = transaction %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+                {% if paid_transaction %}
                 <tr>
                   <td width="100" valign="top" style="padding:6px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">お支払い</td>
                   <td valign="top" style="padding:6px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:14px;color:#1B1D1A;">
-                    {% if transaction.payment_details.credit_card_company %}
-                      {{ transaction.payment_details.credit_card_company }} 下4桁 {{ transaction.payment_details.credit_card_last_four_digits }}
+                    {% if paid_transaction.payment_details.credit_card_company %}
+                      {{ paid_transaction.payment_details.credit_card_company }} 下4桁 {{ paid_transaction.payment_details.credit_card_last_four_digits }}
                     {% else %}
-                      {{ transaction.gateway_display_name }}
+                      {{ paid_transaction.gateway_display_name }}
                     {% endif %}
                   </td>
                 </tr>
-                {% endif %}{% endfor %}
                 {% endif %}
               </table>
             </td>
