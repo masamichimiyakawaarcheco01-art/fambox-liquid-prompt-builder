@@ -88,19 +88,27 @@
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FAFAFA;border-radius:8px;">
                 <tr>
                   <td style="padding:24px;">
-                    <p style="margin:0 0 8px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.15em;color:#FB4C15;">
-                      TRACKING NUMBER
+                    <p style="margin:0 0 16px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.05em;color:#1B1D1A;">
+                      追跡番号
                     </p>
-                    {% if fulfillment.tracking_company %}
-                    <p style="margin:0 0 4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">
-                      {{ fulfillment.tracking_company }}
-                    </p>
-                    {% endif %}
-                    {% for tracking_number in fulfillment.tracking_numbers %}
-                    <p class="fam-tracking" style="margin:0 0 4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:17px;font-weight:600;letter-spacing:0.04em;color:#1B1D1A;">
-                      {{ tracking_number }}
-                    </p>
-                    {% endfor %}
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      {% if fulfillment.tracking_company %}
+                      <tr>
+                        <td width="80" valign="top" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">配送業者</td>
+                        <td valign="top" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:14px;color:#1B1D1A;">{{ fulfillment.tracking_company }}</td>
+                      </tr>
+                      {% endif %}
+                      <tr>
+                        <td width="80" valign="top" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">番号</td>
+                        <td valign="top" style="padding:4px 0;">
+                          {% for tracking_number in fulfillment.tracking_numbers %}
+                          <p class="fam-tracking" style="margin:0 0 4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:600;letter-spacing:0.04em;color:#1B1D1A;">
+                            {{ tracking_number }}
+                          </p>
+                          {% endfor %}
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
