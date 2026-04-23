@@ -108,7 +108,7 @@
                         </p>
                       </td>
                       <td align="right" valign="top" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1B1D1A;white-space:nowrap;">
-                        {{ item.total_price_number | money }}
+                        ¥{{ item.total_price_number }}
                       </td>
                     </tr>
                   </table>
@@ -126,11 +126,11 @@
                   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                       <td align="left" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#545655;">小計</td>
-                      <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1B1D1A;">{{ subscription.total_amount_number | money }}</td>
+                      <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1B1D1A;">¥{{ subscription.total_amount_number }}</td>
                     </tr>
                     <tr>
                       <td align="left" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#545655;">配送料</td>
-                      <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1B1D1A;">{{ subscription.delivery_price_number | money }}</td>
+                      <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1B1D1A;">¥{{ subscription.delivery_price_number }}</td>
                     </tr>
                   </table>
                 </td>
@@ -146,7 +146,7 @@
                         次回お支払い予定額
                       </td>
                       <td align="right" class="fam-price" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:20px;font-weight:600;color:#1B1D1A;">
-                        {{ subscription.total_amount_with_delivery_number | money }}
+                        ¥{{ subscription.total_amount_with_delivery_number }}
                       </td>
                     </tr>
                   </table>
