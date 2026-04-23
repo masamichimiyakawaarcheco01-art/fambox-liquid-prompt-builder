@@ -230,14 +230,14 @@
                 {% endif %}
                 {% assign paid_transaction = nil %}
                 {% for transaction in transactions %}
-                  {% if transaction.status == "success" and transaction.kind != "refund" and transaction.kind != "authorization" and transaction.kind != "void" and transaction.gateway != "bogus" and transaction.payment_details.credit_card_company %}
+                  {% if transaction.status == "success" and transaction.kind != "refund" and transaction.kind != "authorization" and transaction.kind != "void" and transaction.payment_details.credit_card_company %}
                     {% assign paid_transaction = transaction %}
                     {% break %}
                   {% endif %}
                 {% endfor %}
                 {% if paid_transaction == nil %}
                   {% for transaction in transactions %}
-                    {% if transaction.status == "success" and transaction.kind != "refund" and transaction.kind != "authorization" and transaction.kind != "void" and transaction.gateway != "bogus" %}
+                    {% if transaction.status == "success" and transaction.kind != "refund" and transaction.kind != "authorization" and transaction.kind != "void" %}
                       {% assign paid_transaction = transaction %}
                       {% break %}
                     {% endif %}
