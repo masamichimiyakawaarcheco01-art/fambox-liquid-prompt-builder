@@ -236,7 +236,7 @@
                     {% if transaction.payment_details.credit_card_company %}
                       {{ transaction.payment_details.credit_card_company }} 下4桁 {{ transaction.payment_details.credit_card_last_four_digits }}
                     {% else %}
-                      {{ transaction.gateway }}
+                      {{ transaction.gateway_display_name }}
                     {% endif %}
                   </td>
                 </tr>
