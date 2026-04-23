@@ -245,10 +245,10 @@
                 {% endif %}
                 {% if paid_transaction %}
                 <tr>
-                  <td width="100" valign="top" style="padding:6px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">お支払い</td>
+                  <td width="100" valign="top" style="padding:6px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">お支払い方法</td>
                   <td valign="top" style="padding:6px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:14px;color:#1B1D1A;">
                     {% if paid_transaction.payment_details.credit_card_company %}
-                      {{ paid_transaction.payment_details.credit_card_company }} 下4桁 {{ paid_transaction.payment_details.credit_card_last_four_digits }}
+                      クレジットカード（{{ paid_transaction.payment_details.credit_card_company }} 下4桁 {{ paid_transaction.payment_details.credit_card_last_four_digits }}）
                     {% else %}
                       {{ paid_transaction.gateway_display_name }}
                     {% endif %}
