@@ -1,0 +1,210 @@
+<style>
+  body,table,td,a { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+  table,td { mso-table-lspace:0; mso-table-rspace:0; }
+  img { -ms-interpolation-mode:bicubic; border:0; outline:none; text-decoration:none; display:block; }
+  a { text-decoration:none; }
+  @media only screen and (max-width:620px) {
+    .fam-container { width:100%!important; }
+    .fam-px-pc     { padding-left:20px!important; padding-right:20px!important; }
+    .fam-h1        { font-size:22px!important; line-height:1.45!important; }
+    .fam-body      { font-size:14px!important; }
+    .fam-cta       { font-size:15px!important; padding:14px 24px!important; }
+    .fam-item-title{ font-size:14px!important; }
+    .fam-price     { font-size:18px!important; }
+  }
+</style>
+
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#FAFAFA;">
+  カード情報をご確認のうえ、情報の更新をお願いいたします。
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FAFAFA;">
+  <tr>
+    <td align="center" style="padding:32px 16px 40px 16px;">
+      <table role="presentation" class="fam-container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;background:#FFFFFF;">
+
+        <!-- Header: Logo -->
+        <tr>
+          <td class="fam-px-pc" align="center" style="padding:32px 32px 24px 32px;background:#FFFFFF;">
+            <img src="https://cdn.shopify.com/s/files/1/0673/7379/3477/files/Fambox_logo_Black.png?v=1775096636" alt="FAMBOX" width="120" height="28" style="display:block;height:28px;width:auto;margin:0 auto;">
+          </td>
+        </tr>
+
+        <!-- Error アクセント帯（赤） -->
+        <tr>
+          <td style="height:4px;line-height:4px;font-size:0;background:#DC2626;">&nbsp;</td>
+        </tr>
+
+        <!-- Hero -->
+        <tr>
+          <td class="fam-px-pc" style="padding:40px 32px 8px 32px;background:#FFFFFF;">
+            <p style="margin:0 0 16px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:600;line-height:1;letter-spacing:0.15em;color:#DC2626;">
+              ACTION REQUIRED
+            </p>
+            <h1 class="fam-h1" style="margin:0 0 20px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;font-size:24px;font-weight:600;line-height:1.45;color:#1B1D1A;">
+              お支払いの確認ができませんでした。
+            </h1>
+            <p style="margin:0 0 24px 0;">
+              <span style="display:inline-block;padding:4px 12px;background:rgba(220,38,38,0.12);color:#B4261F;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:11px;font-weight:600;line-height:1;letter-spacing:0.08em;border-radius:9999px;">
+                お支払い未完了
+              </span>
+            </p>
+            <p class="fam-body" style="margin:0 0 8px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;font-size:15px;font-weight:400;line-height:1.8;color:#1B1D1A;">
+              {{ customer.last_name }} {{ customer.first_name }} 様
+            </p>
+            <p class="fam-body" style="margin:0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;font-size:15px;font-weight:400;line-height:1.8;color:#545655;">
+              本日の定期便のお支払いが完了できませんでした。<br>
+              カードの有効期限・限度額・残高をご確認のうえ、お支払い情報の更新をお願いいたします。<br>
+              <strong style="color:#1B1D1A;font-weight:600;">明日、自動的にもう一度お引き落としを試みます。</strong>それまでにお支払い情報のご更新をお願いいたします。
+            </p>
+          </td>
+        </tr>
+
+        <!-- CTA -->
+        <tr>
+          <td class="fam-px-pc" align="left" style="padding:32px 32px 16px 32px;background:#FFFFFF;">
+            <!--[if mso]>
+            <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ subscription.url }}" style="height:50px;v-text-anchor:middle;width:320px;" arcsize="8%" strokecolor="#FB4C15" fillcolor="#FB4C15">
+              <w:anchorlock/>
+              <center style="color:#FFFFFF;font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;">お支払い方法を更新する</center>
+            </v:roundrect>
+            <![endif]-->
+            <!--[if !mso]><!-- -->
+            <a href="{{ subscription.url }}" class="fam-cta" style="display:inline-block;padding:16px 32px;background:#FB4C15;color:#FFFFFF;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1;letter-spacing:0.02em;text-decoration:none;border-radius:4px;">
+              お支払い方法を更新する　→
+            </a>
+            <!--<![endif]-->
+          </td>
+        </tr>
+
+        <!-- Info Card -->
+        <tr>
+          <td class="fam-px-pc" style="padding:16px 32px 8px 32px;background:#FFFFFF;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FAFAFA;border-radius:8px;">
+
+              <tr>
+                <td style="padding:24px 24px 12px 24px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td align="left" style="font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;font-weight:400;color:#888888;">
+                        定期便 ID
+                      </td>
+                      <td align="right" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;font-weight:600;color:#1B1D1A;letter-spacing:0.02em;">
+                        #{{ subscription.id }}
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <tr><td style="padding:0 24px;"><div style="height:1px;background:#ECECEC;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
+
+              {% for item in subscription.items %}
+              <tr>
+                <td style="padding:20px 24px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td valign="top">
+                        <p class="fam-item-title" style="margin:0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:15px;font-weight:600;line-height:1.5;color:#1B1D1A;">
+                          {{ item.title }}
+                        </p>
+                        <p style="margin:4px 0 0 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;font-weight:400;line-height:1.5;color:#888888;">
+                          数量 ×{{ item.quantity }}
+                        </p>
+                      </td>
+                      <td align="right" valign="top" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1B1D1A;white-space:nowrap;">
+                        {{ item.total_price }}
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              {% unless forloop.last %}
+              <tr><td style="padding:0 24px;"><div style="height:1px;background:#ECECEC;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
+              {% endunless %}
+              {% endfor %}
+
+              <tr><td style="padding:0 24px;"><div style="height:1px;background:#1B1D1A;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
+
+              <tr>
+                <td style="padding:16px 24px 24px 24px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td align="left" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#545655;">小計</td>
+                      <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1B1D1A;">{{ subscription.total_amount_formatted }}</td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#545655;">配送料</td>
+                      <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1B1D1A;">{{ subscription.delivery_price }}</td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="padding:12px 0 4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:15px;font-weight:600;color:#1B1D1A;">
+                        お支払い予定額
+                      </td>
+                      <td align="right" class="fam-price" style="padding:12px 0 4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:20px;font-weight:600;color:#1B1D1A;">
+                        {{ subscription.total_amount_with_delivery_formatted }}
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+            </table>
+          </td>
+        </tr>
+
+        <!-- よくある失敗理由 -->
+        <tr>
+          <td class="fam-px-pc" style="padding:24px 32px 8px 32px;background:#FFFFFF;">
+            <p style="margin:0 0 12px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;font-weight:600;color:#1B1D1A;">
+              よくあるお支払い失敗の原因
+            </p>
+            <ul style="margin:0;padding:0 0 0 20px;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;line-height:1.8;color:#545655;">
+              <li>カードの有効期限切れ</li>
+              <li>カード利用限度額の超過</li>
+              <li>セキュリティ上の一時的なロック</li>
+              <li>カード番号・名義・CVC の変更</li>
+            </ul>
+          </td>
+        </tr>
+
+        <!-- Divider -->
+        <tr>
+          <td class="fam-px-pc" style="padding:24px 32px 0 32px;background:#FFFFFF;">
+            <div style="height:1px;background:#ECECEC;line-height:1px;font-size:0;">&nbsp;</div>
+          </td>
+        </tr>
+
+        <!-- お問い合わせ -->
+        <tr>
+          <td class="fam-px-pc" style="padding:24px 32px 0 32px;background:#FFFFFF;">
+            <p style="margin:0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;line-height:1.7;color:#545655;">
+              お支払いに関してご不明な点がございましたら、<a href="mailto:{{ shop.email }}" style="color:#FB4C15;text-decoration:underline;">{{ shop.email }}</a> までお問い合わせください。迅速にご対応いたします。
+            </p>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td class="fam-px-pc" style="padding:32px 32px 40px 32px;background:#FFFFFF;">
+            <p style="margin:0 0 8px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:12px;line-height:1.7;color:#888888;">
+              株式会社 ARCHECO　{{ shop.name }}
+            </p>
+            <p style="margin:0 0 16px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:12px;line-height:1.7;color:#888888;">
+              〒150-0001 東京都渋谷区神宮前1-15-4 Barbizon76 3F
+            </p>
+            <p style="margin:0 0 16px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:12px;line-height:1.8;color:#888888;">
+              <a href="https://fam-athletefood-frozen.com/policies/privacy-policy" style="color:#888888;text-decoration:underline;">プライバシーポリシー</a>　・
+              <a href="https://fam-athletefood-frozen.com/policies/legal-notice" style="color:#888888;text-decoration:underline;">特定商取引法</a>　・
+              <a href="https://fam-athletefood-frozen.com/policies/terms-of-service" style="color:#888888;text-decoration:underline;">利用規約</a>
+            </p>
+            <p style="margin:0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;line-height:1.6;color:#888888;letter-spacing:0.05em;">
+              © 2026 ARCHECO Inc. All rights reserved.
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>
