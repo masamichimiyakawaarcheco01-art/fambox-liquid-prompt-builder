@@ -1,0 +1,189 @@
+{
+  "FAMBOX": {
+    "color": {
+      "brand": {
+        "drive": { "value": "#FB4C15", "type": "color", "description": "Primary CTA / 推進 / Drive" },
+        "drive-light": { "value": "#FC825B", "type": "color", "description": "Drive ライト (ホバー・ハイライト)" },
+        "drive-glow": { "value": "rgba(251, 76, 21, 0.2)", "type": "color", "description": "Drive グロー (フォーカスリング等)" },
+        "sky": { "value": "#3DB8E8", "type": "color", "description": "Sky Blue / データ可視化・情報カテゴリ" },
+        "deep": { "value": "#0F2A5C", "type": "color", "description": "Deep Blue / ヒーロー深部・信頼領域" }
+      },
+      "ink": {
+        "ink": { "value": "#1B1D1A", "type": "color", "description": "本文・見出し (段階1)" },
+        "sub": { "value": "#545655", "type": "color", "description": "サブテキスト (段階2)" },
+        "caption": { "value": "#888888", "type": "color", "description": "キャプション (段階3)" },
+        "placeholder": { "value": "#D0D0D0", "type": "color", "description": "プレースホルダ (段階4)" },
+        "white": { "value": "#FFFFFF", "type": "color", "description": "白 (段階5)" }
+      },
+      "bg": {
+        "primary": { "value": "#FFFFFF", "type": "color", "description": "主要背景" },
+        "secondary": { "value": "#FAFAFA", "type": "color", "description": "セカンダリ背景" },
+        "tertiary": { "value": "#F3F3F3", "type": "color", "description": "ターシャリ背景 (カード下敷き等)" }
+      },
+      "border": {
+        "light": { "value": "#ECECEC", "type": "color", "description": "薄いボーダー" },
+        "base": { "value": "#D0D0D0", "type": "color", "description": "標準ボーダー" },
+        "subtle": { "value": "#D0D1DB", "type": "color", "description": "微妙なトーンのボーダー" }
+      },
+      "semantic": {
+        "success": { "value": "#10B981", "type": "color", "description": "Sky Blue調和 / 純緑より洗練" },
+        "warning": { "value": "#F59E0B", "type": "color", "description": "Drive Orangeと色相距離確保" },
+        "error": { "value": "#DC2626", "type": "color", "description": "深赤で識別性" },
+        "info": { "value": "#3DB8E8", "type": "color", "description": "Sky Blue兼用" }
+      },
+      "data": {
+        "primary": { "value": "{color.brand.drive}", "type": "color", "description": "主要データ系列" },
+        "secondary": { "value": "{color.brand.deep}", "type": "color", "description": "副データ系列" },
+        "tertiary": { "value": "{color.brand.sky}", "type": "color", "description": "第3データ系列" },
+        "zone-good": { "value": "{color.semantic.success}", "type": "color", "description": "ゾーン良好" },
+        "zone-caution": { "value": "{color.semantic.warning}", "type": "color", "description": "ゾーン注意" },
+        "zone-danger": { "value": "{color.semantic.error}", "type": "color", "description": "ゾーン危険" }
+      },
+      "alias": {
+        "cta": { "value": "{color.brand.drive}", "type": "color", "description": "CTA全般" },
+        "focus-ring": { "value": "{color.brand.drive}", "type": "color", "description": "フォーカスリング (WCAG対応)" },
+        "link-on-light": { "value": "{color.brand.drive}", "type": "color", "description": "明るい背景上のリンク" },
+        "link-on-dark": { "value": "{color.ink.white}", "type": "color", "description": "暗い背景上のリンク" },
+        "link-on-drive": { "value": "{color.ink.ink}", "type": "color", "description": "Drive背景上のリンク" },
+        "link-hover": { "value": "{color.brand.drive-light}", "type": "color", "description": "リンクホバー" },
+        "price-accent": { "value": "{color.brand.drive}", "type": "color", "description": "目立たせる価格" },
+        "price-default-on-light": { "value": "{color.ink.ink}", "type": "color", "description": "明るい背景の通常価格" },
+        "price-default-on-dark": { "value": "{color.ink.white}", "type": "color", "description": "暗い背景の通常価格" },
+        "error-text": { "value": "#F91A02", "type": "color", "description": "エラーテキスト専用の赤" }
+      }
+    },
+    "opacity": {
+      "glass-1": { "value": "0.05", "type": "opacity", "description": "超薄オーバーレイ" },
+      "glass-2": { "value": "0.1", "type": "opacity", "description": "ガラスタイル薄" },
+      "glass-3": { "value": "0.3", "type": "opacity", "description": "ガラス中" },
+      "glass-4": { "value": "0.6", "type": "opacity", "description": "モーダル暗化" },
+      "glass-5": { "value": "0.8", "type": "opacity", "description": "強オーバーレイ" }
+    },
+    "typography": {
+      "font-family": {
+        "en": { "value": "Poppins", "type": "fontFamilies" },
+        "ja": { "value": "Hiragino Sans", "type": "fontFamilies" }
+      },
+      "font-size": {
+        "caption": { "value": "12", "type": "fontSizes", "description": "キャプション" },
+        "body-sm": { "value": "14", "type": "fontSizes", "description": "小テキスト (FAM v0.5継承例外)" },
+        "body": { "value": "16", "type": "fontSizes", "description": "本文・標準UI" },
+        "lg": { "value": "20", "type": "fontSizes", "description": "リード文" },
+        "h3": { "value": "24", "type": "fontSizes", "description": "見出し H3" },
+        "h2": { "value": "32", "type": "fontSizes", "description": "見出し H2" },
+        "h1": { "value": "48", "type": "fontSizes", "description": "見出し H1" },
+        "display": { "value": "56", "type": "fontSizes", "description": "Display (落ち着いた主役)" },
+        "hero": { "value": "64", "type": "fontSizes", "description": "Hero見出し (推奨)" },
+        "mega": { "value": "96", "type": "fontSizes", "description": "Mega (超迫力・LP主役)" }
+      },
+      "font-weight": {
+        "regular": { "value": "400", "type": "fontWeights" },
+        "medium": { "value": "500", "type": "fontWeights" },
+        "semibold": { "value": "600", "type": "fontWeights" },
+        "bold": { "value": "700", "type": "fontWeights" }
+      },
+      "line-height": {
+        "heading": { "value": "1.2", "type": "lineHeights" },
+        "body": { "value": "1.75", "type": "lineHeights" },
+        "caption": { "value": "1.5", "type": "lineHeights" }
+      },
+      "letter-spacing": {
+        "en": { "value": "-0.02em", "type": "letterSpacing" },
+        "ja": { "value": "0.02em", "type": "letterSpacing" }
+      }
+    },
+    "space": {
+      "1": { "value": "8", "type": "spacing", "description": "極小ギャップ" },
+      "2": { "value": "16", "type": "spacing", "description": "標準ギャップ" },
+      "3": { "value": "24", "type": "spacing", "description": "ゆったりギャップ" },
+      "4": { "value": "32", "type": "spacing", "description": "Section内コンテンツ間" },
+      "5": { "value": "48", "type": "spacing", "description": "Section内大ブロック間" },
+      "6": { "value": "64", "type": "spacing", "description": "Section間 (小)" },
+      "7": { "value": "96", "type": "spacing", "description": "SPセクション間標準" },
+      "8": { "value": "160", "type": "spacing", "description": "PCセクション間標準" }
+    },
+    "grid": {
+      "columns": { "value": "12", "type": "other" },
+      "gutter": { "value": "24", "type": "spacing" },
+      "baseline": { "value": "8", "type": "spacing" },
+      "container-max": { "value": "1440", "type": "sizing", "description": "標準" },
+      "container-narrow": { "value": "1200", "type": "sizing", "description": "狭" }
+    },
+    "breakpoint": {
+      "sp": { "value": "767", "type": "sizing" },
+      "tablet": { "value": "1023", "type": "sizing" },
+      "pc": { "value": "1024", "type": "sizing" }
+    },
+    "radius": {
+      "none": { "value": "0", "type": "borderRadius" },
+      "sm": { "value": "4", "type": "borderRadius" },
+      "md": { "value": "8", "type": "borderRadius", "description": "カード" },
+      "pill-cta": { "value": "50", "type": "borderRadius", "description": "CTA Pill型" },
+      "pill": { "value": "9999", "type": "borderRadius", "description": "バッジ用 完全Pill" }
+    },
+    "border-width": {
+      "thin": { "value": "1", "type": "borderWidth" },
+      "thick": { "value": "2", "type": "borderWidth" }
+    },
+    "shadow": {
+      "1": {
+        "value": { "x": "0", "y": "1", "blur": "2", "spread": "0", "color": "rgba(0,0,0,0.04)", "type": "dropShadow" },
+        "type": "boxShadow"
+      },
+      "2": {
+        "value": { "x": "0", "y": "2", "blur": "8", "spread": "0", "color": "rgba(0,0,0,0.06)", "type": "dropShadow" },
+        "type": "boxShadow"
+      },
+      "3": {
+        "value": { "x": "0", "y": "4", "blur": "16", "spread": "0", "color": "rgba(0,0,0,0.08)", "type": "dropShadow" },
+        "type": "boxShadow"
+      },
+      "4": {
+        "value": { "x": "0", "y": "8", "blur": "32", "spread": "0", "color": "rgba(0,0,0,0.12)", "type": "dropShadow" },
+        "type": "boxShadow"
+      },
+      "5": {
+        "value": { "x": "0", "y": "16", "blur": "64", "spread": "0", "color": "rgba(0,0,0,0.16)", "type": "dropShadow" },
+        "type": "boxShadow"
+      }
+    },
+    "motion": {
+      "duration": {
+        "fast": { "value": "150", "type": "other", "description": "Hover/Focus切替 (ms)" },
+        "base": { "value": "300", "type": "other", "description": "標準遷移 (ms)" },
+        "slow": { "value": "600", "type": "other", "description": "セクション入場 (ms)" },
+        "breath": { "value": "2000", "type": "other", "description": "呼吸アニメ (ms)" }
+      },
+      "easing": {
+        "ease-in": { "value": "cubic-bezier(0.4, 0, 1, 1)", "type": "other", "description": "加速 (主)" },
+        "ease-out": { "value": "cubic-bezier(0, 0, 0.2, 1)", "type": "other", "description": "減速・到達感" },
+        "ease-inout": { "value": "cubic-bezier(0.4, 0, 0.2, 1)", "type": "other", "description": "両端加減速" }
+      }
+    },
+    "layer": {
+      "base": { "value": "0", "type": "other", "description": "通常フロー" },
+      "1": { "value": "1", "type": "other", "description": "バッジ・カード浮上" },
+      "2": { "value": "2", "type": "other", "description": "Tooltip・Popover" },
+      "3": { "value": "3", "type": "other", "description": "Sticky CTA・Announcement Bar" },
+      "4": { "value": "4", "type": "other", "description": "Sticky Header・Drawer" },
+      "5": { "value": "5", "type": "other", "description": "Modal・Overlay" },
+      "6": { "value": "6", "type": "other", "description": "Toast・Critical Alert" },
+      "legacy-sticky-cta": { "value": "9990", "type": "other", "description": "Legacy互換 (v0.5廃止予定)" }
+    },
+    "avatar-size": {
+      "xs": { "value": "24", "type": "sizing" },
+      "sm": { "value": "32", "type": "sizing" },
+      "md": { "value": "48", "type": "sizing" },
+      "lg": { "value": "64", "type": "sizing" },
+      "xl": { "value": "96", "type": "sizing" }
+    }
+  },
+  "$themes": [],
+  "$metadata": {
+    "tokenSetOrder": ["FAMBOX"],
+    "version": "v0.2",
+    "generated": "2026-04-20",
+    "source": "brand/fambox/design-system/tokens/tokens.css",
+    "owner": "宮川"
+  }
+}
