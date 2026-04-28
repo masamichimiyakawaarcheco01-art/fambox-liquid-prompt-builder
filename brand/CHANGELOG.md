@@ -4,6 +4,52 @@ FAM / FAMBOX ブランドDNA・デザインシステムの全体変更履歴。�
 
 ---
 
+## 2026-04-28（DS v0.2 拡張 — §19 Footer L4 Component 確定）
+
+### L4 Footer を v0.2 confirmed として追加
+
+#### 背景
+- 全画面共通 Component / 5/29 TOPページ DNA 反映で Header と並ぶ必須要素
+- 既存 Liquid（fam-footer-v2 / fambox/sections/footer）の実測抽出
+- Brand DNA Integrity 体現（Legal 提示 / 煽り CTA 排除 / 控えめな Social）
+
+#### Variants 3 種採用 + 拡張余地あり
+- **Standard**: Brand + Nav columns + Social + Bottom row（fam-footer-v2 継承）
+- **Minimal**: Brand + Bottom row のみ（LP / チェックアウト）
+- **Sitemap**: Standard + 詳細 Sitemap 多列カテゴリ（将来用）
+
+#### 確定事項
+- **背景**: Ink (`#1B1D1A`) 単色固定（Drive ベタ塗り禁止 / White on Ink = 16.6:1 WCAG AAA）
+- **Logo 配置**: 左固定（Header と整合）
+- **SNS リンク**: 全 Variants で必須（Instagram / YouTube / note 等 / 40×40 上限）
+- **Bottom row**: Copyright + Legal links（Privacy / Terms / 特商法）の最小構成
+- **CTA**: Footer に CTA を置かない（Header / Hero / Section で十分・繰り返し回避）
+- **背景差別化**: Bottom row に `rgba(0,0,0,0.3)` + `border-top rgba(255,255,255,0.1)`
+
+#### Anti-pattern 禁止リスト（Q7 A 全採択）
+1. Drive 色背景の全面ベタ塗り 禁止
+2. SNS アイコンを Display サイズ（64px+）にしない
+3. Bottom row に動きアニメ 禁止
+4. Footer 内に Hero 級画像を置かない
+
+#### L4 派生関係（footer.md §L4 派生関係 に明記）
+- Checkout Footer ← Minimal + Trust badge / セキュリティロゴ
+- Email Footer（メール埋め込み）← Minimal + inline CSS
+- Mobile App Footer（PWA）← Standard（compact）+ App-specific links
+
+### 更新ファイル
+- `brand/fambox/design-system/components/footer.md`（新規・v0.2 confirmed・約 600 行）
+- `brand/fambox/design-system/DS_INPUT_WORKSHEET.md`（§19 追記、session_log 拡張）
+- `brand/fambox/design-system/current.md`（milestone 拡張行追記）
+
+### 効果（TOPページ前提整備の完成）
+- L4 Components 5件 → 6件（Hero + Header + Footer の TOP 三役確定）
+- 5/29 TOPページ DNA 反映の **Header / Hero / Footer 全 Spec 完成**
+- 残り Bento Grid（Card 派生）/ Case Study 配置（既存 Spec）/ 中継ぎセクションのみ
+- TOPページ実装着手可能な状態
+
+---
+
 ## 2026-04-28（DS v0.2 拡張 — §18 Header L4 Component 確定）
 
 ### L4 Header を v0.2 confirmed として追加

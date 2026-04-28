@@ -9,7 +9,7 @@ purpose: 4時間集中セッション用の構造化入力シート。各セク�
 session_log:
   - 2026-04-20: §1-§3 部分回答（color alias / typography）/ §7-§14 確定（Spec 直書き、Worksheet 同期は 4-27 で実施）
   - 2026-04-27: S1 完了（§4 Z-index / §5 Icons / §6 Button）/ S2 完了（§7-§11 Worksheet 同期 + 合成決定 §9.4・§11.3 A 承認）/ S3 完了（§12-§14 Worksheet 同期 + 合成決定 §12.1.a A・§12.1.b B 任意→必須・§12.1.c A・§13.1.a C 不採用・§14.1.a A・§15 A スキップ）/ S3 拡張: §16 Card Pattern 確定（4 Variants + 拡張余地）
-  - 2026-04-28: §17 Hero Section L4 Component 確定（4 Variants × 3 Heights × CTA 0-2 / NBA HOOP モード任意 / 動画 parallax 対応 / 4 禁止項目明示）/ §18 Header L4 Component 確定（3 Variants × 3 Heights × 3 Sticky Modes / Logo 左 / Primary CTA 1 / SP 横スクロール DNA 既定 / 4 禁止項目明示）
+  - 2026-04-28: §17 Hero Section L4 Component 確定（4 Variants × 3 Heights × CTA 0-2 / NBA HOOP モード任意 / 動画 parallax 対応 / 4 禁止項目明示）/ §18 Header L4 Component 確定（3 Variants × 3 Heights × 3 Sticky Modes / Logo 左 / Primary CTA 1 / SP 横スクロール DNA 既定 / 4 禁止項目明示）/ §19 Footer L4 Component 確定（3 Variants / Ink 背景固定 / Logo 左 / SNS 必須 40px / Bottom = Copyright + Legal / CTA なし / 4 禁止項目明示）
 ---
 
 # FAMBOX Design System — Input Worksheet（4時間集中用）
@@ -555,6 +555,58 @@ FAMBOX ヒーローでの典型例を1つ確定したい。
 - menu font: `--font-ja` / `--fs-body`（16px）/ `--fw-medium`（500）★Display サイズ禁止
 - menu hover transition: `color var(--duration-fast) var(--ease-out)` ★既存 0.2s 継承
 - Logo: 高さは Header 高さの 50% 上限（compact 32px / default 40px / tall 48px）
+
+---
+
+# §19. Component — Footer（2026-04-28 確定）
+
+**全画面共通の Component**。詳細仕様: [components/footer.md](components/footer.md)
+
+### Q1: Variants
+- ✅ **3 Variants 採用 + 拡張余地あり** — standard / minimal / sitemap。v0.3 以降カスタム可
+- ☐ 2 Variants（sitemap 省略）
+- ☐ 1 Variant
+
+### Q2: 背景色
+- ✅ **Ink (`--color-ink` `#1B1D1A`) + White テキスト** — 既存 fam-footer-v2 継承・コントラスト 16.6:1（WCAG AAA）
+- ☐ White 背景 + Ink テキスト
+- ☐ modifier 切替可能
+
+### Q3: ロゴ位置
+- ✅ **左固定**（Header と整合）
+- ☐ 中央
+- ☐ 上部中央 + Brand area 中央寄せ
+
+### Q4: SNS リンク
+- ✅ **全 Variants で必須**（Instagram / YouTube / note / X / TikTok 等 / 40×40 サイズ上限）
+- ☐ Standard / Sitemap のみ表示
+- ☐ 任意
+
+### Q5: Bottom row の要素
+- ✅ **Copyright + Legal links のみ**（Privacy / Terms / 特商法）— 最小限・必要十分
+- ☐ +Payment methods icons
+- ☐ +Payment methods + 言語/通貨スイッチャー
+
+### Q6: CTA 配置
+- ✅ **Footer に CTA を置かない**（Header / Hero / Section で CTA は十分・繰り返し回避）
+- ☐ Standard のみ末尾に Primary CTA 1 個
+- ☐ メール登録フォームを Inline で持つ
+
+### Q7: Anti-pattern 禁止リスト
+- ✅ **全 4 項目を禁止リスト化**:
+  1. Drive 色背景の全面ベタ塗り 禁止
+  2. SNS アイコンを Display サイズ（64px+）にしない
+  3. Bottom row に動きアニメ 禁止
+  4. Footer 内に Hero 級画像を置かない
+- ☐ 最小限（Drive ベタ塗り のみ禁止）
+
+### 共通仕様（footer.md からの抜粋）
+- background `--color-ink` (#1B1D1A) / 全 Variants 統一
+- text color `--color-white` / Tagline `rgba(255,255,255,0.7)` / Bottom `rgba(255,255,255,0.6)`
+- padding (vertical) PC `--space-8` (160px) / SP `--space-7` (96px)
+- Bottom row background: `rgba(0,0,0,0.3)` で差別化 / border-top `rgba(255,255,255,0.1)`
+- Nav columns: PC 3 列 / Tablet 2 列 / SP 1 列
+- SNS icon: 40×40 / `border-radius: --radius-pill` / hover で background Drive 色
 
 ---
 

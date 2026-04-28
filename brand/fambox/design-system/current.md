@@ -13,6 +13,7 @@ milestone:
   - 2026-04-27: v0.2 拡張（§16 Card Pattern 確定 / L3 Patterns 1件 → 2件・最頻出 Pattern として L4 Component の継承基盤化）
   - 2026-04-28: v0.2 拡張（§17 Hero Section L4 Component 確定 / L4 Components 3件 → 4件・5/29 TOPページ DNA 反映の主役）
   - 2026-04-28: v0.2 拡張（§18 Header L4 Component 確定 / L4 Components 4件 → 5件・全画面共通 Component / DNA「ハンバーガー不採用 + 横スクロール」体系化）
+  - 2026-04-28: v0.2 拡張（§19 Footer L4 Component 確定 / L4 Components 5件 → 6件・全画面共通 Component / Ink 背景固定 + Legal 必須 + CTA なしの誠実設計）
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し
