@@ -4,6 +4,84 @@ FAM / FAMBOX ブランドDNA・デザインシステムの全体変更履歴。�
 
 ---
 
+## 2026-04-28（DS v0.2 完成基準到達 — Modal + Stat Card + 実装計画 + Operations 運用ルール）
+
+### 4 タスクを 1 セッションで完了
+
+ユーザー指定の「1〜4 を実行」フローを順次完了:
+
+#### タスク 1: TOPページ DNA 反映 実装計画 v0.1 策定
+- **新規ファイル**: `operations/2026-04-28-top-implementation-plan.md`（542 行）
+- TOPページ既存 25 sections を 4 Tier に分類:
+  - Tier 1（5/29 期限直撃）: 7 sections / 21h
+  - Tier 2（優先度中）: 5 sections / 13h
+  - Tier 3（優先度低）: 2 sections / 3h
+  - Tier 4（既存維持・トークン適用のみ）: 11 sections / 5.5h
+- **総工数 42.5h**（5/29 まで 30 日 / 1.5h/日 で完了可能）
+- 5 週間スケジュール（週次タスクブロック）と依存関係マップ
+- 8 項目の section 改修共通検証チェックリスト
+
+#### タスク 2: L4 Modal を v0.2 confirmed として追加
+- **新規ファイル**: `components/modal.md`（約 460 行）
+- **Variants 3 種**: confirmation / detail / sheet
+- **Backdrop**: Glass 4（opacity 0.6）固定
+- **Close 3 方法**: × ボタン + ESC + Backdrop クリック すべて許容（a11y 最大）
+- **サイズ**: Confirmation 400 / Detail 800（max-height 90vh）/ Sheet 100%（SP）→ 400（PC で confirmation 風）
+- **Anti-pattern 禁止 4 項目**: ネスト / 英語ボタン / 90% 超 / PC で Sheet
+- Focus trap・初期 focus・スクロールロック・focus 復元 等 a11y 仕様明記
+
+#### タスク 3: L3 Stat Card 独立 Pattern 化（v0.2 confirmed）
+- **新規ファイル**: `components/stat-card.md`（約 380 行）
+- Card Pattern Flat と Bento Tile Stat-focus を統合し**汎用 L3 Pattern として独立**
+- **Sizes 3 段階**: compact（fs-h2 32px）/ default（fs-display 56px）★既定 / large（fs-mega 96px / SP fs-hero 64px）
+- **Layouts 2 種**: vertical（既定）/ horizontal
+- **4 要素**: Value（必須）/ Unit（0.4em）/ Label（必須）/ Period（任意）
+- **Color**: Value は Drive 色固定（FAMBOX らしさ）
+- **Anti-pattern 禁止 4 項目**: アニメ / 単位ラベル同サイズ / large 背景画像 / 複数数字並列
+- v0.3 で `bento-stat-focus` を Stat Card 薄 wrapper 化予定
+
+#### タスク 4: L7 Naming Convention & Governance v0.2 整備
+- **新規ファイル**: `operations/naming-convention.md`（約 400 行）
+- v0.2 完成基準で抜けていた運用ルール 4 項目を統合:
+  1. **SSoT 宣言**: 各レイヤーの Single Source of Truth 明示・競合時のルール
+  2. **命名規則**: CSS クラス / Token / Liquid Snippet / Section / Figma の全領域
+     - `{component-name}` `{component}-{variant}` `.is-{state}` `.has-{property}` パターン定義
+     - Token category prefix 表（color- / bg- / space- / fs- 等）
+     - 禁止事項（camelCase / snake_case / 番号サフィックス 等）
+  3. **Versioning Policy**: Semantic Versioning 準拠 / Component 個別 status（seed/confirmed/stable/deprecated）
+  4. **Contribution / Deprecate Process**: 新規追加 10 ステップ / 廃止 3 段階フロー
+- Branch / Commit メッセージ規約（Conventional Commits）も明記
+
+### 全更新ファイル
+- `brand/fambox/design-system/operations/2026-04-28-top-implementation-plan.md`（新規）
+- `brand/fambox/design-system/components/modal.md`（新規）
+- `brand/fambox/design-system/components/stat-card.md`（新規）
+- `brand/fambox/design-system/operations/naming-convention.md`（新規）
+- `brand/fambox/design-system/DS_INPUT_WORKSHEET.md`（§22-§23 追記、session_log 拡張）
+- `brand/fambox/design-system/current.md`（milestone 完成基準到達行追記）
+
+### v0.2 完成基準到達
+
+```
+L0 Foundation:  🔶 50%（DNA v1.0 待ち / 6月末）
+L1 Tokens:      ✅ 完成
+L2 Primitives:  ✅ 5件
+L3 Patterns:    ✅ 4件（FormField / Card / Bento Tile / Stat Card）
+L4 Components:  ✅ 8件（Contact Form / Subscription Card / Case Study / Hero / Header / Footer / Bento Grid / Modal）
+L5 Templates:   📋 TOPページ実装計画策定済み（実装は別フェーズ）
+L7 Operations:  ✅ Naming Convention & Governance v0.2 + figma-master-setup-guide + lastmile-playbook + 各種 plan
+L8 Tools:       🔄 60%（Figma Step 5/7）
+```
+
+### 次フェーズ（v0.3 以降）
+- TOPページ実装着手（Tier 1 から開始 / Header 先行）
+- L4 FAQ Accordion / Profile Card / Tabs Spec 化
+- L7 Operations の Lint 自動化・Figma 同期自動化（v0.5）
+- L0 Foundation 翻訳表（DNA v1.0 連動・6月末）
+- v0.5 マイルストーン（DS Tokens + Primitives 完成版・6/30）
+
+---
+
 ## 2026-04-28（DS v0.2 拡張 — §20-§21 Bento Tile + Bento Grid 確定）
 
 ### L3 Bento Tile + L4 Bento Grid を v0.2 confirmed として追加

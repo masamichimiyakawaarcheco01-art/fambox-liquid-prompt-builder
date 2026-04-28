@@ -9,7 +9,7 @@ purpose: 4時間集中セッション用の構造化入力シート。各セク�
 session_log:
   - 2026-04-20: §1-§3 部分回答（color alias / typography）/ §7-§14 確定（Spec 直書き、Worksheet 同期は 4-27 で実施）
   - 2026-04-27: S1 完了（§4 Z-index / §5 Icons / §6 Button）/ S2 完了（§7-§11 Worksheet 同期 + 合成決定 §9.4・§11.3 A 承認）/ S3 完了（§12-§14 Worksheet 同期 + 合成決定 §12.1.a A・§12.1.b B 任意→必須・§12.1.c A・§13.1.a C 不採用・§14.1.a A・§15 A スキップ）/ S3 拡張: §16 Card Pattern 確定（4 Variants + 拡張余地）
-  - 2026-04-28: §17 Hero Section L4 Component 確定（4 Variants × 3 Heights × CTA 0-2 / NBA HOOP モード任意 / 動画 parallax 対応 / 4 禁止項目明示）/ §18 Header L4 Component 確定（3 Variants × 3 Heights × 3 Sticky Modes / Logo 左 / Primary CTA 1 / SP 横スクロール DNA 既定 / 4 禁止項目明示）/ §19 Footer L4 Component 確定（3 Variants / Ink 背景固定 / Logo 左 / SNS 必須 40px / Bottom = Copyright + Legal / CTA なし / 4 禁止項目明示）/ §20 Bento Tile L3 Pattern 確定（4 Variants × 5 Sizes / Glass Variant 専用 / Stat-focus fs-display 56px / Glass 5 階調 / 4 禁止項目明示）/ §21 Bento Grid L4 Component 確定（3 Variants / 12-6-1 col / Gap DNA 既定 + modifier / Editorial 主構図強制 / 4 禁止項目明示）
+  - 2026-04-28: §17 Hero Section L4 Component 確定（4 Variants × 3 Heights × CTA 0-2 / NBA HOOP モード任意 / 動画 parallax 対応 / 4 禁止項目明示）/ §18 Header L4 Component 確定（3 Variants × 3 Heights × 3 Sticky Modes / Logo 左 / Primary CTA 1 / SP 横スクロール DNA 既定 / 4 禁止項目明示）/ §19 Footer L4 Component 確定（3 Variants / Ink 背景固定 / Logo 左 / SNS 必須 40px / Bottom = Copyright + Legal / CTA なし / 4 禁止項目明示）/ §20 Bento Tile L3 Pattern 確定（4 Variants × 5 Sizes / Glass Variant 専用 / Stat-focus fs-display 56px / Glass 5 階調 / 4 禁止項目明示）/ §21 Bento Grid L4 Component 確定（3 Variants / 12-6-1 col / Gap DNA 既定 + modifier / Editorial 主構図強制 / 4 禁止項目明示）/ §22 Modal L4 Component 確定（3 Variants / Backdrop Glass 4 固定 / Close 3 方法 / 4 禁止項目明示）/ §23 Stat Card L3 Pattern 確定（3 Sizes × 2 Layouts / Drive 固定 / 4 要素 / 4 禁止項目明示）+ TOPページ実装計画 + L7 Naming Convention & Governance 整備
 ---
 
 # FAMBOX Design System — Input Worksheet（4時間集中用）
@@ -702,6 +702,82 @@ FAMBOX ヒーローでの典型例を1つ確定したい。
 - 推奨タイル数: 4-9 個（12 個以上禁止）
 - Editorial 主構図: 左下→右上 対角線（軸1 / 主役タイル 2×2 以上 必須）
 - Auto-fit: `grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))` + `grid-auto-flow: dense`
+
+---
+
+# §22. Component — Modal（2026-04-28 確定）
+
+確認・詳細・Bottom Sheet を扱う L4 Component。詳細仕様: [components/modal.md](components/modal.md)
+
+### Q1: Variants
+- ✅ **3 Variants 採用 + 拡張余地あり** — confirmation / detail / sheet
+- ☐ 2 Variants（sheet 省略）
+- ☐ 1 Variant
+
+### Q2: Backdrop opacity
+- ✅ **Glass 4（0.6）固定** — 標準的な背景暗化・テキスト可読性確保
+- ☐ Glass 3（0.3）
+- ☐ modifier 切替可
+
+### Q3: Close 動作
+- ✅ **× ボタン + ESC キー + Backdrop クリック の 3 方法すべて許容** — a11y 最大
+- ☐ × ボタン + ESC のみ
+- ☐ × ボタンのみ
+
+### Q4: Anti-pattern 禁止リスト
+- ✅ **全 4 項目を禁止リスト化**:
+  1. Modal 内 Modal（ネスト）禁止
+  2. Confirmation で「OK」「Cancel」等の英語ボタン禁止 — 日本語動詞ベース
+  3. Detail Modal の高さを画面の 90% 超えて作らない
+  4. Sheet を PC で使わない（PC では Confirmation 風に挙動切替）
+
+### 共通仕様（modal.md からの抜粋）
+- z-index `--layer-5`（Modal / Overlay 階層）
+- Backdrop `rgba(0, 0, 0, 0.6)` Glass 4 固定
+- Modal body: bg `--bg-primary` / radius `--radius-md` / padding `--space-4` / shadow `--shadow-4`
+- max-width: Confirmation 400 / Detail 800 / Sheet 100%（SP）/ 400（PC）
+- アニメ: opacity 0→1 + scale 0.95→1.0（duration-base ease-out）/ Sheet は translateY(100%)→0（duration-slow）
+- Focus trap 必須・初期 focus は Modal 内最初のフォーカス可能要素
+
+---
+
+# §23. Pattern — Stat Card（2026-04-28 確定）
+
+数字訴求専用の L3 Pattern。Card Pattern Flat と Bento Tile Stat-focus を統合し汎用化。詳細仕様: [components/stat-card.md](components/stat-card.md)
+
+### Q1: Sizes
+- ✅ **3 段階** — `stat-card--compact`（fs-h2 32px）/ `stat-card--default`★既定（fs-display 56px）/ `stat-card--large`（fs-mega 96px / SP は fs-hero 64px へ縮退）
+- ☐ 単一サイズ
+
+### Q2: Number color
+- ✅ **Drive 色固定** — 推進感・FAMBOX らしさ・Hero / Bento と整合
+- ☐ modifier 切替可
+- ☐ 文脈で全色切替可
+
+### Q3: 配置スタイル
+- ✅ **Vertical 既定 + Horizontal modifier** — `stat-card--vertical`（数字 → Unit → Label 縦並び）/ `stat-card--horizontal`（数字 + Unit 左、Label + Period 右）
+- ☐ Vertical のみ
+
+### Q4: Anti-pattern 禁止リスト
+- ✅ **全 4 項目を禁止リスト化**:
+  1. 数字部分にアニメ（カウントアップ等）禁止
+  2. 単位（kg / %）を Label と同じサイズで表示禁止 — 0.4em 必須
+  3. 大型 Stat Card（large）に背景画像禁止
+  4. 1 つの Stat Card に 2 つ以上の数字を並べない（複数 Stat なら Bento Grid Auto-fit 推奨）
+
+### 共通仕様（stat-card.md からの抜粋）
+- 4 要素: Value（必須）/ Unit（任意・0.4em）/ Label（必須）/ Period（任意）
+- Value font: `--font-en` Poppins / `--fw-bold` / line-height 1 / color `--color-drive` 固定
+- Unit color `--color-sub` / Label color `--color-ink` / Period color `--color-caption`
+- Sizes: compact = h2 32px / default = display 56px / large = mega 96px（SP hero 64px）
+
+### 統合関係（v0.2 確定）
+```
+L3 Stat Card（独立・汎用）
+    ↑ 派生
+├── L3 Card Pattern Flat: Stat Card を内部に持つ汎用フラット Card
+└── L3 Bento Tile Stat-focus: Bento Grid 内での Stat Card 配置（v0.3 で薄い wrapper 化予定）
+```
 
 ---
 
