@@ -4,6 +4,66 @@ FAM / FAMBOX ブランドDNA・デザインシステムの全体変更履歴。�
 
 ---
 
+## 2026-04-28（DS v0.2 拡張 — §20-§21 Bento Tile + Bento Grid 確定）
+
+### L3 Bento Tile + L4 Bento Grid を v0.2 confirmed として追加
+
+#### 背景
+- 5/29 TOPページ DNA 反映の **主役エリア**（Hero と並ぶ重要要素）
+- 既存 Liquid に Bento 実装なし → Brand DNA v0.5 C-Bento タイル仕様（5 sizes / 12 col / 主構図対角線）をゼロから体系化
+- L3 Pattern（Tile 単体）と L4 Component（Grid 配置システム）を分離設計
+
+#### Bento Tile（L3 Pattern）— Variants 4 種 + 拡張余地
+- **Standard**: Card Standard 継承（タイトル + 本文 + 任意 CTA）
+- **Glass**: 部分ガラス効果（Glass 1-5 opacity 5 階調）
+- **Image-fill**: 画像が全面 + テキスト下部オーバーレイ
+- **Stat-focus**: 大型数字（`--fs-display` 56px）+ ラベル
+
+#### Bento Tile — 5 Sizes（DNA 既定）
+- `tile-1x1` / `tile-2x1` / `tile-1x2` / `tile-2x2`（主役）/ `tile-3x2`（メガ）
+- SP では全タイル `grid-column: span 1` に強制縮退
+
+#### Bento Grid（L4 Component）— Variants 3 種 + 拡張余地
+- **Standard**: PC 12 col / Tablet 6 col / SP 1 col + 自由配置
+- **Editorial**: Standard + **主構図ルール強制**（対角線 + 主役 2×2 最低 1 個必須）
+- **Auto-fit**: `grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))` + `grid-auto-flow: dense`
+
+#### Bento Grid — Gap（DNA 既定 + modifier 上書き）
+- 既定: SP 16 / Tablet 24 / PC 32px
+- modifier: `bento-gap--sm`(16) / `bento-gap--md`(24) / `bento-gap--lg`(32)
+
+#### 確定事項
+- **DNA 5 sizes 厳守**（拡張は規律内のみ）
+- **Glass Variant 専用** — 他 Variant には Glass 適用しない
+- **Stat-focus は `--fs-display` 56px 固定** — Hero `--fs-mega` 96px との階層成立
+- **Editorial 主構図強制** — 主役 2×2 以上 最低 1 個・対角線配置・将来 Lint 検出可能
+- **Tile 数 4-9 個推奨** — 12 個以上禁止（情報過剰）
+
+#### Anti-pattern 禁止リスト（Tile / Grid 各 4 項目）
+- Tile: 同サイズ並列 / Drive 全タイル背景 / Glass + Hero級 mix-blend を image-fill 以外 / 間隔 16px 未満 禁止
+- Grid: 同サイズ並列 / 主役タイルなし / Gap 16px 未満 / 12 タイル以上 禁止
+
+#### L4 派生（bento-grid.md / bento-tile.md §派生関係 に明記）
+- Hero 内 Bento ブロック ← editorial（compact）+ Glass tile-3x2
+- KPI Dashboard ← autofit + Stat-focus tile 群
+- Product Showcase Grid ← standard + Image-fill 主体
+
+### 更新ファイル
+- `brand/fambox/design-system/components/bento-tile.md`（新規・v0.2 confirmed・約 480 行）
+- `brand/fambox/design-system/components/bento-grid.md`（新規・v0.2 confirmed・約 470 行）
+- `brand/fambox/design-system/DS_INPUT_WORKSHEET.md`（§20-§21 追記、session_log 拡張）
+- `brand/fambox/design-system/current.md`（milestone 拡張行追記）
+
+### 効果（5/29 TOPページ前提整備の完成）
+- L3 Patterns 2件 → 3件（FormField / Card / **Bento Tile**）
+- L4 Components 6件 → 7件（Contact Form / Subscription / Case Study / Hero / Header / Footer / **Bento Grid**）
+- **5/29 TOPページ DNA 反映の Spec 全前提が完全に揃った状態**:
+  - Header / Hero / Bento Grid（中央主役）/ Case Study / Footer すべて Spec 確定
+  - 中継ぎセクションは Hero `hero--tall` または Bento Grid Standard で実装可能
+- TOPページ実装着手可能
+
+---
+
 ## 2026-04-28（DS v0.2 拡張 — §19 Footer L4 Component 確定）
 
 ### L4 Footer を v0.2 confirmed として追加

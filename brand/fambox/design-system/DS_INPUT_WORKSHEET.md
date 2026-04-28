@@ -9,7 +9,7 @@ purpose: 4時間集中セッション用の構造化入力シート。各セク�
 session_log:
   - 2026-04-20: §1-§3 部分回答（color alias / typography）/ §7-§14 確定（Spec 直書き、Worksheet 同期は 4-27 で実施）
   - 2026-04-27: S1 完了（§4 Z-index / §5 Icons / §6 Button）/ S2 完了（§7-§11 Worksheet 同期 + 合成決定 §9.4・§11.3 A 承認）/ S3 完了（§12-§14 Worksheet 同期 + 合成決定 §12.1.a A・§12.1.b B 任意→必須・§12.1.c A・§13.1.a C 不採用・§14.1.a A・§15 A スキップ）/ S3 拡張: §16 Card Pattern 確定（4 Variants + 拡張余地）
-  - 2026-04-28: §17 Hero Section L4 Component 確定（4 Variants × 3 Heights × CTA 0-2 / NBA HOOP モード任意 / 動画 parallax 対応 / 4 禁止項目明示）/ §18 Header L4 Component 確定（3 Variants × 3 Heights × 3 Sticky Modes / Logo 左 / Primary CTA 1 / SP 横スクロール DNA 既定 / 4 禁止項目明示）/ §19 Footer L4 Component 確定（3 Variants / Ink 背景固定 / Logo 左 / SNS 必須 40px / Bottom = Copyright + Legal / CTA なし / 4 禁止項目明示）
+  - 2026-04-28: §17 Hero Section L4 Component 確定（4 Variants × 3 Heights × CTA 0-2 / NBA HOOP モード任意 / 動画 parallax 対応 / 4 禁止項目明示）/ §18 Header L4 Component 確定（3 Variants × 3 Heights × 3 Sticky Modes / Logo 左 / Primary CTA 1 / SP 横スクロール DNA 既定 / 4 禁止項目明示）/ §19 Footer L4 Component 確定（3 Variants / Ink 背景固定 / Logo 左 / SNS 必須 40px / Bottom = Copyright + Legal / CTA なし / 4 禁止項目明示）/ §20 Bento Tile L3 Pattern 確定（4 Variants × 5 Sizes / Glass Variant 専用 / Stat-focus fs-display 56px / Glass 5 階調 / 4 禁止項目明示）/ §21 Bento Grid L4 Component 確定（3 Variants / 12-6-1 col / Gap DNA 既定 + modifier / Editorial 主構図強制 / 4 禁止項目明示）
 ---
 
 # FAMBOX Design System — Input Worksheet（4時間集中用）
@@ -607,6 +607,101 @@ FAMBOX ヒーローでの典型例を1つ確定したい。
 - Bottom row background: `rgba(0,0,0,0.3)` で差別化 / border-top `rgba(255,255,255,0.1)`
 - Nav columns: PC 3 列 / Tablet 2 列 / SP 1 列
 - SNS icon: 40×40 / `border-radius: --radius-pill` / hover で background Drive 色
+
+---
+
+# §20. Pattern — Bento Tile（2026-04-28 確定）
+
+**TOPページ主役の L3 Pattern**。詳細仕様: [components/bento-tile.md](components/bento-tile.md)
+
+### Q1: Variants
+- ✅ **4 Variants 採用 + 拡張余地あり** — standard / glass / image-fill / stat-focus。v0.3 以降カスタム可
+- ☐ 3 Variants（stat-focus を別 Pattern 化）
+- ☐ 2 Variants
+
+### Q2: Sizes
+- ✅ **DNA 5 sizes 厳守** — 1×1 / 2×1 / 1×2 / 2×2 / 3×2（Brand DNA v0.5 C-Bento 既定）
+- ☐ DNA 5 + 拡張
+- ☐ 3 sizes に縮小
+
+### Q3: Glass 効果の適用範囲
+- ✅ **Glass Variant 専用**（他 Variants には適用しない・規律明確）
+- ☐ 全 Variants で modifier 切替可能
+- ☐ Standard / Image-fill にも Glass 適用可
+
+### Q4: Stat-focus の数字サイズ
+- ☐ `--fs-mega`（96px）
+- ✅ **`--fs-display`（56px）固定** — Hero との階層成立 / Bento グリッド内の密度保持
+- ☐ Tile size に応じて可変
+
+### Q5: ガラス効果の opacity 階調
+- ✅ **Glass 1-5（DNA 5 階調）から選択** — `bento-glass--{1-5}` modifier で 0.05/0.1/0.3/0.6/0.8 切替
+- ☐ Glass 3（0.3）固定
+- ☐ opacity 任意
+
+### Q6: Anti-pattern 禁止リスト
+- ✅ **全 4 項目を禁止リスト化**:
+  1. 同じサイズタイルの単調並列 禁止（強弱必須）
+  2. Drive 色の全タイル背景化 禁止
+  3. Glass + Hero 級画像 mix-blend は image-fill 専用
+  4. タイル間隔を 16px 未満にしない
+- ☐ 最小限（強弱必須 のみ）
+
+### 共通仕様（bento-tile.md からの抜粋）
+- 5 Sizes: tile-1x1 / tile-2x1 / tile-1x2 / tile-2x2 / tile-3x2
+- border-radius `--radius-md`（8px）固定
+- padding `--space-3`（24px）/ Glass / Image-fill は外周 padding なし
+- Glass: opacity 0.05/0.1/0.3/0.6/0.8 の 5 階調
+- Stat-focus 数字: `--fs-display` 56px / `--font-en` Poppins / `--fw-bold`
+- SP（<768px）では全タイル `grid-column: span 1` に強制縮退
+
+---
+
+# §21. Component — Bento Grid（2026-04-28 確定）
+
+**Bento Tile を配置するグリッドシステム**。L4 Component。詳細仕様: [components/bento-grid.md](components/bento-grid.md)
+
+### Q1: Variants
+- ✅ **3 Variants 採用 + 拡張余地あり** — standard / editorial / autofit。v0.3 以降カスタム可
+- ☐ 2 Variants（autofit 省略）
+- ☐ 1 Variant
+
+### Q2: PC グリッド
+- ✅ **12 column system**（DNA 既定 / gutter 32px）
+- ☐ 6 column system
+- ☐ modifier 切替可
+
+### Q3: レスポンシブ挙動
+- ✅ **PC 12col / Tablet 6col / SP 1col 縦並び**（DNA 整合・実装簡素・SR フレンドリー）
+- ☐ PC 12col / Tablet 6col / SP 横スクロール
+- ☐ PC 12col / Tablet 自動 fit / SP 1col
+
+### Q4: Gap サイズ
+- ✅ **DNA 既定**: SP 16px / Tablet 24px / PC 32px / `bento-gap--{sm/md/lg}` modifier 上書き可
+- ☐ 全画面 24px 固定
+- ☐ カスタム可
+
+### Q5: Editorial Variant の主構図ルール
+- ✅ **強制**（対角線配置 + 主役 2×2 最低 1 個 / 将来 Lint 検出可能）
+- ☐ 推奨（強制せず Do/Don't で記載のみ）
+- ☐ 任意（自由配置可）
+
+### Q6: Anti-pattern 禁止リスト
+- ✅ **全 4 項目を禁止リスト化**:
+  1. 同サイズタイル並列 禁止
+  2. 主役タイルなし 禁止（Editorial Variant 必須条件）
+  3. Gap 16px 未満 禁止
+  4. 1 Bento Grid に 12 タイル以上 禁止（情報過剰）
+- ☐ 最小限（同サイズ並列 のみ禁止）
+
+### 共通仕様（bento-grid.md からの抜粋）
+- grid-template-columns: PC `repeat(12, 1fr)` / Tablet `repeat(6, 1fr)` / SP `1fr`
+- grid-auto-rows: `minmax(160px, auto)`（タイル最小高さ）
+- gap: PC `--space-4`(32px) / Tablet `--space-3`(24px) / SP `--space-2`(16px)
+- max-width: `--container-max`（1440px）
+- 推奨タイル数: 4-9 個（12 個以上禁止）
+- Editorial 主構図: 左下→右上 対角線（軸1 / 主役タイル 2×2 以上 必須）
+- Auto-fit: `grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))` + `grid-auto-flow: dense`
 
 ---
 
