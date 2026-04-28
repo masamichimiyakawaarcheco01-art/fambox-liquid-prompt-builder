@@ -8,7 +8,7 @@ owner: 宮川
 purpose: 4時間集中セッション用の構造化入力シート。各セクションの [ 回答 ] 欄に入力する or 選択肢に ✅ をつける → Claudeが反映して DS を更新
 session_log:
   - 2026-04-20: §1-§3 部分回答（color alias / typography）/ §7-§14 確定（Spec 直書き、Worksheet 同期は 4-27 で実施）
-  - 2026-04-27: S1 完了（§4 Z-index / §5 Icons / §6 Button）/ S2 完了（§7-§11 Worksheet 同期 + 合成決定 §9.4・§11.3 A 承認）/ S3 完了（§12-§14 Worksheet 同期 + 合成決定 §12.1.a A・§12.1.b B 任意→必須・§12.1.c A・§13.1.a C 不採用・§14.1.a A・§15 A スキップ）
+  - 2026-04-27: S1 完了（§4 Z-index / §5 Icons / §6 Button）/ S2 完了（§7-§11 Worksheet 同期 + 合成決定 §9.4・§11.3 A 承認）/ S3 完了（§12-§14 Worksheet 同期 + 合成決定 §12.1.a A・§12.1.b B 任意→必須・§12.1.c A・§13.1.a C 不採用・§14.1.a A・§15 A スキップ）/ S3 拡張: §16 Card Pattern 確定（4 Variants + 拡張余地）
 ---
 
 # FAMBOX Design System — Input Worksheet（4時間集中用）
@@ -422,6 +422,38 @@ FAMBOX ヒーローでの典型例を1つ確定したい。
 
 ## 大前さん／須藤さん向けに事前確認したい質問
 [ 別タスクで実施 ]
+
+---
+
+# §16. Pattern — Card（2026-04-27 S3 拡張セッションで確定）
+
+**FAMBOX 最頻出 Pattern**。L4 Component（Subscription / Case Study / Article / Stat / Hero）の **基盤**として継承される。詳細仕様: [components/card.md](components/card.md)
+
+### Q1: Variants
+- ✅ **4 Variants 採用 + 拡張余地あり** — standard / featured / horizontal / flat。v0.3 以降で `card-{variant-name}` 形式のカスタム追加可能（拡張ルールは card.md の「拡張ルール」節）
+- ☐ 3 Variants まで（flat を別 Pattern 化）
+- ☐ 2 Variants まで縮小
+
+### Q2: horizontal の SP 折り返し挙動
+- ☐ SP では standard レイアウトに自動折り返し
+- ✅ **SP でも横並び維持（画像 30% / テキスト 70%）** — Case Study 一覧の視線移動・密度を優先。極小 SP（〜480px）のみ縦折返しを許可
+
+### Q3: Card 内 CTA の必須性
+- ✅ **全 Variants で CTA 1 個必須**（Primary / Secondary / Ghost / Link いずれか）— 情報のみ Card は作らず、必要なら `<section>` / `<article>` で素直に組む
+- ☐ CTA は任意
+- ☐ CTA × 2 まで許可
+
+### Q4: Selected 状態の発現
+- ✅ **`.is-selected` で Drive 2px 枠線** — Subscription / Plan / Filter 選択時に共通利用。padding は -1px 補正で外形維持
+- ☐ Selected 状態は L3 Card には持たせず、L4 個別実装
+
+### 共通仕様（card.md からの抜粋）
+- background: `--bg-primary`（flat のみ `--bg-secondary`）
+- border: `1px solid --border-light` 既定 / Featured / Selected: `2px --color-drive`
+- border-radius: `--radius-md`（8px）固定 — Pill 禁止
+- padding: `--space-3`（24px）
+- shadow: `--shadow-1` 既定 / hover で `--shadow-3` + `translateY(-2px)`
+- transition: `--duration-base` `--ease-out`
 
 ---
 

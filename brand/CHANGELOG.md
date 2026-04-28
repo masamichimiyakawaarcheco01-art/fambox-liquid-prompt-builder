@@ -4,6 +4,42 @@ FAM / FAMBOX ブランドDNA・デザインシステムの全体変更履歴。�
 
 ---
 
+## 2026-04-27（DS v0.2 拡張 — §16 Card Pattern 確定）
+
+### L3 Card Pattern を v0.2 confirmed として追加
+
+#### 背景
+- v0.2 マイルストーン到達直後、L3 Patterns に唯一未着手の最頻出要素「Card」を 30 分セッションで Spec 化
+- 既存 Liquid（fam-achievement / card-product / subscription-plan-card / case-study）の実測抽出をベースに L3 Pattern として一般化
+
+#### 確定事項
+- **Variants 4 種採用 + 拡張余地あり**: standard / featured / horizontal / flat。v0.3 以降で `card-{variant-name}` 形式のカスタム追加可能（拡張ルールは card.md §拡張ルールに明記）
+- **horizontal の SP 折り返し**: SP でも横並び維持（画像 30% / テキスト 70%）/ 極小 SP（〜480px）のみ縦折返し許可
+- **CTA 必須ルール**: 全 Variants で CTA 1 個以上必須（情報のみ Card は作らない）
+- **`.is-selected` 状態**: Drive 2px 枠線で表現、padding -1px 補正で外形維持
+
+#### 共通 Props
+- background `--bg-primary`（flat のみ `--bg-secondary`）/ border `1px --border-light`（Featured・Selected は 2px Drive）/ radius `--radius-md` 固定 / padding `--space-3` / shadow-1 default → shadow-3 hover
+
+#### L4 Component への継承マップ（card.md §L4 継承関係 に明記）
+- Subscription Plan Card ← Featured / Standard
+- Case Study Card ← Horizontal
+- Article Card ← Standard
+- Stat Card ← Flat
+- Hero Card（Bento Tile）← Standard / Horizontal
+
+### 更新ファイル
+- `brand/fambox/design-system/components/card.md`（新規・v0.2 confirmed・479 行）
+- `brand/fambox/design-system/DS_INPUT_WORKSHEET.md`（§16 追記、session_log 拡張記録）
+- `brand/fambox/design-system/current.md`（milestone 拡張行追記）
+
+### 次フェーズへの効果
+- Subscription Plan Card v0.3 / Case Study v0.2 が Card Pattern を継承する関係を明示化
+- Hero Section / Header / Article Card 等の未 Spec 化 L4 Component を Card 派生として高速に書ける土台が完成
+- 5/29 TOPページ DNA 反映の前提整備が一段進捗
+
+---
+
 ## 2026-04-27（DS v0.2 — Worksheet S3 完了 / Worksheet §1-§14 全クローズ）
 
 ### S3: §12 Contact Form / §13 Subscription Card / §14 Case Study / §15 自由入力 確定
