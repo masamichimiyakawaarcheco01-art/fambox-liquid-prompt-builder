@@ -9,7 +9,7 @@ purpose: 4時間集中セッション用の構造化入力シート。各セク�
 session_log:
   - 2026-04-20: §1-§3 部分回答（color alias / typography）/ §7-§14 確定（Spec 直書き、Worksheet 同期は 4-27 で実施）
   - 2026-04-27: S1 完了（§4 Z-index / §5 Icons / §6 Button）/ S2 完了（§7-§11 Worksheet 同期 + 合成決定 §9.4・§11.3 A 承認）/ S3 完了（§12-§14 Worksheet 同期 + 合成決定 §12.1.a A・§12.1.b B 任意→必須・§12.1.c A・§13.1.a C 不採用・§14.1.a A・§15 A スキップ）/ S3 拡張: §16 Card Pattern 確定（4 Variants + 拡張余地）
-  - 2026-04-28: §17 Hero Section L4 Component 確定（4 Variants × 3 Heights × CTA 0-2 / NBA HOOP モード任意 / 動画 parallax 対応 / 4 禁止項目明示）
+  - 2026-04-28: §17 Hero Section L4 Component 確定（4 Variants × 3 Heights × CTA 0-2 / NBA HOOP モード任意 / 動画 parallax 対応 / 4 禁止項目明示）/ §18 Header L4 Component 確定（3 Variants × 3 Heights × 3 Sticky Modes / Logo 左 / Primary CTA 1 / SP 横スクロール DNA 既定 / 4 禁止項目明示）
 ---
 
 # FAMBOX Design System — Input Worksheet（4時間集中用）
@@ -503,6 +503,58 @@ FAMBOX ヒーローでの典型例を1つ確定したい。
 - Title font-size: PC `--fs-mega`（96px）/ SP `--fs-hero`（64px）
 - Title font-family: `--font-en`（Poppins）
 - Title color: 動画/画像系=`--color-white` + linear-gradient overlay / minimal-text=`--color-ink`
+
+---
+
+# §18. Component — Header（2026-04-28 確定）
+
+**全画面共通の Component**。Brand DNA v0.5 の「ハンバーガー不採用 / 横スクロールメニュー / Drive Pill CTA」を体系化。詳細仕様: [components/header.md](components/header.md)
+
+### Q1: Variants
+- ✅ **3 Variants 採用 + 拡張余地あり** — standard / minimal / mega。v0.3 以降カスタム可
+- ☐ 2 Variants（mega 省略）
+- ☐ 1 Variant
+
+### Q2: SP 挙動
+- ✅ **DNA 既定通り** — 横スクロールメニュー + 990px 未満で Shopify drawer 併用（**ハンバーガー不採用**）
+- ☐ Drawer + ハンバーガー（Shopify 標準）
+- ☐ 横スクロールメニュー単独（drawer 廃止）
+
+### Q3: Sticky 動作
+- ☐ Always sticky 固定
+- ☐ On scroll up only 固定
+- ☐ Never sticky 固定
+- ✅ **modifier 切替可能** — `header--sticky`★既定 / `header--scroll-up` / `header--static` の 3 モード
+
+### Q4: Header の高さ
+- ☐ Default 80px のみ
+- ✅ **3 段階** — `header--compact`（64px）/ `header--default`★既定（80px）/ `header--tall`（96px）modifier 切替
+- ☐ Auto
+
+### Q5: ロゴ位置
+- ✅ **左固定**（Shopify 標準・実装簡素・SR フレンドリー）
+- ☐ 中央
+- ☐ 切替可能
+
+### Q6: CTA 配置と数
+- ✅ **Header 末尾に Primary 1 個固定**（Drive Pill / btn-primary btn-md / DNA 既定）
+- ☐ Primary + Secondary 2 個許可
+- ☐ 任意（0 or 1）
+
+### Q7: Anti-pattern 禁止リスト
+- ✅ **全 4 項目を禁止リスト化**:
+  1. ハンバーガー単独運用 禁止（DNA 違反）
+  2. Header に Drive 色ベタ塗り 禁止
+  3. Logo を Drive 色背景上に置かない
+  4. メニューフォントを Display サイズ（48px+）にしない
+- ☐ 最小限（ハンバーガー単独 のみ禁止）
+
+### 共通仕様（header.md からの抜粋）
+- background `--bg-primary` / color `--color-ink` / border-bottom 1px `--border-light`
+- z-index `--layer-4`（Sticky Header / Drawer 階層）
+- menu font: `--font-ja` / `--fs-body`（16px）/ `--fw-medium`（500）★Display サイズ禁止
+- menu hover transition: `color var(--duration-fast) var(--ease-out)` ★既存 0.2s 継承
+- Logo: 高さは Header 高さの 50% 上限（compact 32px / default 40px / tall 48px）
 
 ---
 

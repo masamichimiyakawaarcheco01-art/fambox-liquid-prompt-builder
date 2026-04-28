@@ -4,6 +4,58 @@ FAM / FAMBOX ブランドDNA・デザインシステムの全体変更履歴。�
 
 ---
 
+## 2026-04-28（DS v0.2 拡張 — §18 Header L4 Component 確定）
+
+### L4 Header を v0.2 confirmed として追加
+
+#### 背景
+- 全画面共通の Component / 5/29 TOPページ DNA 反映に必須
+- 既存 Liquid（fam/sections/header / fam-header-menu / fambox/sections/header）の実測抽出
+- Brand DNA v0.5 の「ハンバーガー不採用 / 横スクロールメニュー / Drive Pill CTA」を体系化
+
+#### Variants 3 種採用 + 拡張余地あり
+- **Standard**: Logo + Menu + CTA + Cart/Account（通常ページ全般）
+- **Minimal**: Logo + CTA のみ（LP / チェックアウト）
+- **Mega**: Standard + Mega Menu（カテゴリ展開・将来用）
+
+#### Heights 3 段階
+- `header--compact`（64px）/ `header--default`（80px）★既定 / `header--tall`（96px）
+
+#### Sticky Modes 3 種（modifier 切替・Q3 D 採択）
+- `header--sticky` ★既定（DNA 既定の常時固定）
+- `header--scroll-up`（下方向スクロールで隠れ・上方向で再表示）
+- `header--static`（sticky なし・Hero 一体化演出用）
+
+#### 確定事項
+- **Logo 配置**: 左固定（高さは Header の 50% 上限）
+- **CTA**: Header 末尾に Primary 1 個固定（btn-primary btn-md / DNA 既定）
+- **SP 挙動**: 990px 未満で横スクロールメニュー + Shopify drawer 併用（**ハンバーガー不採用**）
+- **メニューフォント**: `--fs-body`（16px）/ `--fw-medium` / Display サイズ禁止
+- **z-index**: `--layer-4`（tokens.css の Sticky Header / Drawer 階層）
+
+#### Anti-pattern 禁止リスト（Q7 A 全採択）
+1. ハンバーガー単独運用 禁止（DNA 違反）
+2. Header に Drive 色ベタ塗り 禁止
+3. Logo を Drive 色背景上に置かない
+4. メニューフォントを Display サイズ（48px+）にしない
+
+#### L4 派生関係（header.md §L4 派生関係 に明記）
+- Article Header（Blog 記事冒頭）← Standard（compact）+ Breadcrumb / カテゴリラベル
+- Checkout Header ← Minimal（compact）+ ステップ表示
+- Sticky CTA Bar（Header 連動）← Minimal（compact）/ 別 Component / `--layer-3`
+
+### 更新ファイル
+- `brand/fambox/design-system/components/header.md`（新規・v0.2 confirmed・約 460 行）
+- `brand/fambox/design-system/DS_INPUT_WORKSHEET.md`（§18 追記、session_log 拡張）
+- `brand/fambox/design-system/current.md`（milestone 拡張行追記）
+
+### 効果
+- L4 Components 4件 → 5件（Hero Section + Header 連動で TOP 上半分の Spec 確定）
+- 5/29 TOPページ DNA 反映に必要な共通 Component が揃う
+- Footer Spec で TOP の上下が完成（次セッションタスク）
+
+---
+
 ## 2026-04-28（DS v0.2 拡張 — §17 Hero Section L4 Component 確定）
 
 ### L4 Hero Section を v0.2 confirmed として追加
