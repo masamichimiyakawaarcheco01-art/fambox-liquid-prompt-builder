@@ -9,6 +9,7 @@ purpose: 4時間集中セッション用の構造化入力シート。各セク�
 session_log:
   - 2026-04-20: §1-§3 部分回答（color alias / typography）/ §7-§14 確定（Spec 直書き、Worksheet 同期は 4-27 で実施）
   - 2026-04-27: S1 完了（§4 Z-index / §5 Icons / §6 Button）/ S2 完了（§7-§11 Worksheet 同期 + 合成決定 §9.4・§11.3 A 承認）/ S3 完了（§12-§14 Worksheet 同期 + 合成決定 §12.1.a A・§12.1.b B 任意→必須・§12.1.c A・§13.1.a C 不採用・§14.1.a A・§15 A スキップ）/ S3 拡張: §16 Card Pattern 確定（4 Variants + 拡張余地）
+  - 2026-04-28: §17 Hero Section L4 Component 確定（4 Variants × 3 Heights × CTA 0-2 / NBA HOOP モード任意 / 動画 parallax 対応 / 4 禁止項目明示）
 ---
 
 # FAMBOX Design System — Input Worksheet（4時間集中用）
@@ -454,6 +455,54 @@ FAMBOX ヒーローでの典型例を1つ確定したい。
 - padding: `--space-3`（24px）
 - shadow: `--shadow-1` 既定 / hover で `--shadow-3` + `translateY(-2px)`
 - transition: `--duration-base` `--ease-out`
+
+---
+
+# §17. Component — Hero Section（2026-04-28 確定）
+
+**TOPページ DNA 反映（5/29 期限）の主役 Component**。詳細仕様: [components/hero-section.md](components/hero-section.md)
+
+### Q1: Variants
+- ✅ **4 Variants 採用 + 拡張余地あり** — video-fullscreen / video-split / image-editorial / minimal-text。v0.3 以降カスタム可
+- ☐ 3 Variants（minimal-text 省略）
+- ☐ 2 Variants
+
+### Q2: Hero の高さ運用
+- ✅ **3 段階用意** — `hero--full`（100vh）/ `hero--tall`（70vh）/ `hero--compact`（40vh）modifier クラスで切替
+- ☐ Full のみ
+- ☐ Auto + min-height（コンテンツ依存）
+
+### Q3: CTA 数
+- ☐ Primary 1 個固定
+- ☐ Primary + Secondary 2 個許可
+- ✅ **任意（0〜2）**— FAQ Hero / 告知は CTA 0、TOP は Primary 1、Subscription LP は Primary + Secondary（即決派/相談派 両対応）
+
+### Q4: NBA HOOP 型タイポ重ね（Aesthetic 軸）
+- ☐ image-editorial Variant の必須仕様として実装
+- ✅ **任意機能として ON/OFF 切替可能** — `is-hoop` modifier で発現。`mix-blend-mode: difference` でタイポと写真重ね、撮影／素材選定で干渉回避
+- ☐ 後回し（v0.3 で別タスク）
+
+### Q5: パララックス運用
+- ☐ ヒーロー背景画像のみ slow parallax 任意
+- ✅ **動画でも parallax 適用**（DNA v0.5 既定の拡張）— slow のみ・transform は scrollY の 15% 以下・`prefers-reduced-motion: reduce` で必ず無効
+- ☐ パララックスなし
+
+### Q6: Anti-pattern 禁止リスト
+- ✅ **全 4 項目を禁止リスト化**:
+  1. 動画 + 派手フィルタ重ね（彩度上げ・color burn 等のブレンド多用）禁止
+  2. Drive 色背景の全画面ベタ塗り禁止
+  3. Hero 内 CTA を Primary 2 個以上 禁止
+  4. Pill 形状以外の CTA 禁止
+- ☐ 最小限（Primary 2 個禁止 のみ）
+
+### 共通仕様（hero-section.md からの抜粋）
+- max-width: `--container-max`（1440px）
+- padding (vertical): PC `--space-8` (160px) / SP `--space-7` (96px) ★TNF 級余白
+- padding (horizontal): PC `--space-5` (48px) / SP `--space-3` (24px)
+- min-height: full=100vh / tall=70vh / compact=40vh
+- Title font-size: PC `--fs-mega`（96px）/ SP `--fs-hero`（64px）
+- Title font-family: `--font-en`（Poppins）
+- Title color: 動画/画像系=`--color-white` + linear-gradient overlay / minimal-text=`--color-ink`
 
 ---
 

@@ -4,6 +4,57 @@ FAM / FAMBOX ブランドDNA・デザインシステムの全体変更履歴。�
 
 ---
 
+## 2026-04-28（DS v0.2 拡張 — §17 Hero Section L4 Component 確定）
+
+### L4 Hero Section を v0.2 confirmed として追加
+
+#### 背景
+- 5/29 TOPページ DNA 反映（OKR Task 2-1-a）の主役 Component
+- 既存 Liquid（fam-corp-hero / fambox-hero-v17-video / fam-blog-hero）の実測抽出をベース
+- Brand DNA v0.5 の「NBA HOOP 型タイポ重ね」「TNF 級余白」を体系化
+
+#### Variants 4 種採用 + 拡張余地あり
+- **Video Fullscreen**: 全画面動画 + Logo + Title + Text + CTA（fam-corp-hero / fam-blog-hero 継承）
+- **Video Split**: 左右分割動画 + 4 Corner Icons + 中央テキスト（fambox-hero-v17 継承）
+- **Image Editorial**: 静止画 + タイポ Editorial 配置（NBA HOOP モード ON/OFF 可）
+- **Minimal Text**: 装飾なし大型タイポ（FAQ / 告知 / 社内ページ）
+
+#### Heights 3 段階
+- `hero--full`（100vh）★既定 / `hero--tall`（70vh）/ `hero--compact`（40vh）
+
+#### 確定事項
+- **CTA 数**: 任意（0〜2）— FAQ Hero=0 / TOP=Primary 1 / Subscription LP=Primary+Secondary
+- **NBA HOOP モード**: `is-hoop` modifier で任意 ON/OFF（mix-blend-mode: difference）
+- **パララックス**: 動画にも適用可能（DNA v0.5 拡張）/ slow + 15% 以下 / prefers-reduced-motion で必ず無効
+
+#### 共通仕様
+- max-width `--container-max`（1440px）/ padding PC `--space-8`(160px) SP `--space-7`(96px) ★TNF 級
+- Title PC `--fs-mega`(96px) / SP `--fs-hero`(64px) / `--font-en` Poppins / `--fw-bold`
+- Loader / Scroll cue（`SCROLL` bouncing animation）/ overlay gradient（動画系）
+
+#### Anti-pattern 禁止リスト（Q6 A 全採択）
+1. 動画 + 派手フィルタ重ね禁止
+2. Drive 色背景の全画面ベタ塗り禁止
+3. Hero 内 Primary CTA 2 個以上禁止
+4. Pill 形状以外の CTA 禁止
+
+#### L4 派生関係（hero-section.md §L4 継承関係 に明記）
+- Bento Tile ← Image Editorial / Standard Card 派生
+- Section Hero（中継ぎ）← Image Editorial（hero--tall）
+- Page Header（記事冒頭）← Minimal Text（hero--compact）
+
+### 更新ファイル
+- `brand/fambox/design-system/components/hero-section.md`（新規・v0.2 confirmed・530+ 行）
+- `brand/fambox/design-system/DS_INPUT_WORKSHEET.md`（§17 追記、session_log 拡張記録）
+- `brand/fambox/design-system/current.md`（milestone 拡張行追記）
+
+### 効果と次フェーズ
+- 5/29 TOPページ DNA 反映の主役 Spec 確定 → 実装着手可能
+- Bento Tile / Section Hero / Page Header を Hero 派生として高速に書ける土台
+- L4 Components 3件 → 4件（Contact Form / Subscription Card / Case Study + Hero Section）
+
+---
+
 ## 2026-04-27（DS v0.2 拡張 — §16 Card Pattern 確定）
 
 ### L3 Card Pattern を v0.2 confirmed として追加
