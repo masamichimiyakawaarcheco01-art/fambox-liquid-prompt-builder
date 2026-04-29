@@ -3,9 +3,9 @@ title: FAMBOX Component — Header
 type: design-system
 layer: L4-Components
 component: Header
-version: 0.2
+version: 0.2.1
 status: confirmed
-last_updated: 2026-04-28
+last_updated: 2026-04-29
 owner: 宮川
 deadline: 2026-05-29（OKR Task 2-1-a TOPページ DNA 反映）
 source: Worksheet §18（2026-04-28 確定）+ 既存 Liquid 実測（fam/sections/header / fam-header-menu / fambox/sections/header）+ Brand DNA v0.5 ナビ仕様継承
@@ -157,26 +157,66 @@ PC / SP 共通で Primary 1 個を厳守。Header に複数 CTA を並べるの�
 
 ---
 
-## SP 挙動（Q2 A 採択 — DNA 既定）
+## SP 挙動（Q2 A 採択 — DNA 既定 + v0.2.1 で Heights 別ルール明文化）
 
 ### 990px 以上（PC / Tablet 横）
 - Logo + 横並びメニュー（中央）+ CTA（右）
 
-### 990px 未満（SP / Tablet 縦）
+### 990px 未満（SP / Tablet 縦）— **Heights で挙動が分岐**
+
+#### `header--default` / `header--tall` + SP（DNA 既定）
 - **横スクロールメニュー**（`overflow-x: auto`、スクロールバー非表示）
 - ハンバーガー不採用 — DNA 違反のため絶対に作らない
 - 補助として Shopify drawer を併用（既存 `header-drawer.liquid` 継承）
 
+#### `header--compact` + SP（v0.2.1 で明文化）
+**横スクロールメニューを使用せず、Shopify drawer 主体に切替**:
+- 構造: `[☰ Drawer trigger] [Logo]` ... `[👤 Account] [🛒 Cart] [CTA]`
+- **EC 優先**: Account / Cart は **常時表示必須**（drawer 内に隠さない・購買導線保護）
+- 通常 menu links と Search は drawer 内に格納
+- 極小 SP（< 360px）: CTA は padding / font-size を縮小（`.btn-primary` を上書き）
+
+#### 切替の根拠（UX 観点）
+- compact 64px は「情報密度優先」だが、SP 幅では Logo + EC アイコン + CTA で大半を消費
+- 横スクロールメニューを残すと「メニュー存在自体が気付きにくい」UX 破綻
+- compact + SP は「モバイルアプリ風」の文脈なので drawer の方が自然
+
 ```css
+/* default / tall + SP（DNA 既定）*/
 @media (max-width: 989px) {
-  .header__menu {
+  .header--default .header__menu,
+  .header--tall .header__menu {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;  /* Firefox */
+    scrollbar-width: none;
     white-space: nowrap;
   }
-  .header__menu::-webkit-scrollbar {
-    display: none;  /* Chrome/Safari */
+  .header--default .header__menu::-webkit-scrollbar,
+  .header--tall .header__menu::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* compact + SP（v0.2.1 追加）*/
+@media (max-width: 767px) {
+  .header--compact .header__menu {
+    display: none;  /* 横スクロールメニュー非表示 */
+  }
+  .header--compact header-drawer {
+    display: block;  /* Drawer trigger 表示 */
+  }
+  /* EC アイコン優先表示の保証 */
+  .header--compact .header__icon--account,
+  .header--compact .header__icon--cart {
+    display: inline-flex !important;
+  }
+}
+
+/* 極小 SP（< 360px）対策 */
+@media (max-width: 359px) {
+  .header--compact .btn-primary {
+    padding: 6px 12px;
+    font-size: var(--fs-caption);
   }
 }
 ```
@@ -558,13 +598,14 @@ button.md v0.3 の Primary State をそのまま継承（hover で translateY(-2
 - SP は横スクロールメニュー（DNA 既定）
 - メニュー hover は `color 0.2s ease` で穏やかに
 
-### ✕ Don't（Q7 A 禁止リスト準拠）
-- ❌ **ハンバーガー単独運用**（DNA 違反 — 990px 未満は横スクロール + drawer 併用）
+### ✕ Don't（Q7 A 禁止リスト準拠 + v0.2.1 追加）
+- ❌ **ハンバーガー単独運用**（DNA 違反 — 990px 未満は横スクロール + drawer 併用 / compact + SP は drawer 主体）
 - ❌ **Header に Drive 色ベタ塗り**（うるさい / Anti）
 - ❌ **Logo を Drive 色背景上に置かない**（視認性 / Anti）
 - ❌ **メニューフォントを Display サイズ（48px+）にしない**（情報密度低下）
 - ❌ Header 内に Primary CTA を 2 個並べない（階層崩壊）
 - ❌ メニューにアイコンと文字を 2 段重ねしない（情報過剰）
+- ❌ **SP-compact で Cart / Account を drawer 内に隠さない**（v0.2.1 追加 / EC 体験損出 / 購買導線保護）
 
 ---
 
@@ -588,4 +629,5 @@ button.md v0.3 の Primary State をそのまま継承（hover で translateY(-2
 ---
 
 ## Change Log
+- v0.2.1 (2026-04-29): SP 挙動の Heights 別ルール明文化（compact + SP は横スクロールメニューを使わず Shopify drawer 主体）+ EC 優先表示の保証（Account / Cart は常時表示必須・drawer 内に隠さない）+ 極小 SP（< 360px）対策の CTA 縮小ルール追加 + Anti-pattern 1 項目追加（SP-compact で Cart/Account を drawer 内に隠さない）。Preview HTML での実機確認で発見された UX 問題（compact + SP で横スクロールメニューが認識されない）を patch 対応。
 - v0.2 (2026-04-28): Worksheet §18 確定（3 Variants / 3 Heights / 3 Sticky Modes / Logo 左固定 / Primary CTA 1 個 / SP 横スクロール DNA 既定 / 4 禁止項目明示）。既存 Liquid（fam/sections/header / fam-header-menu / fambox/sections/header）の実測抽出をベースに L4 Component 化

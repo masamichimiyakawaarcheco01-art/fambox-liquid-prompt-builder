@@ -201,6 +201,37 @@ header[data-ds-version="0.2"].header-minimal .header__icon--account {
     transition: none;
   }
 }
+
+/* ============================================================
+ * Phase 2c — header--compact + SP の drawer 主体切替（v0.2.1 追加）
+ * Source: brand/fambox/design-system/components/header.md §SP 挙動
+ * 課題: SP 幅で compact + 横スクロールメニューは UX 破綻
+ *       → drawer 主体に切替 / EC アイコン優先表示の保証
+ * ============================================================ */
+
+/* compact + SP では横スクロールメニュー非表示・drawer 主体 */
+@media (max-width: 767px) {
+  header[data-ds-version="0.2"].header--compact .header__inline-menu {
+    display: none;
+  }
+  header[data-ds-version="0.2"].header--compact header-drawer,
+  header[data-ds-version="0.2"].header--compact .menu-drawer-container {
+    display: block;
+  }
+  /* EC アイコン優先表示の保証（DS Spec Anti 違反防止）*/
+  header[data-ds-version="0.2"].header--compact .header__icon--account,
+  header[data-ds-version="0.2"].header--compact .header__icon--cart {
+    display: inline-flex !important;
+  }
+}
+
+/* 極小 SP（< 360px）対策: CTA 縮小 */
+@media (max-width: 359px) {
+  header[data-ds-version="0.2"].header--compact .btn-primary[data-ds-component="button"] {
+    padding: 6px 12px;
+    font-size: var(--fs-caption, 12px);
+  }
+}
 </style>
 <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
 <svg xmlns="http://www.w3.org/2000/svg" class="hidden">

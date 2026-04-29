@@ -506,7 +506,7 @@ FAMBOX ヒーローでの典型例を1つ確定したい。
 
 ---
 
-# §18. Component — Header（2026-04-28 確定）
+# §18. Component — Header（2026-04-28 確定 / 2026-04-29 v0.2.1 patch）
 
 **全画面共通の Component**。Brand DNA v0.5 の「ハンバーガー不採用 / 横スクロールメニュー / Drive Pill CTA」を体系化。詳細仕様: [components/header.md](components/header.md)
 
@@ -515,8 +515,13 @@ FAMBOX ヒーローでの典型例を1つ確定したい。
 - ☐ 2 Variants（mega 省略）
 - ☐ 1 Variant
 
-### Q2: SP 挙動
+### Q2: SP 挙動（v0.2.1 で Heights 別ルール明文化）
 - ✅ **DNA 既定通り** — 横スクロールメニュー + 990px 未満で Shopify drawer 併用（**ハンバーガー不採用**）
+- ✅ **v0.2.1 追加**: `header--compact` + SP では横スクロールメニュー使用せず drawer 主体に切替
+  - 理由: SP 幅で compact + 横スクロールメニューは UX 破綻（メニュー認識されない）
+  - 構造: `[☰ Drawer] [Logo]` ... `[👤 Account] [🛒 Cart] [CTA]`
+  - **EC 優先**: Account / Cart は常時表示必須（drawer 内に隠さない・購買導線保護）
+  - 極小 SP（< 360px）: CTA padding/font-size 縮小
 - ☐ Drawer + ハンバーガー（Shopify 標準）
 - ☐ 横スクロールメニュー単独（drawer 廃止）
 

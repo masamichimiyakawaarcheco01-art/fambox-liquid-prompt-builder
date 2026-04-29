@@ -4,6 +4,82 @@ FAM / FAMBOX ブランドDNA・デザインシステムの全体変更履歴。�
 
 ---
 
+## 2026-04-29（DS v0.2.1 patch — Header SP-compact drawer 切替 + Phase 2 実装適用）
+
+### Header 実装フェーズ着手 + v0.2.1 patch
+
+#### Phase 2a: Header v0.2 class hooks 適用（コミット 7eb48cd）
+- 既存 `projects/fambox/sections/header.liquid` (621 lines) と `projects/fam/sections/header.liquid` に DS classes / data 属性追加
+- `<header>`: `header-standard header--default` + `data-ds-version="0.2" data-ds-component="header"`
+- `<a class="header__corp-btn">`: `btn btn-primary btn-md` + `data-ds-version="0.2" data-ds-component="button"`
+- 全 Shopify classes / GA4 計測 / sticky-header WC 完全保持・visual 影響 0%
+
+#### Phase 2b: Header v0.2 CSS scoped style block 追加（コミット c17acf9）
+- `header[data-ds-version="0.2"]` セレクタで scope（既存 Shopify CSS 非干渉）
+- DS Spec D1 完全準拠の CSS 約 90 行追加:
+  - Heights（compact 64 / default 80 / tall 96）
+  - Sticky scroll-up modifier（将来拡張用）
+  - SP 横スクロールメニュー（DNA 既定）
+  - CTA hover translate-2px + shadow-2 / focus-visible 2px outline
+  - Menu link Drive 色 hover / aria-current="page" 下線
+  - Variant Minimal（将来用）
+  - prefers-reduced-motion 対応
+- tokens.css 未ロード環境互換のため全 var() に fallback 値併設
+
+#### v0.2.1 patch: SP-compact drawer 切替（本コミット）
+- **発見**: Preview HTML 確認で「compact (64px) + SP では横スクロールメニューが UX 破綻」を発見
+- **解決**: `header--compact` + SP（< 768px）では横スクロールメニュー使用せず Shopify drawer 主体に切替
+- **EC 優先**: Account / Cart アイコンは常時表示必須（drawer 内に隠さない / 購買導線保護）
+- **極小 SP < 360px**: CTA padding 6px 12px / font-size --fs-caption（12px）に縮小
+
+#### Spec 改訂（components/header.md v0.2 → v0.2.1）
+- §SP 挙動 を Heights 別ルールに分離記載
+  - `default` / `tall` + SP: 横スクロールメニュー（DNA 既定）維持
+  - `compact` + SP: drawer 主体 + EC 優先
+- Anti-pattern に 1 項目追加: 「SP-compact で Cart / Account を drawer 内に隠さない」（v0.2.1）
+- Change Log に v0.2.1 エントリ追記
+
+#### Phase 2c CSS 追加（header.liquid 両ファイル）
+```css
+@media (max-width: 767px) {
+  header[data-ds-version="0.2"].header--compact .header__inline-menu { display: none; }
+  header[data-ds-version="0.2"].header--compact header-drawer,
+  header[data-ds-version="0.2"].header--compact .menu-drawer-container { display: block; }
+  header[data-ds-version="0.2"].header--compact .header__icon--account,
+  header[data-ds-version="0.2"].header--compact .header__icon--cart { display: inline-flex !important; }
+}
+@media (max-width: 359px) {
+  header[data-ds-version="0.2"].header--compact .btn-primary[data-ds-component="button"] {
+    padding: 6px 12px; font-size: var(--fs-caption, 12px);
+  }
+}
+```
+
+### 安全弁構成（3 層バックアップ）
+- **Layer 1 git branch**: `feat/ds-header-v0.2`（main 無傷）
+- **Layer 2 ファイル**: `clients/fambox/_backups/2026-04-28-header/` に header.liquid.bak / header_fam.liquid.bak / README.md
+- **Layer 3 Shopify Preview**: 宮川さん側で Theme Duplicate → push → 5 EC フロー検証（着手予定）
+
+### Preview HTML
+- `preview-header-ds-v0.2.html`（後で ds-v0.2.1 にリネーム可）に v0.2.1 セクション追加
+- compact section に drawer trigger（☰）+ Account + Cart + CTA の新レイアウト反映
+- Section ③.5 として「SP-compact 詳細（v0.2.1 patch）」を追加・幅シミュレーション付き
+
+### 更新ファイル
+- `brand/fambox/design-system/components/header.md`（v0.2 → v0.2.1）
+- `brand/fambox/design-system/DS_INPUT_WORKSHEET.md`（§18 Q2 に v0.2.1 ルール追記）
+- `projects/fambox/sections/header.liquid`（Phase 2a + 2b + 2c 累計 +98 行）
+- `projects/fam/sections/header.liquid`（同上）
+- `clients/fambox/_backups/2026-04-28-header/`（新規・3 ファイル）
+- `preview-header-ds-v0.2.html`（新規・v0.2.1 ルール反映）
+
+### 次フェーズ
+- Layer 3 Shopify Preview 検証（宮川さん手動・Cart / Account / Search / Localization / Purchase 5 フロー）
+- 検証通過後 main へ merge
+- TOPページ Tier 1 残（Hero v17 / Subscription Card / fam-voices / fam-item / fam-achievement / fam-nav）の改修着手
+
+---
+
 ## 2026-04-28（DS v0.2 完成基準到達 — Modal + Stat Card + 実装計画 + Operations 運用ルール）
 
 ### 4 タスクを 1 セッションで完了
