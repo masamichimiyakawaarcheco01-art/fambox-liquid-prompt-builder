@@ -103,6 +103,105 @@ margin-right: 8px !important;
   }
 }
 </style>
+{% comment %}
+============================================================
+DS v0.2 Header — Phase 2b CSS
+Source: brand/fambox/design-system/components/header.md
+Scope: header[data-ds-version="0.2"] のみ（既存 Shopify スタイル非干渉）
+Tokens: var() に fallback 値併設（tokens.css 未ロード環境互換）
+============================================================
+{% endcomment %}
+<style>
+/* === Heights（DS Spec § Heights）=== */
+header[data-ds-version="0.2"].header--compact { min-height: 64px; }
+header[data-ds-version="0.2"].header--default { min-height: 80px; }
+header[data-ds-version="0.2"].header--tall    { min-height: 96px; }
+
+/* === Sticky Modes（既存 sticky-header WC は維持）
+       --scroll-up は将来拡張用に予約・JS 実装は別途 === */
+.header-wrapper[data-ds-sticky-mode="scroll-up"] {
+  transform: translateY(0);
+  transition: transform var(--duration-base, 300ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+.header-wrapper[data-ds-sticky-mode="scroll-up"].is-hidden {
+  transform: translateY(-100%);
+}
+
+/* === SP 横スクロールメニュー（DNA v0.5 既定）=== */
+@media (max-width: 989px) {
+  header[data-ds-version="0.2"] .header__inline-menu {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    white-space: nowrap;
+  }
+  header[data-ds-version="0.2"] .header__inline-menu::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* === DS CTA Button（btn-primary）の hover 拡張
+       既存 .header__corp-btn の background / color は触らず、
+       transform / shadow / focus-visible のみ追加 === */
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"] {
+  position: relative;
+  transition:
+    background var(--duration-fast, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+    color var(--duration-fast, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+    transform var(--duration-fast, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+    box-shadow var(--duration-fast, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2, 0 2px 8px rgba(0, 0, 0, 0.06));
+}
+
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:focus-visible {
+  outline: 2px solid var(--color-focus-ring, var(--color-drive, #FB4C15));
+  outline-offset: 2px;
+}
+
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:active {
+  transform: translateY(0);
+}
+
+/* === Menu link Drive 色 hover（DNA 既定: color 0.2s ease 互換）=== */
+header[data-ds-version="0.2"] .header__menu-item-link {
+  transition: color var(--duration-fast, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+
+header[data-ds-version="0.2"] .header__menu-item-link:hover,
+header[data-ds-version="0.2"] .header__menu-item-link:focus-visible {
+  color: var(--color-drive, #FB4C15);
+}
+
+/* === Active page indicator（DS Spec の `aria-current="page"` 対応）=== */
+header[data-ds-version="0.2"] .header__menu-item-link[aria-current="page"] {
+  color: var(--color-drive, #FB4C15);
+  text-decoration: underline;
+  text-underline-offset: 8px;
+  text-decoration-thickness: 2px;
+}
+
+/* === Variant: Minimal（将来用・現在は未使用）=== */
+header[data-ds-version="0.2"].header-minimal .header__inline-menu,
+header[data-ds-version="0.2"].header-minimal .header__icon--account {
+  display: none;
+}
+
+/* === prefers-reduced-motion 対応 === */
+@media (prefers-reduced-motion: reduce) {
+  header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .header-wrapper[data-ds-sticky-mode="scroll-up"] {
+    transition: none;
+  }
+}
+</style>
 <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
 <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
 <symbol id="icon-search" viewBox="0 0 18 19" fill="none">
