@@ -587,5 +587,14 @@ button.md v0.3 の Primary State をそのまま継承（hover で translateY(-2
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
+- **Component Set ID**: `59:33` ✅（Audit #4 で既存確認、2026-05-12）
+- **実装済 variants**: 3（`variant`: standard / minimal / mega）
+- ⚠ Spec gap: spec の `height`（compact/default/tall）と `sticky-mode`（none/sticky/slide-down）は Figma 未実装。v0.3 で別 property として追加検討
+
 ## Change Log
+- v0.2-figma (2026-05-12): Audit #4 で Component Set `59:33` を既存確認。3 variants 実装済、heights/sticky-mode は v0.3 で追加検討
 - v0.2 (2026-04-28): Worksheet §18 確定（3 Variants / 3 Heights / 3 Sticky Modes / Logo 左固定 / Primary CTA 1 個 / SP 横スクロール DNA 既定 / 4 禁止項目明示）。既存 Liquid（fam/sections/header / fam-header-menu / fambox/sections/header）の実測抽出をベースに L4 Component 化

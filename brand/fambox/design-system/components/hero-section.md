@@ -651,5 +651,18 @@ JS で scrollY に応じて `--media-translate-y` を更新。既存 tokens の 
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
+- **Component Set ID**: `67:73` ✅（Audit #4 で既存確認、2026-05-12）
+- **実装済 variants**: **3**（`variant`: video-fullscreen / image-editorial / minimal-text）
+- ⚠ **重要 Spec gap**: spec は **4 variants × 3 heights = 12 variants** を想定していたが、Figma 実装は **3 variants のみ**（spec 1 variant 欠落 + heights 別 property 化が未実装）
+- v0.3 アクション候補:
+  - 不足 variant（spec §17 で確定済の 4 つ目）を Figma に追加
+  - `height`（compact/default/tall）を別 property として 12 variants に展開
+  - または「heights は別 Container Frame で表現」と spec を縮小
+
 ## Change Log
+- v0.2-figma (2026-05-12): Audit #4 で Component Set `67:73` を既存確認。実装は 3 variants で spec の 12 variants（4×3）から欠落、v0.3 で要整合
 - v0.2 (2026-04-28): Worksheet §17 確定（4 Variants / 3 Heights / CTA 0〜2 / NBA HOOP モード任意 / 動画パララックス対応 / 4禁止項目明示）。既存 Liquid（fam-corp-hero / fambox-hero-v17-video / fam-blog-hero）の実測抽出をベースに L4 Component 化

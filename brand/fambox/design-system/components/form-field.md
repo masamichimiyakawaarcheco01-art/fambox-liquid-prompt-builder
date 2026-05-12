@@ -275,5 +275,14 @@ related:
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `4. Patterns FormField / Card / Tooltip / Alert`
+- **Component Set ID**: `56:34` ✅（Audit #4 で既存確認、2026-05-12）
+- **実装済 variants**: 4（`state`: default / focus / error / disabled）
+- ⚠ Spec ↔ Figma 整合: v0.3 で詳細レビュー必要（spec md は §8 のみ、Figma 実装の詳細項目未整合）
+
 ## Change Log
+- v0.2-figma (2026-05-12): Audit #4 で Component Set `56:34` を既存確認。4 state variants 実装済、内部構造の spec 整合は v0.3 でレビュー
 - v0.2 (2026-04-20): Worksheet §8 確定（Label上・Helper下薄色・Error下赤・例はHelperに）

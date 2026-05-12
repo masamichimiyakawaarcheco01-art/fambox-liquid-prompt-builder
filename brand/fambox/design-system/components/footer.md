@@ -615,5 +615,13 @@ Footer は **CTA を持たない**。Header / Hero / Section の文脈で CTA �
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
+- **Component Set ID**: `60:95` ✅（Audit #4 で既存確認、2026-05-12）
+- **実装済 variants**: 3（`variant`: standard / minimal / sitemap）
+
 ## Change Log
+- v0.2-figma (2026-05-12): Audit #4 で Component Set `60:95` を既存確認。3 variants 実装済（standard / minimal / sitemap）
 - v0.2 (2026-04-28): Worksheet §19 確定（3 Variants / Ink 背景固定 / Logo 左 / SNS 必須 40px / Bottom = Copyright + Legal のみ / CTA なし / 4 禁止項目明示）。既存 Liquid（fam-footer-v2 / fambox/sections/footer）の実測抽出をベースに L4 Component 化

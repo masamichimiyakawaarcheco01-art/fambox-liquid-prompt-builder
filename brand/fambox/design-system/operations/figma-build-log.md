@@ -203,3 +203,75 @@ FAMBOX/typography/font-size/lg        (Button lg 20px)
 - **Flat の Button instance を `variant=link` に切り替え**: Spec では Flat は Link CTA だが、現状 Primary Button instance が入っている
 
 ---
+
+## Session 2026-05-12 (#4) — L2–L4 全 Component Set 一括 Audit
+
+**契機**: L4 Hero Figma 化に着手しようとしたところ、Card で発見した「既存資産の見落とし」が他にもある可能性を懸念。Marc 流 Audit-first を **15 Component Set 全件に拡張**して spec ↔ Figma の整合マトリクスを作成。
+
+### 成果: Figma 上に存在する 15 Component Sets
+
+| Layer | Component | Set ID | Page | Variants | Property | 状態 |
+|---|---|---|---|---|---|---|
+| L2 | Avatar | `53:32` | 3. Primitives | 20 | type × state × size | ✅ |
+| L2 | Button | `46:32` | 3. Primitives | 60 | variant × size × state | ✅ v0.3 |
+| L2 | Form Controls | `54:16` | 3. Primitives | 9 | kind × state | ✅ |
+| L2 | Input | `50:26` | 3. Primitives | 12 | variant × state | ✅ |
+| L2 | Progress Bar | `55:11` | 3. Primitives | 5 | value | ✅ |
+| L2 | Spinner | `55:21` | 3. Primitives | 3 | size | △ arc curve 化 v0.4 |
+| L3 | Card | `57:35` | 4. Patterns | 4 | variant | ✅ shadow 補完済 |
+| L3 | FormField | `56:34` | 4. Patterns | 4 | state | ⚠ spec md 未整合確認 |
+| L3 | Stat Card | `64:49` | 4. Patterns | 6 | size × layout | ⚠ spec md 整合確認要 |
+| L4 | Case Study | `66:91` | 5. Components | 2 | variant: tile/story | ✅ |
+| L4 | Footer | `60:95` | 5. Components | 3 | variant: standard/minimal/sitemap | ✅ |
+| L4 | Header | `59:33` | 5. Components | 3 | variant: standard/minimal/mega | ✅ |
+| L4 | Hero Section | `67:73` | 5. Components | **3** | variant: video-fullscreen/image-editorial/minimal-text | ⚠ spec 4 variant × 3 heights = 12 を期待、現状 3 のみ |
+| L4 | Modal | `62:33` | 5. Components | 3 | variant: confirmation/detail/sheet | ✅ |
+| L4 | Subscription Plan Card | `65:110` | 5. Components | 2 | variant: standard/featured | ✅ |
+
+### Figma 未実装の Spec md
+
+| Component | spec md | 期限 / 優先度 | 用途 |
+|---|---|---|---|
+| Bento Tile (L3) | bento-tile.md | TOP 実装 5/29 主役 | Bento Grid の構成要素・5 size |
+| Bento Grid (L4) | bento-grid.md | TOP 実装 5/29 主役 | TOP 主要セクション・12 col |
+| FAQ (L4) | faq.md ← NEW | 既 Spec 化 | TOP 末尾 / 横スクロール Carousel |
+| Profile (L4) | profile.md ← NEW | 既 Spec 化 | TOP 監修者紹介 / Drive 全面塗り Section |
+| Contact Form (L4) | contact-form.md | OKR Task 2-1 中核 | 問合せフォーム |
+
+### 検出されたギャップ
+
+#### 🐛 Gap A: Button 所在ページの誤認
+- 直前 Session (#2) で Button の Page を `0. Cover` と表記したが、**実際は `3. Primitives`**
+- 原因: `getNodeByIdAsync` は document-wide 検索で、`setCurrentPageAsync` でループしていても**最初のページで一致判定**されてしまった
+- 修復: button.md の Page 表記を `3. Primitives ...` に訂正
+- 再発防止: 親ページ判定は **`node.parent`（場合により `parent.parent`）を辿って `type === 'PAGE'` まで遡る** のが正解
+
+#### 🐛 Gap B: Hero Section variants 数の spec 不一致
+- spec: 4 variant × 3 heights = 12 variants 想定
+- Figma 実態: 3 variants（heights プロパティなし、各 variant 単一 height）
+- 判断: 即修正せず、Hero 個別の audit で「heights を別 property として追加するか」を検討（v0.3 候補）
+
+#### 🐛 Gap C: spec md 側の Figma 参照欠落（8 件）
+- 以下の md に **Figma 参照セクション未記載**:
+  case-study / contact-form / faq / footer / form-field / header / hero-section / modal / profile / stat-card / subscription-plan-card
+- 影響: 「spec → Figma → 実装」の双方向追跡が切れている
+- 修復: 本セッション末尾で 8 件（Figma 実装ある分）に最小 Figma 参照を追加。Figma 未実装の 5 件（bento-tile/bento-grid/faq/profile/contact-form）は別途実装と併せて追加
+
+### 学んだこと（追加）
+
+10. **「Audit-first は新規生成前に必ず実行」を体制化**: L3 で 1 件発見 → L2-L4 全件 audit で 15 件マッピングが完成 + 3 つのギャップ検出。30 分の investigation で重複生成と所在誤認を一掃。
+
+11. **Page 判定は node.parent を辿る**: `getNodeByIdAsync` は document-wide で、ループ内で `setCurrentPageAsync` してから取得すると最初の page で「見つけた」ことになり判定が壊れる。**`while (node.parent && node.parent.type !== 'PAGE') node = node.parent` で親ページに到達** する形式が安全。
+
+### 次セッション着手候補（更新版）
+
+優先度高い順:
+1. **Bento Tile + Bento Grid Figma 新規生成**: TOP 実装 5/29 期限の主役エリア、Spec 整備済
+2. **Hero Section variants 拡充**: 4 variant × 3 heights = 12 への拡張（または heights を別 property 化）
+3. **FAQ Carousel Figma 新規生成**: spec 化済、preview-faq.html を参照に
+4. **Profile Section Figma 新規生成**: spec 化済、Drive 全面塗り Section
+5. **L3 FormField / Stat Card の spec ↔ Figma 整合確認**: spec md と Figma 実態の差分洗い出し
+6. **Contact Form Figma 生成 + spec md 補強**
+7. **Spinner v0.3** / **Button v0.4 with-icon**
+
+---

@@ -315,5 +315,14 @@ related:
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
+- **Component Set ID**: `66:91` ✅（Audit #4 で既存確認、2026-05-12）
+- **実装済 variants**: 2（`variant`: tile / story）
+- ⚠ Spec gap: spec §14 は「3 レイアウト併用」想定。tile/story の 2 variant で足りるか v0.3 で要レビュー
+
 ## Change Log
+- v0.2-figma (2026-05-12): Audit #4 で Component Set `66:91` を既存確認。tile / story の 2 variant 実装済
 - v0.2 (2026-04-20): Worksheet §14 確定（3レイアウト併用・全Data Viz活用・公表/匿名混在）

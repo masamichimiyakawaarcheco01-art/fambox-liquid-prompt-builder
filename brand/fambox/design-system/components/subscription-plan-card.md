@@ -293,6 +293,15 @@ related:
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
+- **Component Set ID**: `65:110` ✅（Audit #4 で既存確認、2026-05-12）
+- **実装済 variants**: 2（`variant`: standard / featured）
+- Card Pattern (`57:35`) の Featured / Standard を L4 化したもの。各 variant に Button (`46:32`) instance 埋込
+
 ## Change Log
+- v0.2-figma (2026-05-12): Audit #4 で Component Set `65:110` を既存確認。Card Pattern 継承の 2 variants 実装済
 - v0.3 (2026-04-27): Worksheet §13 縮小（10→8項目）— 最低契約期間・初月特典をカードから外し FAQ/キャンペーン側へ移管（§13.1.a C 採択）
 - v0.2 (2026-04-20): Worksheet §13 確定（10項目構成・h2 Ink価格・2CTA・1バッジ）

@@ -322,5 +322,14 @@ Bento Grid 内    → bento-stat-focus（内部は Stat Card と同じ CSS）
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `4. Patterns FormField / Card / Tooltip / Alert`
+- **Component Set ID**: `64:49` ✅（Audit #4 で既存確認、2026-05-12）
+- **実装済 variants**: 6（`size`: compact / default / large × `layout`: vertical / horizontal）
+- ✅ Spec の「3 Sizes × 2 Layouts = 6 variants」と完全整合
+
 ## Change Log
+- v0.2-figma (2026-05-12): Audit #4 で Component Set `64:49` を既存確認。Spec の 3 sizes × 2 layouts = 6 variants と整合
 - v0.2 (2026-04-28): Worksheet §23 確定（3 Sizes / 2 Layouts / Drive 固定 / 4 禁止項目明示）。Card Flat と Bento Tile Stat-focus を統合し汎用 L3 Pattern として独立化

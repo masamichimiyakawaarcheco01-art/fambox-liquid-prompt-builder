@@ -455,5 +455,13 @@ modal.addEventListener('keydown', (e) => {
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
+- **Component Set ID**: `62:33` ✅（Audit #4 で既存確認、2026-05-12）
+- **実装済 variants**: 3（`variant`: confirmation / detail / sheet）
+
 ## Change Log
+- v0.2-figma (2026-05-12): Audit #4 で Component Set `62:33` を既存確認。3 variants 実装済
 - v0.2 (2026-04-28): Worksheet §22 確定（3 Variants / Backdrop Glass 4 固定 / Close 3 方法 / 4 禁止項目明示）。既存 Shopify product-media-modal 等の実装サンプルから一般化した L4 Modal Component

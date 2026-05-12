@@ -366,7 +366,7 @@ WCAG 2.1 AA 準拠。マウス操作では非表示、キーボード操作で�
 ## Figma 参照
 
 - File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
-- Page: `0. Cover`（v0.4 で `3. Primitives` へ移動予定 — figma-build-log の所在表記と一時的に不一致）
+- Page: `3. Primitives Button / Input / Icon / Avatar / FormControls / Progress / Badge`（2026-05-12 Audit #4 で確定 — 過去 Build Log の所在誤認を訂正）
 - **Component Set ID**: `46:32` ✅ 自動生成済 + v0.3 state 拡張済（2026-05-12）
 - 生成スキル: `figma-component-from-spec` v0.1 + v0.3 incremental 拡張
 - **実装済 variants**: **60**（`variant` × `size` × `state`）
