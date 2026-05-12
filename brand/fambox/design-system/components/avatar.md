@@ -157,5 +157,19 @@ related:
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `3. Primitives`
+- **Component Set ID**: `53:32` ✅ 自動生成済（2026-05-12）
+- 生成スキル: `figma-component-from-spec` v0.1
+- **実装済 variants**: 20（`type` × `state` × `size`）
+  - type: fallback (Deep + "F" initial) / photo (gray placeholder)
+  - state: default / featured (Drive 2px outer border)
+  - size: xs / sm / md / lg / xl
+- **未実装（v0.3 で追加予定）**: focus ring、実写真フィル
+- Variables バインド: color (deep/white/drive/bg-tertiary) / radius (pill) / border-width (thick)
+
 ## Change Log
 - v0.2 (2026-04-20): Worksheet §9 確定
+- v0.2-figma (2026-05-12): Figma Component Set 自動生成（20 variants）

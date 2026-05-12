@@ -215,5 +215,21 @@ related:
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `3. Primitives`
+- **Progress Bar Component Set ID**: `55:11` ✅ 自動生成済（2026-05-12）
+- **Spinner Component Set ID**: `55:21` ✅ 自動生成済（2026-05-12）
+- 生成スキル: `figma-component-from-spec` v0.1
+- **実装済**:
+  - Progress Bar Linear: 5 variants（value=0/25/50/75/100）
+  - Spinner: 3 variants（size=sm/md/lg）arcData による 75% 円弧
+- **未実装（v0.3 で追加予定）**:
+  - **Progress Circular**: vectorPath による正確な arc curve（現状の Spinner は pie 形状に近い）
+  - Loading State pattern（Spinner + 「処理中です…」テキスト）
+- Variables バインド: color (drive/bg-tertiary) / radius (pill)
+
 ## Change Log
 - v0.2 (2026-04-20): Worksheet §11 確定（線形+円形両用・Drive色固定・文言最小）
+- v0.2-figma (2026-05-12): Linear + Spinner 自動生成（8 variants）。Circular は v0.3 で対応

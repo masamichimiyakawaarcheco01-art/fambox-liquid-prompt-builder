@@ -259,5 +259,21 @@ related:
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `3. Primitives`
+- **Component Set ID**: `54:16` ✅ 自動生成済（2026-05-12）
+- 生成スキル: `figma-component-from-spec` v0.1
+- **実装済 variants**: 9（`kind` × `state`）
+  - kind: checkbox / radio / toggle
+  - state (checkbox/radio): default / checked / disabled
+  - state (toggle): off / on / disabled
+- Checkbox checked: ✓ tick（Poppins Bold Unicode U+2713、white）
+- Toggle knob: 20×20 white ellipse + drop shadow
+- **未実装（v0.3 で追加予定）**: focus / hover state、`role="switch"` メタデータ
+- Variables バインド: color (drive/bg-primary/bg-tertiary/border-base/border-light) / radius (sm/pill)
+
 ## Change Log
 - v0.2 (2026-04-20): Worksheet §10 確定（標準形状3種・Drive色軸）
+- v0.2-figma (2026-05-12): Figma Component Set 自動生成（9 variants）

@@ -366,9 +366,16 @@ WCAG 2.1 AA 準拠。マウス操作では非表示、キーボード操作で�
 ## Figma 参照
 
 - File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
-- Page: `3. Primitives / Button`
-- Component 命名: `button/{variant}/{size}`（例: `button/primary/md`）
-- Variants prop: `variant`（primary/secondary-ink/secondary-drive/ghost/link）/ `size`（sm/md/lg）/ `state`（default/hover/focus/active/disabled/loading）/ `with-icon`（none/leading/trailing/icon-only）
+- Page: `3. Primitives`
+- **Component Set ID**: `46:32` ✅ 自動生成済（2026-05-12）
+- 生成スキル: `figma-component-from-spec` v0.1
+- **実装済 variants**: 15（`variant` × `size`）
+  - variant: primary / secondary-ink / secondary-drive / ghost / link
+  - size: sm / md / lg
+- **未実装 variants（v0.3 で追加予定）**:
+  - state: hover / focus / active / disabled / loading
+  - with-icon: leading / trailing / icon-only
+- Variables バインド: color (bg/border/text) / radius (pill-cta) / border-width (thick) / font-size (body-sm/body/lg)
 
 ---
 

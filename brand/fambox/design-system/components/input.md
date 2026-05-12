@@ -238,5 +238,19 @@ FAMBOX で最も使用頻度の高い Primitive。**下線型 + 枠囲み型** �
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `3. Primitives`
+- **Component Set ID**: `50:26` ✅ 自動生成済（2026-05-12）
+- 生成スキル: `figma-component-from-spec` v0.1
+- **実装済 variants**: 12（`variant` × `state`）
+  - variant: underline / bordered / textarea
+  - state: default / focus / disabled / error
+- **未実装 states（v0.3 で追加予定）**: hover / active / empty / success
+- フォント: Noto Sans JP（Hiragino Sans 代替）
+- Variables バインド: color (bg/border/text) / radius (md) / font-size (body)
+
 ## Change Log
 - v0.2 (2026-04-20): Worksheet §7 確定（下線型+枠囲み型ハイブリッド・onBlur検証・「必須」バッジ）
+- v0.2-figma (2026-05-12): Figma Component Set 自動生成（12 variants）
