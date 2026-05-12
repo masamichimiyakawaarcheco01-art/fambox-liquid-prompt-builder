@@ -104,7 +104,66 @@ FAMBOX/typography/font-size/lg        (Button lg 20px)
 ## 次回セッション着手候補
 
 優先順:
-1. **Button v0.3 拡張**: hover/disabled/Icon variants で完全体化
-2. **Patterns L3** に進む: `form-field.md` `card.md` の組合せ系
-3. **Header / Footer**: ナビゲーション系 Component
-4. **Hero Section**: LP 主役 Template
+1. ✅ **Button v0.3 第1弾（state property 追加）**: 2026-05-12 完了 — 下記 Session 参照
+2. **Button v0.3 第2弾（icon variants）**: `with-icon` property（leading / trailing / icon-only）追加
+3. **Spinner v0.3**: dashed ring を vectorPath ベースの arc curve に置換
+4. **L3/L4 Components の Figma 化**: Card / Hero / Header / Footer / FAQ / Profile / Bento の順
+5. **L2 Primitives の所在ページ整合**: 現在 `0. Cover` にあるが Build Log 表記は `3. Primitives` — 全 L2 を 3. Primitives へ移動
+
+---
+
+## Session 2026-05-12 (#2) — Button v0.3 state property 拡張
+
+**契機**: Build Log v0.1 で次回着手候補 #1 として明示されていた「Button v0.3 — hover/disabled/loading state」を実行。Marc 流 incremental（小さく作って大きく展開）に従い、icon variants は v0.4 へ送り state のみに集中。
+
+### 成果
+
+| Component | Property 追加 | Variants 追加 | 合計 | Component Set ID |
+|---|---|---|---|---|
+| Button | `state` (default / hover / disabled / loading) | +45（hover 15 / disabled 15 / loading 15）| **60**（旧 15 → 60）| `46:32`（変わらず）|
+
+**配置**: state ごとに横方向ブロック（`x` offset: default=0 / hover=700 / disabled=1400 / loading=2100、各ブロック 626 幅）
+**Component Set 全体**: width 626 → **2726**、height 430 のまま
+
+### 各 state の Variable バインド
+
+| state | bg | text | stroke | 特記 |
+|---|---|---|---|---|
+| default | 既存維持 | 既存維持 | 既存維持 | rename のみ（`state=default` を name に追加） |
+| hover | primary → `drive-light` / secondary-ink → `ink` 反転 / secondary-drive → `drive` 反転 / ghost → `rgba(27,29,26,0.06)` 直値 | secondary 反転時は `white` / link は `link-hover`（→ alias drive-light） | 既存維持 | link は `textDecoration: 'UNDERLINE'` |
+| disabled | 全 variant → `border/base` | 全 variant → `ink/caption` | **除去** | spec 整合（背景強制） |
+| loading | 既存維持（default の見た目を維持）| **opacity 0** で透明化 | 既存維持 | 中央に variant 色の dashed ring（sm14 / md16 / lg20）を絶対配置 |
+
+### 発生問題と修復
+
+#### 🐛 Issue 3: link variant の `textDecoration` 設定で「Poppins Medium 未ロード」エラー
+- **症状**: hover variants ループ中、link variants の `tn.textDecoration = 'UNDERLINE'` で
+  `Cannot write to node with unloaded font "Poppins Medium"`
+- **原因**: 事前ロードしたのは `Inter Semi Bold` / `Inter Medium` のみ。link variants は実際には Poppins Medium で組まれていた
+- **影響範囲**: link hover 3 variants（sm/md/lg）— underline 未適用で clone 自体は作成済
+- **修復**: `figma.listAvailableFontsAsync()` で Poppins の正式 style 名（`Medium` / `SemiBold`）を確認後、対象 text node の `fontName` を読み取り `loadFontAsync(tn.fontName)` で動的ロード、その後 underline と link-hover binding を後追い適用
+- **再発防止**: state cloning では「テキスト node の実フォントを node ごとに動的ロード」をパターン化（事前に全フォント列挙してロードするより堅実）
+
+#### 🐛 Issue 4: clone 直後の variants が default と同位置に重なる
+- **症状**: hover variants 生成直後、screenshot に 15 個分しか映らない（実際は重なって 30 個ある）
+- **原因**: Component Set が `layoutMode: 'NONE'`（auto-layout なし）。clone は親と同座標で生成され、手動で再配置が必要
+- **修復**: state ごとに x オフセット（default=0 / hover=700 / disabled=1400 / loading=2100）を割り振り、`set.resize(blockEnd, height)` で Set 自体を拡幅
+- **再発防止**: Component Set 構築時は **layoutMode を `'HORIZONTAL'` または `'VERTICAL'` で auto-layout 化することを v0.4 で検討**（手動 x 計算は state 数が増えると壊れやすい）
+
+### Known TODOs（v0.3 残）
+
+- **Button with-icon**: leading / trailing / icon-only variants（INSTANCE_SWAP property で実装、variants 増やさない方針も検討）
+- **Spinner v0.3**: 現状の dashed ring を vectorPath で正確な arc curve に置換し、Button loading も同 Spinner Component の instance に差し替え
+- **Secondary-ink disabled のコントラスト改善**: 現状 `caption (#888) on border-base (#d0d0d0)` は約 2:1 で WCAG NG。Spec 改訂で disabled text を `--color-sub` (#545655) へ昇格する案を検討
+
+### 学んだこと（追加）
+
+5. **`layoutMode: 'NONE'` の Component Set は state 拡張に向かない**: 新 variants が同座標で重なる。
+   今後は **Component Set を auto-layout 化**してから state を追加するのが安全。
+
+6. **Variable bind には `setBoundVariableForPaint` の戻り値の paint で配列を再構築する**: 既存 paint をin-place 改変ではなく
+   新 paint オブジェクトを作って `[newPaint]` を fills に代入する方が安定（既存 fills が空配列のときの NPE を回避）。
+
+7. **「Spec の `:disabled` 一律適用」は Figma で stroke 除去が必要**: CSS の `.btn:disabled` は背景上書きするので
+   border は視覚的に隠れるが、Figma variant では明示的に `strokes = []` しないと border が残る。
+

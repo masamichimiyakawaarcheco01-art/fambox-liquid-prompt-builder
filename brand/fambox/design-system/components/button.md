@@ -366,21 +366,30 @@ WCAG 2.1 AA 準拠。マウス操作では非表示、キーボード操作で�
 ## Figma 参照
 
 - File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
-- Page: `3. Primitives`
-- **Component Set ID**: `46:32` ✅ 自動生成済（2026-05-12）
-- 生成スキル: `figma-component-from-spec` v0.1
-- **実装済 variants**: 15（`variant` × `size`）
-  - variant: primary / secondary-ink / secondary-drive / ghost / link
-  - size: sm / md / lg
-- **未実装 variants（v0.3 で追加予定）**:
-  - state: hover / focus / active / disabled / loading
-  - with-icon: leading / trailing / icon-only
-- Variables バインド: color (bg/border/text) / radius (pill-cta) / border-width (thick) / font-size (body-sm/body/lg)
+- Page: `0. Cover`（v0.4 で `3. Primitives` へ移動予定 — figma-build-log の所在表記と一時的に不一致）
+- **Component Set ID**: `46:32` ✅ 自動生成済 + v0.3 state 拡張済（2026-05-12）
+- 生成スキル: `figma-component-from-spec` v0.1 + v0.3 incremental 拡張
+- **実装済 variants**: **60**（`variant` × `size` × `state`）
+  - variant: primary / secondary-ink / secondary-drive / ghost / link（5）
+  - size: sm / md / lg（3）
+  - state: default / hover / disabled / loading（4）
+- **未実装 variants（v0.4 で追加予定）**:
+  - state: **focus / active**（残 2 状態）
+  - with-icon: leading / trailing / icon-only（INSTANCE_SWAP property 化を検討中）
+- **state 別仕様**:
+  - default: 既存 v0.2 のまま
+  - hover: primary → `drive-light` / secondary-ink → ink 反転 + 白文字 / secondary-drive → drive 反転 + 白文字 / ghost → `rgba(27,29,26,0.06)` 直値 / link → underline + `link-hover` alias
+  - disabled: 全 variant → bg `border/base` + text `ink/caption` + stroke 除去
+  - loading: text opacity 0 + 中央に variant 色の dashed ring（sm14 / md16 / lg20px、暫定 — Spinner v0.3 で arc curve 化予定）
+- Variables バインド: color (bg/border/text/disabled/hover/loading-ring) / radius (pill-cta) / border-width (thick) / font-size (body-sm/body/lg)
+- 配置: state ごとに横方向ブロック（x offset 0 / 700 / 1400 / 2100、各ブロック 626 幅、Component Set 全幅 2726）
 
 ---
 
 ## Change Log
 
+- v0.3-figma (2026-05-12): Figma で state property 拡張完了（45 variants 追加 / 15 → 60）。default 既存維持・hover / disabled / loading を Variable bind 込みで実装。残 v0.4 = focus / active state + with-icon
+- v0.2-figma (2026-05-12): Figma Component Set 自動生成（15 variants / `variant` × `size`）
 - v0.3 (2026-04-27): Worksheet §6 確定反映 — 5 Variant 採用（Primary / Secondary Ink / Secondary Drive / Ghost / Link）/ 3 Size 全採用 / 6 State / Icon-only & With-icon 両形態 / Destructive 不採用
 - v0.2 (2026-04-20): Seed ドキュメント作成（FAM v0.5 K章継承ベース）
 - （予定）v1.0: Figma Library とリンク、Storybook 実装、CTA 文言確定
