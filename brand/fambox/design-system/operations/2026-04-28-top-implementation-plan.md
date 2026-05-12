@@ -49,7 +49,7 @@ purpose: DS v0.2 確定 Spec を TOPページ既存 25 sections に適用する�
 | # | section type | 既存 Liquid 行数 | 適用 Spec | 改修内容 | 工数 |
 |---|---|---|---|---|---|
 | 13 | `fambox-faq` | 433 | **L4 FAQ Component v0.2 (Carousel)** ✅ Spec 化完了 (2026-05-12) | 既存の Accordion 実装を Carousel 形式（DNA 整合）に書き換え。クラス名 `faq faq-carousel` 統一・tokens.css 適用・8 枚上限 | 2h |
-| 14 | `fambox-profile` | 380 | **Card Pattern v0.2** `card-horizontal` + Avatar v0.2 | profile-card → card 統一 | 2h |
+| 14 | `fambox-profile` | 380 | **L4 Profile Component v0.2 (Section)** ✅ Spec 化完了 (2026-05-12) | クラス名 `profile profile-section` 統一・Drive 全面塗りを Section レベルで再構築・1-3 名並列・PC 背景画像/SP 下配置 | 3h |
 
 ### Tier 4: 既存維持（改修なし・11 sections）
 
@@ -174,7 +174,7 @@ purpose: DS v0.2 確定 Spec を TOPページ既存 25 sections に適用する�
 - ✅ **L3 Stat Card 独立 Pattern 化**（5/14 までに）: Bento Tile stat-focus を Card 派生で抽出 — **完了 (commit eaf1d60)**
 - 🟡 **L7 Operations 運用ルール**（5/30 以降）: v0.2 完成基準・Naming / Versioning / Contribution / Deprecate — 部分完了（naming-convention.md / lastmile-playbook.md / figma-build-log.md 整備済）
 - ✅ **L4 FAQ Component**（5/20 までに）: Tier 3 fambox-faq 改修の前提 — **完了 (2026-05-12)**。Carousel Variant 確定、Accordion は v0.3 拡張枠で保留
-- ⏸ **L4 Profile Card**（5/22 までに）: Tier 3 fambox-profile 改修の前提 — 未着手（次の並行作業候補）
+- ✅ **L4 Profile Component**（5/22 までに）: Tier 3 fambox-profile 改修の前提 — **完了 (2026-05-12)**。Section Variant 確定（Drive 全面塗り）、Card variant は v0.3 拡張枠で保留
 
 ---
 

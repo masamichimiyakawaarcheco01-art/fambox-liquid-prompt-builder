@@ -17,6 +17,7 @@ milestone:
   - 2026-04-28: v0.2 拡張（§20-§21 Bento Tile L3 + Bento Grid L4 確定 / L3 Patterns 2件→3件・L4 Components 6件→7件 / DNA Bento 仕様体系化・5/29 TOPページ主役エリアの Spec 完成）
   - 2026-04-28: v0.2 完成基準到達（§22 Modal L4 + §23 Stat Card L3 確定 / TOPページ実装計画策定 / L7 Naming Convention & Governance v0.2 整備 / L3 Patterns 4件・L4 Components 8件・L7 運用ルール 1件 = v0.2 全要素確定）
   - 2026-05-12: v0.2 拡張（L4 FAQ Component 確定 / L4 Components 8件 → 9件 / preview-faq.html を一次資料に Carousel Variant Spec 化 / Accordion variant は v0.3 拡張枠として保留 / 実装計画書 §7「5/20 期限 L4 FAQ Accordion」をクローズ）
+  - 2026-05-12: v0.2 拡張（L4 Profile Component 確定 / L4 Components 9件 → 10件 / preview-profile.html を一次資料に Section Variant Spec 化 / Drive 全面塗りを Profile/Hero 専用表現として位置付け / Card variant は v0.3 拡張枠として保留 / 実装計画書 §7「5/22 期限 L4 Profile Card」をクローズ）
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し
@@ -233,8 +234,9 @@ Primitivesを2-3個組み合わせた単位。
 | 4-12 | Subscription Plan Card | 定期便プラン | 🔶 |
 | 4-13 | Testimonial / Case Study | 実績コンテンツ | 🔶 既存fam-case-study参考 |
 | 4-14 | FAQ（Carousel）| 質問カード横スクロール | ✅ v0.2（[faq.md](components/faq.md)）/ Accordion variant は v0.3 |
+| 4-15 | Profile（Section）| 監修者・推薦者の Drive 全面塗り紹介 | ✅ v0.2（[profile.md](components/profile.md)）/ Card variant は v0.3 |
 
-**Status**: v0.5継承6件＋FAMBOX新設8件（Table/Filter/Contact/Diagnosis/Subscription/FAQ 等）
+**Status**: v0.5継承6件＋FAMBOX新設9件（Table/Filter/Contact/Diagnosis/Subscription/FAQ/Profile 等）
 
 ---
 
