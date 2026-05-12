@@ -410,5 +410,30 @@ L4 Component を作る際は **Card の上に拡張**する形で書く。Card �
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `4. Patterns FormField / Card / Tooltip / Alert`
+- **Component Set ID**: `57:35` ✅（既存 + 2026-05-12 に shadow 適用で v0.2 完成）
+- 生成スキル: `figma-component-from-spec`（事前作成 + 2026-05-12 Audit-first 補完）
+- **実装済 variants**: 4（`variant`）
+  - variant: standard / featured / horizontal / flat
+- **Variable バインド**:
+  - fills: `bg/primary`（standard, featured, horizontal）/ `bg/secondary`（flat）
+  - strokes: `border/light` 1px（standard, horizontal）/ `color/brand/drive` 2px（featured）/ なし（flat）
+  - effect: `FAMBOX/shadow/1` （standard, featured, horizontal）/ なし（flat — spec 通り）
+- **Variant 別寸法**:
+  - standard: 320 × 383（画像 placeholder 上 + Title + 本文 + Button instance）
+  - featured: 320 × 312（バッジ Frame 上 + Title + 価格 + ✓特典 × 3 + Button instance）
+  - horizontal: 480 × 174（画像左 30% + Body Frame 右 70%、内部に eyebrow `CASE` + Title + Link CTA）
+  - flat: 280 × 176（BigStat + ラベル + Link CTA、shadow なし）
+- 各 variant に **Button (`46:32`) Component instance** を埋め込み済（Link variant への切替は v0.3 で対応）
+- 共通 props: cornerRadius 8（radius-md）/ padding 24（space-3）/ itemSpacing 16（space-2）
+- **未実装（v0.3 で追加予定）**:
+  - state property: hover / focus-visible / active / disabled / selected
+  - stroke weight Variable バインド（現状直値 1 / 2 → `border-width/thin` / `border-width/thick` に置換）
+  - Flat の Button instance を `variant=link` に切り替え
+
 ## Change Log
+- v0.2-figma (2026-05-12): Figma Card Component Set の Audit-first 補完 — 構造・Variable bind は spec 整合確認、唯一の gap だった shadow を `FAMBOX/shadow/1` で 3 variants（standard/featured/horizontal）に適用。flat は spec 通り shadow なしで保持
 - v0.2 (2026-04-27): Worksheet §16 確定（4 Variants / SP 維持横長 / CTA 必須 / `.is-selected` Drive 枠 / 拡張余地あり）。既存 Liquid（fam-achievement / card-product / subscription-plan-card / case-study）の実測抽出をベースに L3 Pattern 化

@@ -19,6 +19,7 @@ milestone:
   - 2026-05-12: v0.2 拡張（L4 FAQ Component 確定 / L4 Components 8件 → 9件 / preview-faq.html を一次資料に Carousel Variant Spec 化 / Accordion variant は v0.3 拡張枠として保留 / 実装計画書 §7「5/20 期限 L4 FAQ Accordion」をクローズ）
   - 2026-05-12: v0.2 拡張（L4 Profile Component 確定 / L4 Components 9件 → 10件 / preview-profile.html を一次資料に Section Variant Spec 化 / Drive 全面塗りを Profile/Hero 専用表現として位置付け / Card variant は v0.3 拡張枠として保留 / 実装計画書 §7「5/22 期限 L4 Profile Card」をクローズ）
   - 2026-05-12: v0.3 着手（L2 Button Figma state property 拡張完了 / 15 → 60 variants / hover/disabled/loading 3 state を Variable bind 込みで実装 / focus/active と with-icon は v0.4 へ送付 / figma-build-log に Issue 3-4 と再発防止策蓄積）
+  - 2026-05-12: v0.2 Figma 整合補完（L3 Card Pattern Figma を Audit-first で発見 — Component Set 57:35 既存。唯一の gap だった shadow を `FAMBOX/shadow/1` で 3 variants 適用 / flat は spec 通り shadow なし維持 / Audit-first protocol が L2/L3 両方で重複生成を回避することを実証）
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し

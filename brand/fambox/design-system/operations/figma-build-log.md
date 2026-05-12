@@ -167,3 +167,39 @@ FAMBOX/typography/font-size/lg        (Button lg 20px)
 7. **「Spec の `:disabled` 一律適用」は Figma で stroke 除去が必要**: CSS の `.btn:disabled` は背景上書きするので
    border は視覚的に隠れるが、Figma variant では明示的に `strokes = []` しないと border が残る。
 
+---
+
+## Session 2026-05-12 (#3) — Card Pattern v0.2 Audit-first 補完
+
+**契機**: 「L3 Card Pattern Figma 化」を新規生成で着手しようとしたところ、Audit ステップで Component Set `57:35` が `4. Patterns` ページに**既存**していることを発見。Marc 流 Audit-first protocol が再び有効に作用し、重複生成を回避。
+
+### 成果
+
+| Component | 状態 | Variants | Component Set ID | 操作内容 |
+|---|---|---|---|---|
+| Card | 既存資産の audit + 唯一の gap を補完 | 4（standard / featured / horizontal / flat） | `57:35`（既存）| **shadow `FAMBOX/shadow/1` を 3 variants に適用**（flat 除く） |
+
+### Audit-first で確認した既存実装
+
+| Variant | bg | stroke | shadow（適用前） | 寸法 |
+|---|---|---|---|---|
+| standard | `bg/primary` ✅ | `border/light` 1px ✅ | **なし → shadow/1 適用** | 320 × 383 |
+| featured | `bg/primary` ✅ | `color/brand/drive` 2px ✅ | **なし → shadow/1 適用** | 320 × 312 |
+| horizontal | `bg/primary` ✅ | `border/light` 1px ✅ | **なし → shadow/1 適用** | 480 × 174 |
+| flat | `bg/secondary` ✅ | なし（spec 通り）✅ | なし（spec 通り）✅ | 280 × 176 |
+
+各 variant は Button (`46:32`) Component instance を埋め込み済。Featured は「おすすめ」バッジ用の Frame を内包。
+
+### 学んだこと（追加）
+
+8. **Audit-first protocol は L3 でも有効**: 既存 Card Component Set を発見できたことで「重複生成 → 後で 2 つの Card を統合」という最悪フローを回避。**Figma で何かを作る前に必ず `findAll(name match)` で既存確認** することをルール化。
+
+9. **Effect Style の適用は `setEffectStyleIdAsync` が必須**: 同期 setter (`v.effectStyleId = id`) ではなく async 版を使う（モダン Figma API の規約）。
+
+### Known TODOs（Card v0.3 残）
+
+- **state property 追加**: hover / focus-visible / active / disabled / selected（5 states × 4 variants = +20 variants）
+- **stroke weight Variable バインド**: 現状直値 1 / 2 → `border-width/thin` / `border-width/thick` に置換
+- **Flat の Button instance を `variant=link` に切り替え**: Spec では Flat は Link CTA だが、現状 Primary Button instance が入っている
+
+---
