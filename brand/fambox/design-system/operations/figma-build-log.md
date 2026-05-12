@@ -266,12 +266,66 @@ FAMBOX/typography/font-size/lg        (Button lg 20px)
 ### 次セッション着手候補（更新版）
 
 優先度高い順:
-1. **Bento Tile + Bento Grid Figma 新規生成**: TOP 実装 5/29 期限の主役エリア、Spec 整備済
+1. ✅ **Bento Tile + Bento Grid Figma 新規生成**: 2026-05-12 完了（下記 Session #5 参照）
 2. **Hero Section variants 拡充**: 4 variant × 3 heights = 12 への拡張（または heights を別 property 化）
 3. **FAQ Carousel Figma 新規生成**: spec 化済、preview-faq.html を参照に
 4. **Profile Section Figma 新規生成**: spec 化済、Drive 全面塗り Section
 5. **L3 FormField / Stat Card の spec ↔ Figma 整合確認**: spec md と Figma 実態の差分洗い出し
 6. **Contact Form Figma 生成 + spec md 補強**
 7. **Spinner v0.3** / **Button v0.4 with-icon**
+8. **Bento Tile 残 4 sizes 追加**: 1×1 / 2×1 / 1×2 / 3×2（計 20 variants 完備）
+9. **Bento Grid 内の placeholder を Bento Tile instance に置換**
+
+---
+
+## Session 2026-05-12 (#5) — L3 Bento Tile + L4 Bento Grid Figma 新規生成
+
+**契機**: Audit #4 で「Figma 未実装の Spec md 5 件」のうち最優先（TOP 実装 5/29 期限の主役エリア）として、Bento Tile + Bento Grid を一体生成。Marc 流 incremental に従い、**まず代表 size のみで型を作り、残 sizes は次セッション** とした。
+
+### 成果
+
+| Component | Set ID | Page | Variants | Phase 1 範囲 |
+|---|---|---|---|---|
+| Bento Tile (L3) | `87:26` | 4. Patterns | 4 | 各 variant × default size 2×2（360×360）|
+| Bento Grid (L4) | `91:107` | 5. Components | 3 | placeholder rect で grid layout demo |
+
+### Bento Tile 詳細
+
+各 variant の Variable bind と構造:
+- **standard**: `bg/primary` + `border/light` 1px + `shadow/1` + Eyebrow（Drive `CASE`）+ Title（Bold 24）+ Body（Regular 16）
+- **glass**: dark base 直値 + 半透明 overlay rect（opacity 0.3 黒、Spec の Glass 3 既定）+ 下寄せ白文字
+- **image-fill**: 画像 placeholder（dark blue-gray）+ bottom gradient overlay（透明→黒 0.7、Liner Gradient）+ 下寄せ白文字
+- **stat-focus**: `bg/primary` + `border/light` + `shadow/1` + 大型数字 `-3.2 kg`（56px Drive Bold / `kg` 部分 22px sub）+ ラベル 16px sub
+
+### Bento Grid 詳細（placeholder demo）
+
+各 variant 内に **rect placeholder** を grid 風に配置（後で Bento Tile instance に差替予定）:
+- **Standard** 936×520: 自由配置 5 tiles（2×1 / 1×1×2 / 1×1 / 3×1）
+- **Editorial** 1160×968: **対角線パターン A** 9 tiles（2×2 主役 右上 + 3×2 主役 左下 + 1×1×4 + 2×1×2）— 主役タイルは Drive 2px stroke で識別
+- **Autofit** 936×520: KPI ギャラリー 8 tiles（1×1 均等）
+
+### 発生問題と修復
+
+#### 🐛 Issue 5: Component の resize 後に子要素追加で AUTO sizing が再計算される
+- **症状**: `resize(360, 360)` 直後は 360×360 だが、子テキスト要素を appendChild すると `primaryAxisSizingMode: 'AUTO'` で高さが HUG（コンテンツ依存）に縮む
+- **影響**: Bento Tile 4 variants が当初 86-186px 高さ（期待 360px から大幅縮退）
+- **修復**: 各 variant の `primaryAxisSizingMode = 'FIXED'` を明示設定後、再度 `resize(360, 360)` を実行
+- **再発防止**: Auto-layout component を固定サイズで作るときは、子要素 append 前に `resize` → 子追加 → **`primaryAxisSizingMode = 'FIXED'` 確認 → 必要なら再 resize** の順序を守る。Gotcha 12（layoutSizing は parent.appendChild 後）と関連する罠
+
+### 学んだこと（追加）
+
+12. **Component Set 高さは variants の最終 height に追従しない場合がある**: 内部 variants の高さを変えても Set の bounding box が更新されないことがある。**`set.resize(setW, expectedH)` で明示的に拡張** が確実。
+
+13. **Figma Plugin API でグラデーション overlay**: Linear Gradient は `gradientTransform`（2D アフィン行列）+ `gradientStops` で指定。`[[0,1,0],[-1,0,1]]` で「上 → 下」方向のグラデを実現。
+
+14. **`setRangeFontSize` / `setRangeFills` で複合スタイル**: `-3.2 kg` のように単語内で size / color を変えるときに有効。Spec の「kg 部分 22px sub」など細部要件に対応可能。
+
+### Known TODOs（Bento v0.3 残）
+
+- **Bento Tile 残 4 sizes**: 1×1 / 2×1 / 1×2 / 3×2 → 計 20 variants 完備
+- **Bento Tile state property**: hover（shadow-3 + translateY -2px）/ focus-visible / disabled
+- **Bento Tile Glass の 5 階調 modifier**: glass--1 ～ --5（opacity 0.05 / 0.1 / 0.3 / 0.6 / 0.8）
+- **Bento Grid 内の placeholder を Bento Tile instance に置換**
+- **Tablet / SP responsive variants**: 6 col / 1 col 縦並び
 
 ---

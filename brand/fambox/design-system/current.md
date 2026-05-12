@@ -21,6 +21,7 @@ milestone:
   - 2026-05-12: v0.3 着手（L2 Button Figma state property 拡張完了 / 15 → 60 variants / hover/disabled/loading 3 state を Variable bind 込みで実装 / focus/active と with-icon は v0.4 へ送付 / figma-build-log に Issue 3-4 と再発防止策蓄積）
   - 2026-05-12: v0.2 Figma 整合補完（L3 Card Pattern Figma を Audit-first で発見 — Component Set 57:35 既存。唯一の gap だった shadow を `FAMBOX/shadow/1` で 3 variants 適用 / flat は spec 通り shadow なし維持 / Audit-first protocol が L2/L3 両方で重複生成を回避することを実証）
   - 2026-05-12: 全 Component Set 一括 Audit (#4) — Figma 上 15 Component Sets を発見。L2 全 6 + L3 全 3 + L4 全 6 のマッピング表完成 / spec md 8 件に Figma 参照を追加 / Button 所在ページ誤認を訂正（`0. Cover` → `3. Primitives`）/ Hero Section の variants gap（spec 12 ↔ Figma 3）を検出、v0.3 課題化 / Figma 未実装の Spec md 5 件（Bento Tile/Bento Grid/FAQ/Profile/Contact Form）を特定
+  - 2026-05-12: L3 Bento Tile + L4 Bento Grid Figma 新規生成 (Session #5) — Audit #4 で未実装と判明した TOP 実装 5/29 期限の主役エリアを最優先で生成 / Bento Tile (`87:26`) 4 variants × default size 2×2 / Bento Grid (`91:107`) 3 variants × placeholder grid demo（Editorial 対角線パターン視覚化）/ 残 sizes と instance 置換は v0.3 へ / Figma 未実装 5 件 → 3 件（FAQ / Profile / Contact Form）へ減少
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し

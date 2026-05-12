@@ -371,5 +371,23 @@ L3 Bento Tile（**bento-tile.md**）と一体運用。Tile は単体で存在せ
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
+- **Component Set ID**: `91:107` ✅ 新規生成（2026-05-12）
+- 生成スキル: `figma-component-from-spec` + `figma-use`
+- **実装済 variants**: 3（`variant`: standard / editorial / autofit）
+- **レイアウト demo の構成**（placeholder rect で grid pattern を示す）:
+  - **Standard** (936×520): 自由配置 — 2×1 / 1×1 × 2 / 1×1 / 3×1（5 tiles）
+  - **Editorial** (1160×968): 対角線配置 — 2×2 主役（右上 Drive 枠）+ 3×2 主役（左下 Drive 枠）+ 1×1 × 4 + 2×1 × 2（9 tiles）
+  - **Autofit** (936×520): KPI ギャラリー — 1×1 × 8 均等
+- **主役タイル識別**: `card-featured` と同じく `--color-drive` 2px ストロークで視認可能
+- **未実装（v0.3 で追加予定）**:
+  - 各 variant 内の placeholder rect を **Bento Tile (`87:26`) Component instance に置換**
+  - Tablet（6 col）/ SP（1 col 縦並び）の responsive variants
+  - `bento-gap--sm/md/lg` modifier の Figma 表現
+
 ## Change Log
+- v0.2-figma (2026-05-12): Figma Component Set `91:107` 新規生成（3 variants × placeholder grid demo）。Editorial で対角線パターン A を視覚化、主役タイルを Drive 2px 枠で識別。Bento Tile instance への置換は v0.3
 - v0.2 (2026-04-28): Worksheet §21 確定（3 Variants / DNA 12-6-1 col システム / Gap 16-24-32 既定 + modifier / Editorial 主構図強制 / 4 禁止項目明示）。Brand DNA v0.5 C-Bento グリッド仕様を体系化
