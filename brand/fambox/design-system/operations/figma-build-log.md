@@ -1382,3 +1382,60 @@ main repo `brand/fambox/brand-dna/current.md` への正式反映は宮川さん�
 - TOPページ Week 1 完了 → Week 2 へ: Bento Grid Liquid 化 / Hero v17 統合判断
 
 ---
+
+## Session 2026-05-12 (#23) — TOPページ Week 2 主役: Bento Grid + Tile Liquid 化
+
+**契機**: 実装計画書 Week 2 主役エリア（fam-voices / fam-item の Bento 化）の前提として、Bento Grid + Tile の汎用 Liquid section を生成。Figma Component Set 91:107 (Grid) + 87:26 (Tile) の双方向参照を Liquid に持ち込む。
+
+### 成果
+
+| 成果物 | 場所 | サイズ | 内容 |
+|---|---|---|---|
+| FAMBOX Bento section | `projects/fambox/sections/fambox-bento.liquid` | 563 行 | Grid (3 variants) + Tile (4 variants × 5 sizes × featured) 統合 |
+
+### 実装範囲（Phase 1）
+
+| 機能 | 実装状況 |
+|---|---|
+| **Grid 3 variants** (standard / editorial / autofit) | ✅ section.settings.grid_variant |
+| **Tile 4 variants** (standard / glass / image-fill / stat-focus) | ✅ block.settings.tile_variant |
+| **Tile 5 sizes** (1×1 / 2×1 / 1×2 / 2×2 / 3×2) | ✅ block.settings.tile_size |
+| **Featured** (Drive 2px 枠で主役識別) | ✅ block.settings.is_featured |
+| **Gap modifiers** (sm 16 / md 24 / lg 32) | ✅ section.settings.gap_size |
+| **Responsive**: PC 12 col / Tablet 6 col / SP 1 col | ✅ |
+| Tile クリック化（`<a>` ラップ）| ✅ block.tile_url で切替 |
+| Stat-focus の数字 + 単位（22px sub）| ✅ |
+| Glass の半透明 overlay (`::before` + opacity 0.3) | ✅ |
+| Image-fill の bottom gradient overlay | ✅ |
+| Variable bind + GA4 連携 + reduced-motion | ✅ |
+| **Schema preset**: Editorial (5 tiles) + Autofit KPI (4 tiles) | ✅ 即配置可能 |
+
+### Phase 1 で適用した spec 規律（Anti 回避）
+
+| Anti | 回避方法 |
+|---|---|
+| Gap < 16px（密度過剰）| `bento-gap--sm` の最小値を 16px に clamp |
+| 全 tile 同 size 並列（強弱なし）| Schema コメントで「主役 2×2 推奨」明記、Lint は v0.3 |
+| 全 tile に Featured | block 個別制御 |
+| 12 tile 以上 | block `limit: 12` で厳守 |
+
+### Phase 2 候補
+
+- Editorial variant の主構図 Lint（主役 2×2 最低 1 個チェック）
+- Glass の 5 階調 modifier（glass--1 〜 5）
+- Image fill バインドの強化（responsive sizes）
+- Parallax（Glass tile の背景画像）
+
+### 学んだこと（追加）
+
+49. **Grid + Tile の Liquid 統合は 1 section が正解**: Figma では Grid (`91:107`) と Tile (`87:26`) が別 Component Set として双方向参照していたが、**Liquid ではユーザー編集の単位が「Section」で、Grid と Tile が同じ section.blocks に属する方が編集体験が良い**。Figma の参照構造を機械的に Liquid に持ち込まず、**「ユーザー編集単位」に合わせて統合 / 分離を判断する**。
+
+50. **Schema preset で「最初の配置」を spec 準拠にする**: Editorial preset を「2×2 主役 + 1×1 stat + 1×1 + 2×1 + 3×2 主役」の 5 tile で構成し、spec の「対角線パターン A」を **デフォルトで再現**。これにより Shopify エディタの「Section 追加」時点で DNA 準拠の配置が出来上がる。
+
+### Known TODOs
+
+- Bento v0.3: 主構図 Lint / Glass 5 階調 modifier / Parallax / Image fill responsive
+- Week 2 続き: fam-voices / fam-item を `fambox-bento.liquid` の preset / block 化で実装
+- Week 3-4: 残 Tier 2-3 sections (FAQ / Profile / value-proposition 等)
+
+---
