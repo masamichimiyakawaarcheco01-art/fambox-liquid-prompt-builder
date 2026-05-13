@@ -638,7 +638,91 @@ FAMBOX/typography/font-size/lg        (Button lg 20px)
 - **size 別のコンテンツ最適化**: 1×1 / 2×1 / 1×2 / 3×2 ごとの推奨コンテンツ密度を spec 化（タイトル文字数 / 本文行数 等）
 - **state property 追加**: hover（shadow-3 + translateY -2px）/ focus-visible / disabled
 - **Glass の 5 階調 modifier**: glass--1 ～ --5（opacity 0.05 / 0.1 / 0.3 / 0.6 / 0.8）を別 property 化
-- **Bento Grid (`91:107`) の placeholder rect を Bento Tile instance に置換**（Phase 3、別セッション）
-  - 課題: Tile 固定 size（2×2 = 360×360）と Grid 内 placeholder size（2×2 ≈ 424×424）の乖離 → instance resize の挙動検証が必要
+- ✅ **Bento Grid (`91:107`) の placeholder rect を Bento Tile instance に置換**（Phase 3）— Session #11 で editorial variant 完了
+
+---
+
+## Session 2026-05-12 (#11) — Bento Grid editorial × Bento Tile 双方向参照確立（Phase 3）
+
+**契機**: Bento Tile 20 variants 完備（#10）で Tile 側準備が整ったため、Bento Grid editorial variant の placeholder 9 個を Bento Tile instance に置換し、**Tile 単体修正が Grid demo に自動反映** される双方向参照を確立する。
+
+### SKILL の各ステップ実証ログ
+
+| Step | 実行内容 | 結果 |
+|---|---|---|
+| 0. Audit-first | Grid (`91:107`) と Tile (`87:26`) の現状確認 | ✅ |
+| 1. Spec md | editorial パターン A の 9 tiles 構成を再確認（主役 2×2 + 主役 3×2 + 1×1×4 + 2×1×2）| ✅ |
+| 2. Variables | 既存 token 再利用 | ✅ |
+| 3. Component 操作 | placeholder の x/y/size/stroke 識別 → Tile instance 化 → resize → placeholder 削除 | ✅ 9/9 成功 |
+| 4. スクリーンショット検証 | 全 9 tiles が instance として表示確認、課題 3 件検出 | ✅ + 課題発見 |
+| 5. spec md 更新 | bento-grid.md に v0.3 進捗とv0.4 残 TODO 追加 | ✅ |
+| 6. figma-build-log 更新 | 本 Session #11 を記録 | ✅ |
+| 7. current.md milestone | 双方向参照確立マイルストーン追加 | ✅ |
+
+### 成果
+
+| Component | 操作 | 結果 | Set ID |
+|---|---|---|---|
+| Bento Grid editorial | placeholder 9 個 → Bento Tile instance 9 個に置換 | 双方向参照確立 | `91:107` / editorial variant `91:67` |
+
+### Tile instance マッピング規則
+
+| placeholder 属性 | 適用 Tile variant |
+|---|---|
+| stroke = 2px Drive（主役）| **glass** variant |
+| stroke = 1px border-light（非主役）| **standard** variant |
+| size label "1×1" | tile size `1x1` |
+| size label "2×1" | tile size `2x1` |
+| size label "2×2" | tile size `2x2` |
+| size label "3×2" | tile size `3x2` |
+
+placeholder の x/y/width/height を読み取り、instance を **同位置・同サイズ** で配置（`instance.resize(phW, phH)` で Grid 内の placeholder サイズに合わせる）。
+
+### 検出した次 Phase 課題
+
+#### 🐛 Issue 8: Tile instance 化で主役識別の Drive 2px 枠が消失
+- **症状**: placeholder では Drive 2px stroke で主役識別していたが、Tile instance には Drive stroke が含まれない
+- **原因**: Bento Tile Component 自体に `featured` 概念がなく、主役識別が Grid 側 placeholder の責務だった
+- **対処（v0.4）**: 以下のいずれか:
+  - (A) Bento Tile に **`featured` boolean property** を追加し、true で Drive 2px stroke を表示
+  - (B) Bento Tile に **`featured` variant** を追加（Card の `card-featured` と同パターン）
+  - (C) Grid 側で instance の上に Drive stroke の rect overlay を別途配置
+- **暫定**: 主役識別が失われたまま v0.3 完了とし、v0.4 で (A) または (B) を実装
+
+#### 🐛 Issue 9: resize した Tile instance のコンテンツ密度オーバー
+- **症状**: 1×1 (200×200) / 2×1 (424×200) では本文「タイルタイトル / 本文テキストの説明…」が切れる
+- **原因**: Tile の auto-layout がコンテンツ固定で、container resize しても text は wrap せず溢れる
+- **対処（v0.4）**: size 別の text overflow 規律を spec で確定（例: 1×1 は title のみ、2×1 は title + 1 行本文）
+
+#### 🐛 Issue 10: Glass variant 3×2 のテキスト下寄せが過剰
+- **症状**: 3×2 メガサイズで Glass の text が左下に集中、main hero として上中央に配置したい
+- **原因**: Glass variant の `primaryAxisAlignItems: 'MAX'` がデフォルト、size 共通で適用されてしまう
+- **対処（v0.4）**: Glass variant に `align` boolean property（top / bottom）を追加 or size 別の auto-layout overrideroad
+
+### 学んだこと（追加）
+
+27. **既存 Component の instance 化と resize で双方向参照を確立**: `createInstance()` → `resize(W, H)` で別サイズ Set の demo として利用可能。Tile 単体修正が Grid に反映される設計が機能。
+
+28. **instance 化で「stroke / overlay 等の placeholder 固有属性は失われる」**: placeholder の strokes は Tile に転写されない。**主役識別など Component 横断の状態は Tile 側 property として持つべき**（Phase 3 で発覚した設計ミス）。
+
+29. **resize は内部 auto-layout を**ある程度**追従させる**: Tile の auto-layout は container 拡張時に縦間隔が維持される。ただしテキストの wrap までは制御できないので、size 別の text overflow 規律を spec で別途定める必要がある（学び 29.5）。
+
+### SKILL v0.2 の検証結果（実証 3 回目）
+
+| 検証項目 | 評価 | コメント |
+|---|---|---|
+| Step 0 Audit + 既存 Component の inspect | ◎ | placeholder 9 個と Tile 20 variants の mapping を一発取得 |
+| Step 3 instance 化フロー | ◎ | createInstance + resize + 削除の 3 ステップが clean |
+| Step 4 検証で課題発見 | ◎ | screenshot で Issue 8-10 を即特定 |
+| Step 5-7 ドキュメント反映 | ◎ | v0.4 課題化が体系的 |
+| **総合** | **A** | SKILL は有効、ただし「Phase 3 = 双方向参照確立」のような新ユースケースで Issue を新規発見 → SKILL v0.3 にも反映余地あり |
+
+### SKILL v0.3 改善候補（追加）
+
+- **Phase 3「Component 間の参照確立」**を Step 3 のサブパターンとして明記:
+  - instance 化と resize の手順
+  - placeholder 固有属性（stroke / overlay 等）が転写されないことを警告
+  - 主役識別など状態は Component 側 property として設計推奨
+- **Tile 間サイズ乖離の検証手順**を Step 4 に追加（resize 前後の auto-layout 挙動を screenshot で比較）
 
 ---

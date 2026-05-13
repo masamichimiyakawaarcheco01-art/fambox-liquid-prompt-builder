@@ -27,6 +27,7 @@ milestone:
   - 2026-05-12: 📚 **`figma-component-from-spec` SKILL v0.2 整備** (Session #8) — 8 セッションで蓄積した 20 項の学び + 7 つの実 Issue を 287 行の SKILL に体系化 / `.claude/skills/figma-component-from-spec/SKILL.md` として git 管理対象化 / Marc 流 7 ステップ workflow + Issue 1-7 + 学び 1-20 + チェックリスト構成 / 次プロジェクト・別 brand での即活用可能なナレッジ資産化完了
   - 2026-05-12: ✅ **Hero Section variants 完備 + SKILL v0.2 実証実験** (Session #9) — 直前整備の SKILL v0.2 を実 Component で愚直に 7 ステップ実行し有効性を検証 / Hero `67:73` に video-split 追加（3 → 4 variants）/ spec の 4 variants gap 解消 / heights property は v0.4 / SKILL 検証結果 A+ / 学び 23-24 追加（既存 Set への variant 追加と x/y 配置規則）
   - 2026-05-12: 🎨 **Bento Tile 20 variants 完備** (Session #10) — SKILL v0.2 実証 2 回目（L3 2D property 拡張）/ Bento Tile `87:26` に size property 拡張で残 4 sizes（1×1/2×1/1×2/3×2）を 16 variants 追加 / 4 variant × 5 size = **20 variants 完備**、4 列 × 5 行 grid 配置 / 1×1 でコンテンツ切れ検出 → v0.4 で size 別最適化を spec 化 / SKILL 検証 A+ / 学び 25-26 追加（variantOptions 追加順 / 2D property の grid 配置）/ Bento Grid placeholder 置換は Phase 3 で実施
+  - 2026-05-12: 🔗 **Bento Grid editorial × Tile 双方向参照確立** (Session #11, Phase 3) — placeholder 9 個 → Bento Tile instance 9 個に置換完了 / 主役 = Glass / 非主役 = Standard で variant 自動選択 / Tile 単体修正が Grid editorial demo に自動反映 / Issue 8-10 検出（主役 Drive 枠消失 / size 別 content 密度 / Glass 3×2 下寄せ）→ v0.4 課題化 / SKILL v0.2 実証 3 回目 A / 学び 27-29 追加（instance + resize で双方向参照 / placeholder 固有属性は転写されない / resize と auto-layout の関係）
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し
