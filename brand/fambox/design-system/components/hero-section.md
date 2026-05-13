@@ -668,12 +668,17 @@ JS で scrollY に応じて `--media-translate-y` を更新。既存 tokens の 
   - 左 video placeholder（dark teal）/ 右 video placeholder（dark slate）
   - 4 Corner Icons（40 × 40 Drive、四隅 32px offset）
   - 中央 overlay frame: Eyebrow "FAMBOX × CAMPAIGN" / Title Bold 48 / Sub Regular 16 / CTA Button instance
-- **未実装（v0.5 で追加予定）**:
-  - height 別のコンテンツ密度最適化（compact で内部要素が見切れる場合の auto-layout 調整）
+- **v0.5 進捗（2026-05-12 Session #18）**:
+  - ✅ **Issue 12 完全解消** — height 別のコンテンツ密度最適化を 6 variants（compact 4 + tall 2）に適用
+  - compact: video-fullscreen の padding 96→40、minimal-text の padding 96→64、image-editorial の Rectangle 500h→336h、video-split の video/corners を 400h に再配置
+  - tall: image-editorial の Rectangle 500h→486h、video-split の video/corners を 550h に再配置
+- **未実装（v0.6 で追加予定）**:
   - NBA HOOP モード（Editorial Variant のタイポ重ね ON/OFF）の boolean property 化
   - 動画パララックス挙動（Figma では仕様メモのみ、実装は Liquid 側）
+  - video-fullscreen / video-split の `image-fill` Image fill バインド（現状 dark placeholder）
 
 ## Change Log
+- v0.5-figma (2026-05-12): Session #18 で Issue 12 を完全解消 — compact/tall variants 6 件の内部 auto-layout を補修（padding 縮小・Rectangle resize・video-split 再配置）。SKILL v0.5 の Phase 2 事前 audit ルーチンを実証
 - v0.4-figma (2026-05-12): Session #16 で **height property を追加**（4 → 12 variants 完備）。spec の `hero--full/tall/compact` を Figma 上で完全再現。minimal-text の既存 1440×500 を 1440×700 に統一して default 揃え。SKILL v0.4 Phase 2 1D 拡張パターン実証 (A+)
 - v0.3-figma (2026-05-12): Session #9 で video-split variant を追加（4 variants 完備）。spec の 4 variants gap を解消、heights property は v0.4 へ送付
 - v0.2-figma (2026-05-12): Audit #4 で Component Set `67:73` を既存確認。実装は 3 variants で spec の 12 variants（4×3）から欠落、v0.3 で要整合

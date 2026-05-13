@@ -1111,3 +1111,58 @@ function sizeKey(w, h) {
 - **Phase 4 提案: コンテンツ最適化**: Phase 2/3 後の auto-layout 補修・size 別 padding override を体系化
 
 ---
+
+## Session 2026-05-12 (#18) — Issue 12 解消（SKILL v0.5 事前 audit 実証）
+
+**契機**: SKILL v0.5 で正式手順化した「Phase 2 事前 audit」を実 Issue で実証。Hero Section の compact/tall variants の内部 auto-layout が default size 前提で設計されていた問題（Issue 12）を、audit → 補修パターンで完全解消する。
+
+### SKILL v0.5 事前 audit 実証ログ
+
+| ステップ | 実行内容 | 結果 |
+|---|---|---|
+| 事前 audit | compact 4 + tall 2 = 6 variants の内部構造（layoutMode / padding / 子要素 size）を inspect | ✅ 問題箇所 4 件特定 |
+| 補修計画 | (A) padding 縮小 / (B) 内部 Rectangle resize / (C) layoutMode=NONE の絶対座標再計算 の 3 パターンを選定 | ✅ |
+| 補修実行 | 6 variants を 1 script で一括補修 | ✅ エラー 0 |
+| 検証 | screenshot で全 12 variants の表示確認、見切れ要素ゼロ | ✅ Issue 12 完全解消 |
+
+### 事前 audit で検出した問題詳細
+
+| Variant | height | 問題 | 補修内容 |
+|---|---|---|---|
+| video-fullscreen | compact | padding 96×2 + 内部要素 260h > 利用可 208h | padding 96→40、itemSpacing 24→12 |
+| image-editorial | compact | 内部 Rectangle が 500h で 400h frame 内に収まらない | padding 96→32、Rectangle 500h→336h |
+| minimal-text | compact | 元々問題なし（内部 149h < 利用可 208h）だが余裕で padding 縮小 | padding 96→64、itemSpacing 16→12 |
+| video-split | compact | layoutMode=NONE、video 720×700 が 400h frame 外にはみ出す | video left/right 700h→400h、corners 再配置、overlay 中央 |
+| image-editorial | tall | Rectangle 500h が 550h - padding 192 = 358h より大 | padding 96→72、Rectangle 500h→486h |
+| video-split | tall | video 700h が 550h frame 外 | video 700h→550h、corners 再配置 |
+
+### 補修パターン（学び 42）
+
+3 つの再利用可能なヘルパー関数として整理:
+- **`fixVerticalVariant(v, padding, itemSpacing)`**: VERTICAL auto-layout の padding / itemSpacing を縮小
+- **`fixImageEditorial(v, padding, rectH)`**: HORIZONTAL auto-layout で内部 Rectangle のサイズを補修
+- **`fixVideoSplit(v, targetH)`**: layoutMode=NONE で video/corners/overlay を targetH に合わせて手動再配置
+
+これらは **Phase 2 後の auto-layout 補修パターン** として SKILL v0.6 に「Phase 4: コンテンツ最適化」として組み込み候補。
+
+### SKILL v0.5 の検証結果（実証 1 回目）
+
+| 検証項目 | 評価 | コメント |
+|---|---|---|
+| Phase 2 事前 audit による問題検知 | ◎ | 6 variants で問題箇所 4 件、全件事前検出可能 |
+| Issue 12 の対処パターン化 | ◎ | 3 つのヘルパー関数で補修フローを再利用可能化 |
+| **総合** | **A+** | 事前 audit ルーチンが実 Issue で機能することを実証 |
+
+### 学んだこと（追加）
+
+42. **補修パターンも SKILL に組み込む**: Phase 2 後の auto-layout 補修は 3 パターンに分類可能（VERTICAL padding 縮小 / HORIZONTAL 内部 Rectangle / NONE 絶対座標）。**Phase 4 = コンテンツ最適化フェーズ** として SKILL v0.6 に正式追加候補。
+
+43. **事前 audit は実 Issue で初めて価値が顕在化する**: v0.5 で事前 audit ルーチンを SKILL に追加した時点では「予防的な手順」でしかなかったが、Session #18 で実際に Issue 12 を audit → 検知 → 補修まで通したことで、**ルーチンの有効性が実証** された。SKILL 整備は実証ループとセットで進化する（学び 30 の延長）。
+
+### Known TODOs（Hero v0.6 残）
+
+- NBA HOOP モードの boolean property 化
+- video-fullscreen / video-split の `image-fill` Image fill バインド
+- minimal-text の sub text が compact で 0 行になる場合の挙動確認
+
+---
