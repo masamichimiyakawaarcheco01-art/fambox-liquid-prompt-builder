@@ -1,10 +1,10 @@
 ---
 name: figma-component-from-spec
-description: Markdown 仕様（components/*.md）から Figma Component Set を生成・更新・統合する手順。Marc-Antoine 流の Audit-first（既存生成 + Phase 2/3 事前 audit）/ 小さく作って大きく展開 / Phase 戦略（1=新規 / 2=property 拡張 / 3=参照確立）/ instance swap / 寸法から size 自動推定 / Build Log 蓄積 を体系化したスキル。Use when generating a Figma Component Set from a spec md, expanding variants (state / size / height / boolean property / featured), replacing placeholders with instances, or swapping existing instances to different variants. Triggers on "Figma に Component を作って", "spec から Figma 化", "L2/L3/L4 を Figma 化", "Component Set 拡張", "variant property 追加", "instance に置換", "featured 追加", "instance を swap", "height property 追加", "spec と Figma の整合性確認".
-version: 0.5
+description: Markdown 仕様（components/*.md）から Figma Component Set を生成・更新・統合・最適化する手順。Marc-Antoine 流の Audit-first（既存生成 + Phase 2/3 事前 audit）/ 小さく作って大きく展開 / Phase 戦略（1=新規 / 2=property 拡張 / 3=参照確立 / 4=コンテンツ最適化）/ instance swap / 寸法から size 自動推定 / 補修ヘルパー関数群 / Build Log 蓄積 を体系化したスキル。Use when generating a Figma Component Set from a spec md, expanding variants, replacing placeholders, swapping instances, or fixing auto-layout overflow after size expansion. Triggers on "Figma に Component を作って", "spec から Figma 化", "L2/L3/L4 を Figma 化", "Component Set 拡張", "variant property 追加", "instance に置換", "featured 追加", "instance を swap", "height property 追加", "auto-layout 補修", "見切れ修正", "padding override", "spec と Figma の整合性確認".
+version: 0.6
 last_updated: 2026-05-12
 owner: 宮川（FAMBOX DS）
-origin: Marc-Antoine（Smart City Kit）の 4 層スタック（L1 Transport / L2 Skill / L3 Tokens / L4 CLAUDE.md / L5 Audit-first）を FAMBOX に翻訳。2026-05-12 の 16 セッションで蓄積した 39 項の学び + 12 の実問題（Issue 1-12）+ Phase 1/2/3 戦略 + Phase 2/3 事前 audit + Phase 3 の 2 パターン を体系化
+origin: Marc-Antoine（Smart City Kit）の 4 層スタック（L1 Transport / L2 Skill / L3 Tokens / L4 CLAUDE.md / L5 Audit-first）を FAMBOX に翻訳。2026-05-12 の 18 セッションで蓄積した 43 項の学び + 12 の実問題（Issue 1-12 — 全件解消／回避策あり）+ Phase 1/2/3/4 戦略 + Phase 2/3 事前 audit + Phase 3 の 2 パターン + Phase 4 補修ヘルパー 3 種 を体系化
 ---
 
 # figma-component-from-spec
@@ -260,6 +260,80 @@ function sizeKey(w, h) {
 - ✅ source Component を後で修正すれば、すべての instance に自動反映される（Marc 流の DRY 原則）
 - ✅ swapComponent は同 file 内 variant の切替に最適（位置・サイズ保持）
 
+#### Phase 4: コンテンツ最適化（v0.6 追加）
+
+Phase 2/3 後の **auto-layout 内部要素の見切れ・はみ出し補修**フェーズ。size 拡張で内部 padding / itemSpacing / 内部 Rectangle / 絶対座標が default size 前提のまま残ると、縮小方向で要素オーバーフロー（Issue 12）。Phase 4 は **「サイズ変動後の見せ方を size ごとに最適化」** する独立フェーズ。
+
+##### いつ Phase 4 が必要か
+
+| 条件 | Phase 4 必要？ |
+|---|---|
+| Phase 2 で size / height property を拡張した | **ほぼ必須**（縮小方向では特に必要）|
+| Phase 3 で instance を異なる size に resize した | 条件付き必要（Issue 9-10 相当があれば）|
+| 既存 auto-layout が default size 前提で設計 | **必須**（事前 audit で要検知）|
+| 全 variants が縮小耐性のある auto-layout | スキップ可 |
+
+##### 補修ヘルパー関数 3 種（学び 42）
+
+Hero Section の Issue 12 解消で確立した補修パターン。再利用可能なヘルパーとして整理:
+
+```js
+// Pattern 1: VERTICAL auto-layout の padding / itemSpacing 縮小
+function fixVerticalVariant(v, newPadding, newItemSpacing) {
+  v.paddingTop = newPadding;
+  v.paddingBottom = newPadding;
+  if (newItemSpacing !== undefined) v.itemSpacing = newItemSpacing;
+}
+
+// Pattern 2: HORIZONTAL auto-layout で内部 Rectangle のサイズを縮小
+function fixHorizontalVariantRect(v, newPadding, internalRectName, newRectH) {
+  v.paddingTop = newPadding;
+  v.paddingBottom = newPadding;
+  const rect = v.children.find(c => c.type === 'RECTANGLE' || c.name === internalRectName);
+  if (rect) rect.resize(rect.width, newRectH);
+}
+
+// Pattern 3: layoutMode=NONE で絶対座標再配置
+function fixAbsoluteLayoutVariant(v, targetH, anchorNames) {
+  // anchorNames = { bottomAlign: ['corner-bl', 'corner-br'], centerY: ['hero-overlay'] }
+  for (const c of v.children) {
+    if (anchorNames.resize?.includes(c.name)) c.resize(c.width, targetH);
+    if (anchorNames.bottomAlign?.includes(c.name)) c.y = targetH - 32 - c.height;
+    if (anchorNames.centerY?.includes(c.name)) c.y = (targetH - c.height) / 2;
+  }
+}
+```
+
+##### Phase 4 の典型フロー
+
+```js
+// 1) audit: どの variants で要素オーバーフローが起きているか
+const audit = compactVariants.map(v => ({
+  name: v.name,
+  innerHeight: v.children.reduce((sum, c) => sum + c.height, 0),
+  availableHeight: v.height - v.paddingTop - v.paddingBottom
+}));
+// audit.filter(a => a.innerHeight > a.availableHeight) で補修対象を特定
+
+// 2) variant ごとに適切な補修パターンを選択
+for (const v of compactVariants) {
+  const variantType = v.layoutMode;
+  if (variantType === 'VERTICAL') fixVerticalVariant(v, 32, 12);
+  else if (variantType === 'HORIZONTAL') fixHorizontalVariantRect(v, 32, 'Rectangle', 336);
+  else if (variantType === 'NONE') fixAbsoluteLayoutVariant(v, 400, {
+    resize: ['video-left', 'video-right'],
+    bottomAlign: ['corner-bl', 'corner-br'],
+    centerY: ['hero-overlay']
+  });
+}
+
+// 3) screenshot で全 variants 補修後の見え方を検証
+```
+
+##### Phase 4 の代替案: Override Property
+
+Component Property の Override（プロパティ上書き）機能を使えば、サイズごとに padding / itemSpacing を boolean property で切替できる。ただし Figma の Component Property は variant 値で hard-bind されない部分（padding 値）には適用不可なため、**現状は ヘルパー関数による補修が現実解**。将来 Figma 側で size-aware override が拡張されれば SKILL v0.7 で再検討。
+
 ### Step 4: スクリーンショット検証
 
 #### 撮影単位の選択（学び 4.1）
@@ -477,6 +551,14 @@ N. ...
 38. **1D 拡張でも 2D matrix 配置がレビューしやすい**: variant × 新 property のような 2 軸組合せは、新 property が 1D だけ拡張する場合でも matrix 配置することで完備状況が一目瞭然
 39. **既存 variants のサイズ差異は Phase 2 着手前に統一**: 不揃いがあると後続 variants が綺麗に配置されない。`set.children.forEach` で size を統一してから clone することで、配置 grid が崩れない
 
+### 事前 audit メタパターン（v0.5 追加）
+40. **事前 audit は Phase 戦略のメタパターン**: Step 0 Audit-first（既存 Component 全件確認）と並んで、各 Phase 着手前にも事前 audit を入れる。後で「Issue として表面化する問題」を着手前に検知できる
+41. **SKILL は Issue 検知のチェックポイントを増やすほど堅牢化**: 各 Phase の事前 audit で「想定外を早期発見」する設計。Issue 12 のように後発の問題も事前検知できれば「補修計画を組み込んでから進む」判断が可能
+
+### Phase 4 コンテンツ最適化（v0.6 追加）
+42. **補修パターンも SKILL に組み込む（Phase 4 化）**: Phase 2 後の auto-layout 補修は **3 パターン**に分類可能（VERTICAL padding 縮小 / HORIZONTAL 内部 Rectangle / NONE 絶対座標）。3 つのヘルパー関数として SKILL に組み込み、再利用可能に
+43. **事前 audit は実 Issue で初めて価値が顕在化する**: v0.5 で audit ルーチンを SKILL に追加した時点では「予防的な手順」だったが、Session #18 で実際に Issue 12 を audit → 検知 → 補修まで通したことで、**ルーチンの有効性が実証**。SKILL 整備は **実証ループとセットで進化** する（学び 30, 36 の系列）
+
 ---
 
 ## チェックリスト（コミット前）
@@ -504,6 +586,13 @@ N. ...
 - [ ] **Pattern B**: 既存 instance の id を取得 → 切替先 variant の id を取得 → `existingInstance.swapComponent(newVariant)` で 1 行 swap
 - [ ] **寸法 → size key 自動推定** を用意した（text label 欠落でも動作させる、学び 35）
 - [ ] resize 前後の text wrap / overflow を screenshot で検証した（Issue 9-10）
+
+### Phase 4 (コンテンツ最適化) — v0.6 追加
+- [ ] **必要性の判定**: Phase 2/3 後で内部 auto-layout が default size 前提のままか確認した
+- [ ] **audit**: 各 variants の innerHeight vs availableHeight を比較、オーバーフロー対象を特定
+- [ ] **補修パターン選択**: VERTICAL なら `fixVerticalVariant`、HORIZONTAL なら `fixHorizontalVariantRect`、NONE なら `fixAbsoluteLayoutVariant`
+- [ ] **補修実行**: 対象 variants を 1 script で一括補修、エラー 0 を確認
+- [ ] **検証**: screenshot で全 variants の見切れ・はみ出しゼロを確認
 
 ### 共通（コミット前）
 - [ ] spec md に「## Figma 参照」セクションを追加した（ID / variants / Variable bind / TODO）

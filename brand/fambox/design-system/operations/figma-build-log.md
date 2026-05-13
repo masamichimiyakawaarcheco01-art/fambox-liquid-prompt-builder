@@ -1166,3 +1166,72 @@ function sizeKey(w, h) {
 - minimal-text の sub text が compact で 0 行になる場合の挙動確認
 
 ---
+
+## Session 2026-05-12 (#19) — figma-component-from-spec SKILL v0.6 整備
+
+**契機**: Session #18 の Issue 12 補修で得た 3 つのヘルパー関数（fixVerticalVariant / fixImageEditorial / fixVideoSplit）と Phase 4 = コンテンツ最適化フェーズの概念を SKILL に正式組み込み。学び 42-43 を還元。
+
+### v0.6 で追加した内容
+
+#### 1. frontmatter 拡充
+- `description`: 「auto-layout 補修」「見切れ修正」「padding override」を triggers に追加
+- 「Phase 戦略（1=新規 / 2=property 拡張 / 3=参照確立 / **4=コンテンツ最適化**）」と 4 フェーズ明示
+- `origin`: 16 → 18 セッション / 39 → 43 学び / **Phase 4 補修ヘルパー 3 種** を体系化
+- `version`: 0.5 → 0.6
+
+#### 2. Phase 4 = コンテンツ最適化セクションを正式追加（v0.6 主成果）
+- 「いつ Phase 4 が必要か」判定表
+- **補修ヘルパー関数 3 種**を一般化:
+  - `fixVerticalVariant(v, newPadding, newItemSpacing)`
+  - `fixHorizontalVariantRect(v, newPadding, internalRectName, newRectH)`
+  - `fixAbsoluteLayoutVariant(v, targetH, anchorNames)`
+- Phase 4 の典型フロー（audit → 補修パターン選択 → 検証）コードサンプル付き
+- 代替案: Override Property の制約と将来検討（v0.7 候補）
+
+#### 3. ベストプラクティスを 39 → 43 項に拡張
+- **新カテゴリ「Phase 4 コンテンツ最適化」（42-43）**
+- 既存「事前 audit メタパターン」カテゴリ（40-41）を独立化
+
+#### 4. チェックリストに「Phase 4」セクション追加（5 項目）
+- 必要性の判定 / audit / 補修パターン選択 / 補修実行 / 検証
+
+### Phase 1-4 完成形フロー（v0.6 確定）
+
+```
+[Step 0] 既存全件 Audit (図全体)
+   ↓
+[Step 1] Spec md 読み込み
+   ↓
+[Step 2] Variables / Effect Styles 取得
+   ↓
+[Step 3] Phase 戦略選択
+   ├─ Phase 1 (新規生成)
+   ├─ Phase 2 (property 拡張)
+   │  ├─ 事前 audit (v0.5)
+   │  └─ rename → clone → 配置
+   ├─ Phase 3 (参照確立)
+   │  ├─ 事前 audit (v0.5)
+   │  ├─ Pattern A (placeholder → instance)
+   │  └─ Pattern B (instance → instance swap)
+   └─ Phase 4 (コンテンツ最適化) ← v0.6 追加
+      ├─ audit: innerH vs availableH
+      ├─ 補修パターン選択 (VERTICAL / HORIZONTAL / NONE)
+      └─ ヘルパー関数で 1 script 補修
+   ↓
+[Step 4] スクリーンショット検証
+   ↓
+[Step 5-7] spec md / build-log / current.md 更新 → commit
+```
+
+### 学んだこと（追加）
+
+44. **Phase 戦略は線形でなく入れ子**: Phase 1 → 2 → 3 → 4 と進む必要はなく、各 Component の状態に応じて **「Phase 2 を実施したから Phase 4 も必要」のような連動条件** がある。SKILL は **「条件 → Phase 選択」** を明示する設計に進化中。
+
+### SKILL v0.7 候補
+
+- **Phase 2/3/4 事前 audit の自動化 helper script**: 手動 mental simulation を Plugin API 化
+- **brand 横展開のパラメータ化**: `brand/<brand>/` パスを変数化
+- **Token migration セクション**: 既存 Component の直値 → Variable bind 置換手順
+- **Phase 5 提案: テスト**: Component Set を import → 利用シーンで検証する自動テスト
+
+---
