@@ -1557,3 +1557,58 @@ main repo `brand/fambox/brand-dna/current.md` への正式反映は宮川さん�
 - Stat Card / Case Study Liquid 化（Tier 1-2 補完）
 
 ---
+
+## Session 2026-05-12 (#26) — TOPページ Week 4 残: easy-cooking preset + menu-showcase tokens ガイド
+
+**契機**: 実装計画書 Week 4 Day 22-24 の残タスク 2 件を対応。
+- **easy-cooking**: spec で「Hero Section image-editorial tall」と確定 → `fambox-hero.liquid` の preset 追加
+- **menu-showcase**: spec で「専用 Pattern 保持、tokens.css 適用のみ」と確定 → operations/ に tokens 適用ガイドを書き出し（本番テーマ転記対象）
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| Hero preset 拡充（4 個追加）| `fambox-hero.liquid` の schema.presets | Video Fullscreen / Video Split / **Easy Cooking** / Minimal Text の即配置 preset |
+| menu-showcase tokens 移行ガイド | `operations/2026-05-12-menu-showcase-tokens-migration.md` | 直値 → Variable 置換マッピング表 + 改修フロー |
+
+### Hero preset 4 個の内訳
+
+1. **Video Fullscreen** — TOP 用、FAMBOX × ATHLETES
+2. **Video Split (Campaign)** — キャンペーン LP 用、4 Corner Icons
+3. **Easy Cooking (image-editorial tall)** — Week 4 Day 23-24 タスク対応、「解凍するだけ、3 分で完成。」+ 2 CTA
+4. **Minimal Text (FAQ)** — `compact` height、装飾なし
+
+### menu-showcase の戦略的判断
+
+spec の「構造変更なし、tokens.css 適用のみ」確定方針を踏襲し、**新規 Liquid section 不要**と判断:
+- 既存 sections/fambox-menu-showcase.liquid (264 行) は本番テーマリポジトリ管理
+- 横スクロール track という独自レイアウトは Bento / Card に収まらない
+- 「tokens 適用のみで DNA 準拠化」が最小コストで最大効果
+
+### Tokens 移行ガイドの内容
+
+| カテゴリ | マッピング数 |
+|---|---|
+| 色（Drive / Ink / Sub / Caption / Placeholder / White / bg-secondary / border-light）| 8 |
+| 余白（space-1 〜 7）| 7 |
+| Radius（sm / md / pill）| 3 |
+| フォント（Hiragino / Poppins + 4 weight）| 6 |
+| フォントサイズ（caption / body-sm / body / lg / h3 / h2 / h1）| 7 |
+| Shadow（effect style 参照）| 2 |
+| **合計** | **33 placement-rule** |
+
+加えて改修フロー（バックアップ / 置換 / fallback 付与 / grep 検証）と注意点（GA4 属性保持等）を明示。
+
+### 学んだこと（追加）
+
+55. **Liquid preset 拡充は L4 単一 section の表現力を桁違いに上げる**: `fambox-hero.liquid` 1 ファイルが 5 preset を持つことで、**Shopify エディタ上では 5 つの異なる Section type に見える**（実装計画書の "Hero / Easy Cooking / FAQ" などが全部 Hero section に集約）。**spec → Figma → Liquid の三位一体の "Liquid 側" は preset 化で最大化**。
+
+56. **Tokens 移行は「構造変更なし」の中で最大の DNA 準拠化手段**: 直値（hex / px）→ Variable 置換だけで、**ライト / ダーク / カスタムテーマ切替に強くなる**、**brand DNA の token 変更が即反映する**、**spec ↔ 実装の整合性が grep で検証可能になる**。menu-showcase のような独自 Pattern でも、tokens 適用だけで DS 整合できる。
+
+### Known TODOs
+
+- Week 4 完了 → Week 5 (QA / 本番反映) 着手
+- menu-showcase: 本番テーマでの tokens 適用作業（宮川さん手動転記）
+- Modal / Footer / Stat Card / Case Study の Liquid 化（v0.3 候補）
+
+---
