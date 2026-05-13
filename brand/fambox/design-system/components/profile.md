@@ -470,5 +470,36 @@ Profile Section は静的表示。状態遷移は持たない（hover / active �
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
+- **Component Set ID**: `96:79` ✅ 新規生成（2026-05-12 Session #6）
+- 生成スキル: `figma-component-from-spec` + `figma-use`
+- **実装済 variants**: 1（`variant`: section）/ Card variant は v0.3 拡張枠で保留
+- **構造**:
+  - Section bg: `color/brand/drive` (#FB4C15) 全面、padding 64px × 4 辺
+  - **Title box**: 1312 × 72 / 2px solid `drive-light` 枠
+    - Icon box 72×72 / 右に 2px drive-light 縦罫線 (`individualStrokeWeights.right = 2`)
+    - Icon glyph: 40×40 drive-light 半透明 placeholder
+    - "Profile" Poppins Regular 32px white（左 padding 24px）
+  - Title → Profile list: 56px
+  - **Profile list**: HORIZONTAL / gap 64 / 2 boxes 並列
+  - 各 **Profile box** 624 × 517 / `layoutMode: 'NONE'` / `clipsContent: true`:
+    - 背景 placeholder: 全面 dark gray rect（実画像は production で fill）
+    - Content frame 284 wide / 上寄せ左配置:
+      - Name 40px Bold White line 130%
+      - 肩書 14px Medium White line 180%
+      - Spacer 24（line top margin = itemSpacing 8 + spacer 24 = 32）
+      - 区切り線 284 × 2 `drive-light`
+      - Spacer 24（line bottom margin = 32）
+      - Bio 14px Regular White line 180%
+- **未実装（v0.3 で追加予定）**:
+  - **Card variant**（About ページ・メンバー一覧用）
+  - 背景画像の Image Fill バインド（現状 dark placeholder）
+  - SP layout（テキスト下に画像 180px、Card box の縦積み）
+  - WCAG 注: 14px 白 on Drive は AA 大文字非達成、bio を 16px に昇格する spec 改訂候補
+
 ## Change Log
+- v0.2-figma (2026-05-12): Figma Component Set `96:79` 新規生成（Section variant）。Drive 全面塗り + Editorial キャラクターライン（2px drive-light 罫線）+ 2 名並列構造を実装。Title box の Icon 枠は `individualStrokeWeights.right = 2` で実現
 - v0.2 (2026-05-12): preview-profile.html を一次資料に Section Variant を Spec 化。Title border の直書き `#FF7A51` を `--color-drive-light` (#FC825B) に統一。Card variant は v0.3 拡張枠で保留（About ページ・メンバー一覧用）

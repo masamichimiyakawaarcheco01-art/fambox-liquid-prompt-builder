@@ -425,5 +425,30 @@ extensible: true  # v0.3 以降で Accordion variant を追加可能
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
+- **Component Set ID**: `93:90` ✅ 新規生成（2026-05-12 Session #6）
+- 生成スキル: `figma-component-from-spec` + `figma-use`
+- **実装済 variants**: 1（`variant`: carousel）/ Accordion は v0.3 拡張枠で保留
+- **構造**:
+  - Section bg: `bg/secondary` (#FAFAFA)、padding 64px (上下) × 64px (左右)
+  - Title: 「よくあるご質問」Noto Sans JP Bold 32px Ink、margin-bottom 56px
+  - Scroll track: 横並び 4 cards、gap 32px
+  - 各 card 320 wide × auto height:
+    - Avatar 40×40 円（`bg/tertiary` placeholder）
+    - Question N（Poppins SemiBold 24 Ink）
+    - 質問文（Noto Sans JP Bold 18 Ink、line-height 170%）
+    - 黒線 32×2（`ink/ink` 直値）
+    - 回答文（Noto Sans JP Regular 18 **Drive**、line-height 170%）
+    - FAMBOX ロゴ placeholder（80×32 灰色 + テキスト）
+- **未実装（v0.3 で追加予定）**:
+  - Accordion variant（`/pages/faq` 長文 FAQ 専用）
+  - SP layout（card 幅 calc(100vw - 80px) / scroll-snap）
+  - Avatar に実画像 fill bind
+  - hover state（spec で hover 動作はないが、focus-visible は要）
+
 ## Change Log
+- v0.2-figma (2026-05-12): Figma Component Set `93:90` 新規生成（Carousel variant のみ）。4 card sample 構造で Q/A 対比、Drive 強調、黒線キャラクターラインを実装
 - v0.2 (2026-05-12): preview-faq.html を一次資料に Carousel Variant を Spec 化。実装計画書の「Accordion」表記を DNA 整合のため Carousel が Default、Accordion は v0.3 拡張 と再定義

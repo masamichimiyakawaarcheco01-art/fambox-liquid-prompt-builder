@@ -329,3 +329,67 @@ FAMBOX/typography/font-size/lg        (Button lg 20px)
 - **Tablet / SP responsive variants**: 6 col / 1 col 縦並び
 
 ---
+
+## Session 2026-05-12 (#6) — L4 FAQ Carousel + L4 Profile Section Figma 新規生成
+
+**契機**: 直前に Spec 化した 2 件（faq.md / profile.md）を Figma 化することで「spec → Figma」の往復サイクルを締める。Audit #4 で残っていた Figma 未実装 3 件のうち 2 件を本セッションで消化。
+
+### 成果
+
+| Component | Set ID | Page | Variants | サイズ |
+|---|---|---|---|---|
+| FAQ (L4) | `93:90` | 5. Components | 1（`variant`: carousel）| 1440 × 560 |
+| Profile (L4) | `96:79` | 5. Components | 1（`variant`: section）| 1440 × 760 |
+
+### FAQ Carousel 詳細
+
+- Section bg: `bg/secondary` (#FAFAFA)、padding 64×4辺
+- Title: 「よくあるご質問」Noto Sans JP Bold 32 Ink + margin-bottom 56
+- Scroll track: HORIZONTAL / gap 32 / 4 cards
+- 各 card 320 wide / auto height / itemSpacing 24:
+  - Avatar 40×40 円（`bg/tertiary`）
+  - Question N（Poppins SemiBold 24 Ink）
+  - 質問文（Bold 18 Ink、170%）
+  - 黒線 32×2（`ink/ink`）← FAMBOX Editorial キャラクターライン
+  - 回答文（Regular 18 **Drive**、170%）
+  - FAMBOX logo placeholder（80×32）
+
+### Profile Section 詳細
+
+- Section bg: `color/brand/drive` (#FB4C15) 全面、padding 64×4辺
+- Title box: 1312 × 72 / 2px `drive-light` 枠
+  - Icon box 72×72: **右側のみ 2px drive-light 罫線**（`individualStrokeWeights.right = 2`）
+  - Icon glyph: 40×40 drive-light 半透明 placeholder
+  - "Profile" Poppins Regular 32 white
+- Profile list: HORIZONTAL / gap 64 / 2 boxes
+- 各 Profile box 624 × 517 / `layoutMode: 'NONE'` / `clipsContent: true`:
+  - dark bg placeholder
+  - content w284: Name 40 / 肩書 14 / spacer 24 / line 284×2 drive-light / spacer 24 / Bio 14（全 white）
+
+### 発生問題と修復
+
+#### 🐛 Issue 6: `layoutPositioning = 'ABSOLUTE'` は親が auto-layout の時のみ可
+- **症状**: Profile box の `layoutMode: 'NONE'` 内で `content.layoutPositioning = 'ABSOLUTE'` が
+  `Can only set layoutPositioning = ABSOLUTE if the parent node has layoutMode !== NONE` で失敗
+- **原因**: layoutPositioning は auto-layout の **子要素の例外配置**指定 API。NONE の場合は元から x/y で自由配置できるため不要・かつ不正
+- **修復**: `layoutPositioning` 行を削除し、`content.x = 0; content.y = 0` で直接配置
+- **再発防止**: parent の `layoutMode` を判定して、NONE の場合は `layoutPositioning` を**設定しない**。素直に `x/y` だけ使う
+
+### 学んだこと（追加）
+
+15. **`individualStrokeWeights` で部分ボーダー**: Figma の単一 frame で「右だけ 2px 線」を引くには `strokeTopWeight = 0` / `strokeBottomWeight = 0` / `strokeLeftWeight = 0` / `strokeRightWeight = 2` を組み合わせる。CSS の `border-right` 相当を Plugin API で再現する正式手段。
+
+16. **auto-layout の itemSpacing は均一前提**: 「avatar→Q番号 16 / Q番号→質問文 24 / 質問文→線 24 / 線→回答文 24 / 回答文→logo 32」のように要素間で異なる margin を持たせる場合、**spacer frame を挟む** か **個別 padding** で表現する必要がある。今回 Profile は spacer 24px frame で line 上下 32px margin を実現。
+
+17. **`combineAsVariants` は単一 variant でも有効**: 将来 variant 追加余地のある Component は最初から Component Set でラップする方が、後で property 追加しやすい（FAQ / Profile はそれぞれ Carousel / Section の 1 variant だけだが Set 化）。
+
+### Known TODOs（FAQ / Profile v0.3 残）
+
+- **FAQ Accordion variant**: `/pages/faq` 長文 FAQ 専用
+- **FAQ SP layout**: card 幅 `calc(100vw - 80px)` + scroll-snap
+- **Profile Card variant**: About ページ・メンバー一覧用
+- **Profile 背景画像 Image Fill バインド**: 現状 dark placeholder
+- **Profile SP layout**: テキスト下に画像 180px 配置の縦積み
+- **Profile WCAG 改善**: bio 14px white on drive を 16px へ昇格 spec 改訂
+
+---
