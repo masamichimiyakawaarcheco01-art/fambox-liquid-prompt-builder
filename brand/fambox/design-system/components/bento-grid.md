@@ -383,16 +383,19 @@ L3 Bento Tile（**bento-tile.md**）と一体運用。Tile は単体で存在せ
   - **Editorial** (1160×968): 対角線配置 — 2×2 主役（右上 Drive 枠）+ 3×2 主役（左下 Drive 枠）+ 1×1 × 4 + 2×1 × 2（9 tiles）
   - **Autofit** (936×520): KPI ギャラリー — 1×1 × 8 均等
 - **主役タイル識別**: `card-featured` と同じく `--color-drive` 2px ストロークで視認可能
-- **v0.3 進捗（2026-05-12 Session #11）**:
-  - ✅ **editorial variant の placeholder 9 個 → Bento Tile instance に置換完了**（主役 = Glass / 非主役 = Standard で variant 選択、placeholder の x/y/size に instance を配置 + resize）
-  - 双方向参照を確立: Bento Tile 単体修正が Bento Grid editorial に自動反映
+- **v0.3 進捗（2026-05-12 Session #11 → #14 で完成）**:
+  - ✅ **editorial variant**: placeholder 9 個 → Bento Tile instance 置換完了（#11）
+  - ✅ **editorial 主役 2 個**: featured=true 版に `swapComponent` で切替（#14、Issue 8 完全解消）
+  - ✅ **standard variant**: placeholder 5 個 → standard Tile instance 置換完了（#14）
+  - ✅ **autofit variant**: placeholder 8 個 → **stat-focus Tile instance** 置換完了（#14、KPI ダッシュボード spec 整合）
+  - 全 3 variants × Bento Tile 双方向参照確立
 - **未実装（v0.4 で追加予定）**:
-  - **standard / autofit variant の placeholder → Tile instance 置換**（editorial と同手順、size mapping は流用可）
-  - **主役識別の Drive 2px 枠 を Tile 側に復活**（instance 化で消失、Featured variant 追加 or stroke modifier 検討）
   - Tablet（6 col）/ SP（1 col 縦並び）の responsive variants
   - `bento-gap--sm/md/lg` modifier の Figma 表現
+  - **3x1 placeholder の解消**: standard variant に 3x1 wide が残存していたが Tile に 3x1 size がないため 2x1 + resize で対応。Spec の Tile sizes を 3x1 含むか v0.4 で判断
 
 ## Change Log
+- v0.3-figma-完成 (2026-05-12): Session #14 で **3 variants 全 placeholder を Bento Tile instance に置換完了** + editorial 主役 2 個を featured=true 版に swap。Issue 8 完全解消。standard / autofit / editorial の全 22 tile placeholder が双方向参照に
 - v0.3-figma (2026-05-12): Session #11 で editorial variant の placeholder 9 個を Bento Tile instance に置換完了。Tile (87:26) と Grid (91:107) の双方向参照が確立。次は standard / autofit variant の同手順置換 + 主役識別の復活
 - v0.2-figma (2026-05-12): Figma Component Set `91:107` 新規生成（3 variants × placeholder grid demo）。Editorial で対角線パターン A を視覚化、主役タイルを Drive 2px 枠で識別。Bento Tile instance への置換は v0.3
 - v0.2 (2026-04-28): Worksheet §21 確定（3 Variants / DNA 12-6-1 col システム / Gap 16-24-32 既定 + modifier / Editorial 主構図強制 / 4 禁止項目明示）。Brand DNA v0.5 C-Bento グリッド仕様を体系化

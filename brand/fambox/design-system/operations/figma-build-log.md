@@ -839,7 +839,83 @@ x: 0 - 2400                              x: 2500 - 4900
 
 ### Known TODOs（Bento featured v0.4 残）
 
-- **Bento Grid editorial の主役 instances を `featured=true` に切替**（Phase 3 再実装）— Tile 側 property が用意できたので、editorial の 2 主役 (2×2 + 3×2) を `featured=true, variant=glass` の instance に差し替えて Issue 8 を完全解消する
+- ✅ **Bento Grid editorial の主役 instances を `featured=true` に切替**: Session #14 で完了
 - featured=true で `--shadow-2` の hover 拡張（Card Pattern の selected 状態と同期）
+
+---
+
+## Session 2026-05-12 (#14) — Bento エコシステム完成 + Issue 8 完全解消
+
+**契機**: Session #13 で Tile 側に featured property を用意できたので、Bento Grid の Phase 3 を完成させる:
+- editorial の 2 主役 instance を featured=true 版に **swap** で切替
+- standard / autofit variant の placeholder を **Tile instance に置換**（editorial と同手順）
+
+### 成果
+
+| Variant | 操作 | 結果 |
+|---|---|---|
+| editorial | 2 主役 instance を featured=true に **`swapComponent`** | Drive 2px stroke 復活、Issue 8 完全解消 |
+| standard | placeholder 5 個 → **standard Tile instance** 置換 | 双方向参照確立 |
+| autofit | placeholder 8 個 → **stat-focus Tile instance** 置換 | spec 整合（KPI ダッシュボード = "-3.2 kg" × 8）|
+
+**置換総計**: 13 placeholder → 13 instance + 2 swap = 15 操作。エラー 0。
+
+### `swapComponent` の活用（学び 34）
+
+既存 instance の main component を **swap** することで、placeholder を delete + 新 instance を作成 のフローを 1 行に短縮できる。x/y/size はそのまま保持される。
+
+```js
+const hero2x2 = await figma.getNodeByIdAsync('104:57'); // existing instance
+const featuredTrueVariant = await figma.getNodeByIdAsync('105:14'); // glass/2x2/featured=true
+hero2x2.swapComponent(featuredTrueVariant);
+// position/size unchanged, but stroke and all featured=true property reflect through
+```
+
+**Phase 3 の 2 種類のパターン**:
+- **placeholder → instance**: 新規 instance 作成（remove old, create new）
+- **instance → instance**: `swapComponent` で main component を切替（同一 instance 維持）
+
+### 寸法 → size key の自動推定（学び 35）
+
+Bento Grid の placeholder は size label を text として持っていたが、これに依存せず **寸法から size を直接推定** する関数を採用:
+
+```js
+function sizeKey(w, h) {
+  const cols = { 200: 1, 424: 2, 648: 3 }[w] || 2;
+  const rows = { 200: 1, 424: 2 }[h] || 1;
+  // ...
+}
+```
+
+これにより size label が欠落している placeholder（自動配置 etc）でも置換可能。
+
+### 検出した次 Phase 課題
+
+#### 🐛 Issue 11: spec にない size の placeholder（3×1）
+- **症状**: standard variant の最後の placeholder が 648 × 200 = 3×1 だが、Tile sizes は 1x1 / 2x1 / 1x2 / 2x2 / 3x2 のみ
+- **対処**: 2×1 Tile を resize で対応（横長表現は維持できるが、Tile auto-layout が崩れる可能性）
+- **本質的解消**: spec で Tile sizes に **3x1 を追加するか**を v0.4 で判断（DNA 5 sizes 厳守ルールとの整合）
+
+### SKILL v0.3 の検証結果（実証 2 回目）
+
+| 検証項目 | 評価 | コメント |
+|---|---|---|
+| Step 3 Phase 3 「instance → instance swap」パターン | ◎ | v0.3 で明示した「createInstance + resize + remove」に加え、`swapComponent` パターンを発見 → v0.4 SKILL へ追加候補 |
+| 寸法 → size 推定 heuristic | ◎ | spec ↔ Figma の不整合（3x1）に対しても fallback で動作 |
+| placeholder 全件置換の安定性 | ◎ | 13 placeholder + 2 swap = 15 操作でエラー 0 |
+| **総合** | **A+** | SKILL v0.3 Phase 3 は安定運用フェーズ |
+
+### 学んだこと（追加）
+
+34. **`swapComponent` は Phase 3 の第 2 パターン**: 既存 instance を別 variant に切り替える時、delete + new ではなく **swap で in-place 変更**できる。x/y/size を再設定不要、上位の auto-layout 配置も保持される。
+
+35. **寸法 → size key 自動推定**: placeholder の text label に依存せず、width/height の数値から size を逆算する関数で堅牢化。spec ↔ Figma の data 整合性が完璧でなくても動作する。
+
+### Known TODOs（Bento エコシステム v0.4 残）
+
+- Issue 11: Tile に 3x1 size 追加 or Grid placeholder を 2x1 + 1x1 に分割
+- Tablet / SP responsive variants
+- `bento-gap--sm/md/lg` modifier の Figma 表現
+- editorial 以外の variant にも主役識別が必要か仕様レビュー（現状 standard / autofit は主役なし）
 
 ---
