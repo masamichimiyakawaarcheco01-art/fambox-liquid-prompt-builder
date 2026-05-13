@@ -1,10 +1,10 @@
 ---
 name: figma-component-from-spec
-description: Markdown 仕様（components/*.md）から Figma Component Set を生成・更新する手順。Marc-Antoine 流の Audit-first / 小さく作って大きく展開 / Build Log 蓄積 を体系化したスキル。Use when generating a Figma Component Set from a spec md, expanding variants, or auditing the spec ↔ Figma gap. Triggers on "Figma に Component を作って", "spec から Figma 化", "L2/L3/L4 を Figma 化", "Component Set 拡張", "spec と Figma の整合性確認".
-version: 0.2
+description: Markdown 仕様（components/*.md）から Figma Component Set を生成・更新・統合する手順。Marc-Antoine 流の Audit-first / 小さく作って大きく展開 / Phase 戦略 / Component 間参照確立 / Build Log 蓄積 を体系化したスキル。Use when generating a Figma Component Set from a spec md, expanding variants (state / size / instance reference), or auditing the spec ↔ Figma gap. Triggers on "Figma に Component を作って", "spec から Figma 化", "L2/L3/L4 を Figma 化", "Component Set 拡張", "variant property 追加", "instance に置換", "spec と Figma の整合性確認".
+version: 0.3
 last_updated: 2026-05-12
 owner: 宮川（FAMBOX DS）
-origin: Marc-Antoine（Smart City Kit）の 4 層スタック（L1 Transport / L2 Skill / L3 Tokens / L4 CLAUDE.md / L5 Audit-first）を FAMBOX に翻訳。2026-05-12 の 7 セッションで得た 20 項の学び + 7 つの実問題（Issue 1-7）を体系化
+origin: Marc-Antoine（Smart City Kit）の 4 層スタック（L1 Transport / L2 Skill / L3 Tokens / L4 CLAUDE.md / L5 Audit-first）を FAMBOX に翻訳。2026-05-12 の 11 セッションで蓄積した 29 項の学び + 10 の実問題（Issue 1-10）+ Phase 1/2/3 戦略 を体系化
 ---
 
 # figma-component-from-spec
@@ -75,11 +75,13 @@ const shadows = effectStyles.filter(s => /shadow/i.test(s.name)).map(s => ({ id:
 - 確認方法: `valuesByMode` の値が `VARIABLE_ALIAS` 型になっているか、SOLID color になっていないか
 - 異常時は `setValueForMode` で正しい alias に再接続
 
-### Step 3: Component Set 構築（小さく作って大きく展開）
+### Step 3: Component Set 構築（小さく作って大きく展開 + Phase 戦略）
 
-**Phase 1 = 代表 variant / 代表 size のみ作る**。Phase 2 で残を拡張する戦略を取る。
+**Phase 戦略**で進める。Phase 1 で型を作り、Phase 2 で量を増やし、Phase 3 で他 Component との参照を確立する。
 
-例: Button v0.3 → state property 追加（4 states × 5 variants × 3 sizes = 60 variants だが、 まず default の rename だけで state property を認識させ、その後 hover / disabled / loading を個別 step で追加）。
+#### Phase 1: 新規生成（代表 variant のみ）
+
+代表 variant / 代表 size だけ作る。Phase 2 で残を拡張する戦略。
 
 ```js
 // Standard pattern: build each variant as a Component, then combineAsVariants
@@ -88,19 +90,101 @@ variant1.name = 'variant=primary';
 // ... auto-layout / fills / strokes / text setup
 const variant2 = figma.createComponent();
 variant2.name = 'variant=secondary';
-// ...
 const set = figma.combineAsVariants([variant1, variant2, ...], parentPage);
 set.name = 'ComponentName';
 ```
 
 **combineAsVariants は 1 variant でも有効**（学び 17）— 将来 variant 追加余地のある Component は最初から Component Set でラップする。
 
-### Step 4: スクリーンショット検証
+#### Phase 2: 既存 Set への variant property 拡張
+
+既存 Set に新 property（state / size 等）を追加する場合は **rename → clone → grid 配置** のフローを使う。
 
 ```js
-// 各 Set 完成後、必ず get_screenshot で視覚確認
-mcp__figma__get_screenshot({ fileKey, nodeId: set.id, maxDimension: 1800 })
+// 1) Rename existing variants to include the new property's default value
+for (const v of set.children) {
+  if (!v.name.includes('state=')) v.name = v.name + ', state=default';
+}
+
+// 2) Clone defaults and set the new property value
+const defaults = set.children.filter(c => c.name.includes('state=default'));
+for (const def of defaults) {
+  const clone = def.clone();
+  clone.name = def.name.replace('state=default', 'state=hover');
+  set.appendChild(clone);
+  // Apply variant-specific changes (color, border, etc.)
+}
 ```
+
+**配置規則（学び 24, 26）**:
+- **1D 拡張**（state ごとなど）: 既存 variants の縦並び（または横並び）パターンを inspect で確認し、その規則を踏襲。例: y = 既存最終 y + 既存最終 height + 100px gap
+- **2D 拡張**（variant × size のような 2 property 全展開）: **列 = property1 / 行 = property2 の matrix 配置**がレビューしやすい。`x = cIdx * COL_W, y = rIdx * ROW_H`
+
+```js
+// 2D matrix layout example
+const COL_W = 600;  // max width across variants
+const ROW_H = 400;  // max height across sizes
+for (const v of set.children) {
+  const m = v.name.match(/variant=([^,]+), size=([^,]+)/);
+  const cIdx = variantOrder.indexOf(m[1]);
+  const rIdx = sizeOrder.indexOf(m[2]);
+  v.x = cIdx * COL_W;
+  v.y = rIdx * ROW_H;
+}
+set.resize(variantOrder.length * COL_W, sizeOrder.length * ROW_H);
+```
+
+#### Phase 3: Component 間の参照確立（instance 化）
+
+別 Component の placeholder を本 Component の instance に置換することで、**「Component 単体修正が demo に自動反映」される双方向参照**を確立する。
+
+```js
+// 1) Get target Set + source Component map
+const targetSet = await figma.getNodeByIdAsync(targetSetId);
+const sourceVariant = sourceSet.children.find(c => c.name === 'variant=X, size=Y');
+
+// 2) For each placeholder, create instance + position + resize + remove placeholder
+const placeholders = targetSet.children.filter(p => p.type === 'FRAME');
+for (const ph of placeholders) {
+  const instance = sourceVariant.createInstance();
+  targetSet.appendChild(instance);
+  instance.x = ph.x;
+  instance.y = ph.y;
+  instance.resize(ph.width, ph.height);
+  ph.remove();
+}
+```
+
+**Phase 3 の注意点（学び 27-29）**:
+- ⚠ **placeholder 固有属性（stroke / overlay）は instance に転写されない** — 主役識別など状態は **source Component 側の property** として持つべき（Issue 8）
+- ⚠ **resize は内部 auto-layout を「ある程度」追従させるが、text wrap までは制御できない** — size 別 overflow 規律を spec で別途定める（Issue 9-10）
+- ✅ source Component を後で修正すれば、すべての instance に自動反映される（Marc 流の DRY 原則）
+
+### Step 4: スクリーンショット検証
+
+#### 撮影単位の選択（学び 4.1）
+
+| シチュエーション | 撮影対象 | 理由 |
+|---|---|---|
+| 新規生成（Phase 1） | **Component Set 全体** | 全 variants を一覧できる、矩形配置が正しいか即確認 |
+| 拡張（Phase 2、state / size 追加） | **Component Set 全体** | 既存 vs 新 variants の差分を比較できる |
+| 拡張（Phase 2、新 variant 1 個） | **個別 variant** | 新 variant の詳細確認、Set 全体は最後に |
+| 参照確立（Phase 3、instance 化） | **対象 variant** + **個別 instance**（必要時） | layout 全体 → 個別の resize 挙動の順 |
+
+```js
+// Set 全体
+mcp__figma__get_screenshot({ fileKey, nodeId: set.id, maxDimension: 1800 })
+// 個別 variant
+mcp__figma__get_screenshot({ fileKey, nodeId: variantId, maxDimension: 1600 })
+```
+
+#### Phase 3 専用: resize 前後の auto-layout 挙動検証
+
+Component instance の resize で内部 auto-layout がどう振る舞うかを確認する：
+- **拡大方向の resize**: 余白が広がるか / text が中央寄せに戻るか
+- **縮小方向の resize**: text が切れる位置 / コンテンツが overflow するか
+
+問題があれば spec md の「size 別 content 規律」を確定させる（Issue 9）。
 
 確認項目:
 - spec の数値（padding / radius / font-size）と一致しているか
@@ -196,6 +280,23 @@ N. ...
 - **対処**: `child.remove()` を使う（Plugin API のノード削除はこれ）
 - **回避**: そもそも条件分岐で「削除する場面」を作らず、最初から分岐前置で必要な要素だけ作る
 
+### Issue 8: instance 化で placeholder 固有属性（stroke / overlay）が消失
+- placeholder の Drive 2px stroke で主役識別していたが、Tile instance には Drive stroke が含まれない
+- **対処（v0.4 候補）**:
+  - (A) source Component に **`featured` boolean property** を追加（true で stroke 表示）
+  - (B) source Component に **`featured` variant** を追加
+- **回避**: Phase 3 着手前に、**「主役識別など状態は source Component 側の property として設計済か」を確認**。未設計なら Phase 2 で先に property 追加
+
+### Issue 9: resize した instance のコンテンツ密度オーバー
+- instance を縮小 resize すると text が切れる、auto-layout が wrap して縦に伸びる
+- **対処**: spec md の「size 別 content 規律」セクションで、各 size の推奨タイトル文字数 / 本文行数を確定させる
+- **回避**: Phase 1 で **代表 size の auto-layout 設計時に「縮小耐性」を意識** — text に `layoutSizingHorizontal: 'FILL'` を必ず適用、固定幅 text は避ける
+
+### Issue 10: auto-layout `primaryAxisAlignItems: 'MAX'` の縦伸び挙動
+- Glass variant のテキスト下寄せ（MAX）が、3×2 メガサイズで「主役感を出すには下に偏りすぎ」
+- **対処**: variant に **`align` boolean property** を追加（top / bottom）or size 別の layout override
+- **回避**: 全 size で同じ `primaryAxisAlignItems` を使い回さない。各 size の見せ方を spec で個別確定
+
 ---
 
 ## ベストプラクティス（学び 1-20）
@@ -236,14 +337,45 @@ N. ...
 19. **`child.createInstance()` で既存 Component 埋込**: Submit Button などを既存 Set から instance 化、双方向反映が機能
 20. **必須 badge は label row 内の HORIZONTAL frame**: CSS inline-flex 相当を実現
 
+### SKILL 設計
+21. **SKILL は frontmatter の `description` が trigger 判定の核**: 自然言語の起動キーワード（"Figma 化", "variant 拡張", "instance に置換" 等）を網羅して記述
+22. **SKILL は git 管理対象に**: `.claude/skills/<name>/SKILL.md` を **プロジェクトリポジトリ内に置いてコミット** すれば worktree が消えても残り、PR レビュー対象になり、チーム共有できる
+
+### 拡張パターン（Phase 2）
+23. **既存 Set への variant 追加は `set.appendChild(newVariant)`**: 新規 Set 作成より少ない手数、property definitions も自動拡張される
+24. **既存 Set への variants 追加時の x/y 配置規則**: 既存 variants の縦並び（または横並び）パターンを inspect で確認してから、その規則を踏襲する。例: Hero は y = 0 / 800 / 1600 の 100px gap → 新 variant も y=2200 に配置
+25. **`variantOptions` の順序は追加順**: 既存 から clone & rename した場合、Figma 側の `variantOptions` 配列は追加順になり、spec の表記順と一致しない場合がある。UI 表示の視認性のみ問題、機能影響なし
+26. **2D Property の grid 配置パターン**: variants × sizes のような 2 property を全展開する場合、**列 = property1 / 行 = property2** の matrix 配置がレビューしやすい。`x = cIdx * COL_W, y = rIdx * ROW_H` で計算
+
+### 参照確立（Phase 3）
+27. **`createInstance()` + `resize(W, H)` で双方向参照確立**: 別 Component の placeholder を本 Component の instance に置換することで、「Component 単体修正が demo に自動反映」される DRY 設計
+28. **placeholder 固有属性（stroke / overlay）は instance に転写されない**: 主役識別など状態は **source Component 側の property** として持つべき（Phase 3 着手前に必ず確認）
+29. **resize と auto-layout の関係**: container 縦間隔は維持されるが、text wrap までは制御できない。size 別 overflow 規律を spec で別途定める必要がある
+
 ---
 
 ## チェックリスト（コミット前）
 
+### Phase 1 (新規生成)
 - [ ] Step 0 Audit-first を実行した（既存 Component Set 一覧を確認した）
 - [ ] spec md を完全読み込み、Variants / Sizes / Props / Do-Don't を把握した
 - [ ] 使う Variables / Effect Styles の ID を取得した
-- [ ] 各 variant のスクリーンショットを get_screenshot で視覚確認した
+- [ ] Variable 健全性（alias 純白固定化なし）を確認した
+- [ ] Set 全体スクリーンショットで全 variants を視覚確認した
+
+### Phase 2 (variant property 拡張)
+- [ ] 既存 variants の x/y 配置規則を inspect で確認した
+- [ ] 1D 拡張なら縦/横並び規則を踏襲、2D 拡張なら matrix 配置を採用した
+- [ ] clone 後 `primaryAxisSizingMode = 'FIXED'` を明示した（Issue 5 回避）
+- [ ] Set 全体を再 resize して新 variants が収まることを確認した
+
+### Phase 3 (Component 間参照)
+- [ ] source Component 側に「主役識別など状態」property が設計済か確認した（Issue 8）
+- [ ] placeholder の x/y/size を捕捉した
+- [ ] instance を createInstance → 配置 → resize → placeholder remove の順で操作した
+- [ ] resize 前後の text wrap / overflow を screenshot で検証した（Issue 9-10）
+
+### 共通（コミット前）
 - [ ] spec md に「## Figma 参照」セクションを追加した（ID / variants / Variable bind / TODO）
 - [ ] figma-build-log.md に Session #N を追加した（成果 / 発生 Issue / 学び / TODO）
 - [ ] current.md の milestone 行を追加した

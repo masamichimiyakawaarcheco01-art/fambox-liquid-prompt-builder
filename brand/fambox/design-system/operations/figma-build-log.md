@@ -726,3 +726,58 @@ placeholder の x/y/width/height を読み取り、instance を **同位置・�
 - **Tile 間サイズ乖離の検証手順**を Step 4 に追加（resize 前後の auto-layout 挙動を screenshot で比較）
 
 ---
+
+## Session 2026-05-12 (#12) — figma-component-from-spec SKILL v0.3 整備
+
+**契機**: Session #9-11 の 3 回の SKILL 実証実験で発見した改善候補 5 件 + 学び 21-29 + Issue 8-10 を SKILL に還元し、次サイクル以降の作業を安定化させる。
+
+### 成果
+
+| 成果物 | 変更内容 |
+|---|---|
+| `SKILL.md` v0.2 → **v0.3** | 287 行 → 拡張後 計 ~390 行 |
+
+### v0.3 で追加した内容
+
+#### 1. frontmatter 拡充
+- `description`: 「Phase 戦略」「Component 間参照確立」「variant property 追加」「instance に置換」を triggers に追加
+- `origin`: 7 → 11 セッション / 20 → 29 項の学び / 7 → 10 Issue
+- `version`: 0.2 → 0.3
+
+#### 2. Step 3 を「Phase 戦略」セクションに大幅拡張
+- **Phase 1 (新規生成)**: 既存内容 + combineAsVariants 1 variant 化
+- **Phase 2 (variant property 拡張)**: rename → clone → grid 配置のフロー、1D / 2D 配置規則、コードサンプル
+- **Phase 3 (Component 間参照確立)**: instance 化 + resize + remove、placeholder 固有属性転写なしの warning、source Component 側 property 設計推奨
+
+#### 3. Step 4 を「撮影単位の選択ガイド」に拡張
+- 新規生成 / 拡張 / 参照確立 の 3 シナリオごとの screenshot 撮影単位を表化
+- Phase 3 専用「resize 前後の auto-layout 挙動検証」セクション追加
+
+#### 4. 既知の罠を Issue 1-7 → Issue 1-10 に拡張
+- Issue 8: instance 化で placeholder 固有属性消失（Phase 3 で発覚）
+- Issue 9: resize 後の content 密度オーバー
+- Issue 10: auto-layout `primaryAxisAlignItems: 'MAX'` の縦伸び挙動
+
+#### 5. ベストプラクティスを 20 → 29 項に拡張
+- **新カテゴリ「SKILL 設計」（21-22）**: description が trigger 核 / SKILL の git 管理
+- **新カテゴリ「拡張パターン (Phase 2)」（23-26）**: appendChild / x/y 配置 / variantOptions 順序 / 2D matrix
+- **新カテゴリ「参照確立 (Phase 3)」（27-29）**: createInstance + resize / 属性転写なし / resize と auto-layout
+
+#### 6. チェックリストを Phase 別に分割
+- Phase 1 / Phase 2 / Phase 3 / 共通 の 4 セクション化
+- 計 18 項目（v0.2 は 8 項目）に細分化
+
+### 学んだこと（追加）
+
+30. **SKILL は実証→改善→再実証のサイクルで進化させる**: v0.2 を作って即実 Component で実証することで、SKILL 自体の抜け漏れが判明する。**3 回の実証で 5 改善 + 9 新学び + 3 新 Issue を還元** できた。これは SKILL 単独設計より圧倒的に有効。
+
+31. **Phase 戦略は Marc 流の本質**: 「Phase 1 で型作り → Phase 2 で量増 → Phase 3 で参照確立」という段階構造は、Component の拡張規律として再利用可能。Skill に明示することで、次プロジェクトでも一貫した進め方ができる。
+
+### Known TODOs（SKILL v0.4 候補）
+
+- **brand 横展開のパラメータ化**: `brand/<brand>/` パスを変数化、別 brand プロジェクト即適用
+- **figma-use との依存関係宣言**: SKILL load 順序を frontmatter で宣言できる仕組み（プラットフォーム側に要望）
+- **新ユースケース実証**: Bento Tile に `featured` property 追加（Issue 8 解消）で SKILL Phase 2 のもう 1 例実証
+- **Token migration ユースケース**: 既存 Component の直値 stroke を Variable bind に置換する手順（Card v0.3 残 TODO に該当）
+
+---
