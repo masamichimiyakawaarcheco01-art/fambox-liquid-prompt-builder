@@ -1288,3 +1288,51 @@ main repo `brand/fambox/brand-dna/current.md` への正式反映は宮川さん�
 - TOPページ実装 Week 2: 主役 Section（Hero / Bento / Plan Card）の Liquid 化
 
 ---
+
+## Session 2026-05-12 (#21) — TOPページ Week 2: Hero section Liquid 雛形
+
+**契機**: ユーザー指示「A (Hero Section の Liquid 雛形)」。実装計画書 Week 2 タスク「Hero / 主役 Section の Liquid 化」を着手。Figma Component Set 67:73 の 12 variants（4 variant × 3 height）に対応する **汎用 section** として 1 ファイルで実装。
+
+### 成果
+
+| 成果物 | 場所 | サイズ | 内容 |
+|---|---|---|---|
+| FAMBOX Hero section | `projects/fambox/sections/fambox-hero.liquid` | 441 行 | 4 variants 汎用 + 3 heights + NBA HOOP モード |
+
+### 実装範囲（Phase 1）
+
+| 機能 | 実装状況 |
+|---|---|
+| 4 variants 統一 section: video-fullscreen / video-split / image-editorial / minimal-text | ✅ schema dropdown で切替 |
+| 3 heights: compact (40vh) / tall (70vh) / full (100vh) | ✅ modifier クラスで CSS 切替 |
+| 背景動画: `<video>` autoplay/muted/loop/playsinline | ✅ |
+| 背景画像: `image_url`（最大 1920w）+ alt | ✅ |
+| video-split: 左右 50% 分割動画 + 4 Corner Icons | ✅ |
+| NBA HOOP モード: image-editorial で boolean toggle、タイポ大型重ね | ✅ |
+| content alignment: left / center / right | ✅ schema 選択可 |
+| Eyebrow / Title (h1) / Sub / Primary CTA / Secondary CTA | ✅ |
+| Variable bind（`--bg-primary` / `--color-drive` / `--font-en` 等 fallback 付き）| ✅ |
+| `data-gtag-cta` で GA4 連携 | ✅ |
+| SP responsive（content padding / btn full-width / corners 縮小）| ✅ |
+| `prefers-reduced-motion` で video 非表示 | ✅ |
+| Schema settings: variant / height / content_align / is_hoop / images / videos / texts / 2 CTA | ✅ |
+
+### Phase 2 / v0.3 候補
+
+- パララックス JS（動画 / 画像のスクロール連動）
+- scroll-cue（任意の下スクロール促進）
+- NBA HOOP の詳細レイアウト（eyebrow を画像端に重ね、大型タイポ overflow）
+- video の autoplay 抑制（モバイル / 帯域考慮）
+- 既存 `fambox-hero-v17-video.liquid`（578 行 / video-split 特化）との統合 or deprecate 判断
+
+### 学んだこと（追加）
+
+47. **「複数 variants を 1 section で扱うか / variant 別に分離するか」の判断軸**: Figma Component Set は variants を 1 Set にまとめるが、Liquid section は **1 ファイル 1 variant** が Shopify エディタとの相性が良い場合もある。Hero では「**4 variants の共通要素が多く、schema 切替で十分機能する**」と判断し 1 section に統合。Header は「3 variants の構造差が大きい」ため v0.3 で別 section 分離検討（Session #20 参照）。判断軸は **「共通要素率 ≥ 60% → 統合、未満 → 分離」**。
+
+### Known TODOs
+
+- Hero v0.3: パララックス / scroll-cue / 既存 v17 統合判断
+- TOPページ実装 Week 2 続き: Plan Card 改修、Bento Grid Liquid 化
+- TOPページ実装 Week 3-5: Tier 2-4 sections の改修
+
+---

@@ -1,0 +1,441 @@
+{% comment %}
+  =====================================================
+  FAMBOX Hero — Section v0.2 (Phase 1 雛形 / 4 variants 汎用)
+  =====================================================
+  Spec: brand/fambox/design-system/components/hero-section.md
+  Spec date: 2026-04-28 / Figma Component Set 67:73 (12 variants)
+  Implementation date: 2026-05-12
+
+  Variants (4):
+    - video-fullscreen: 全画面動画 + Overlay
+    - video-split: 左右分割動画 + 4 Corner Icons + 中央テキスト
+    - image-editorial: 静止画 + Editorial 配置 (NBA HOOP モード ON/OFF)
+    - minimal-text: 装飾なし + 大型タイポ + サブ + CTA
+
+  Heights (3, modifier):
+    - hero--compact (40vh) — FAQ / 規約 / 社内
+    - hero--tall    (70vh) — カテゴリ / 中継ぎ
+    - hero--full    (100vh) ★既定 — TOP / 主役 LP
+
+  Phase 1 範囲:
+    - 4 variants 共通の HTML 構造で実装
+    - schema で variant / height / コンテンツ切替
+    - video / image 背景は最低限の HTML5 タグで実装
+    - 4 corner icons は video-split 専用 (spec の Figma 67:73 video-split を参考)
+    - NBA HOOP は boolean property で text の重ね位置切替
+
+  Phase 2/v0.3 候補:
+    - パララックス JS (動画 / 画像)
+    - scroll-cue (任意)
+    - NBA HOOP の詳細レイアウト (eyebrow 重ね / 大型タイポ overflow)
+    - prefers-reduced-motion で video 自動再生抑制
+    - 既存 fambox-hero-v17-video.liquid との統合 or deprecate 判断
+=====================================================
+{% endcomment %}
+
+<section class="hero hero-{{ section.settings.variant }} hero--{{ section.settings.height }}{% if section.settings.variant == 'image-editorial' and section.settings.is_hoop %} is-hoop{% endif %}"
+         data-gtag-section="hero_{{ section.settings.variant }}">
+
+  {%- comment -%} === 背景レイヤー === {%- endcomment -%}
+  <div class="hero__bg" aria-hidden="true">
+
+    {%- case section.settings.variant -%}
+
+    {%- when 'video-fullscreen' -%}
+      {%- if section.settings.bg_video_url != blank -%}
+        <video class="hero__video" autoplay muted loop playsinline preload="metadata"
+               poster="{{ section.settings.bg_image | image_url: width: 1920 }}">
+          <source src="{{ section.settings.bg_video_url }}" type="video/mp4">
+        </video>
+      {%- elsif section.settings.bg_image != blank -%}
+        <img src="{{ section.settings.bg_image | image_url: width: 1920 }}"
+             alt="" class="hero__image" loading="eager" width="1920" height="1080">
+      {%- endif -%}
+      <div class="hero__overlay hero__overlay--gradient"></div>
+
+    {%- when 'video-split' -%}
+      {%- if section.settings.left_video_url != blank -%}
+        <video class="hero__video hero__video--left" autoplay muted loop playsinline preload="metadata">
+          <source src="{{ section.settings.left_video_url }}" type="video/mp4">
+        </video>
+      {%- endif -%}
+      {%- if section.settings.right_video_url != blank -%}
+        <video class="hero__video hero__video--right" autoplay muted loop playsinline preload="metadata">
+          <source src="{{ section.settings.right_video_url }}" type="video/mp4">
+        </video>
+      {%- endif -%}
+      {%- comment -%} 4 Corner Icons (DNA: ブランド identity 強化) {%- endcomment -%}
+      {%- if section.settings.show_corners -%}
+        <span class="hero__corner hero__corner--tl" aria-hidden="true"></span>
+        <span class="hero__corner hero__corner--tr" aria-hidden="true"></span>
+        <span class="hero__corner hero__corner--bl" aria-hidden="true"></span>
+        <span class="hero__corner hero__corner--br" aria-hidden="true"></span>
+      {%- endif -%}
+
+    {%- when 'image-editorial' -%}
+      {%- if section.settings.bg_image != blank -%}
+        <img src="{{ section.settings.bg_image | image_url: width: 1920 }}"
+             alt="{{ section.settings.bg_image_alt | default: '' | escape }}"
+             class="hero__image" loading="eager" width="1920" height="1080">
+      {%- endif -%}
+
+    {%- when 'minimal-text' -%}
+      {%- comment -%} 装飾なし: bg なし、bg-primary が透けるだけ {%- endcomment -%}
+
+    {%- endcase -%}
+
+  </div>
+
+  {%- comment -%} === コンテンツレイヤー === {%- endcomment -%}
+  <div class="hero__content hero__content--{{ section.settings.content_align }}">
+    <div class="hero__inner">
+
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="hero__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.title != blank -%}
+        <h1 class="hero__title">{{ section.settings.title }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.sub != blank -%}
+        <p class="hero__sub">{{ section.settings.sub }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.cta_label != blank and section.settings.cta_url != blank -%}
+        <div class="hero__actions">
+          <a href="{{ section.settings.cta_url }}"
+             class="btn btn-primary btn-lg"
+             data-gtag-cta="hero_primary_{{ section.settings.variant }}">
+            {{ section.settings.cta_label }}
+          </a>
+          {%- if section.settings.cta_secondary_label != blank and section.settings.cta_secondary_url != blank -%}
+            <a href="{{ section.settings.cta_secondary_url }}"
+               class="btn btn-secondary-ink btn-lg"
+               data-gtag-cta="hero_secondary_{{ section.settings.variant }}">
+              {{ section.settings.cta_secondary_label }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* === Hero 基本 (spec v0.2 準拠 / Figma 67:73) === */
+  .hero {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: var(--bg-primary, #ffffff);
+    isolation: isolate;
+  }
+
+  /* === Heights === */
+  .hero--compact { min-height: 40vh; }
+  .hero--tall    { min-height: 70vh; }
+  .hero--full    { min-height: 100vh; }
+
+  /* === 背景レイヤー === */
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .hero__video,
+  .hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* === Gradient Overlay (video-fullscreen 既定) === */
+  .hero__overlay--gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0.15) 0%,
+      rgba(0, 0, 0, 0.55) 100%);
+    z-index: 1;
+  }
+
+  /* === Content === */
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    display: flex;
+    align-items: center;
+    padding: var(--space-7, 64px) var(--space-7, 64px);
+    max-width: var(--container-max, 1440px);
+    margin-inline: auto;
+  }
+  .hero__content--center { justify-content: center; text-align: center; }
+  .hero__content--left   { justify-content: flex-start; text-align: left; }
+  .hero__content--right  { justify-content: flex-end; text-align: right; }
+
+  .hero__inner {
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3, 24px);
+  }
+  .hero__content--center .hero__inner { align-items: center; }
+
+  /* === Typography === */
+  .hero__eyebrow {
+    font-family: var(--font-en, 'Poppins', sans-serif);
+    font-weight: var(--fw-semibold, 600);
+    font-size: var(--fs-caption, 14px);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-drive, #fb4c15);
+    margin: 0;
+  }
+  .hero__title {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-weight: var(--fw-bold, 700);
+    font-size: clamp(2rem, 5vw, var(--fs-hero, 56px));
+    line-height: 1.3;
+    color: var(--color-white, #ffffff);
+    letter-spacing: var(--ls-ja, 0);
+    margin: 0;
+  }
+  .hero__sub {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-weight: var(--fw-regular, 400);
+    font-size: var(--fs-body, 16px);
+    line-height: 1.7;
+    color: var(--color-white, #ffffff);
+    margin: 0;
+  }
+  .hero__actions {
+    display: flex;
+    gap: var(--space-3, 24px);
+    margin-top: var(--space-2, 16px);
+    flex-wrap: wrap;
+  }
+
+  /* === Variant: video-fullscreen === */
+  .hero-video-fullscreen .hero__title,
+  .hero-video-fullscreen .hero__sub { color: var(--color-white, #ffffff); }
+
+  /* === Variant: video-split === */
+  .hero-video-split .hero__video--left {
+    position: absolute; top: 0; left: 0; width: 50%; height: 100%;
+  }
+  .hero-video-split .hero__video--right {
+    position: absolute; top: 0; right: 0; width: 50%; height: 100%;
+  }
+  .hero-video-split .hero__title,
+  .hero-video-split .hero__sub { color: var(--color-white, #ffffff); }
+
+  /* 4 Corner Icons (video-split, Figma 67:73 video-split 参考) */
+  .hero__corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: var(--color-drive, #fb4c15);
+    border-radius: 4px;
+    opacity: 0.8;
+    z-index: 5;
+  }
+  .hero__corner--tl { top: 32px; left: 32px; }
+  .hero__corner--tr { top: 32px; right: 32px; }
+  .hero__corner--bl { bottom: 32px; left: 32px; }
+  .hero__corner--br { bottom: 32px; right: 32px; }
+
+  /* === Variant: image-editorial === */
+  .hero-image-editorial .hero__title { color: var(--color-ink, #1b1d1a); }
+  .hero-image-editorial .hero__sub   { color: var(--color-sub, #545655); }
+
+  /* NBA HOOP モード: タイポを画像に重ねる editorial 配置 */
+  .hero-image-editorial.is-hoop .hero__content {
+    align-items: flex-end;
+    padding-bottom: var(--space-8, 96px);
+  }
+  .hero-image-editorial.is-hoop .hero__title {
+    color: var(--color-white, #ffffff);
+    font-size: clamp(2.5rem, 7vw, var(--fs-mega, 96px));
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  /* === Variant: minimal-text === */
+  .hero-minimal-text { background: var(--bg-primary, #ffffff); }
+  .hero-minimal-text .hero__title { color: var(--color-ink, #1b1d1a); }
+  .hero-minimal-text .hero__sub   { color: var(--color-sub, #545655); }
+  .hero-minimal-text .hero__eyebrow { color: var(--color-drive, #fb4c15); }
+
+  /* === SP === */
+  @media (max-width: 767px) {
+    .hero__content { padding: var(--space-5, 32px) var(--space-3, 24px); }
+    .hero__inner { gap: var(--space-2, 16px); }
+    .hero__title { font-size: clamp(1.75rem, 8vw, 2.5rem); }
+    .hero__corner { width: 24px; height: 24px; }
+    .hero__corner--tl,
+    .hero__corner--tr { top: 16px; }
+    .hero__corner--bl,
+    .hero__corner--br { bottom: 16px; }
+    .hero__corner--tl,
+    .hero__corner--bl { left: 16px; }
+    .hero__corner--tr,
+    .hero__corner--br { right: 16px; }
+    .hero__actions { gap: var(--space-2, 16px); width: 100%; }
+    .hero__actions .btn { width: 100%; text-align: center; justify-content: center; }
+  }
+
+  /* === reduced motion === */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__video { display: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "FAMBOX Hero",
+  "tag": "section",
+  "class": "section-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Variant / Layout"
+    },
+    {
+      "type": "select",
+      "id": "variant",
+      "label": "Hero Variant",
+      "default": "video-fullscreen",
+      "options": [
+        { "value": "video-fullscreen",  "label": "Video Fullscreen — TOP / Blog Top" },
+        { "value": "video-split",       "label": "Video Split — キャンペーン LP" },
+        { "value": "image-editorial",   "label": "Image Editorial — 食事診断 / About" },
+        { "value": "minimal-text",      "label": "Minimal Text — FAQ / 告知" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "高さ",
+      "default": "full",
+      "options": [
+        { "value": "compact", "label": "Compact (40vh) — FAQ / 規約" },
+        { "value": "tall",    "label": "Tall (70vh) — カテゴリ / 中継ぎ" },
+        { "value": "full",    "label": "Full (100vh) — TOP / 主役 LP ★既定" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "content_align",
+      "label": "コンテンツ配置",
+      "default": "center",
+      "options": [
+        { "value": "left",   "label": "左寄せ" },
+        { "value": "center", "label": "中央 ★既定" },
+        { "value": "right",  "label": "右寄せ" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "is_hoop",
+      "label": "NBA HOOP モード (image-editorial 専用)",
+      "default": false,
+      "info": "タイポを画像に大きく重ねる Editorial 配置"
+    },
+    {
+      "type": "header",
+      "content": "背景: 動画 / 画像"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "背景画像（image-editorial / minimal-text / video poster）"
+    },
+    {
+      "type": "text",
+      "id": "bg_image_alt",
+      "label": "背景画像 alt"
+    },
+    {
+      "type": "text",
+      "id": "bg_video_url",
+      "label": "背景動画 URL (MP4 / video-fullscreen 用)"
+    },
+    {
+      "type": "text",
+      "id": "left_video_url",
+      "label": "左側動画 URL (video-split 用)"
+    },
+    {
+      "type": "text",
+      "id": "right_video_url",
+      "label": "右側動画 URL (video-split 用)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_corners",
+      "label": "4 Corner Icons を表示 (video-split 用)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "テキスト"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (大文字英字、Drive 強調)",
+      "default": "FAMBOX × ATHLETES"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title (h1)",
+      "default": "すべてのアスリートに、スポーツ栄養アドバイザーを。"
+    },
+    {
+      "type": "textarea",
+      "id": "sub",
+      "label": "Sub Text",
+      "default": "チーム単位で個別最適化された食事戦略。確率を上げる、共創パートナー。"
+    },
+    {
+      "type": "header",
+      "content": "CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Primary CTA ラベル",
+      "default": "話を聞いてみる"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Primary CTA リンク先",
+      "default": "/contact"
+    },
+    {
+      "type": "text",
+      "id": "cta_secondary_label",
+      "label": "Secondary CTA ラベル (任意)"
+    },
+    {
+      "type": "url",
+      "id": "cta_secondary_url",
+      "label": "Secondary CTA リンク先 (任意)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAMBOX Hero",
+      "category": "Hero"
+    }
+  ]
+}
+{% endschema %}
