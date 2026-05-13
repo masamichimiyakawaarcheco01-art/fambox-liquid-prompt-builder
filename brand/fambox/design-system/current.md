@@ -33,6 +33,7 @@ milestone:
   - 2026-05-12: 🎉 **Bento エコシステム完成 + Issue 8 完全解消** (Session #14) — editorial 主役 2 個を `swapComponent` で featured=true 版に切替 / standard 5 placeholder + autofit 8 placeholder を Tile instance に置換 / 全 3 variants × 22 tiles が双方向参照に / Issue 11 検出 (Tile に 3x1 size がない) → v0.4 課題化 / SKILL v0.3 実証 2 回目 A+ / 学び 34-35 追加 (swapComponent は Phase 3 第 2 パターン / 寸法 → size 自動推定)
   - 2026-05-12: 📚 **`figma-component-from-spec` SKILL v0.4 整備** (Session #15) — Session #13-14 の新パターン (boolean variant / swapComponent / 寸法→size 自動推定) + Issue 11 を SKILL に還元 / Phase 3 を「Pattern A: placeholder→instance」「Pattern B: instance→instance swap」の 2 パターンに明文化 / Issue を 10 → 11、学び を 29 → 35、チェックリストを Pattern 別に再構成 / 学び 36-37 追加 (新ユースケースは実証してから明示 / Phase 3 事前 audit を v0.5 で)
   - 2026-05-12: 🚀 **Hero Section 12 variants 完備** (Session #16) — SKILL v0.4 Phase 2 1D 拡張実証 / Hero `67:73` に height property 追加 (4 → 12 variants) / spec の hero--full/tall/compact を Figma 完全再現 (1440×700/550/400) / 4 列 × 3 行 matrix 配置 / minimal-text 既存 500h を 700h 統一 / Issue 12 検出 (compact で内部見切れ) → v0.5 課題化 / SKILL 検証 A+ / 学び 38-39 追加 (1D でも 2D matrix 配置 / 既存サイズ統一を Phase 2 前に)
+  - 2026-05-12: 📚 **`figma-component-from-spec` SKILL v0.5 整備** (Session #17) — Phase 2/3 事前 audit を正式手順化 / Phase 2 事前 audit: 既存サイズ差異検出 + auto-layout 変動耐性確認 (Issue 12 回避) / Phase 3 事前 audit: placeholder × source size cross-check (Issue 11 回避) / Issue を 11→12、学び を 35→39、チェックリスト 18→20 項に拡張 / 学び 40-41 追加 (事前 audit は Phase 戦略のメタパターン / Issue 検知のチェックポイント増)
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し

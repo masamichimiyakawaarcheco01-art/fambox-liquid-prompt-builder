@@ -1041,3 +1041,73 @@ function sizeKey(w, h) {
 - video-fullscreen / video-split の `image-fill` Image fill バインド
 
 ---
+
+## Session 2026-05-12 (#17) — figma-component-from-spec SKILL v0.5 整備
+
+**契機**: Session #15-16 で得た **Phase 2 / Phase 3 の事前 audit 必要性** + 学び 38-39 + Issue 12 を SKILL v0.4 に還元し、各 Phase 着手前のリスク検知をルーチン化する。
+
+### v0.5 で追加した内容
+
+#### 1. frontmatter 拡充
+- `description`: 「Phase 2/3 事前 audit」「height property 追加」を triggers / 説明に追加
+- `origin`: 14 → 16 セッション / 35 → 39 学び / 11 → 12 Issue / Phase 2/3 事前 audit 追記
+- `version`: 0.4 → 0.5
+
+#### 2. Phase 2 に「事前 audit」サブセクションを正式追加（必須）
+- 既存 variants のサイズ差異検出（学び 39）
+- 既存 auto-layout のサイズ変動耐性確認（Issue 12 回避）
+- audit 結果に応じた対応分岐（統一 / 補修計画 / そのまま進行）
+
+#### 3. Phase 3 に「事前 audit」サブセクションを正式追加（必須）
+- target placeholder size × source Component variant size の cross-check
+- unmatched があれば「spec 改訂」or「fallback heuristic」を判断
+- Issue 11 を Phase 3 事前 audit で検知可能に
+
+#### 4. Issue 1-11 → Issue 1-12 に拡張
+- Issue 12: Phase 2 サイズ拡張で既存 auto-layout が縮小耐性なし（Hero compact で発覚）
+
+#### 5. ベストプラクティスを 35 → 39 項に拡張
+- **新カテゴリ「Phase 2 補強」（38-39）**: 1D でも 2D matrix 配置 / 既存サイズ統一を事前に
+
+#### 6. チェックリストに事前 audit を必須化
+- Phase 2: 「サイズ差異検出」「auto-layout 変動耐性」の 2 項目を必須化
+- Phase 3: 「placeholder × source size 全件照合」を必須化
+
+### 学んだこと（追加）
+
+40. **「事前 audit」は Phase 戦略のメタパターン**: Step 0 Audit-first（既存 Component 全件確認）と並んで、各 Phase 着手前にも事前 audit を入れることで、後で「Issue として表面化する問題」を **着手前に検知** できる。
+
+41. **SKILL は「Issue 検知のチェックポイント」を増やすほど堅牢化する**: 各 Phase の事前 audit で「想定外を早期発見」する設計。Issue 12 のように Phase 2 拡張後に発覚した問題も、事前 audit があれば「補修計画を組み込んでから進む」判断ができた。
+
+### Phase 1/2/3 + 事前 audit のフロー（v0.5 完成形）
+
+```
+[Step 0] 既存全件 Audit (図全体)
+   ↓
+[Step 1] Spec md 読み込み
+   ↓
+[Step 2] Variables / Effect Styles 取得
+   ↓
+[Step 3] Phase 戦略選択
+   ├─ Phase 1 (新規生成)
+   ├─ Phase 2 (property 拡張)
+   │  └─ ★Phase 2 事前 audit (v0.5)
+   │     ├─ 既存サイズ差異検出
+   │     └─ auto-layout 変動耐性確認
+   └─ Phase 3 (参照確立)
+      └─ ★Phase 3 事前 audit (v0.5)
+         └─ placeholder × source size cross-check
+   ↓
+[Step 4] スクリーンショット検証
+   ↓
+[Step 5-7] spec md / build-log / current.md 更新 → commit
+```
+
+### SKILL v0.6 候補
+
+- **Phase 2/3 事前 audit の自動化 helper script**: チェックを Plugin API でワンライナー化（手動 mental simulation を機械化）
+- **brand 横展開のパラメータ化**: `brand/<brand>/` パスを変数化
+- **Token migration セクション**: 既存 Component の直値 → Variable bind 置換手順
+- **Phase 4 提案: コンテンツ最適化**: Phase 2/3 後の auto-layout 補修・size 別 padding override を体系化
+
+---
