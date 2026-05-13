@@ -443,10 +443,17 @@ Bento Tile は **Bento Grid 内に配置される**。Grid 側は:
 
 - File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
 - Page: `4. Patterns FormField / Card / Tooltip / Alert`
-- **Component Set ID**: `87:26`（2026-05-12 生成 + Session #10 で 20 variants 完備）
-- 生成スキル: `figma-component-from-spec` v0.2
-- **実装済 variants**: **20**（`variant`: standard / glass / image-fill / stat-focus × `size`: 1×1 / 2×1 / 1×2 / 2×2 / 3×2）
-- **配置**: 4 列 × 5 行の grid（列=variant、行=size）/ Set 全体 2400 × 2000
+- **Component Set ID**: `87:26`（2026-05-12 生成 + Session #10 で 20 variants 完備 + Session #13 で featured property 拡張）
+- 生成スキル: `figma-component-from-spec` v0.3
+- **実装済 variants**: **40**（`variant` × `size` × `featured`）
+  - variant: standard / glass / image-fill / stat-focus（4）
+  - size: 1×1 / 2×1 / 1×2 / 2×2 / 3×2（5）
+  - **featured: false / true（2）**★ Session #13 で追加（Issue 8 解消）
+- **配置**: 2 ブロック × 4 列 × 5 行（左 featured=false / 右 featured=true）/ Set 全体 4900 × 2000
+- **featured 仕様**:
+  - `featured=false` (既定): 既存 stroke 維持（standard / stat-focus は border-light 1px、glass / image-fill は枠なし）
+  - `featured=true`: 全 variant に **Drive `#FB4C15` 2px stroke** を適用（individual stroke weights を 2/2/2/2 で均一化）
+  - 用途: Bento Grid editorial パターンでの主役識別、Subscription Plan の推奨プラン等
 - **size 別寸法**:
   - 1×1: 160 × 160（小タイル、Quote / Icon / 単一 KPI）
   - 2×1: 360 × 160（横長、Stat 横並び / 横長告知）
@@ -467,9 +474,10 @@ Bento Tile は **Bento Grid 内に配置される**。Grid 側は:
   - state property: hover（shadow-3 + translateY -2px）/ focus-visible / disabled
   - Glass の 5 階調 modifier（glass--1 〜 glass--5）
   - 画像 placeholder の Image Fill バインド
-  - **Bento Grid (`91:107`) の placeholder rect を Bento Tile instance に置換**（次セッション）
+  - **Bento Grid editorial の主役 instances を `featured=true` に切替**（Issue 8 解消の Phase 3 実装、次セッション）
 
 ## Change Log
+- v0.3-figma+featured (2026-05-12): Session #13 で **featured boolean variant property を追加**（20 → 40 variants）。featured=true で Drive 2px stroke 適用、Bento Grid editorial の主役識別を Tile 側で表現可能に（Issue 8 解消の準備）。SKILL v0.3 Phase 2 の実証実験 1 回目
 - v0.3-figma (2026-05-12): Session #10 で 残 4 sizes を追加し **20 variants 完備**（4 variant × 5 size）。size property が認識され、Bento 5 sizes 体系が Figma 上で完全に表現可能に
 - v0.2-figma (2026-05-12): Figma Component Set `87:26` 新規生成（4 variants × default size 2×2 のみ）。残 4 sizes と state は v0.3 で順次追加
 - v0.2 (2026-04-28): Worksheet §20 確定（4 Variants / DNA 5 sizes 厳守 / Glass Variant 専用 / Stat-focus は --fs-display 56px / Glass 5 階調 / 4 禁止項目明示）。Brand DNA v0.5 C-Bento タイル仕様を体系化

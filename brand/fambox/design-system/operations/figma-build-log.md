@@ -777,7 +777,69 @@ placeholder の x/y/width/height を読み取り、instance を **同位置・�
 
 - **brand 横展開のパラメータ化**: `brand/<brand>/` パスを変数化、別 brand プロジェクト即適用
 - **figma-use との依存関係宣言**: SKILL load 順序を frontmatter で宣言できる仕組み（プラットフォーム側に要望）
-- **新ユースケース実証**: Bento Tile に `featured` property 追加（Issue 8 解消）で SKILL Phase 2 のもう 1 例実証
+- ✅ **新ユースケース実証**: Bento Tile に `featured` property 追加 — Session #13 完了
 - **Token migration ユースケース**: 既存 Component の直値 stroke を Variable bind に置換する手順（Card v0.3 残 TODO に該当）
+
+---
+
+## Session 2026-05-12 (#13) — Bento Tile featured property 追加（SKILL v0.3 実証 + Issue 8 解消）
+
+**契機**: SKILL v0.3 で明示した「Phase 2 = variant property 拡張」と Session #11 で発見した Issue 8（instance 化で主役識別 stroke 消失）を同時に解消。SKILL v0.3 の Phase 2 を新しい variant property（boolean 的）でも実証する。
+
+### SKILL v0.3 Phase 2 実証ログ
+
+| Phase 2 ステップ | 実行内容 | 結果 |
+|---|---|---|
+| 0. Audit-first | 既存 `87:26` (20 variants) 確認 | ✅ |
+| 1. Spec md | featured 仕様（spec の `card-featured` パターン継承）を Issue 8 から逆算 | ✅ |
+| 2. Variables | `color/brand/drive` 既存利用 | ✅ |
+| 3. rename → clone → 配置 | featured=false 追加 → 全 variants を clone して featured=true 化 → Drive 2px stroke 適用 → 2 ブロック配置 | ✅ |
+| 4. スクリーンショット検証 | 左 (false) / 右 (true) ブロックで対比、stroke が全 20 variants に均一適用されたことを確認 | ✅ |
+| 5-7. ドキュメント反映 | bento-tile.md / build-log / current.md 同時更新 | ✅ |
+
+### 成果
+
+| Component | 操作 | 結果 | Set ID |
+|---|---|---|---|
+| Bento Tile | featured boolean variant property 追加 | 20 → 40 variants | `87:26`（変わらず） |
+
+**最終 property 構成**: `variant` (4) × `size` (5) × `featured` (2) = 40 variants
+
+### featured 仕様
+
+| featured 値 | stroke 仕様 | 用途 |
+|---|---|---|
+| `false` (既定) | 既存維持（standard/stat-focus: border-light 1px / glass/image-fill: なし） | 通常 Tile |
+| `true` | **全 variant 一律 Drive 2px stroke**（individualStrokeWeights を 2/2/2/2 で均一化） | Bento Grid editorial の主役識別 / Subscription Plan 推奨プラン |
+
+### 配置レイアウト（4900 × 2000）
+
+```
+左ブロック (featured=false)              右ブロック (featured=true)
+x: 0 - 2400                              x: 2500 - 4900
+4 cols × 5 rows                          4 cols × 5 rows
+既存通り                                 全 variants に Drive 2px stroke
+```
+
+### SKILL v0.3 の検証結果
+
+| 検証項目 | 評価 | コメント |
+|---|---|---|
+| Step 3 (Phase 2) の rename → clone → grid 配置 フロー | ◎ | v0.3 で明文化されたコードサンプルがそのまま機能 |
+| Issue 8 への対処（Tile 側 property として featured を追加） | ◎ | v0.3 で「placeholder 固有属性は source 側 property として持つべき」と明記、それに従って実装 |
+| 学び 24 適用（配置規則の踏襲）| ◎ | 既存 2400 × 2000 の grid 配置を踏襲、featured=true ブロックを +2500 offset で並置 |
+| 学び 25 適用（variantOptions 順序は追加順）| △ | `featured=['false', 'true']` 自体は順序問題なし。`size` は前 Session 順を継承（'2x2' が先頭）— UI 表示時の整列は別途対応 |
+| **総合** | **A+** | SKILL v0.3 は Phase 2 の boolean 的 property 追加でも有効 |
+
+### 学んだこと（追加）
+
+32. **boolean 的な variant property は文字列 'true'/'false' で**: Figma の variant property 型は `VARIANT`（文字列）のみで、真の Boolean 型は存在しない。`featured` を `true`/`false` の variant option として実装すれば、UI 側で boolean トグル風に表示される。
+
+33. **既存 strokes を上書きする場合は individual stroke weights もリセット**: 一部の既存 variant に `strokeRightWeight = 2`（Profile の Title icon 等）が残っていると、新 stroke 適用後も古い individual 値が残る。**4 辺の `strokeTopWeight / RightWeight / BottomWeight / LeftWeight = 2` を明示** することで完全均一化。
+
+### Known TODOs（Bento featured v0.4 残）
+
+- **Bento Grid editorial の主役 instances を `featured=true` に切替**（Phase 3 再実装）— Tile 側 property が用意できたので、editorial の 2 主役 (2×2 + 3×2) を `featured=true, variant=glass` の instance に差し替えて Issue 8 を完全解消する
+- featured=true で `--shadow-2` の hover 拡張（Card Pattern の selected 状態と同期）
 
 ---
