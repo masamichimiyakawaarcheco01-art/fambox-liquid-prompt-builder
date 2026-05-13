@@ -578,3 +578,67 @@ FAMBOX/typography/font-size/lg        (Button lg 20px)
 - 4 Corner Icons を実 icon instance に置換（現状 Drive rectangle placeholder）
 
 ---
+
+## Session 2026-05-12 (#10) — Bento Tile 20 variants 完備（size property 拡張）
+
+**契機**: Session #9 で SKILL v0.2 の実用性を A+ で検証済。続いて Bento Tile の Phase 2 = 残 4 sizes 追加を SKILL の手順通りに実行し、TOP 実装 5/29 主役エリアの完全体化を目指す。
+
+### SKILL の各ステップ実証ログ
+
+| Step | 実行内容 | 結果 |
+|---|---|---|
+| 0. Audit-first | 既存 `87:26` 確認、4 variants × default size のみ | ✅ 重複生成回避 |
+| 1. Spec md 再読み込み | Sizes 表（5 sizes）と各サイズの寸法・用途を確認 | ✅ spec の真意把握 |
+| 2. Variables | 既存 token 再利用、新規取得不要 | ✅ |
+| 3. Component Set 拡張 | 既存 4 variants を rename（`size=2x2` 追加）→ 16 variants clone（4 variants × 4 残 sizes）→ grid 配置 | ✅ Phase 2 完了 |
+| 4. スクリーンショット検証 | 20 variants が grid に配置されることを確認、1×1 でコンテンツ切れ検出 | ✅ + 次 Phase 課題発見 |
+| 5. spec md 更新 | bento-tile.md に v0.3-figma エントリ + 20 variants の完全マッピング | ✅ |
+| 6. figma-build-log 更新 | 本 Session #10 を記録 | ✅ |
+| 7. current.md milestone | 20 variants 完備マイルストーン追加 | ✅ |
+
+### 成果
+
+| Component | 操作 | 状態 | Set ID | Variants |
+|---|---|---|---|---|
+| Bento Tile | size property 拡張 | 4 → 20 variants | `87:26`（変わらず）| 4 variant × 5 size = **20 variants 完備** |
+
+### 配置レイアウト（grid 2400 × 2000）
+
+| 列（variant） \ 行（size） | 1×1 (160×160) | 2×1 (360×160) | 1×2 (160×360) | 2×2 (360×360) | 3×2 (560×360) |
+|---|---|---|---|---|---|
+| standard | ✅ | ✅ | ✅ | ✅（元）| ✅ |
+| glass | ✅ | ✅ | ✅ | ✅（元）| ✅ |
+| image-fill | ✅ | ✅ | ✅ | ✅（元）| ✅ |
+| stat-focus | ✅ | ✅ | ✅ | ✅（元）| ✅ |
+
+### 検出した次 Phase 課題
+
+- **1×1 (160×160) でコンテンツ切れ**: spec のデフォルトテキスト「タイルタイトル」「本文テキストの説明…」が 160px 幅で見切れる
+- **判断**: spec で「1×1 は小タイル / Icon / Quote 用」と既定。production では size に応じたコンテンツが入る前提。**コンテンツ最適化は v0.4 で各 size 別の見せ方を Spec 化** する
+
+### SKILL v0.2 の検証結果（実証 2 回目）
+
+| 検証項目 | 評価 | コメント |
+|---|---|---|
+| Step 0 Audit-first | ◎ | 既存 Set 即発見 |
+| Step 1 Spec md | ◎ | Sizes 表が即読み込め、判断材料に直結 |
+| Step 3 拡張パターン | ◎ | rename → clone → grid 配置のフローが安定 |
+| Issue 5 回避（resize 後の FIXED 設定）| ◎ | clone 後に `primaryAxisSizingMode = 'FIXED'` 明示で size 反映 |
+| 学び 23 適用（既存 Set への `appendChild`）| ◎ | clone を Set に直接 append、property definitions 自動拡張 |
+| **総合** | **A+** | SKILL v0.2 は L3 multi-property 拡張でも有効 |
+
+### 学んだこと（追加）
+
+25. **size property の variantOptions 順序は追加順**: 既存 `2x2` から clone & rename した場合、Figma 側の `variantOptions` 配列は `['2x2', '1x1', '2x1', '1x2', '3x2']` の追加順になる。**spec の表記順（1x1 / 2x1 / 1x2 / 2x2 / 3x2）と一致しない**ため、UI で表示する時の並び順は別途整列が必要（プロパティ panel での視認性のみ問題、機能的影響なし）。
+
+26. **2D Property の grid 配置パターン**: variants × sizes のような 2 property を全展開する場合、`列 = property1 / 行 = property2` の matrix 配置がレビュー時に最も読みやすい。Set の x/y を `cIdx * COL_W + rIdx * ROW_H` で計算。
+
+### Known TODOs（Bento v0.4 残）
+
+- **size 別のコンテンツ最適化**: 1×1 / 2×1 / 1×2 / 3×2 ごとの推奨コンテンツ密度を spec 化（タイトル文字数 / 本文行数 等）
+- **state property 追加**: hover（shadow-3 + translateY -2px）/ focus-visible / disabled
+- **Glass の 5 階調 modifier**: glass--1 ～ --5（opacity 0.05 / 0.1 / 0.3 / 0.6 / 0.8）を別 property 化
+- **Bento Grid (`91:107`) の placeholder rect を Bento Tile instance に置換**（Phase 3、別セッション）
+  - 課題: Tile 固定 size（2×2 = 360×360）と Grid 内 placeholder size（2×2 ≈ 424×424）の乖離 → instance resize の挙動検証が必要
+
+---

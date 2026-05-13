@@ -26,6 +26,7 @@ milestone:
   - 2026-05-12: 🏆 **Marc 流 4 層スタック完全カバー達成** (Session #7) — Contact Form (`98:121`) input variant 1 個 / 代表 7 フィールド + Submit Button instance / **Figma 未実装 Spec md 1 件 → 0 件**、Spec md ↔ Figma Component Set ↔ Build Log の完全な往復サイクル確立 / 7 セッションで蓄積した学び 20 項を figma-component-from-spec SKILL v0.2 整備へ展開予定
   - 2026-05-12: 📚 **`figma-component-from-spec` SKILL v0.2 整備** (Session #8) — 8 セッションで蓄積した 20 項の学び + 7 つの実 Issue を 287 行の SKILL に体系化 / `.claude/skills/figma-component-from-spec/SKILL.md` として git 管理対象化 / Marc 流 7 ステップ workflow + Issue 1-7 + 学び 1-20 + チェックリスト構成 / 次プロジェクト・別 brand での即活用可能なナレッジ資産化完了
   - 2026-05-12: ✅ **Hero Section variants 完備 + SKILL v0.2 実証実験** (Session #9) — 直前整備の SKILL v0.2 を実 Component で愚直に 7 ステップ実行し有効性を検証 / Hero `67:73` に video-split 追加（3 → 4 variants）/ spec の 4 variants gap 解消 / heights property は v0.4 / SKILL 検証結果 A+ / 学び 23-24 追加（既存 Set への variant 追加と x/y 配置規則）
+  - 2026-05-12: 🎨 **Bento Tile 20 variants 完備** (Session #10) — SKILL v0.2 実証 2 回目（L3 2D property 拡張）/ Bento Tile `87:26` に size property 拡張で残 4 sizes（1×1/2×1/1×2/3×2）を 16 variants 追加 / 4 variant × 5 size = **20 variants 完備**、4 列 × 5 行 grid 配置 / 1×1 でコンテンツ切れ検出 → v0.4 で size 別最適化を spec 化 / SKILL 検証 A+ / 学び 25-26 追加（variantOptions 追加順 / 2D property の grid 配置）/ Bento Grid placeholder 置換は Phase 3 で実施
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し

@@ -443,24 +443,33 @@ Bento Tile は **Bento Grid 内に配置される**。Grid 側は:
 
 - File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
 - Page: `4. Patterns FormField / Card / Tooltip / Alert`
-- **Component Set ID**: `87:26` ✅ 新規生成（2026-05-12）
-- 生成スキル: `figma-component-from-spec` + `figma-use`
-- **実装済 variants**: 4（`variant`: standard / glass / image-fill / stat-focus）× **default size 2×2 (360 × 360)** のみ
+- **Component Set ID**: `87:26`（2026-05-12 生成 + Session #10 で 20 variants 完備）
+- 生成スキル: `figma-component-from-spec` v0.2
+- **実装済 variants**: **20**（`variant`: standard / glass / image-fill / stat-focus × `size`: 1×1 / 2×1 / 1×2 / 2×2 / 3×2）
+- **配置**: 4 列 × 5 行の grid（列=variant、行=size）/ Set 全体 2400 × 2000
+- **size 別寸法**:
+  - 1×1: 160 × 160（小タイル、Quote / Icon / 単一 KPI）
+  - 2×1: 360 × 160（横長、Stat 横並び / 横長告知）
+  - 1×2: 160 × 360（縦長、動画 / 連続情報）
+  - 2×2: 360 × 360（**主役タイル**、Bento 1 グリッドに最低 1 個推奨）
+  - 3×2: 560 × 360（メガタイル、Hero 内 / Editorial 級）
 - **Variable バインド**:
-  - fills: `bg/primary`（standard, stat-focus）/ 直値 dark base（glass, image-fill — 画像差替前提）
-  - strokes: `border/light` 1px（standard, stat-focus）/ なし（glass, image-fill — spec 通り）
+  - fills: `bg/primary`（standard, stat-focus）/ 直値 dark base（glass, image-fill）
+  - strokes: `border/light` 1px（standard, stat-focus）/ なし（glass, image-fill）
   - effects: `FAMBOX/shadow/1`（standard, stat-focus）/ なし（glass, image-fill）
-- **各 variant の構造**:
-  - standard: Eyebrow（Drive `CASE`）+ Title（Bold 24）+ Body（Regular 16）の縦並び
-  - glass: dark base + Glass overlay rect (opacity 0.3) + 下寄せ白文字レイヤー
-  - image-fill: 画像 placeholder + bottom gradient overlay（透明→黒 0.7）+ 下寄せ白文字
-  - stat-focus: 大型数字 `-3.2 kg`（56px Drive Bold、`kg` 部分 22px sub）+ ラベル 16px sub
-- **未実装（v0.3 で追加予定）**:
-  - 残 4 sizes: 1×1（160×160）/ 2×1（360×160）/ 1×2（160×360）/ 3×2（560×360）→ 計 20 variants 完備
+- **各 variant の構造（全 size 共通）**:
+  - standard: Eyebrow（Drive `CASE`）+ Title（Bold 24）+ Body（Regular 16）
+  - glass: dark base + Glass overlay rect (opacity 0.3) + 下寄せ白文字
+  - image-fill: 画像 placeholder + bottom gradient overlay + 下寄せ白文字
+  - stat-focus: 大型数字 `-3.2 kg`（56px Drive Bold、`kg` 部分 22px sub）+ ラベル
+- **未実装（v0.4 で追加予定）**:
+  - **size 別のコンテンツ最適化**: 1×1 でテキスト切れの問題、各 size 専用のコンテンツ密度調整
   - state property: hover（shadow-3 + translateY -2px）/ focus-visible / disabled
   - Glass の 5 階調 modifier（glass--1 〜 glass--5）
-  - 画像 placeholder を Image fill 可能な変数バインドへ
+  - 画像 placeholder の Image Fill バインド
+  - **Bento Grid (`91:107`) の placeholder rect を Bento Tile instance に置換**（次セッション）
 
 ## Change Log
+- v0.3-figma (2026-05-12): Session #10 で 残 4 sizes を追加し **20 variants 完備**（4 variant × 5 size）。size property が認識され、Bento 5 sizes 体系が Figma 上で完全に表現可能に
 - v0.2-figma (2026-05-12): Figma Component Set `87:26` 新規生成（4 variants × default size 2×2 のみ）。残 4 sizes と state は v0.3 で順次追加
 - v0.2 (2026-04-28): Worksheet §20 確定（4 Variants / DNA 5 sizes 厳守 / Glass Variant 専用 / Stat-focus は --fs-display 56px / Glass 5 階調 / 4 禁止項目明示）。Brand DNA v0.5 C-Bento タイル仕様を体系化
