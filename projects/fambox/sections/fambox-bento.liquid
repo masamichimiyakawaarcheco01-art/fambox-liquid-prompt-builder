@@ -538,7 +538,7 @@
     {
       "name": "FAMBOX Bento Editorial",
       "category": "Bento",
-      "settings": { "grid_variant": "editorial", "gap_size": "lg" },
+      "settings": { "grid_variant": "editorial", "gap_size": "lg", "title": "主役エリア" },
       "blocks": [
         { "type": "tile", "settings": { "tile_size": "2x2", "tile_variant": "glass", "is_featured": true, "eyebrow": "CASE", "title": "主役タイル", "body": "対角線パターンの主役" } },
         { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "-3.2", "stat_unit": "kg", "title": "3ヶ月で平均減量" } },
@@ -550,12 +550,67 @@
     {
       "name": "FAMBOX Bento KPI (Autofit)",
       "category": "Bento",
-      "settings": { "grid_variant": "autofit", "gap_size": "sm" },
+      "settings": { "grid_variant": "autofit", "gap_size": "sm", "title": "実績ハイライト" },
       "blocks": [
         { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "+15", "stat_unit": "%", "title": "コンディション向上" } },
         { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "-3.2", "stat_unit": "kg", "title": "平均減量" } },
         { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "98", "stat_unit": "%", "title": "継続率" } },
         { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "120", "stat_unit": "名", "title": "監修アスリート" } }
+      ]
+    },
+    {
+      "name": "FAMBOX Value Proposition",
+      "category": "Bento",
+      "settings": {
+        "grid_variant": "standard",
+        "gap_size": "lg",
+        "eyebrow": "WHY FAMBOX",
+        "title": "選ばれる理由",
+        "intro": "アスリートと共に走る、栄養戦略のチーム。"
+      },
+      "blocks": [
+        { "type": "tile", "settings": { "tile_size": "2x2", "tile_variant": "standard", "is_featured": true, "eyebrow": "EXPERTISE", "title": "スポーツ栄養 15 年", "body": "プロ野球・実業団・大学体育会まで、競技特性に応じた食事設計を 15 年以上提供。" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "120", "stat_unit": "名+", "title": "監修アスリート" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "98", "stat_unit": "%", "title": "継続率" } },
+        { "type": "tile", "settings": { "tile_size": "2x1", "tile_variant": "standard", "title": "全国配送 / 冷凍便", "body": "全国どこでも、冷凍便で安全にお届け。" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "title": "個別カスタマイズ", "body": "選手ごとの体質・目標に応じて調整。" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "title": "月次相談", "body": "管理栄養士による月 1 回の個別相談。" } }
+      ]
+    },
+    {
+      "name": "FAMBOX Plan Features",
+      "category": "Bento",
+      "settings": {
+        "grid_variant": "autofit",
+        "gap_size": "md",
+        "title": "FAMBOX の特長",
+        "intro": "プランに含まれるサポート内容を一覧で確認"
+      },
+      "blocks": [
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "01", "title": "個別栄養設計", "body": "競技・体重・目標に応じた個別メニュー" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "02", "title": "月次栄養相談", "body": "管理栄養士による定期的な個別アドバイス" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "03", "title": "体調ヒアリング", "body": "配送ごとに体調・食欲を確認、次回に反映" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "04", "title": "Drive 体制", "body": "コーチ・専属栄養士とも連携可能" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "05", "title": "全国配送", "body": "冷凍便で安全にお届け" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "06", "title": "アレルゲン対応", "body": "個別相談で柔軟に調整" } }
+      ]
+    },
+    {
+      "name": "FAMBOX Spirit (Editorial)",
+      "category": "Bento",
+      "settings": {
+        "grid_variant": "editorial",
+        "gap_size": "lg",
+        "eyebrow": "SPIRIT",
+        "title": "FAMBOX の哲学",
+        "intro": "アスリートと共に走る、栄養戦略のチーム。私たちが大切にしている 5 つの価値観。"
+      },
+      "blocks": [
+        { "type": "tile", "settings": { "tile_size": "2x2", "tile_variant": "glass", "is_featured": true, "eyebrow": "INTEGRITY", "title": "誠実な提案", "body": "結果を保証しない。価値で選ばれる立場を貫く。" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "CO-DRIVEN", "title": "対等な共創", "body": "「お客様」ではなく共創パートナー。" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "DRIVE", "title": "推進力", "body": "栄養戦略を主導する。" } },
+        { "type": "tile", "settings": { "tile_size": "2x1", "tile_variant": "standard", "eyebrow": "EDITORIAL", "title": "読み物的な情報設計", "body": "煽らず、本質的な情報を Editorial に。" } },
+        { "type": "tile", "settings": { "tile_size": "3x2", "tile_variant": "glass", "is_featured": true, "eyebrow": "LAB", "title": "栄養科学の研究室として", "body": "現場 + 科学のループで、選手ごとの最適解を継続的に更新。" } }
       ]
     }
   ]

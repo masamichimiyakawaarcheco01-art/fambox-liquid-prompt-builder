@@ -1497,3 +1497,63 @@ main repo `brand/fambox/brand-dna/current.md` への正式反映は宮川さん�
 - Week 3 着手: fam-spirit / value-proposition / plan-features 改修案策定
 
 ---
+
+## Session 2026-05-12 (#25) — TOPページ Week 3: Bento preset で 3 Section を一括解決
+
+**契機**: 実装計画書 Week 3 タスク（fam-spirit / value-proposition / plan-features）を `fambox-bento.liquid` の **preset 追加**で解決。Marc 流 学び 50「Schema preset で『最初の配置』を DNA 準拠に」を実証する。**3 sections の新規ファイル不要、Bento の preset 3 個追加で対応**。
+
+### 成果
+
+| Week 3 タスク | 実装計画書の方針 | 本セッションでの実装 |
+|---|---|---|
+| fam-spirit | Bento Grid editorial + glass tile | ✅ "FAMBOX Spirit (Editorial)" preset（5 tile / 主役 2x2 + 3x2 + 標準 3） |
+| value-proposition | Bento Grid standard + standard tile | ✅ "FAMBOX Value Proposition" preset（6 tile / 主役 2x2 + stat 2 + 横長 + 1x1×2） |
+| plan-features | Card Pattern standard Grid | ✅ "FAMBOX Plan Features" preset（6 tile / 1x1 × 6 autofit） |
+
+### 各 preset の DNA 準拠
+
+#### FAMBOX Spirit (Editorial)
+- Grid: editorial / gap: lg
+- 5 tile: 2x2 主役 (INTEGRITY) + 1x1×2 (CO-DRIVEN / DRIVE) + 2x1 (EDITORIAL) + 3x2 主役 (LAB)
+- 対角線パターン A（左上 2x2 → 右下 3x2）
+- Glass variant で写真背景 + 半透明 overlay 想定
+
+#### FAMBOX Value Proposition
+- Grid: standard / gap: lg
+- 6 tile: 2x2 主役 (EXPERTISE 15 年) + 1x1×2 stat-focus (120 名+ / 98%) + 2x1 (全国配送) + 1x1×2 (カスタマイズ / 月次相談)
+- 主役 + Stat + Standard の mix で「実績で語る」DNA
+
+#### FAMBOX Plan Features
+- Grid: autofit / gap: md
+- 6 tile: 1x1 × 6 standard (eyebrow 番号 01-06 で順序明示)
+- 「サポート内容を一覧で」フラットなリスト型
+- 8 項目超過時は spec の Anti「12 tile 以上禁止」前に分割推奨
+
+### Marc 流 学び 50 の実証
+
+「**Schema preset で『最初の配置』を DNA 準拠に**」が **3 sections 一括解決** で機能。
+- Shopify エディタで「FAMBOX Bento」を追加 → preset 5 種から選択 → 即 DNA 準拠の配置が出来上がる
+- 各 preset は spec の DNA Anti（gap < 16 / 12 tile 超 / 全 Featured）を踏まない
+- block の編集（text / image 差替）で容易にカスタマイズ可能
+
+### 既存 section との関係
+
+| 既存 section | 行数 | 今後の扱い |
+|---|---|---|
+| `fambox-value-proposition.liquid` | 513 行 | v0.3 で deprecate 判断、`fambox-bento.liquid` の preset で代替 |
+| `fambox-plan-features.liquid` | 396 行 | 同上 |
+| (fam-spirit は新規 section なし) | — | `fambox-bento.liquid` の preset として新規運用 |
+
+### 学んだこと（追加）
+
+53. **「3 sections 1 file で解決」は Marc 流の効率の極み**: 学び 50（Schema preset で DNA 準拠の初期配置）と学び 49（Liquid のユーザー編集単位）の組合せで、**新規 3 ファイル不要、既存 1 ファイルへの preset 5 行追加 × 3 = 15 行で Week 3 タスク完了**。Phase 1 戦略の「最小コストで最大カバー」を実証。
+
+54. **既存 section の deprecate 判断は preset カバー範囲で決まる**: 既存 `fambox-value-proposition.liquid` (513 行) / `fambox-plan-features.liquid` (396 行) は v0.3 で deprecate 判断するが、判断軸は **「Bento の preset で同等以上の表現ができるか」**。preset がカバーできていれば deprecate、できていなければ統合改修。今回の 3 preset はカバー OK と判断。
+
+### Known TODOs
+
+- Week 3 進捗: 3 sections を Bento preset で解決完了 → 残り Week 5 QA / 本番反映
+- Modal / Footer の Liquid 化（残 L4 の Liquid 化で完全カバー）
+- Stat Card / Case Study Liquid 化（Tier 1-2 補完）
+
+---
