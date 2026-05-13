@@ -974,3 +974,70 @@ function sizeKey(w, h) {
 - **新 Issue が出るたびに v0.X+1 で還元**するサイクルを継続
 
 ---
+
+## Session 2026-05-12 (#16) — Hero Section height property 追加（SKILL v0.4 Phase 2 1D 拡張実証）
+
+**契機**: SKILL v0.4 を実証するため、Audit #4 で残っていた Hero Section の spec gap（spec 12 variants 想定 / Figma 4 variants）を解消。SKILL v0.4 の Phase 2 = 1D 拡張パターンで `height` property を追加。
+
+### SKILL v0.4 Phase 2 (1D 拡張) 実証ログ
+
+| Step | 実行内容 | 結果 |
+|---|---|---|
+| 0. Audit-first | `67:73` の現状 4 variants 確認 | ✅ |
+| 1. Spec md | Heights セクションの `hero--full` (100vh) / `hero--tall` (70vh) / `hero--compact` (40vh) を取得 | ✅ |
+| 2. Variables | 既存利用 | ✅ |
+| 3. Phase 2 拡張 | rename → clone × 2 → 2D matrix 配置 + minimal-text 既存高さ統一 | ✅ |
+| 4. スクリーンショット | 12 variants が 4×3 matrix に配置されることを確認、compact で内部要素見切れ検出 | ✅ + 課題発見 |
+| 5-7. ドキュメント | hero-section.md / figma-build-log / current.md 同時更新 | ✅ |
+
+### 成果
+
+| Component | 操作 | 結果 |
+|---|---|---|
+| Hero Section | height property 追加 + minimal-text 高さ統一 | **4 → 12 variants 完備** |
+
+**Property 構成**: `variant` (4) × `height` (3) = 12 variants
+**配置**: 4 列 × 3 行 matrix (`x = cIdx * 1500, y = rIdx * 750`)、Set 全体 6000 × 2250
+**Figma px → Spec vh 対応**:
+- `default` 1440×700 = `hero--full` (100vh)
+- `tall` 1440×550 = `hero--tall` (70vh)
+- `compact` 1440×400 = `hero--compact` (40vh)
+
+### SKILL v0.4 の検証結果（Phase 2 1D 拡張、3 回目）
+
+| 検証項目 | 評価 | コメント |
+|---|---|---|
+| Step 3 Phase 2 「rename → clone → 2D matrix」フロー | ◎ | v0.3 で明文化されたパターンがそのまま機能 |
+| 学び 24 (配置規則踏襲) と 26 (2D matrix) の組合せ | ◎ | 1D 拡張だが既存配置と直交する 2D matrix で表示すると視認性高い |
+| 学び 33 (既存 strokes 上書き) | – | 今回は stroke 操作なし、適用機会なし |
+| **総合** | **A+** | SKILL v0.4 は Phase 2 1D 拡張でも安定運用フェーズ |
+
+### 検出した次 Phase 課題
+
+#### 🐛 Issue 12: compact で内部要素が見切れる
+- **症状**: minimal-text variant の default (700) を compact (400) に縮めると、内部の text / CTA が一部見切れる
+- **原因**: 既存 variants は default (700) を前提に auto-layout 設計されていて、内部要素間の余白が固定
+- **対処（v0.5）**:
+  - (A) compact 専用に内部 padding / itemSpacing を縮小 override
+  - (B) `primaryAxisAlignItems: 'CENTER'` で中央寄せに変更
+  - (C) compact では一部要素を非表示（boolean property で）
+- **回避**: 今回は Phase 2 = サイズ拡張に集中、内部最適化は別 Phase へ送付
+
+### 学んだこと（追加）
+
+38. **1D 拡張でも 2D matrix 配置がレビューしやすい**: variant × height のような 2 property を持つ場合、新規 property が 1D だけ拡張する場合でも、視覚的には matrix で配置することで「どの組合せが完備しているか」が一目瞭然。
+
+39. **既存 variants のサイズ差異は拡張前に統一する**: minimal-text の既存 height 500（他は 700）を、default 揃えで 700 に統一した。**Phase 2 拡張時に既存の不揃いを正す**ことで、後続の variants が綺麗に配置される。
+
+### SKILL v0.5 への新たな改善候補（追加）
+
+- **Phase 2 着手前の「既存 variants サイズ統一」チェック**: 不揃いがあれば Phase 2 着手前に修正
+- **Phase 2 の auto-layout 制約**: 既存 variants の auto-layout 設計が default size 前提なら、拡張時に内部要素が見切れる（Issue 12）。**Phase 2 では「サイズ変動でも内部要素が崩れない auto-layout 設計」を確認** すべきと SKILL に明記
+
+### Known TODOs（Hero v0.5 残）
+
+- Issue 12 解消: compact で内部要素が見切れる auto-layout 調整
+- NBA HOOP モードの boolean property 化
+- video-fullscreen / video-split の `image-fill` Image fill バインド
+
+---

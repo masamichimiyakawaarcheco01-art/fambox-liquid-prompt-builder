@@ -655,19 +655,26 @@ JS で scrollY に応じて `--media-translate-y` を更新。既存 tokens の 
 
 - File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
 - Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
-- **Component Set ID**: `67:73`（Audit #4 で発見 + Session #9 で video-split 追加、2026-05-12）
-- **実装済 variants**: **4**（`variant`: video-fullscreen / image-editorial / minimal-text / **video-split** ★新規）
+- **Component Set ID**: `67:73`（Audit #4 で発見 + Session #9 で video-split 追加 + Session #16 で height property 追加、2026-05-12）
+- **実装済 variants**: **12**（`variant` × `height`）
+  - variant (4): video-fullscreen / image-editorial / minimal-text / video-split
+  - **height (3): default (1440×700) / tall (1440×550) / compact (1440×400)** ★ Session #16 で追加
+- **配置**: 2D matrix（4 列 × 3 行）/ Set 全体 6000 × 2250
+- **height 別寸法**:
+  - **default** (1440×700) = spec `hero--full` (100vh) — TOP / 主要 LP
+  - **tall** (1440×550) = spec `hero--tall` (70vh) — カテゴリページ / 中継ぎ Hero
+  - **compact** (1440×400) = spec `hero--compact` (40vh) — FAQ / 規約 / 社内ページ
 - **video-split 仕様**（spec §17 「fambox-hero-v17 継承」を再現）:
-  - 1440 × 700、`layoutMode: 'NONE'`
-  - 左 video placeholder 720 × 700（dark teal）/ 右 video placeholder 720 × 700（dark slate）
+  - 左 video placeholder（dark teal）/ 右 video placeholder（dark slate）
   - 4 Corner Icons（40 × 40 Drive、四隅 32px offset）
-  - 中央 overlay frame 600 × auto: Eyebrow "FAMBOX × CAMPAIGN"（Poppins SemiBold 14 Drive）/ Title Bold 48 White（line 130%）/ Sub Regular 16 White / CTA Button (`46:32`) instance（variant=primary, size=lg）
-- **未実装（v0.4 で追加予定）**:
-  - **`height` property**（compact / default / tall）を別 variant property として追加 → 4 variants × 3 heights = 12 variants 完備
+  - 中央 overlay frame: Eyebrow "FAMBOX × CAMPAIGN" / Title Bold 48 / Sub Regular 16 / CTA Button instance
+- **未実装（v0.5 で追加予定）**:
+  - height 別のコンテンツ密度最適化（compact で内部要素が見切れる場合の auto-layout 調整）
   - NBA HOOP モード（Editorial Variant のタイポ重ね ON/OFF）の boolean property 化
   - 動画パララックス挙動（Figma では仕様メモのみ、実装は Liquid 側）
 
 ## Change Log
+- v0.4-figma (2026-05-12): Session #16 で **height property を追加**（4 → 12 variants 完備）。spec の `hero--full/tall/compact` を Figma 上で完全再現。minimal-text の既存 1440×500 を 1440×700 に統一して default 揃え。SKILL v0.4 Phase 2 1D 拡張パターン実証 (A+)
 - v0.3-figma (2026-05-12): Session #9 で video-split variant を追加（4 variants 完備）。spec の 4 variants gap を解消、heights property は v0.4 へ送付
 - v0.2-figma (2026-05-12): Audit #4 で Component Set `67:73` を既存確認。実装は 3 variants で spec の 12 variants（4×3）から欠落、v0.3 で要整合
 - v0.2 (2026-04-28): Worksheet §17 確定（4 Variants / 3 Heights / CTA 0〜2 / NBA HOOP モード任意 / 動画パララックス対応 / 4禁止項目明示）。既存 Liquid（fam-corp-hero / fambox-hero-v17-video / fam-blog-hero）の実測抽出をベースに L4 Component 化
