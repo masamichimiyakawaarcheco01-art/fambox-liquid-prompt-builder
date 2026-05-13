@@ -1439,3 +1439,61 @@ main repo `brand/fambox/brand-dna/current.md` への正式反映は宮川さん�
 - Week 3-4: 残 Tier 2-3 sections (FAQ / Profile / value-proposition 等)
 
 ---
+
+## Session 2026-05-12 (#24) — TOPページ Week 4 前倒し: FAQ + Profile Liquid 化
+
+**契機**: Week 1-2 が高品質に早期完了したため、Week 4 Tier 3 改修の前提（FAQ / Profile Liquid 化）を先行実装。両方とも spec / Figma 完成済（Session #6 で Spec 化、Session #16 で Figma 化）で、**spec → Figma → Liquid の三位一体**を Liquid 側で締結。
+
+### 成果
+
+| 成果物 | 場所 | サイズ | 内容 |
+|---|---|---|---|
+| FAMBOX FAQ section | `projects/fambox/sections/fambox-faq.liquid` | 292 行 | Carousel variant + 4-8 card scroll |
+| FAMBOX Profile section | `projects/fambox/sections/fambox-profile.liquid` | 321 行 | Section variant + Drive 全面塗り |
+
+### FAQ Carousel 実装範囲
+
+| 機能 | 実装状況 |
+|---|---|
+| Carousel variant (横スクロール 4-8 card) | ✅ |
+| Card 構造: Avatar 40 + Q番号 + 質問 + **黒線 32×2** + 回答 + ロゴ | ✅ |
+| Q 番号 Poppins SemiBold 24 / 質問 Bold 18 / 回答 Regular 18 Drive | ✅ |
+| SP: scroll-snap で 1 枚送り、カード幅 `calc(100vw - 80px)` | ✅ |
+| FAMBOX ロゴ：画像 or text fallback | ✅ |
+| `tabindex="0"` + `aria-label`（横スクロール領域）| ✅ |
+| 4 card の preset | ✅ |
+
+### Profile Section 実装範囲
+
+| 機能 | 実装状況 |
+|---|---|
+| Section variant (Drive `#FB4C15` 全面塗り) | ✅ |
+| Title box: 2px drive-light 罫線 + 72×72 icon 枠 + Poppins 32 white "Profile" | ✅ `border-right` で部分罫線 |
+| Profile box 624×517: 背景画像 PC absolute / SP 下配置 | ✅ |
+| Name 40px Bold / 肩書 14px Medium / **284×2 drive-light 線** / Bio 14px Regular（全 white）| ✅ |
+| Block limit: 3（DNA 規律 "1-3 名"）| ✅ |
+| 2 名 preset（大前 恵 + 和田 毅、spec 例文）| ✅ |
+| SP: 縦並び + テキスト下に画像 180h | ✅ |
+
+### Spec → Figma → Liquid の三位一体達成
+
+| Component | Spec md | Figma Set | Liquid section |
+|---|---|---|---|
+| FAQ | ✅ faq.md | ✅ 93:90 | ✅ fambox-faq.liquid |
+| Profile | ✅ profile.md | ✅ 96:79 | ✅ fambox-profile.liquid |
+
+これにより、**spec → Figma → Liquid の全 3 媒体に同じ情報が再現可能**（学び 51）。
+
+### 学んだこと（追加）
+
+51. **spec → Figma → Liquid の三位一体は L4 Component で完成形**: Marc 流 4 層スタックは「Spec を一次資料」として、Figma が「視覚的実装」、Liquid が「production 実装」となる三層を**同じ情報量で再現**できる。Session #24 で FAQ / Profile を Liquid 化したことで、**Audit-first の対象が「Spec ↔ Figma ↔ Liquid」の 3 ペア全部**になり、整合性チェックが体系化。
+
+52. **既存 preview-*.html は L4 Component の「DNA 確認の rapid prototype」**: preview-faq.html / preview-profile.html は Spec 化前の DNA 確認用 HTML だった。Spec → Figma → Liquid の三位一体が完成すると、**preview-*.html の役割は「rapid prototype」へ縮小**（spec が一次資料の地位を取る）。preview-*.html は今後「L4 候補の新規 DNA 確認」用途に専念。
+
+### Known TODOs
+
+- FAQ v0.3: Accordion variant (`/pages/faq` 専用、details/summary)
+- Profile v0.3: Card variant (About ページ・メンバー一覧用)
+- Week 3 着手: fam-spirit / value-proposition / plan-features 改修案策定
+
+---

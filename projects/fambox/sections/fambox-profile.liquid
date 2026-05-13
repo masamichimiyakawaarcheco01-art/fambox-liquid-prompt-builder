@@ -1,0 +1,321 @@
+{% comment %}
+  =====================================================
+  FAMBOX Profile Section — Section v0.2 (Phase 1)
+  =====================================================
+  Spec: brand/fambox/design-system/components/profile.md
+  Spec date: 2026-05-12
+  Figma: Component Set 96:79 (section variant)
+  Implementation date: 2026-05-12
+  既存: preview-profile.html を一次資料に L4 Component 化
+
+  Variant: section (★ Default、Card variant は v0.3 で About ページ用)
+
+  Phase 1 範囲:
+    - 1 section で 1-3 名の Profile を Drive 全面塗りで表示
+    - Title box: 1312×72 / 2px drive-light border / 72×72 icon + Poppins 32 white "Profile"
+    - 各 Profile box: 624×517 / dark bg or 背景画像 / 上寄せ content w284
+      - Name 40px Bold White / 肩書 14px Medium / 区切り 284×2 drive-light / Bio 14px Regular
+    - SP: 縦並び (テキスト→画像 180px)
+    - DNA: Drive 全面塗りは Profile / Hero 専用、他では使用禁止
+
+  v0.3 候補:
+    - Card variant (About ページ・メンバー一覧用、Drive 塗りなし)
+    - 画像 fill バインドの強化 (responsive sizes)
+    - WCAG: bio 14px white on drive は AA 大文字非達成、16px 昇格検討
+=====================================================
+{% endcomment %}
+
+<section class="profile profile-section" data-gtag-section="profile">
+  <div class="profile__inner">
+
+    <header class="profile__title-box">
+      <span class="profile__title-icon" aria-hidden="true">
+        {%- if section.settings.title_icon != blank -%}
+          <img src="{{ section.settings.title_icon | image_url: width: 80 }}"
+               width="40" height="40" alt="" loading="lazy">
+        {%- else -%}
+          <span class="profile__title-icon-placeholder"></span>
+        {%- endif -%}
+      </span>
+      <h2 class="profile__title">{{ section.settings.title | default: 'Profile' }}</h2>
+    </header>
+
+    <div class="profile__list">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'person' -%}
+          <article class="profile__box" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              <div class="profile__bg profile__bg--pc" aria-hidden="true">
+                <img src="{{ block.settings.image | image_url: width: 1248 }}"
+                     width="624" height="517"
+                     alt=""
+                     class="profile__bg-image"
+                     loading="lazy">
+              </div>
+            {%- endif -%}
+            <div class="profile__content">
+              <p class="profile__name">{{ block.settings.name }}</p>
+              {%- if block.settings.title_sub != blank -%}
+                <p class="profile__title-sub">{{ block.settings.title_sub | newline_to_br }}</p>
+              {%- endif -%}
+              <hr class="profile__line" aria-hidden="true" />
+              {%- if block.settings.bio != blank -%}
+                <p class="profile__bio">{{ block.settings.bio }}</p>
+              {%- endif -%}
+              {%- if block.settings.image != blank -%}
+                <div class="profile__sp-image" aria-hidden="true">
+                  <img src="{{ block.settings.image | image_url: width: 686 }}"
+                       width="343" height="180"
+                       alt=""
+                       class="profile__sp-image-img"
+                       loading="lazy">
+                </div>
+              {%- endif -%}
+            </div>
+          </article>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* === Section === */
+  .profile {
+    max-width: var(--container-max, 1440px);
+    margin-inline: auto;
+    margin-block: var(--space-6, 48px);
+    background: var(--color-drive, #fb4c15);
+    position: relative;
+  }
+  .profile__inner {
+    padding: var(--space-7, 64px);
+  }
+
+  /* === Title box (1312 × 72, 2px drive-light border) === */
+  .profile__title-box {
+    width: 100%;
+    height: 72px;
+    border: 2px solid var(--color-drive-light, #fc825b);
+    display: flex;
+    align-items: center;
+  }
+  .profile__title-icon {
+    width: 72px;
+    height: 72px;
+    border-right: 2px solid var(--color-drive-light, #fc825b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .profile__title-icon > img { width: 40px; height: 40px; }
+  .profile__title-icon-placeholder {
+    width: 40px;
+    height: 40px;
+    background: var(--color-drive-light, #fc825b);
+    opacity: 0.5;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .profile__title {
+    font-family: var(--font-en, 'Poppins', sans-serif);
+    font-weight: var(--fw-regular, 400);
+    font-size: var(--fs-h2, 32px);
+    color: var(--color-white, #ffffff);
+    padding-left: var(--space-3, 24px);
+    line-height: 1;
+    margin: 0;
+  }
+
+  /* === List === */
+  .profile__list {
+    display: flex;
+    gap: var(--space-7, 64px);
+    margin-top: var(--space-6, 56px);
+  }
+
+  /* === Box === */
+  .profile__box {
+    flex: 1 1 624px;
+    max-width: 624px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0; /* Editorial の角丸禁止 */
+    min-height: 517px;
+  }
+
+  /* PC 背景画像 (absolute fill) */
+  .profile__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .profile__bg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Content w284 上寄せ */
+  .profile__content {
+    position: relative;
+    z-index: 1;
+    width: 284px;
+    padding: 0;
+  }
+
+  .profile__name {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-weight: var(--fw-bold, 700);
+    font-size: 40px; /* Display 級、直値で確定 (spec) */
+    color: var(--color-white, #ffffff);
+    line-height: 1.3;
+    margin: 0;
+  }
+  .profile__title-sub {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-weight: var(--fw-medium, 500);
+    font-size: var(--fs-body-sm, 14px);
+    color: var(--color-white, #ffffff);
+    line-height: 1.8;
+    margin: var(--space-1, 8px) 0 0;
+  }
+  .profile__line {
+    width: 284px;
+    height: 2px;
+    background: var(--color-drive-light, #fc825b);
+    border: 0;
+    margin: var(--space-5, 32px) 0 0;
+  }
+  .profile__bio {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-weight: var(--fw-regular, 400);
+    font-size: var(--fs-body-sm, 14px);
+    color: var(--color-white, #ffffff);
+    line-height: 1.8;
+    margin: var(--space-5, 32px) 0 0;
+  }
+
+  /* SP 用画像 (PC では非表示) */
+  .profile__sp-image { display: none; }
+  .profile__sp-image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* === SP === */
+  @media (max-width: 767px) {
+    .profile__inner { padding: var(--space-7, 64px) var(--space-3, 24px); }
+    .profile__title { font-size: var(--fs-h3, 24px); }
+    .profile__title-box { width: 100%; }
+
+    .profile__list {
+      flex-direction: column;
+      gap: var(--space-5, 32px);
+    }
+
+    .profile__box {
+      max-width: 100%;
+      min-height: auto;
+    }
+    .profile__content { width: 100%; position: relative; }
+    .profile__line { width: 100%; }
+
+    /* PC 背景を非表示にし、テキスト下に画像を配置 */
+    .profile__bg--pc { display: none; }
+
+    .profile__sp-image {
+      display: block;
+      width: 100%;
+      height: 180px;
+      margin-top: var(--space-3, 24px);
+      overflow: hidden;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "FAMBOX Profile",
+  "tag": "section",
+  "class": "section-profile",
+  "settings": [
+    {
+      "type": "header",
+      "content": "セクション見出し"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "見出し (英語推奨)",
+      "default": "Profile"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_icon",
+      "label": "Title アイコン (40×40 推奨。未設定なら drive-light placeholder)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "person",
+      "name": "プロフィール",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "肖像画像 (推奨 1248×1034 以上)"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "氏名",
+          "default": "大前 恵"
+        },
+        {
+          "type": "textarea",
+          "id": "title_sub",
+          "label": "肩書 (改行可)",
+          "default": "FAM スポーツ栄養アドバイザー\n管理栄養士"
+        },
+        {
+          "type": "textarea",
+          "id": "bio",
+          "label": "経歴 (1 段落、80 字以内推奨)",
+          "default": "プロ野球選手をはじめ、トップアスリートの栄養管理を 15 年以上担当。個々の体質や競技特性に応じた食事プランの設計を専門とし、FAMBOX のメニュー監修を手がける。"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAMBOX Profile",
+      "category": "Profile",
+      "blocks": [
+        {
+          "type": "person",
+          "settings": {
+            "name": "大前 恵",
+            "title_sub": "FAM スポーツ栄養アドバイザー\n管理栄養士",
+            "bio": "プロ野球選手をはじめ、トップアスリートの栄養管理を 15 年以上担当。個々の体質や競技特性に応じた食事プランの設計を専門とし、FAMBOX のメニュー監修を手がける。"
+          }
+        },
+        {
+          "type": "person",
+          "settings": {
+            "name": "和田 毅",
+            "title_sub": "球団統括本部アドバイザー\n福岡ソフトバンクホークス",
+            "bio": "NPB 通算 150 勝を達成した左腕投手。現役時代から食事管理を徹底し、40 歳まで第一線で活躍。引退後はその経験を活かし、次世代アスリートの栄養環境改善に取り組む。"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
