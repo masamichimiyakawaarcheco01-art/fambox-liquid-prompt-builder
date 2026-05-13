@@ -280,6 +280,33 @@ FAMBOX
 
 ---
 
+## Figma 参照
+
+- File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
+- Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
+- **Component Set ID**: `98:121` ✅ 新規生成（2026-05-12 Session #7）
+- 生成スキル: `figma-component-from-spec` + `figma-use`
+- **実装済 variants**: 1（`variant`: input）/ 確認フェーズ・Success 画面は v0.3 拡張枠で保留
+- **構造**（Phase 1 = 入力フェーズの代表 7 フィールド）:
+  - Section bg: `bg/secondary` (#FAFAFA)、padding 64×4辺、Form width 768（内寸 640）
+  - Title 「お問い合わせ」Noto Sans JP Bold 32 Ink + サブタイトル 16 sub
+  - **Fields container** (gap 24):
+    1. 会社名・団体名 (text): Label Bold 14 + 必須 badge (Drive bg, 10px white) + Input border-base 1px / radius 8 / placeholder
+    2. お名前 (text): 同上
+    3. 役職 (select): placeholder + `▾` 右寄せ
+    4. メール (email): 同 text
+    5. 問合せ種別 (radio): 4 options（円形 20×20 + label）
+    6. 問合せ内容 (textarea): 144px 高 + helper text 「0 / 500 字」caption
+    7. プライバシーポリシー (checkbox): 20×20 box + inline label
+  - **Submit Button**: Button (`46:32`) instance variant=primary, size=lg, state=default、テキスト「内容を確認する」
+- **未実装（v0.3 で追加予定）**:
+  - 残 4 フィールド: 競技・種目 / 電話番号 / 選手数・チーム規模 / 利用検討時期（任意）
+  - **`variant=review` (確認フェーズ)**: 同画面 inline 確認、readonly 表示 + 修正/送信 ボタン 2 つ
+  - **`variant=success` (Success 画面)**: TOPに戻る + 事例を見る の 2 CTA
+  - エラーステート variants: 各フィールドの error state（FormField `56:34` の `state=error` を参照）
+  - SP layout: Form 全幅 / button 全幅 / select OS ネイティブ UI
+
 ## Change Log
+- v0.3-figma (2026-05-12): Figma Component Set `98:121` 新規生成（input variant 1個 / 代表 7 フィールド + Submit Button instance）。FormField パターン化が機能、必須 badge も spec 通り Drive bg + white。残 4 フィールド・確認/Success フェーズは v0.3 拡張枠
 - v0.3 (2026-04-27): Worksheet §12 拡張承認（11フィールド化）— **電話番号 任意→必須**（緊急連絡確保）/ **利用検討時期 select 任意 を正式採用**（リード温度判定）/ 役職 8選択肢確認
 - v0.2 (2026-04-20): Worksheet §12 確定（10フィールド・inline確認・カスタム自動返信）

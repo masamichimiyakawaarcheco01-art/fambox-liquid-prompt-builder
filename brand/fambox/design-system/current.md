@@ -23,6 +23,7 @@ milestone:
   - 2026-05-12: 全 Component Set 一括 Audit (#4) — Figma 上 15 Component Sets を発見。L2 全 6 + L3 全 3 + L4 全 6 のマッピング表完成 / spec md 8 件に Figma 参照を追加 / Button 所在ページ誤認を訂正（`0. Cover` → `3. Primitives`）/ Hero Section の variants gap（spec 12 ↔ Figma 3）を検出、v0.3 課題化 / Figma 未実装の Spec md 5 件（Bento Tile/Bento Grid/FAQ/Profile/Contact Form）を特定
   - 2026-05-12: L3 Bento Tile + L4 Bento Grid Figma 新規生成 (Session #5) — Audit #4 で未実装と判明した TOP 実装 5/29 期限の主役エリアを最優先で生成 / Bento Tile (`87:26`) 4 variants × default size 2×2 / Bento Grid (`91:107`) 3 variants × placeholder grid demo（Editorial 対角線パターン視覚化）/ 残 sizes と instance 置換は v0.3 へ / Figma 未実装 5 件 → 3 件（FAQ / Profile / Contact Form）へ減少
   - 2026-05-12: L4 FAQ Carousel + L4 Profile Section Figma 新規生成 (Session #6) — 直前 Spec 化 2 件を即 Figma 化し spec ↔ Figma 往復サイクルを締結 / FAQ (`93:90`) Carousel 1 variant × 4 cards / Profile (`96:79`) Section 1 variant × Drive 全面塗り + 2 名並列 / individualStrokeWeights で部分ボーダー実装 / Figma 未実装 3 件 → 1 件（Contact Form のみ）に減少
+  - 2026-05-12: 🏆 **Marc 流 4 層スタック完全カバー達成** (Session #7) — Contact Form (`98:121`) input variant 1 個 / 代表 7 フィールド + Submit Button instance / **Figma 未実装 Spec md 1 件 → 0 件**、Spec md ↔ Figma Component Set ↔ Build Log の完全な往復サイクル確立 / 7 セッションで蓄積した学び 20 項を figma-component-from-spec SKILL v0.2 整備へ展開予定
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し

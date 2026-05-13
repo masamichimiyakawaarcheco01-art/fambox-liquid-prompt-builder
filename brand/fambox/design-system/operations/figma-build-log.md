@@ -393,3 +393,84 @@ FAMBOX/typography/font-size/lg        (Button lg 20px)
 - **Profile WCAG 改善**: bio 14px white on drive を 16px へ昇格 spec 改訂
 
 ---
+
+## Session 2026-05-12 (#7) — L4 Contact Form Figma 新規生成（最後の Figma 未実装 spec を消化）
+
+**契機**: Audit #4 で残っていた Figma 未実装 1 件（Contact Form）を消化することで「**Spec md ↔ Figma の完全カバー**」を達成し、Marc 流 4 層スタックの 1 サイクルが完結する。
+
+### 成果
+
+| Component | Set ID | Page | Variants | サイズ |
+|---|---|---|---|---|
+| Contact Form (L4) | `98:121` | 5. Components | 1（`variant`: input）| 768 × 1200 |
+
+**🏆 マイルストーン**: Figma 未実装 Spec md **1 件 → 0 件** に減少。Marc 流 4 層スタック（Spec → Figma → Build Log → Audit）の **完全カバー** 達成。
+
+### Contact Form 詳細（Phase 1 = 入力フェーズ）
+
+- Section bg: `bg/secondary` (#FAFAFA)、padding 64×4辺
+- Title 「お問い合わせ」Bold 32 Ink + サブタイトル 16 sub
+- Fields container (gap 24) — 代表 7 フィールド（spec 11 のうち主要型を網羅）:
+  - **text** × 2（会社名・お名前）
+  - **select** × 1（役職、`▾` 右寄せ）
+  - **email** × 1（メール）
+  - **radio** × 1（問合せ種別 4 options）
+  - **textarea** × 1（500 字カウンタ付き）
+  - **checkbox** × 1（プライバシーポリシー同意）
+- 各 Label に **必須 badge**（Drive bg + white「必須」10px）
+- Submit Button: Button (`46:32`) instance `variant=primary, size=lg, state=default`、テキスト「内容を確認する」
+
+### 発生問題と修復
+
+#### 🐛 Issue 7: `parent.removeChild(child)` は Figma Plugin API に存在しない
+- **症状**: `wrapper.removeChild(labelRow)` で `TypeError: no such property 'removeChild' on FRAME node`
+- **原因**: Figma Plugin API のノード削除は **`child.remove()`** が正解。DOM API の `removeChild` 慣性で書いてしまった
+- **修復**: checkbox 分岐では最初から label row を作らないように分岐前置（より良いアプローチ）
+- **再発防止**: ノード削除のときは常に `child.remove()`、parent からの除去 API は存在しない
+
+### 学んだこと（追加）
+
+18. **既存 Component の instance 化は `child.createInstance()`**: Button (46:32) の特定 variant を埋め込むには、Component Set の children から target variant Component を見つけて `.createInstance()` を呼ぶ。これで親 Form に instance を append すれば、Button の変更が Contact Form の Submit にも反映される（双方向）。
+
+19. **必須 badge は label row 内の補助 frame で**: HORIZONTAL auto-layout の label row に「ラベル + badge」を gap 8 で配置することで、CSS の inline-flex 相当を実現。
+
+20. **Phase 1 で型を作り Phase 2 で拡張する Marc 流の真価**: Contact Form 11 フィールド全部を一発で作らず、各フィールド型（text/select/email/radio/textarea/checkbox）の代表だけ作ったことで、`buildFormField` 関数が再利用可能なパターンライブラリとして残った。残 4 フィールドの追加は **既存関数に定義だけ追加** で済む。
+
+### Known TODOs（Contact Form v0.3 残）
+
+- **残 4 フィールド追加**: 競技・種目 / 電話番号 / 選手数・チーム規模 / 利用検討時期（任意）
+- **`variant=review`**: 確認フェーズ inline 表示（readonly + 修正/送信 2 ボタン）
+- **`variant=success`**: Success 画面（TOPに戻る + 事例を見る）
+- **error state variants**: 各フィールドの error 表示（FormField `56:34` の state=error を継承）
+- **SP layout**: Form 全幅 + button 全幅
+
+---
+
+## 🎯 マイルストーン到達: Marc 流 4 層スタック完全カバー
+
+2026-05-12 の 7 セッションで、FAMBOX Design System の **Spec md ↔ Figma Component Set ↔ Build Log** の完全な往復サイクルを確立した。
+
+### 最終マトリクス（2026-05-12 時点）
+
+| Layer | Spec md | Figma Set | 状態 |
+|---|---|---|---|
+| L1 Tokens | colors / typography / spacing / motion 等 | Variables / Effect Styles | ✅ |
+| L2 Primitives | 6 件 | 6 件（Button 60v / Input 12v / Avatar 20v / Form Controls 9v / Progress 5v / Spinner 3v）| ✅ |
+| L3 Patterns | 3 件 | 3 件（Card 4v / FormField 4v / Stat Card 6v / Bento Tile 4v Phase1）| ✅ |
+| L4 Components | 9 件 | 9 件（Header 3v / Footer 3v / Modal 3v / Hero 3v / Case Study 2v / Plan Card 2v / Bento Grid 3v / FAQ 1v / Profile 1v / Contact Form 1v）| ✅ |
+
+### Marc 流 7 セッションで蓄積した学び（計 20 項）
+
+| Session | 内容 | 学び |
+|---|---|---|
+| #1 (前期) | L2 Primitives 64 variants 構築 | 1-4: alias 健全化 / テキスト順序 / MVP→拡張 / Hiragino 代替 |
+| #2 | Button v0.3 state property 拡張 | 5-7: auto-layout / paint 再構築 / stroke 明示除去 |
+| #3 | Card audit + shadow 補完 | 8-9: Audit-first L3 適用 / setEffectStyleIdAsync 必須 |
+| #4 | 全 Component Set 一括 Audit | 10-11: 重複生成回避 / node.parent で安全な page 判定 |
+| #5 | Bento Tile + Grid 新規生成 | 12-14: resize 後 sizing 罠 / Gradient 行列 / Range スタイル |
+| #6 | FAQ + Profile 新規生成 | 15-17: individualStrokeWeights / spacer frame / 1variant でも Set 化 |
+| #7 | Contact Form 新規生成 | 18-20: `createInstance()` / 必須 badge label row / Phase 1 で型作り→Phase 2 で拡張 |
+
+これらを **figma-component-from-spec SKILL v0.2** として整備するのが次の本質的な打点。
+
+---
