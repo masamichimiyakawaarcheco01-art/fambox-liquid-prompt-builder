@@ -516,3 +516,65 @@ FAMBOX/typography/font-size/lg        (Button lg 20px)
 - **figma-use との依存関係明示**: SKILL load 順序を frontmatter で宣言できる仕組み（プラットフォーム側に要望）
 
 ---
+
+## Session 2026-05-12 (#9) — Hero Section variants 拡充（SKILL v0.2 実証実験）
+
+**契機**: 直前に整備した `figma-component-from-spec` SKILL v0.2 を実 Component で実証。Audit #4 で検出した Hero Section の spec gap（spec 4 variants / Figma 3 variants）を SKILL の 7 ステップを愚直に踏んで解消する。
+
+### SKILL の各ステップ実証ログ
+
+| Step | 実行内容 | 結果 |
+|---|---|---|
+| 0. Audit-first | 既に Audit #4 で実施済（67:73 存在、3 variants）| ✅ 重複生成回避 |
+| 1. Spec md 完全読み込み | `## Variants（4 種 / 拡張可）` 表 + `## Heights（3 段階）` を確認、4 つ目の variant が **video-split** と判明 | ✅ spec の真意把握 |
+| 2. Variables / Effect Styles | drive / ink / white / 既存 ID 再利用 | ✅ 既存 token 活用 |
+| 3. Component Set 構築 | 不足 1 variant（video-split）を Phase 1 で追加。heights property は v0.4 へ送付 | ✅ Phase 戦略適用 |
+| 4. スクリーンショット検証 | `get_screenshot` で spec の「左右分割 + 4 Corner + 中央テキスト」表現を視覚確認 | ✅ 一発で OK |
+| 5. spec md に Figma 参照追記 | hero-section.md に v0.3-figma エントリ + video-split 仕様 + v0.4 残 TODO | ✅ |
+| 6. figma-build-log 更新 | 本 Session #9 を記録 | ✅ |
+| 7. current.md milestone | 4 → 4 variants 完備マイルストーン追加 | ✅ |
+
+### 成果
+
+| Component | 操作 | 状態 | Set ID | Variants |
+|---|---|---|---|---|
+| Hero Section | variant=video-split 追加 | 3 → 4 variants | `67:73`（変わらず） | video-fullscreen / image-editorial / minimal-text / **video-split** |
+
+### video-split 詳細
+
+- 1440 × 700, `layoutMode: 'NONE'`（4 corner + overlay の絶対配置のため）
+- 左 video placeholder 720×700 dark teal / 右 720×700 dark slate
+- 4 Corner Icons 40×40 Drive、32px offset
+- 中央 overlay 600×auto: Eyebrow "FAMBOX × CAMPAIGN" Poppins SemiBold 14 + Title 48 Bold White + Sub 16 + CTA Button (46:32) instance「話を聞いてみる」
+
+### SKILL v0.2 の検証結果
+
+| 検証項目 | 評価 | コメント |
+|---|---|---|
+| Step 0 Audit-first の有効性 | ◎ | 既存 Set を再利用、新規生成回避 |
+| Step 1 Spec md 一次資料化 | ◎ | spec 表を読むだけで「4 つ目は video-split」と即特定 |
+| Phase 1 戦略 | ◎ | 12 variants 全展開でなく 4 variants 完備を優先、heights は v0.4 へ |
+| Issue 6 回避（layoutMode NONE での layoutPositioning 不使用）| ◎ | 直接 `x/y` で配置、エラーなし |
+| 学び 19 適用（既存 Button の `createInstance`）| ◎ | CTA を Button (46:32) primary lg から instance 化 |
+| 学び 22 適用（SKILL の git 管理）| ◎ | SKILL ファイルが既に commit 済、利用フローが透明 |
+| **総合** | **A+** | SKILL は実用レベル、抜け漏れなし |
+
+### 検出した SKILL 改善点（v0.3 候補）
+
+- **Step 3 に「拡張時の変位置決定パターン」を明記**: 既存 Set に新 variant を `appendChild` する際、x/y は既存 variants の縦並び規則に合わせる（今回は y = 既存最終 y + 既存最終 height + 100 gap）。
+- **Step 4 の検証フローに「Component Set 全体 vs 個別 variant の screenshot を選ぶ判断」を追加**: 新 variant 単体を撮るか、Set 全体で他 variants との比較を撮るかをガイド化。
+
+### 学んだこと（追加）
+
+23. **既存 Component Set への variant 追加は `set.appendChild(newVariant)`**: 新規 Set 作成より少ない手数、property definitions も自動拡張される。
+
+24. **既存 Set への variants 追加時の x/y 配置規則**: 既存 variants の縦並び（または横並び）パターンを inspect で確認してから、その規則を踏襲する。今回 Hero は y = 0 / 800 / 1600 の 100px gap だったので、新 variant も y=2200 に配置。
+
+### Known TODOs（Hero v0.4 残）
+
+- **`height` property 追加**: compact / default / tall → 4 × 3 = 12 variants 完備
+- **NBA HOOP モード** boolean property（Editorial variant のタイポ重ね ON/OFF）
+- **left video / right video の image fill バインド**（現状 dark gray placeholder）
+- 4 Corner Icons を実 icon instance に置換（現状 Drive rectangle placeholder）
+
+---
