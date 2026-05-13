@@ -919,3 +919,58 @@ function sizeKey(w, h) {
 - editorial 以外の variant にも主役識別が必要か仕様レビュー（現状 standard / autofit は主役なし）
 
 ---
+
+## Session 2026-05-12 (#15) — figma-component-from-spec SKILL v0.4 整備
+
+**契機**: Session #13-14 で得た新パターン（boolean 的 variant、swapComponent、寸法 → size 自動推定）と Issue 11 を SKILL v0.3 に還元し、Phase 3 を堅牢化。
+
+### v0.4 で追加した内容
+
+#### 1. frontmatter 拡充
+- `description`: 「instance を swap」「featured 追加」を triggers に追加 / Phase 3 の 2 パターンを明記
+- `origin`: 11 → 14 セッション / 29 → 35 学び / 10 → 11 Issue / Phase 3 の 2 パターン明示
+- `version`: 0.3 → 0.4
+
+#### 2. Step 3 Phase 3 に「2 パターン」明示
+- **Pattern A**: placeholder → instance（既存内容、`createInstance + resize + remove`）
+- **Pattern B (新規)**: instance → instance **swap**（`existingInstance.swapComponent(newVariant)`、x/y/size 保持）
+- **使い分け**: rect/frame から始める → A、property 値変更だけ → B
+
+#### 3. Step 3 に「寸法 → size 自動推定 heuristic」追加
+- `sizeKey(w, h)` 関数のコードサンプル
+- text label に依存せず、width/height から逆算する堅牢化パターン
+- fallback で不一致 size（Issue 11）に対応
+
+#### 4. Issue 1-10 → Issue 1-11 に拡張
+- Issue 11: spec にない size の placeholder（Phase 3 で遭遇する spec ↔ Figma 不整合）
+
+#### 5. ベストプラクティスを 29 → 35 項に拡張
+- **既存「SKILL 設計」「拡張パターン」「参照確立」カテゴリに新項目追加**
+- **新カテゴリ「Boolean 的 property / stroke 上書き」（32-33）**: featured 等の boolean 風 property の実装 + stroke 上書き時の individualStrokeWeights リセット
+- **新カテゴリ「Phase 3 拡張パターン」（34-35）**: swapComponent / 寸法→size 自動推定
+
+#### 6. チェックリスト Phase 3 セクションを Pattern 別に再構成
+- Pattern A / Pattern B の選択を明確化
+- 寸法 → size 自動推定の用意を必須項目化
+- Grid placeholder と source Component の size 事前照合を追加（Issue 11 回避）
+
+### 学んだこと（追加）
+
+36. **SKILL v0.3 で「拡張時に新パターンが現れる」を予測できなかった**: v0.3 は Phase 3 を 1 パターン（placeholder→instance）のみで明示していたが、Session #14 で swapComponent パターンが実用上の第 2 パターンとして出現。**新ユースケースは実証してから明示する**しかなく、SKILL は永続的に進化する性質を持つ。
+
+37. **「Phase 3 の事前 audit」を SKILL に追加すべき**: Issue 11（spec にない size の placeholder）は事前 audit で防げた。Phase 3 着手前に「Grid placeholder size × Source Component size の cross-check」をルーチン化 → v0.5 SKILL で。
+
+### SKILL v0.4 検証計画（次セッション以降）
+
+- 新ユースケース: Hero `height` property 追加（4 × 3 = 12 variants）で Phase 2 の 1D 拡張をもう 1 回実証
+- Phase 3 Pattern B の追加実証: Card Pattern の Featured variant を card-featured 用 instance に swap
+- Token migration ユースケース: 直値 stroke → Variable bind の置換（Card v0.3 残）
+
+### Known TODOs（SKILL v0.5 候補）
+
+- **Phase 3 事前 audit ステップ追加**: Grid placeholder size × Source Component size の cross-check ルーチン化
+- **brand 横展開のパラメータ化**: `brand/<brand>/` パスを変数化、別 brand プロジェクト即適用
+- **Token migration セクション**: 既存 Component の直値 → Variable bind 置換手順
+- **新 Issue が出るたびに v0.X+1 で還元**するサイクルを継続
+
+---

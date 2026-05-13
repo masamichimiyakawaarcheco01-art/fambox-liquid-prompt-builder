@@ -1,10 +1,10 @@
 ---
 name: figma-component-from-spec
-description: Markdown 仕様（components/*.md）から Figma Component Set を生成・更新・統合する手順。Marc-Antoine 流の Audit-first / 小さく作って大きく展開 / Phase 戦略 / Component 間参照確立 / Build Log 蓄積 を体系化したスキル。Use when generating a Figma Component Set from a spec md, expanding variants (state / size / instance reference), or auditing the spec ↔ Figma gap. Triggers on "Figma に Component を作って", "spec から Figma 化", "L2/L3/L4 を Figma 化", "Component Set 拡張", "variant property 追加", "instance に置換", "spec と Figma の整合性確認".
-version: 0.3
+description: Markdown 仕様（components/*.md）から Figma Component Set を生成・更新・統合する手順。Marc-Antoine 流の Audit-first / 小さく作って大きく展開 / Phase 戦略（1=新規 / 2=property 拡張 / 3=参照確立）/ instance swap / 寸法から size 自動推定 / Build Log 蓄積 を体系化したスキル。Use when generating a Figma Component Set from a spec md, expanding variants (state / size / boolean property / featured), replacing placeholders with instances, or swapping existing instances to different variants. Triggers on "Figma に Component を作って", "spec から Figma 化", "L2/L3/L4 を Figma 化", "Component Set 拡張", "variant property 追加", "instance に置換", "featured 追加", "instance を swap", "spec と Figma の整合性確認".
+version: 0.4
 last_updated: 2026-05-12
 owner: 宮川（FAMBOX DS）
-origin: Marc-Antoine（Smart City Kit）の 4 層スタック（L1 Transport / L2 Skill / L3 Tokens / L4 CLAUDE.md / L5 Audit-first）を FAMBOX に翻訳。2026-05-12 の 11 セッションで蓄積した 29 項の学び + 10 の実問題（Issue 1-10）+ Phase 1/2/3 戦略 を体系化
+origin: Marc-Antoine（Smart City Kit）の 4 層スタック（L1 Transport / L2 Skill / L3 Tokens / L4 CLAUDE.md / L5 Audit-first）を FAMBOX に翻訳。2026-05-12 の 14 セッションで蓄積した 35 項の学び + 11 の実問題（Issue 1-11）+ Phase 1/2/3 戦略 + Phase 3 の 2 パターン（placeholder→instance / instance→instance swap）を体系化
 ---
 
 # figma-component-from-spec
@@ -134,9 +134,11 @@ for (const v of set.children) {
 set.resize(variantOrder.length * COL_W, sizeOrder.length * ROW_H);
 ```
 
-#### Phase 3: Component 間の参照確立（instance 化）
+#### Phase 3: Component 間の参照確立（2 パターン）
 
-別 Component の placeholder を本 Component の instance に置換することで、**「Component 単体修正が demo に自動反映」される双方向参照**を確立する。
+別 Component の **placeholder を本 Component の instance に置換** または **既存 instance を別 variant に切替** することで、**「Component 単体修正が demo に自動反映」される双方向参照**を確立する。
+
+##### Pattern A: placeholder → instance（新規 instance 作成）
 
 ```js
 // 1) Get target Set + source Component map
@@ -155,10 +157,53 @@ for (const ph of placeholders) {
 }
 ```
 
-**Phase 3 の注意点（学び 27-29）**:
+##### Pattern B: instance → instance swap（学び 34）
+
+既存 instance を別 variant に **in-place で切替**。x/y/size を保持したまま、main component だけが入れ替わる。featured property を有効化するなど、property 値の変更に最適。
+
+```js
+// 1) Find existing instance and target variant
+const existingInstance = await figma.getNodeByIdAsync(instanceId);
+const newVariant = await figma.getNodeByIdAsync(newVariantId); // e.g., featured=true 版
+
+// 2) Single-line swap
+existingInstance.swapComponent(newVariant);
+existingInstance.name = 'new-descriptive-name'; // optional: rename
+
+// position/size/auto-layout 配置はそのまま保持される
+```
+
+**Pattern A vs B の使い分け**:
+- placeholder（rect / frame）から始める → **Pattern A**
+- 既存 instance を property 値だけ変えたい → **Pattern B**（rebuild 不要、効率的）
+
+##### 寸法 → size 自動推定 heuristic（学び 35）
+
+placeholder の text label に依存せず、**width / height の数値から size を逆算** することで堅牢化:
+
+```js
+function sizeKey(w, h) {
+  // Each col_w / row_h は spec で確定済の値を使う
+  const cols = { 200: 1, 424: 2, 648: 3 }[w] || 2;
+  const rows = { 200: 1, 424: 2 }[h] || 1;
+  const key = `${cols}x${rows}`;
+  // Spec で存在する size のみ accept
+  const validSizes = ['1x1', '2x1', '1x2', '2x2', '3x2'];
+  if (validSizes.includes(key)) return key;
+  // Fallback: 不一致 size は近似マッピング（Issue 11 回避）
+  if (key === '3x1') return '2x1';  // resize で 3x1 風に伸ばす
+  return '1x1';
+}
+```
+
+これにより size label が欠落している placeholder（自動配置 etc）や spec ↔ Figma の不整合があっても動作する。
+
+**Phase 3 の注意点（学び 27-29, 34-35）**:
 - ⚠ **placeholder 固有属性（stroke / overlay）は instance に転写されない** — 主役識別など状態は **source Component 側の property** として持つべき（Issue 8）
 - ⚠ **resize は内部 auto-layout を「ある程度」追従させるが、text wrap までは制御できない** — size 別 overflow 規律を spec で別途定める（Issue 9-10）
+- ⚠ **spec にない size の placeholder** に遭遇したら、heuristic fallback or spec 改訂で対応（Issue 11）
 - ✅ source Component を後で修正すれば、すべての instance に自動反映される（Marc 流の DRY 原則）
+- ✅ swapComponent は同 file 内 variant の切替に最適（位置・サイズ保持）
 
 ### Step 4: スクリーンショット検証
 
@@ -297,6 +342,13 @@ N. ...
 - **対処**: variant に **`align` boolean property** を追加（top / bottom）or size 別の layout override
 - **回避**: 全 size で同じ `primaryAxisAlignItems` を使い回さない。各 size の見せ方を spec で個別確定
 
+### Issue 11: spec にない size の placeholder（Phase 3 で遭遇）
+- Spec の Tile sizes は `1x1 / 2x1 / 1x2 / 2x2 / 3x2` のみだが、Grid 側 placeholder に `3x1`（spec 外）が含まれていた
+- **症状**: 寸法 → size 推定で `3x1` が出るが、Tile に対応する Component がない
+- **対処（暫定）**: heuristic fallback で `2x1` Tile を採用し、resize で 3 col 幅に伸ばす（auto-layout が縦に伸びる可能性）
+- **対処（本質的）**: spec の Tile sizes に `3x1` を追加するか、Grid 側 placeholder を spec 通りの size に修正
+- **回避**: Phase 3 着手前に **「Grid placeholder size と Tile size の全件照合」** を行い、不整合があれば spec を先に修正
+
 ---
 
 ## ベストプラクティス（学び 1-20）
@@ -352,6 +404,14 @@ N. ...
 28. **placeholder 固有属性（stroke / overlay）は instance に転写されない**: 主役識別など状態は **source Component 側の property** として持つべき（Phase 3 着手前に必ず確認）
 29. **resize と auto-layout の関係**: container 縦間隔は維持されるが、text wrap までは制御できない。size 別 overflow 規律を spec で別途定める必要がある
 
+### Boolean 的 property / stroke 上書き
+32. **boolean 的 variant property は `'true'`/`'false'` 文字列で実装**: Figma の variant property 型は VARIANT（文字列）のみで真の Boolean なし。`featured = ['false', 'true']` のような variant option で運用すれば UI でトグル風に表示される
+33. **既存 strokes 上書き時は `individualStrokeWeights` もリセット**: 一部 variant に `strokeRightWeight = 2` 等が残っていると新 stroke 適用後も古い individual 値が残る。**4 辺の `Top/Right/Bottom/LeftWeight` を明示**して完全均一化
+
+### Phase 3 拡張パターン（v0.4 追加）
+34. **`swapComponent` は Phase 3 の第 2 パターン**: 既存 instance を別 variant に in-place 切替。`createInstance + delete + new` ではなく **swap で 1 行**、x/y/size/auto-layout 配置を全て保持する。featured 切替などの property 値変更に最適
+35. **寸法 → size key 自動推定 heuristic**: placeholder の text label に依存せず、width/height から逆算する `sizeKey(w, h)` 関数で堅牢化。spec ↔ Figma の data 整合性が完璧でなくても動作。fallback で不一致 size を近似 mapping することで Issue 11 を回避
+
 ---
 
 ## チェックリスト（コミット前）
@@ -370,9 +430,12 @@ N. ...
 - [ ] Set 全体を再 resize して新 variants が収まることを確認した
 
 ### Phase 3 (Component 間参照)
+- [ ] **Pattern 選択を明確化**: placeholder → instance なら **Pattern A**、既存 instance の property 値変更なら **Pattern B (swapComponent)**
 - [ ] source Component 側に「主役識別など状態」property が設計済か確認した（Issue 8）
-- [ ] placeholder の x/y/size を捕捉した
-- [ ] instance を createInstance → 配置 → resize → placeholder remove の順で操作した
+- [ ] **Pattern A**: placeholder の x/y/size を捕捉 → instance を createInstance → 配置 → resize → placeholder remove の順で操作した
+- [ ] **Pattern B**: 既存 instance の id を取得 → 切替先 variant の id を取得 → `existingInstance.swapComponent(newVariant)` で 1 行 swap
+- [ ] **寸法 → size key 自動推定** を用意した（text label 欠落でも動作させる、学び 35）
+- [ ] **Grid placeholder size と source Component の size 整合性を事前照合**（Issue 11 回避）
 - [ ] resize 前後の text wrap / overflow を screenshot で検証した（Issue 9-10）
 
 ### 共通（コミット前）

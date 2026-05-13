@@ -31,6 +31,7 @@ milestone:
   - 2026-05-12: 📚 **`figma-component-from-spec` SKILL v0.3 整備** (Session #12) — 3 回の実証 (#9-11) で発見した改善候補 5 件 + 学び 21-29 + Issue 8-10 を SKILL に還元 / Step 3 を Phase 1/2/3 戦略に大幅拡張 / Step 4 に撮影単位選択ガイド + Phase 3 専用検証 / Issue を 7 → 10、学び を 20 → 29、checklist を 8 項 → 18 項 (Phase 別) に拡張 / 学び 30-31 追加 (実証→改善→再実証サイクル / Phase 戦略は Marc 流の本質)
   - 2026-05-12: 🛡 **Bento Tile featured property 追加 + Issue 8 解消** (Session #13) — SKILL v0.3 Phase 2 の boolean 的 property 拡張実証 / Bento Tile `87:26` に featured property 追加 (20 → 40 variants) / featured=true で全 variants に Drive 2px stroke 適用、主役識別を Tile 側 property として保持可能に / Bento Grid editorial の主役 instances 差し替えは v0.4 / 学び 32-33 追加 (boolean 的 variant は 'true'/'false' 文字列 / individual stroke weights リセット)
   - 2026-05-12: 🎉 **Bento エコシステム完成 + Issue 8 完全解消** (Session #14) — editorial 主役 2 個を `swapComponent` で featured=true 版に切替 / standard 5 placeholder + autofit 8 placeholder を Tile instance に置換 / 全 3 variants × 22 tiles が双方向参照に / Issue 11 検出 (Tile に 3x1 size がない) → v0.4 課題化 / SKILL v0.3 実証 2 回目 A+ / 学び 34-35 追加 (swapComponent は Phase 3 第 2 パターン / 寸法 → size 自動推定)
+  - 2026-05-12: 📚 **`figma-component-from-spec` SKILL v0.4 整備** (Session #15) — Session #13-14 の新パターン (boolean variant / swapComponent / 寸法→size 自動推定) + Issue 11 を SKILL に還元 / Phase 3 を「Pattern A: placeholder→instance」「Pattern B: instance→instance swap」の 2 パターンに明文化 / Issue を 10 → 11、学び を 29 → 35、チェックリストを Pattern 別に再構成 / 学び 36-37 追加 (新ユースケースは実証してから明示 / Phase 3 事前 audit を v0.5 で)
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し
