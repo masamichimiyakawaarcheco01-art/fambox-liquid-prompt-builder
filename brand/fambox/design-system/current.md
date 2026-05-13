@@ -24,6 +24,7 @@ milestone:
   - 2026-05-12: L3 Bento Tile + L4 Bento Grid Figma 新規生成 (Session #5) — Audit #4 で未実装と判明した TOP 実装 5/29 期限の主役エリアを最優先で生成 / Bento Tile (`87:26`) 4 variants × default size 2×2 / Bento Grid (`91:107`) 3 variants × placeholder grid demo（Editorial 対角線パターン視覚化）/ 残 sizes と instance 置換は v0.3 へ / Figma 未実装 5 件 → 3 件（FAQ / Profile / Contact Form）へ減少
   - 2026-05-12: L4 FAQ Carousel + L4 Profile Section Figma 新規生成 (Session #6) — 直前 Spec 化 2 件を即 Figma 化し spec ↔ Figma 往復サイクルを締結 / FAQ (`93:90`) Carousel 1 variant × 4 cards / Profile (`96:79`) Section 1 variant × Drive 全面塗り + 2 名並列 / individualStrokeWeights で部分ボーダー実装 / Figma 未実装 3 件 → 1 件（Contact Form のみ）に減少
   - 2026-05-12: 🏆 **Marc 流 4 層スタック完全カバー達成** (Session #7) — Contact Form (`98:121`) input variant 1 個 / 代表 7 フィールド + Submit Button instance / **Figma 未実装 Spec md 1 件 → 0 件**、Spec md ↔ Figma Component Set ↔ Build Log の完全な往復サイクル確立 / 7 セッションで蓄積した学び 20 項を figma-component-from-spec SKILL v0.2 整備へ展開予定
+  - 2026-05-12: 📚 **`figma-component-from-spec` SKILL v0.2 整備** (Session #8) — 8 セッションで蓄積した 20 項の学び + 7 つの実 Issue を 287 行の SKILL に体系化 / `.claude/skills/figma-component-from-spec/SKILL.md` として git 管理対象化 / Marc 流 7 ステップ workflow + Issue 1-7 + 学び 1-20 + チェックリスト構成 / 次プロジェクト・別 brand での即活用可能なナレッジ資産化完了
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し

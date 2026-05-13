@@ -474,3 +474,45 @@ FAMBOX/typography/font-size/lg        (Button lg 20px)
 これらを **figma-component-from-spec SKILL v0.2** として整備するのが次の本質的な打点。
 
 ---
+
+## Session 2026-05-12 (#8) — figma-component-from-spec SKILL v0.2 整備
+
+**契機**: 7 セッションで蓄積した 20 項の学び + 7 つの実 Issue を、**再利用可能なナレッジ資産** として SKILL に体系化。次プロジェクト・別 brand での Figma 化作業で即活用可能にする。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| `figma-component-from-spec/SKILL.md` | `.claude/skills/figma-component-from-spec/` | 287 行 / Marc 流 7 ステップ + 既知 Issue 1-7 + ベストプラクティス 1-20 + チェックリスト |
+
+### SKILL 構造
+
+1. **frontmatter**: name / description（trigger キーワード網羅）/ version / origin
+2. **いつ使うか**: 4 シナリオ（新規生成 / 拡張 / audit / Build Log 記録）
+3. **前提**: brand DS 構造 / Variables / figma-use Skill load
+4. **ワークフロー（Marc 流 7 ステップ）**:
+   - Step 0: **Audit-first**（最重要・絶対省略禁止）
+   - Step 1: Spec md 完全読み込み
+   - Step 2: Variables / Effect Styles 現状取得 + 健全性確認
+   - Step 3: Component Set 構築（Phase 1 = 代表で型作り）
+   - Step 4: スクリーンショット検証
+   - Step 5: spec md に Figma 参照追記
+   - Step 6: figma-build-log.md に Session 追加
+   - Step 7: current.md milestone 更新
+5. **既知の罠（Issue 1-7）**: 症状 / 原因 / 対処 / 回避をパターン化
+6. **ベストプラクティス（学び 1-20）**: 4 カテゴリ（構造設計 / Variable bind / Layout / Text 等）に整理
+7. **チェックリスト**: コミット前の確認 8 項目
+
+### 学んだこと（追加）
+
+21. **SKILL は frontmatter の `description` が trigger 判定の核**: 自然言語の起動キーワードを description に網羅することで、Skill 自動起動の精度が上がる。今回は「Figma に Component を作って」「spec から Figma 化」「L2/L3/L4 を Figma 化」「Component Set 拡張」「spec と Figma の整合性確認」を網羅。
+
+22. **SKILL を git 管理対象に**: `.claude/skills/<name>/SKILL.md` を **プロジェクトリポジトリ内に置いてコミット** することで、worktree が消えても SKILL が消えない・チームで共有できる・PR レビュー対象になる。
+
+### Known TODOs（SKILL v0.3 候補）
+
+- **brand 横展開**: 「`brand/<brand>/...`」のように brand 名をパラメータ化（現状 FAMBOX 前提のパス）
+- **他 brand での実証**: FAM ではない別 brand のプロジェクトで SKILL を起動して有効性検証
+- **figma-use との依存関係明示**: SKILL load 順序を frontmatter で宣言できる仕組み（プラットフォーム側に要望）
+
+---
