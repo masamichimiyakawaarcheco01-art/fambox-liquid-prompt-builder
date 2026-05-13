@@ -1336,3 +1336,49 @@ main repo `brand/fambox/brand-dna/current.md` への正式反映は宮川さん�
 - TOPページ実装 Week 3-5: Tier 2-4 sections の改修
 
 ---
+
+## Session 2026-05-12 (#22) — TOPページ Week 1 残: Subscription Plan Card Liquid 改修
+
+**契機**: 実装計画書 Week 1 残タスク「Subscription Plan Card 改修」を着手。既存 `fambox-subscription-plan.liquid` (506 行 / v0.1 系) は破壊せず、spec v0.2 準拠版を **別ファイル新規** として生成（Marc 流「既存を破壊しない」原則）。
+
+### 成果
+
+| 成果物 | 場所 | サイズ | 内容 |
+|---|---|---|---|
+| FAMBOX Subscription Plan Card v0.2 | `projects/fambox/sections/fambox-subscription-plan-v0.2.liquid` | 約 450 行 | Card Pattern 継承 + 8 項目 + 2 CTA |
+
+### 実装範囲（Phase 1）
+
+| 機能 | 実装状況 |
+|---|---|
+| Card Pattern 継承 (`card-standard` / `card-featured`) | ✅ block.settings.is_featured で切替 |
+| 8 項目構成（spec §13 v0.3） | ✅ plan_name / price / frequency / meals / customizable / target / features / 2 CTA |
+| 価格訴求 (h2 32px Ink、Drive 不使用)| ✅ Anti「煽り 64px」回避 |
+| 「おすすめ」バッジ（Drive 背景 + 白テキスト、Section 内で 1 個まで）| ✅ section 内 Lint は未実装（人間運用） |
+| CTA × 2（Primary + Ghost）| ✅ Spec §13 Q3 確定 |
+| section blocks で複数プラン並列 (limit 6) | ✅ |
+| Responsive: PC 3 列 / Tablet 2 列 / SP 1 列 | ✅ |
+| Variable bind（fallback 値付き）| ✅ |
+| `data-gtag-cta` で GA4 連携 | ✅ |
+| Disclaimer（税表記 + 「最低契約期間は FAQ」誘導）| ✅ spec の Anti「カード内に最低契約期間 / 初月特典」を回避 |
+| Schema preset: 3 plan（中央を Featured）| ✅ |
+
+### Phase 1 で適用した spec 規律（Anti 回避）
+
+| Anti | 回避方法 |
+|---|---|
+| 価格 Drive 64px（煽り）| 価格は `--fs-h2` 32px + `--color-ink`、Drive 色は CTA のみ |
+| カード内に「最低契約期間」表示 | カード外 disclaimer に「FAQ 参照」誘導のみ |
+| カード内に「初月特典」表示 | カード非表示。キャンペーンは別建て |
+| 全プランに「おすすめ」バッジ | block.settings.is_featured で 1 個のみ |
+
+### 学んだこと（追加）
+
+48. **「既存実装を破壊しない」Marc 流原則の Liquid 適用**: 既存 `fambox-subscription-plan.liquid` (506 行 v0.1) を上書きせず `-v0.2.liquid` として並行配置。Shopify section の場合、片方を `archive` 移動 / もう片方を `enabled_on` で本番ページ限定 することで衝突回避可能。**v0.3 で v0.1 を deprecate**するタイミングを決めて統合。
+
+### Known TODOs
+
+- v0.3: 既存 v0.1 (506 行) との統合判断 / Featured 1 個以上の Lint 警告 / 推奨対象別の条件分岐
+- TOPページ Week 1 完了 → Week 2 へ: Bento Grid Liquid 化 / Hero v17 統合判断
+
+---
