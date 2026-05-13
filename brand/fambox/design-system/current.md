@@ -36,6 +36,7 @@ milestone:
   - 2026-05-12: 📚 **`figma-component-from-spec` SKILL v0.5 整備** (Session #17) — Phase 2/3 事前 audit を正式手順化 / Phase 2 事前 audit: 既存サイズ差異検出 + auto-layout 変動耐性確認 (Issue 12 回避) / Phase 3 事前 audit: placeholder × source size cross-check (Issue 11 回避) / Issue を 11→12、学び を 35→39、チェックリスト 18→20 項に拡張 / 学び 40-41 追加 (事前 audit は Phase 戦略のメタパターン / Issue 検知のチェックポイント増)
   - 2026-05-12: 🔧 **Issue 12 完全解消 + SKILL v0.5 事前 audit 実証** (Session #18) — Hero compact 4 + tall 2 = 6 variants の内部 auto-layout を補修 / video-fullscreen padding 縮小、image-editorial 内部 Rectangle resize、video-split 絶対座標再配置 / 3 つのヘルパー関数 (fixVerticalVariant / fixImageEditorial / fixVideoSplit) で補修パターン化 / SKILL v0.5 事前 audit が実 Issue で機能することを実証 / 学び 42-43 追加 (補修パターンも SKILL に / 事前 audit は実証ループで価値顕在化)
   - 2026-05-12: 📚 **`figma-component-from-spec` SKILL v0.6 整備** (Session #19) — Phase 4 = コンテンツ最適化フェーズを正式追加 / 補修ヘルパー関数 3 種を一般化 (fixVerticalVariant / fixHorizontalVariantRect / fixAbsoluteLayoutVariant) / 「いつ Phase 4 が必要か」判定表 + 典型フロー code sample / ベストプラクティス を 39→43 項に拡張、チェックリストに Phase 4 セクション 5 項追加 / 学び 44 追加 (Phase 戦略は線形でなく条件連動) / Phase 1-4 完成形フローを確定
+  - 2026-05-12: 🚀 **TOPページ実装着手 + Brand DNA v0.4 draft** (Session #20) — Phase 1 として FAMBOX Header section (`projects/fambox/sections/fambox-header.liquid` 343 行) を spec v0.2 準拠で雛形化 / Brand DNA v0.4 反映 draft (`operations/2026-05-12-brand-dna-v0.4-draft.md`) で Marc 流 4 層スタック / Phase 戦略 / 三位一体 / 6 軸目「Disciplined」を提案 / 学び 45-46 追加 (worktree 内 Liquid は本番テーマへ移植前提 / non-disruptive reflection pattern)
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し

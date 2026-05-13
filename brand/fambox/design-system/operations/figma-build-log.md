@@ -1235,3 +1235,56 @@ function sizeKey(w, h) {
 - **Phase 5 提案: テスト**: Component Set を import → 利用シーンで検証する自動テスト
 
 ---
+
+## Session 2026-05-12 (#20) — Brand DNA v0.4 反映 draft + Header Liquid 雛形
+
+**契機**: ユーザー指示「A (TOPページ Liquid 実装) と B (Brand DNA v0.4 整備) を同時に進める」。Brand DNA は main repo 別ブランチ管理のため worktree 内に「v0.4 反映 draft」を operations/ に書き出し、Header 実装は worktree 内の `projects/fambox/sections/fambox-header.liquid` として新規生成。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| Brand DNA v0.4 反映 draft | `operations/2026-05-12-brand-dna-v0.4-draft.md` | 4 Section（Marc 流 4 層スタック / Phase 戦略 / 三位一体 / 6 軸目「Disciplined」）|
+| FAMBOX Header section | `projects/fambox/sections/fambox-header.liquid` | 343 行、spec v0.2 準拠の Phase 1 雛形 |
+
+### Brand DNA v0.4 への提案内容（4 Section）
+
+- **A**: 実装規律の Marc 流 4 層スタック（L1 Transport / L2 Skill / L3 Tokens / L4 Definitions / L5 Audit-first）
+- **B**: Phase 戦略（1=新規 / 2=拡張 / 3=参照確立 / 4=コンテンツ最適化）の 4 Phase 体系
+- **C**: Spec md ↔ Figma Component Set ↔ Build Log の三位一体（DNA 永続化の必須要件）
+- **D**: Brand Principle 6 軸目「**Disciplined**」追加（Audit-first を視覚言語と同等の重要度に格上げ）
+
+main repo `brand/fambox/brand-dna/current.md` への正式反映は宮川さん承認後に手動転記。
+
+### FAMBOX Header section の実装範囲（Phase 1）
+
+| 機能 | 実装状況 |
+|---|---|
+| Variants: standard | ✅ |
+| Variants: minimal / mega | v0.3（別 section に分離検討）|
+| Heights: compact (64) / default (80) / tall (96) | ✅ schema で選択可 |
+| Sticky modes: sticky | ✅（CSS のみで動作）|
+| Sticky modes: scroll-up / static | v0.3（JS 追加必要）|
+| Logo 左固定 / Menu 中央 / Utilities 右 | ✅ |
+| Account / Cart icon（切替可）| ✅ |
+| Primary CTA 1 個 | ✅（DNA 規律準拠）|
+| SP 横スクロールメニュー（ハンバーガー不採用）| ✅ |
+| `data-gtag-*` 属性（GA4 計測継続）| ✅ |
+| accessibility (aria-label / focus-visible / reduced-motion) | ✅ |
+| Variable bind（`--bg-primary` / `--border-light` / `--color-drive` 等）| ✅ fallback 値付き |
+| Schema settings（height / sticky_mode / logo / menu / cta_*）| ✅ |
+
+### 学んだこと（追加）
+
+45. **worktree 内 Liquid 実装は本番テーマへ移植する前提**: `projects/fambox/sections/fambox-header.liquid` は雛形として worktree 内で完成させ、宮川さんが本番 Shopify テーマリポジトリ（OKR 5/29 期限の対象）へ手動移植する。Marc 流 4 層スタックの L1 Transport（git worktree + PR）は **雛形 → 本番** のフローも保持する。
+
+46. **Brand DNA への学習成果反映は main repo 別ブランチ**: design-system は jovial-benz-864b2d ブランチで進めたが、Brand DNA は別ブランチで管理。「**worktree 内の operations/ に draft を残す → 後で本体に手動転記**」は OKR Excel / memory と同じ「**non-disruptive reflection pattern**」（直接書き込まず、PR で永続化された draft を経由）。
+
+### Known TODOs
+
+- Header v0.3: minimal / mega variant の別 section 分離 + scroll-up JS 実装
+- Header SP: section.settings から SP 表示制御（Account icon 省略等）
+- Brand DNA v0.4 の main repo 反映（手動転記）
+- TOPページ実装 Week 2: 主役 Section（Hero / Bento / Plan Card）の Liquid 化
+
+---

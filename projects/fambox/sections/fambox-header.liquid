@@ -1,0 +1,343 @@
+{% comment %}
+  =====================================================
+  FAMBOX Header — Section v0.2 (Phase 1 雛形)
+  =====================================================
+  Spec: brand/fambox/design-system/components/header.md
+  Spec date: 2026-04-28
+  Implementation date: 2026-05-12
+
+  Variants:
+    - header-standard ★この雛形で実装
+    - header-minimal (v0.3 で別 section に分離検討)
+    - header-mega    (v0.3 で別 section に分離検討)
+
+  Heights:
+    - header--compact (64px) — 情報密度優先
+    - header--default (80px) ★既定
+    - header--tall    (96px) — TOP / Hero 並列
+
+  Sticky Modes:
+    - header--sticky ★既定（常時 sticky）
+    - header--scroll-up (Blog / Long LP / v0.3 で JS 追加)
+    - header--static (Hero 一体化 / 特殊)
+
+  Phase 1 範囲:
+    - 1 variant (standard) のみ
+    - 3 heights を schema で選択可
+    - 1 sticky mode (sticky 固定) のみ — scroll-up は v0.3 で JS 追加
+    - Logo 左 + Menu 中央 + Utilities (Account / Cart / Primary CTA) 右
+
+  v0.3 候補:
+    - minimal / mega variant を別 section に分離
+    - scroll-up sticky の JS 追加
+    - SP ハンバーガー drawer (DNA: 既定不採用、SP 横スクロールで代替)
+=====================================================
+{% endcomment %}
+
+<header class="header header-standard header--{{ section.settings.height }} header--{{ section.settings.sticky_mode }}"
+        data-gtag-section="header_global">
+  <div class="header__inner">
+
+    {%- comment -%} Logo（左固定） {%- endcomment -%}
+    <a href="{{ routes.root_url }}" class="header__logo" aria-label="{{ shop.name }} ホームへ戻る">
+      {%- if section.settings.logo != blank -%}
+        <img
+          src="{{ section.settings.logo | image_url: width: 256 }}"
+          width="128" height="32"
+          alt="{{ shop.name | escape }}"
+          class="header__logo-image"
+          loading="eager"
+        >
+      {%- else -%}
+        <span class="header__logo-text">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    {%- comment -%} Menu（中央 / PC のみ。SP は横スクロール扱い） {%- endcomment -%}
+    {%- if section.settings.menu != blank -%}
+      <nav class="header__menu" aria-label="メインナビゲーション">
+        <ul class="header__menu-list" role="list">
+          {%- for link in section.settings.menu.links -%}
+            <li class="header__menu-item">
+              <a href="{{ link.url }}"
+                 class="header__menu-link{% if link.current %} is-active{% endif %}"
+                 {%- if link.current %} aria-current="page"{% endif %}
+                 data-gtag-nav="{{ link.title | escape }}">
+                {{ link.title }}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    {%- comment -%} Utilities（右: Account / Cart / Primary CTA） {%- endcomment -%}
+    <div class="header__utilities">
+      {%- if section.settings.show_account -%}
+        <a href="{{ routes.account_url }}" class="header__icon-link" aria-label="アカウント">
+          {%- comment -%} icon: nav-user — render snippet が存在しない場合は SVG inline で代替 {%- endcomment -%}
+          {%- render 'icon', name: 'nav-user', size: 24 -%}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.show_cart -%}
+        <a href="{{ routes.cart_url }}" class="header__icon-link" aria-label="カート（{{ cart.item_count }} 点）">
+          {%- render 'icon', name: 'nav-cart', size: 24 -%}
+          {%- if cart.item_count > 0 -%}
+            <span class="header__cart-badge" aria-hidden="true">{{ cart.item_count }}</span>
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.cta_label != blank and section.settings.cta_url != blank -%}
+        <a href="{{ section.settings.cta_url }}"
+           class="btn btn-primary btn-md"
+           data-gtag-cta="header_main_cta">
+          {{ section.settings.cta_label }}
+        </a>
+      {%- endif -%}
+    </div>
+
+  </div>
+</header>
+
+<style>
+  /* === Header 基本 (spec v0.2 準拠) === */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: var(--layer-3, 30);
+    background: var(--bg-primary, #ffffff);
+    border-bottom: 1px solid var(--border-light, #ececec);
+    transition: transform var(--duration-base, 0.3s) var(--ease-out, cubic-bezier(0.2, 0.8, 0.2, 1));
+  }
+
+  /* Heights */
+  .header--compact { height: 64px; }
+  .header--default { height: 80px; }
+  .header--tall    { height: 96px; }
+
+  /* Sticky modes (Phase 1: sticky のみ動作 / scroll-up と static は v0.3 で JS 追加) */
+  .header--sticky    { position: sticky; top: 0; }
+  .header--scroll-up { position: sticky; top: 0; }
+  .header--static    { position: relative; }
+
+  /* === Inner === */
+  .header__inner {
+    height: 100%;
+    max-width: var(--container-max, 1440px);
+    margin-inline: auto;
+    padding-inline: var(--space-3, 24px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3, 24px);
+  }
+
+  /* === Logo === */
+  .header__logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--color-ink, #1b1d1a);
+  }
+  .header__logo-image { height: 32px; width: auto; }
+  .header__logo-text {
+    font-family: var(--font-en, 'Poppins', sans-serif);
+    font-weight: var(--fw-bold, 700);
+    font-size: var(--fs-h3, 24px);
+    letter-spacing: var(--ls-en, 0.02em);
+  }
+
+  /* === Menu === */
+  .header__menu { flex: 1; min-width: 0; }
+  .header__menu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4, 32px);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .header__menu-list::-webkit-scrollbar { display: none; }
+
+  .header__menu-item { flex-shrink: 0; }
+  .header__menu-link {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-body, 16px);
+    font-weight: var(--fw-medium, 500);
+    color: var(--color-ink, #1b1d1a);
+    text-decoration: none;
+    padding-block: var(--space-1, 8px);
+    transition: color var(--duration-fast, 0.15s) var(--ease-out);
+  }
+  .header__menu-link:hover { color: var(--color-drive, #fb4c15); }
+  .header__menu-link.is-active {
+    color: var(--color-drive, #fb4c15);
+    font-weight: var(--fw-semibold, 600);
+  }
+  .header__menu-link:focus-visible {
+    outline: 2px solid var(--color-focus-ring, #fb4c15);
+    outline-offset: 2px;
+  }
+
+  /* === Utilities === */
+  .header__utilities {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2, 16px);
+  }
+  .header__icon-link {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink, #1b1d1a);
+    text-decoration: none;
+    border-radius: var(--radius-pill, 9999px);
+    transition: background var(--duration-fast, 0.15s) var(--ease-out);
+  }
+  .header__icon-link:hover { background: rgba(27, 29, 26, 0.06); }
+  .header__icon-link:focus-visible {
+    outline: 2px solid var(--color-focus-ring, #fb4c15);
+    outline-offset: 2px;
+  }
+  .header__cart-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    min-width: 18px;
+    height: 18px;
+    padding-inline: 4px;
+    background: var(--color-drive, #fb4c15);
+    color: var(--color-white, #ffffff);
+    font-family: var(--font-en, 'Poppins', sans-serif);
+    font-size: 10px;
+    font-weight: var(--fw-bold, 700);
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-pill, 9999px);
+  }
+
+  /* === SP === */
+  @media (max-width: 767px) {
+    .header__inner { padding-inline: var(--space-2, 16px); }
+    .header__menu-list { gap: var(--space-3, 24px); }
+    .header__utilities { gap: var(--space-1, 8px); }
+    /* SP では Account icon を省略候補 (v0.3 で section.settings から制御) */
+  }
+
+  /* === reduced motion === */
+  @media (prefers-reduced-motion: reduce) {
+    .header { transition: none; }
+    .header__menu-link,
+    .header__icon-link { transition: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "FAMBOX Header",
+  "tag": "header",
+  "class": "section-header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "サイズ・配置"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "高さ",
+      "default": "default",
+      "options": [
+        { "value": "compact", "label": "Compact (64px) — Blog / FAQ" },
+        { "value": "default", "label": "Default (80px) — 通常ページ ★既定" },
+        { "value": "tall",    "label": "Tall (96px) — TOP / 主要 LP" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "sticky_mode",
+      "label": "Sticky 挙動",
+      "default": "sticky",
+      "options": [
+        { "value": "sticky",    "label": "Sticky (常時固定) ★既定" },
+        { "value": "scroll-up", "label": "Scroll-up (上方向で再表示・v0.3 で JS 追加)" },
+        { "value": "static",    "label": "Static (sticky なし)" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo 画像（推奨 256×64 以上）"
+    },
+    {
+      "type": "header",
+      "content": "ナビゲーション"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "メインメニュー",
+      "default": "main-menu",
+      "info": "DNA: ハンバーガー不採用、SP は横スクロール"
+    },
+    {
+      "type": "header",
+      "content": "ユーティリティ"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Account アイコンを表示",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "Cart アイコンを表示",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Primary CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA ラベル",
+      "default": "話を聞いてみる",
+      "info": "DNA: Primary CTA は 1 個まで"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA リンク先",
+      "default": "/contact"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAMBOX Header",
+      "category": "Header"
+    }
+  ],
+  "enabled_on": {
+    "groups": ["header"]
+  }
+}
+{% endschema %}
