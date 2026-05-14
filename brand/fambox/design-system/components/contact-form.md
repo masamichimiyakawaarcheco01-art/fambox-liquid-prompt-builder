@@ -307,6 +307,13 @@ FAMBOX
   - SP layout: Form 全幅 / button 全幅 / select OS ネイティブ UI
 
 ## Change Log
+- v0.3-audit-ok (2026-05-14): Session #36 で SKILL v0.7 Step 0.5 詳細 Audit を実戦投入。Set `98:121` の 1 variant (`variant=input`, 768×1200) は重なり / overflow なし、property 名も spec と完全整合。**配置 OK / 修正不要**。三位一体は spec ↔ Figma 整合済（**Liquid 未作成**は v0.3 残課題）
 - v0.3-figma (2026-05-12): Figma Component Set `98:121` 新規生成（input variant 1個 / 代表 7 フィールド + Submit Button instance）。FormField パターン化が機能、必須 badge も spec 通り Drive bg + white。残 4 フィールド・確認/Success フェーズは v0.3 拡張枠
 - v0.3 (2026-04-27): Worksheet §12 拡張承認（11フィールド化）— **電話番号 任意→必須**（緊急連絡確保）/ **利用検討時期 select 任意 を正式採用**（リード温度判定）/ 役職 8選択肢確認
 - v0.2 (2026-04-20): Worksheet §12 確定（10フィールド・inline確認・カスタム自動返信）
+
+## Known TODOs（v0.3-v0.4 候補）
+- **Liquid 化**: `sections/fambox-contact-form.liquid` 新規作成（spec の 11 フィールド + Shopify Contact form タグ + バリデーション + 自動返信メール）
+- **Figma `variant=review` 追加**: 確認フェーズの readonly 表示（Phase 2 拡張）
+- **Figma `variant=success` 追加**: 送信完了画面（Phase 2 拡張、TOPに戻る + 事例を見る の 2 CTA）
+- **Figma 残 4 フィールド追加**: 競技・種目 / 電話番号 / 選手数・チーム規模 / 利用検討時期

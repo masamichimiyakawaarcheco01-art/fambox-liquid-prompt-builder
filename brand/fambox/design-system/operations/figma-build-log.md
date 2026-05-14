@@ -2182,3 +2182,56 @@ Hero（12 variants）と Bento Tile（40 variants）は **2D / 3D matrix 配置*
 - SKILL v0.8 候補: テストフェーズ（Phase 5）/ brand 横展開のパラメータ化
 
 ---
+
+## Session 2026-05-14 (#36) — Drawer / Contact Form Audit（SKILL v0.7 Step 0.5 実戦投入）
+
+**契機**: Session #35 で SKILL v0.7 に昇格させた Step 0.5 詳細 Audit を**実戦投入**。残 Tier 1-2 component（Drawer / Contact Form）の状態確認。
+
+### Audit 結果
+
+| Component | 発見 | 状態 |
+|---|---|---|
+| **Drawer** | 全 page 検索（type=COMPONENT_SET/COMPONENT, name /drawer/i）で **0 件 hit** | spec md / Figma / Liquid **全層未作成** → v0.3 拡張枠 |
+| **Contact Form `98:121`** | 1 variant (`variant=input`, 768×1200), 重なり/overflow なし, property 整合 | spec ↔ Figma 整合 OK / Liquid 未作成 → 2/3 達成 |
+
+### Step 0.5 一括 Audit スクリプトの実戦価値
+
+SKILL v0.7 line 54-144 のテンプレをそのまま実行（コピペ）して、Contact Form 1 set を audit。所要時間は **約 1 分**。返り値 `overlapping: null, overflow: null` で **OK 判定が即決**。
+
+**スクリプトの再利用性**: targets 配列を書き換えるだけで任意の N set を一括 audit できる。Session #34 で 7 set / Session #36 で 1 set と、**スケールに依らず同じスクリプト**で動作。
+
+### Drawer の扱い
+
+| 観点 | 状態 |
+|---|---|
+| spec md | `brand/fambox/design-system/components/drawer.md` **未作成** |
+| Figma | name に "drawer" を含む COMPONENT_SET/COMPONENT が **0 件** |
+| Liquid | `sections/fambox-drawer.liquid` **未作成** |
+| Page 名 | `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study` に "Drawer" が含まれるが、**Page 名は予約だけ**であって実装は無い |
+
+→ **3 層とも未着手**。優先順位: SP メニュー / Mobile Drawer の必要性が顕在化した時点で着手（Header v0.2 spec で言及されている可能性を確認 → 次回タスク）。
+
+### Contact Form の Liquid 未作成について
+
+spec / Figma は揃っているが、Liquid section が無い。理由:
+1. Shopify Contact form は **テーマの form タグ** (`{% form 'contact', class: '...' %}`) が必要で、Liquid 化は他 section と比較して**多少の特殊作法**がいる
+2. **11 フィールド** + **バリデーション** + **自動返信メール**の整合確認が必要
+3. **CTA wording** (cta-wording-proposal.md) との連動が必要
+
+これらは小さくないため、独立した 1 セッション（30-60 min）で実装する Known TODO に。
+
+### 学んだこと（追加）
+
+77. **「3 層中 N 層存在」を Audit の判定軸に加える**: Component の状態は **0/3 (全層未作成) / 1/3 (spec のみ) / 2/3 (spec ↔ Figma または spec ↔ Liquid) / 3/3 (三位一体達成)** の 4 段階で表現できる。Step 0.5 詳細 Audit は **Figma 単体**の整合性チェックだが、**spec / Figma / Liquid の存在チェック**を組み合わせると **3 層全体の完成度**が即可視化される。Drawer = 0/3 / Contact Form = 2/3 / Modal = 3/3 のようにラベル化することで、**次に手を入れるべき component の優先順位**が論理的に決まる。
+
+78. **Page 名の予約と実装の差を意識する**: Figma の Page 名 `5. Components Header / Drawer / Footer / Modal / ...` のように **未実装 component も Page 名に予約**しておくと、将来追加時の認知摩擦が減る。ただし**「Page 名にあるから実装済」と誤認する罠**もある（今回 Drawer がそれ）。Audit では **Page 名 ≠ 実装の存在** を意識し、`findAll(type=COMPONENT_SET, name match)` で実態を必ず確認する。
+
+### Known TODOs
+
+- **Contact Form Liquid 化**: `sections/fambox-contact-form.liquid` 新規（11 フィールド + Shopify form + バリデーション + 自動返信、独立 1 セッション、30-60 min）
+- **Drawer spec md 着手**: SP メニュー / Mobile Drawer の必要性顕在化時に spec から開始
+- **完成度ダッシュボード**: 全 component の 0/3 〜 3/3 状態を current.md に一覧化（学び 77 の実装）
+- fam-footer-v2 / fam-case-study のラベル整理
+- TOP ページに新 sections 配置判断（Week 5 QA）
+
+---
