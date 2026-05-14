@@ -1,0 +1,672 @@
+<!-- ============================================
+     FAMBOX Modal Section
+     sections/fambox-modal.liquid
+     Spec: brand/fambox/design-system/components/modal.md (v0.2)
+     Figma Component Set: 62:33
+     ============================================
+     3 Variants（spec §Variants 準拠）:
+       - Confirmation: 削除確認 / Plan 変更 / Contact 送信前
+       - Detail: 商品詳細 / Case Study / Plan 比較
+       - Sheet: SP の Variant 選択 / フィルタ（PC では Confirmation 風）
+     Close 3 方法:
+       - × ボタン
+       - ESC キー
+       - Backdrop クリック
+     Accessibility:
+       - role="dialog" + aria-modal="true"
+       - aria-labelledby で Title 参照
+       - Focus trap（Tab 移動を Modal 内に閉じ込め）
+       - body scroll lock
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-modal-' | append: section.id
+  assign variant = section.settings.variant | default: 'confirmation'
+  assign modal_id = section.settings.modal_id | default: sec_id
+  assign title_id = modal_id | append: '__title'
+  assign desc_id = modal_id | append: '__desc'
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap');
+
+  /* ============================================
+     RESET: テーマCSS干渉対策
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     TRIGGER (preview ボタン)
+     ============================================ */
+  #{{ sec_id }} .modal__trigger-wrap {
+    text-align: center;
+    padding: 32px 24px;
+  }
+  #{{ sec_id }} .modal__trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    height: 48px;
+    padding: 0 32px;
+    background: #1B1D1A;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    cursor: pointer;
+    transition: background 200ms ease-out, transform 200ms ease-out;
+  }
+  #{{ sec_id }} .modal__trigger:hover {
+    background: #FC5214;
+    transform: translateY(-2px);
+  }
+
+  /* ============================================
+     MODAL ROOT
+     ============================================ */
+  #{{ sec_id }} .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  #{{ sec_id }} .modal.is-open {
+    display: flex;
+  }
+  #{{ sec_id }} .modal[hidden] {
+    display: none !important;
+  }
+
+  /* ============================================
+     BACKDROP（Glass 4 固定 / opacity 0.6）
+     ============================================ */
+  #{{ sec_id }} .modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 250ms ease-out;
+    cursor: pointer;
+  }
+  #{{ sec_id }} .modal.is-open .modal__backdrop {
+    opacity: 1;
+  }
+
+  /* ============================================
+     MODAL BODY 共通
+     ============================================ */
+  #{{ sec_id }} .modal__body {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    padding: 32px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.24);
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    opacity: 0;
+    transform: scale(0.95);
+    transition:
+      opacity 250ms ease-out,
+      transform 250ms ease-out;
+  }
+  #{{ sec_id }} .modal.is-open .modal__body {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* ============================================
+     HEADER
+     ============================================ */
+  #{{ sec_id }} .modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(27, 29, 26, 0.08);
+  }
+  #{{ sec_id }} .modal__title {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    line-height: 1.5 !important;
+    color: #1B1D1A !important;
+    letter-spacing: normal !important;
+    margin: 0 !important;
+  }
+  #{{ sec_id }} .modal__close {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #5C5F58;
+    transition: background 150ms ease-out, color 150ms ease-out;
+  }
+  #{{ sec_id }} .modal__close:hover {
+    background: rgba(27, 29, 26, 0.06);
+    color: #1B1D1A;
+  }
+  #{{ sec_id }} .modal__close svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  /* ============================================
+     TEXT / CONTENT
+     ============================================ */
+  #{{ sec_id }} .modal__text {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
+    line-height: 1.75 !important;
+    color: #5C5F58 !important;
+    margin: 0 !important;
+  }
+  #{{ sec_id }} .modal__content {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 15px !important;
+    color: #1B1D1A !important;
+    line-height: 1.75 !important;
+  }
+  #{{ sec_id }} .modal__content p {
+    margin-bottom: 16px;
+  }
+  #{{ sec_id }} .modal__content p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ============================================
+     ACTIONS（Cancel / Confirm）
+     ============================================ */
+  #{{ sec_id }} .modal__actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(27, 29, 26, 0.08);
+  }
+  #{{ sec_id }} .modal__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    height: 44px;
+    padding: 0 24px;
+    border-radius: 4px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    cursor: pointer;
+    transition: background 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+    text-decoration: none;
+  }
+  #{{ sec_id }} .modal__btn--ghost {
+    background: transparent;
+    color: #5C5F58;
+    border: 1px solid rgba(27, 29, 26, 0.16);
+  }
+  #{{ sec_id }} .modal__btn--ghost:hover {
+    background: rgba(27, 29, 26, 0.04);
+    color: #1B1D1A;
+    border-color: rgba(27, 29, 26, 0.32);
+  }
+  #{{ sec_id }} .modal__btn--primary {
+    background: #FC5214;
+    color: #fff;
+    border: 1px solid #FC5214;
+  }
+  #{{ sec_id }} .modal__btn--primary:hover {
+    background: #E14710;
+    border-color: #E14710;
+  }
+
+  /* ============================================
+     VARIANT: Confirmation
+     ============================================ */
+  #{{ sec_id }} .modal-confirmation .modal__body {
+    max-width: 400px;
+  }
+
+  /* ============================================
+     VARIANT: Detail
+     ============================================ */
+  #{{ sec_id }} .modal-detail .modal__body {
+    max-width: 800px;
+    max-height: 90vh;
+  }
+
+  /* ============================================
+     VARIANT: Sheet（SP 専用 slide-up / PC では Confirmation 風）
+     ============================================ */
+  #{{ sec_id }} .modal-sheet {
+    align-items: flex-end;
+    padding: 0;
+  }
+  #{{ sec_id }} .modal-sheet .modal__body {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 16px 16px 0 0;
+    padding: 24px;
+    transform: translateY(100%);
+    transition: transform 350ms ease-out;
+  }
+  #{{ sec_id }} .modal-sheet.is-open .modal__body {
+    transform: translateY(0);
+  }
+
+  /* PC では Sheet を Confirmation 風（DNA Anti 回避） */
+  @media (min-width: 768px) {
+    #{{ sec_id }} .modal-sheet {
+      align-items: center;
+      padding: 24px;
+    }
+    #{{ sec_id }} .modal-sheet .modal__body {
+      max-width: 480px;
+      max-height: 90vh;
+      border-radius: 8px;
+      padding: 32px;
+      transform: scale(0.95);
+    }
+    #{{ sec_id }} .modal-sheet.is-open .modal__body {
+      transform: scale(1);
+    }
+  }
+
+  /* ============================================
+     SP: Actions を縦並び (Primary 上、Ghost 下)
+     ============================================ */
+  @media (max-width: 480px) {
+    #{{ sec_id }} .modal__actions {
+      flex-direction: column-reverse;
+      align-items: stretch;
+    }
+    #{{ sec_id }} .modal__btn {
+      width: 100%;
+    }
+  }
+
+  /* ============================================
+     prefers-reduced-motion
+     ============================================ */
+  @media (prefers-reduced-motion: reduce) {
+    #{{ sec_id }} .modal__backdrop,
+    #{{ sec_id }} .modal__body {
+      transition: none !important;
+    }
+    #{{ sec_id }} .modal__body {
+      transform: none !important;
+    }
+  }
+
+  /* ============================================
+     BODY scroll-lock helper
+     ============================================ */
+  body.fambox-modal-open {
+    overflow: hidden;
+  }
+</style>
+
+<section id="{{ sec_id }}">
+
+  {%- if section.settings.show_trigger -%}
+    <div class="modal__trigger-wrap">
+      <button
+        type="button"
+        class="modal__trigger"
+        data-modal-trigger="{{ modal_id }}"
+        aria-haspopup="dialog"
+        aria-controls="{{ modal_id }}"
+      >{{ section.settings.trigger_label }}</button>
+    </div>
+  {%- endif -%}
+
+  <div
+    class="modal modal-{{ variant }}"
+    id="{{ modal_id }}"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="{{ title_id }}"
+    {%- if section.settings.body_text != blank %} aria-describedby="{{ desc_id }}"{% endif -%}
+    hidden
+  >
+    <div class="modal__backdrop" data-modal-close>{%- comment -%}not empty{%- endcomment -%}</div>
+    <div class="modal__body" role="document">
+
+      {%- comment -%} ===== Header (Detail / Sheet で表示 / Confirmation は title のみ) ===== {%- endcomment -%}
+      {%- if variant == 'detail' or variant == 'sheet' -%}
+        <header class="modal__header">
+          <h2 class="modal__title" id="{{ title_id }}">{{ section.settings.title | newline_to_br }}</h2>
+          <button
+            type="button"
+            class="modal__close"
+            data-modal-close
+            aria-label="閉じる"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </header>
+      {%- else -%}
+        <h2 class="modal__title" id="{{ title_id }}" style="margin-bottom: 16px !important;">{{ section.settings.title | newline_to_br }}</h2>
+      {%- endif -%}
+
+      {%- comment -%} ===== Body content ===== {%- endcomment -%}
+      {%- if variant == 'detail' -%}
+        <div class="modal__content" id="{{ desc_id }}">
+          {{ section.settings.body_html }}
+        </div>
+      {%- elsif section.settings.body_text != blank -%}
+        <p class="modal__text" id="{{ desc_id }}">{{ section.settings.body_text | newline_to_br }}</p>
+      {%- endif -%}
+
+      {%- comment -%} ===== Actions ===== {%- endcomment -%}
+      {%- if section.settings.show_actions -%}
+        <div class="modal__actions">
+          <button type="button" class="modal__btn modal__btn--ghost" data-modal-close>
+            {{ section.settings.cancel_label | default: 'キャンセル' }}
+          </button>
+          {%- if section.settings.confirm_url != blank -%}
+            <a href="{{ section.settings.confirm_url }}" class="modal__btn modal__btn--primary" data-modal-confirm>
+              {{ section.settings.confirm_label | default: '送信する' }}
+            </a>
+          {%- else -%}
+            <button type="button" class="modal__btn modal__btn--primary" data-modal-confirm>
+              {{ section.settings.confirm_label | default: '送信する' }}
+            </button>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var SEC_ID = {{ sec_id | json }};
+    var MODAL_ID = {{ modal_id | json }};
+
+    var section = document.getElementById(SEC_ID);
+    if (!section) return;
+    var modal = document.getElementById(MODAL_ID);
+    if (!modal) return;
+
+    var lastFocused = null;
+    var focusableSelector = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    function openModal() {
+      lastFocused = document.activeElement;
+      modal.removeAttribute('hidden');
+      // 次フレームで is-open を付与してトランジション開始
+      requestAnimationFrame(function () {
+        modal.classList.add('is-open');
+        document.body.classList.add('fambox-modal-open');
+      });
+      // 初期 focus を最初のフォーカス可能要素に
+      var focusables = modal.querySelectorAll(focusableSelector);
+      if (focusables.length) {
+        focusables[0].focus();
+      }
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      document.body.classList.remove('fambox-modal-open');
+      // トランジション完了後に hidden 復帰
+      var onEnd = function () {
+        modal.setAttribute('hidden', '');
+        modal.removeEventListener('transitionend', onEnd);
+      };
+      modal.addEventListener('transitionend', onEnd);
+      // フォールバック: transitionend 不発時
+      setTimeout(function () {
+        if (!modal.classList.contains('is-open')) {
+          modal.setAttribute('hidden', '');
+        }
+      }, 500);
+      // フォーカス復元
+      if (lastFocused && typeof lastFocused.focus === 'function') {
+        try { lastFocused.focus(); } catch (e) { /* noop */ }
+      }
+    }
+
+    // ===== 開く: data-modal-trigger="<MODAL_ID>" =====
+    document.querySelectorAll('[data-modal-trigger="' + MODAL_ID + '"]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        openModal();
+      });
+    });
+
+    // ===== 閉じる: data-modal-close（× / backdrop / cancel ボタン）=====
+    modal.querySelectorAll('[data-modal-close]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        // backdrop の場合のみクリック発火（modal__body 内クリックは伝播停止）
+        if (el.classList.contains('modal__backdrop') && e.target !== el) return;
+        e.preventDefault();
+        closeModal();
+      });
+    });
+    // modal__body 内のクリックは backdrop に伝播しない
+    var modalBody = modal.querySelector('.modal__body');
+    if (modalBody) {
+      modalBody.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+    }
+
+    // ===== ESC キー =====
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      if (modal.classList.contains('is-open')) {
+        e.preventDefault();
+        closeModal();
+      }
+    });
+
+    // ===== Focus trap（Tab 移動を Modal 内に閉じ込め）=====
+    modal.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      var focusables = Array.prototype.filter.call(
+        modal.querySelectorAll(focusableSelector),
+        function (el) {
+          return el.offsetParent !== null; // 可視のものだけ
+        }
+      );
+      if (focusables.length === 0) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+    // ===== confirm ボタン: URL なしの場合はカスタムイベントを発火（呼び出し側で扱える）=====
+    var confirmBtn = modal.querySelector('[data-modal-confirm]');
+    if (confirmBtn && confirmBtn.tagName !== 'A') {
+      confirmBtn.addEventListener('click', function () {
+        modal.dispatchEvent(new CustomEvent('fambox-modal:confirm', {
+          bubbles: true,
+          detail: { modalId: MODAL_ID }
+        }));
+        closeModal();
+      });
+    }
+
+    // ===== 外部 API: window.FAMBoxModal[modalId] = { open, close } =====
+    if (!window.FAMBoxModal) window.FAMBoxModal = {};
+    window.FAMBoxModal[MODAL_ID] = { open: openModal, close: closeModal };
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Modal セクション",
+  "tag": "section",
+  "class": "fambox-modal-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "基本設定"
+    },
+    {
+      "type": "select",
+      "id": "variant",
+      "label": "Variant",
+      "options": [
+        { "value": "confirmation", "label": "Confirmation（確認）" },
+        { "value": "detail",       "label": "Detail（詳細）" },
+        { "value": "sheet",        "label": "Sheet（SP slide-up）" }
+      ],
+      "default": "confirmation"
+    },
+    {
+      "type": "text",
+      "id": "modal_id",
+      "label": "Modal ID（HTML id）",
+      "info": "trigger ボタンから data-modal-trigger=\"<ID>\" で開く。空ならセクション ID を使用。",
+      "default": ""
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "タイトル（改行可）",
+      "default": "プランを変更しますか？"
+    },
+    {
+      "type": "textarea",
+      "id": "body_text",
+      "label": "Body テキスト（Confirmation / Sheet 用）",
+      "default": "変更後のプランは次回お届け分から適用されます。"
+    },
+    {
+      "type": "html",
+      "id": "body_html",
+      "label": "Body HTML（Detail 用）",
+      "info": "Detail variant のときに表示。<p>, <ul>, <img> など自由記述可。"
+    },
+    {
+      "type": "header",
+      "content": "── アクション（Cancel / Confirm）──"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_actions",
+      "label": "アクションボタンを表示",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cancel_label",
+      "label": "キャンセルボタン文言",
+      "default": "キャンセル"
+    },
+    {
+      "type": "text",
+      "id": "confirm_label",
+      "label": "確定ボタン文言",
+      "default": "変更する"
+    },
+    {
+      "type": "url",
+      "id": "confirm_url",
+      "label": "確定ボタンの遷移先 URL（任意）",
+      "info": "URL を指定するとリンク（<a>）になる。空ならボタン（カスタムイベント fambox-modal:confirm を発火）。"
+    },
+    {
+      "type": "header",
+      "content": "── プレビュー Trigger（任意）──"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trigger",
+      "label": "Trigger ボタンを表示（プレビュー用）",
+      "info": "本番では別セクション/カスタム HTML の data-modal-trigger=\"<ID>\" で開く。",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trigger_label",
+      "label": "Trigger ボタン文言",
+      "default": "プラン変更を確認"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Modal — Confirmation（プラン変更確認）",
+      "settings": {
+        "variant": "confirmation",
+        "modal_id": "plan-change-modal",
+        "title": "プランを変更しますか？",
+        "body_text": "変更後のプランは次回お届け分から適用されます。",
+        "show_actions": true,
+        "cancel_label": "キャンセル",
+        "confirm_label": "変更する",
+        "show_trigger": true,
+        "trigger_label": "プラン変更を確認"
+      }
+    },
+    {
+      "name": "Modal — Detail（Case Study 詳細）",
+      "settings": {
+        "variant": "detail",
+        "modal_id": "case-detail-modal",
+        "title": "事例の詳細",
+        "body_html": "<p>FAMBOX を導入してから、選手のコンディション管理がチーム単位で揃うようになりました。</p><p>1食あたりの栄養設計が標準化されているため、コーチが日々の食事内容を意識しなくても、安定した補食が成り立っています。</p>",
+        "show_actions": false,
+        "show_trigger": true,
+        "trigger_label": "事例を読む"
+      }
+    },
+    {
+      "name": "Modal — Sheet（SP フィルタ）",
+      "settings": {
+        "variant": "sheet",
+        "modal_id": "filter-sheet",
+        "title": "絞り込み",
+        "body_text": "カテゴリ・タンパク質量・カロリーで絞り込みできます。",
+        "show_actions": true,
+        "cancel_label": "クリア",
+        "confirm_label": "適用する",
+        "show_trigger": true,
+        "trigger_label": "絞り込み"
+      }
+    }
+  ]
+}
+{% endschema %}

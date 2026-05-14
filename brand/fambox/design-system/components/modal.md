@@ -462,6 +462,15 @@ modal.addEventListener('keydown', (e) => {
 - **Component Set ID**: `62:33` ✅（Audit #4 で既存確認、2026-05-12）
 - **実装済 variants**: 3（`variant`: confirmation / detail / sheet）
 
+## Liquid 実装
+
+- **File**: `sections/fambox-modal.liquid`（672 行）
+- **Schema**: 14 settings + 3 presets（Confirmation / Detail / Sheet）
+- **JS API**: `window.FAMBoxModal[modalId].open() / .close()` + `data-modal-trigger="<modalId>"` + CustomEvent `fambox-modal:confirm`
+- **Close 3 方法**: × ボタン / ESC キー / Backdrop クリック（全て実装）
+- **Accessibility**: `role="dialog"` + `aria-modal="true"` + `aria-labelledby` + Focus trap + body scroll lock + `prefers-reduced-motion` 対応
+
 ## Change Log
+- v0.2-liquid (2026-05-14): `fambox-modal.liquid` 三位一体達成。3 variants 内包 + 3 presets。spec の Liquid 実装例（Confirmation / Detail / Sheet）を 1 section に統合。JS で Focus trap / ESC / Backdrop / body scroll lock を実装
 - v0.2-figma (2026-05-12): Audit #4 で Component Set `62:33` を既存確認。3 variants 実装済
 - v0.2 (2026-04-28): Worksheet §22 確定（3 Variants / Backdrop Glass 4 固定 / Close 3 方法 / 4 禁止項目明示）。既存 Shopify product-media-modal 等の実装サンプルから一般化した L4 Modal Component

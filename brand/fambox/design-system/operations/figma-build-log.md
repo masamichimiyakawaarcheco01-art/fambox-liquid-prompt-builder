@@ -1612,3 +1612,62 @@ spec の「構造変更なし、tokens.css 適用のみ」確定方針を踏襲�
 - Modal / Footer / Stat Card / Case Study の Liquid 化（v0.3 候補）
 
 ---
+
+## Session 2026-05-14 (#27) — L4 Modal Liquid 化（三位一体達成）
+
+**契機**: 前回 Session #26 の Known TODOs「Modal / Footer / Stat Card / Case Study の Liquid 化」のうち、最も小さく独立性が高い **Modal** から着手。spec md（v0.2）+ Figma Component Set `62:33`（実装済 3 variants）が揃っているため、Liquid 1 ファイル追加で三位一体が完成する状態だった。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| Modal Liquid section | `sections/fambox-modal.liquid` (672 行) | 3 variants 内包 + JS（ESC/Backdrop/Focus trap）+ 3 presets |
+| spec md 更新 | `components/modal.md` | `## Liquid 実装` セクション追加、Change Log に v0.2-liquid 追記 |
+
+### Modal Liquid の設計判断（学び 57 への布石）
+
+**1 section / 3 variants / 3 presets という凝縮**:
+- spec の Liquid 実装例（Confirmation / Detail / Sheet）を **1 ファイル**に統合
+- `variant` setting + `{% case variant %}` のような分岐ではなく **CSS class `modal-{variant}` で表示制御**
+- preset 3 個 = Plan 変更確認 / Case Study 詳細 / SP フィルタの即配置パターン
+- → `fambox-hero.liquid` 5 preset 戦略（学び 55）を Modal にも適用
+
+**JS の汎用 API 設計**:
+- `window.FAMBoxModal[modalId] = { open, close }` で外部からも呼び出し可能
+- `data-modal-trigger="<modalId>"` で宣言的に trigger 設定
+- 確定ボタンはカスタムイベント `fambox-modal:confirm` を bubble 発火 → 呼び出し側で `addEventListener` してフォーム送信等に接続
+- URL 指定時は `<a>` タグに切替（リンクのまま遷移）
+
+**Accessibility の網羅**:
+- `role="dialog"` + `aria-modal="true"` + `aria-labelledby` + `aria-describedby`
+- Focus trap（Tab を Modal 内に閉じ込め、Shift+Tab も対応）
+- `body.fambox-modal-open` で背景 scroll lock
+- 初期 focus を最初の focusable へ、close 後は trigger 要素に復元
+- `prefers-reduced-motion: reduce` で transition 無効化
+
+**spec 準拠の Anti 回避**:
+- Backdrop opacity 0.6 固定（Glass 4）
+- Sheet variant は PC（768px 以上）で Confirmation 風挙動に CSS 切替（spec の Don't「Sheet を PC で使わない」を実装側でガード）
+- SP の `.modal__actions` は `flex-direction: column-reverse` で Primary が上
+- Modal Detail の max-height: 90vh 厳守（90% 超を防ぐ）
+
+### 検証
+
+- `wc -l`: 672 行
+- Schema JSON: valid（settings 14 / presets 3）
+- Liquid tag balance: `{% %}` 26 pairs / `{{ }}` 64 pairs / section/style/script 各 1 開閉
+- modal-confirmation / modal-detail / modal-sheet クラス: 計 8 箇所登場
+
+### 学んだこと（追加）
+
+57. **Modal は「単一 section に 3 variants + JS API + custom event」で完結する**: spec の Liquid 実装例が 3 つあっても、CSS class 切替 + Liquid 内 if 分岐で**1 ファイル**にまとまる。JS は `window.FAMBoxModal[modalId]` という公開 API + `data-modal-trigger` 宣言で**他の section / カスタム HTML から呼び出し可能**にする。確定アクションは `CustomEvent` で bubble 発火させれば、呼び出し側に **コンテキスト依存の挙動（フォーム送信 / Plan 変更 API / GA4 イベント）** を委ねられる → section は「**Modal の見た目と開閉**」だけに責任を持つ純粋な L4 になる。
+
+58. **三位一体（spec / Figma / Liquid）の Liquid 側完成は spec の "Liquid 実装例" の品質に比例する**: modal.md は Confirmation / Detail / Sheet の Liquid 例を 3 つとも書いてあった → Liquid 化は **コピー & 統合 + JS 肉付け** で済んだ。逆に spec に Liquid 例がない component（Stat Card 等）は、Liquid 化前に spec を補強する必要がある。**spec に Liquid 例を書く投資 = 後の Liquid 化セッションの所要時間を短縮する投資**。
+
+### Known TODOs
+
+- **Footer Liquid 化**: 既存 `fam-footer-v2.liquid` を spec v0.2 の 3 variants（Standard / Minimal / Sitemap）に refactor → `fambox-footer.liquid` 化。ボリューム大のため次セッション。
+- Stat Card / Case Study の Liquid 化（spec に Liquid 例追記 → Liquid 化の 2 段階）
+- 本番テーマへの移植リハーサル（Week 5 QA 準備）
+
+---
