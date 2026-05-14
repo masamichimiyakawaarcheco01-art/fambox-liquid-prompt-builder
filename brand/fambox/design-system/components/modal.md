@@ -471,6 +471,7 @@ modal.addEventListener('keydown', (e) => {
 - **Accessibility**: `role="dialog"` + `aria-modal="true"` + `aria-labelledby` + Focus trap + body scroll lock + `prefers-reduced-motion` 対応
 
 ## Change Log
+- v0.2-audit-ok (2026-05-14): Session #32 で再 Audit。Set 62:33 の 3 variants（confirmation 400×219 / detail 800×236 / sheet 800×345）配置は x=0, 500, 1400 で問題なし、property `variant` も spec と完全整合。**修正不要**。Set boundary 2200×345 も適切
 - v0.2-liquid (2026-05-14): `fambox-modal.liquid` 三位一体達成。3 variants 内包 + 3 presets。spec の Liquid 実装例（Confirmation / Detail / Sheet）を 1 section に統合。JS で Focus trap / ESC / Backdrop / body scroll lock を実装
 - v0.2-figma (2026-05-12): Audit #4 で Component Set `62:33` を既存確認。3 variants 実装済
 - v0.2 (2026-04-28): Worksheet §22 確定（3 Variants / Backdrop Glass 4 固定 / Close 3 方法 / 4 禁止項目明示）。既存 Shopify product-media-modal 等の実装サンプルから一般化した L4 Modal Component

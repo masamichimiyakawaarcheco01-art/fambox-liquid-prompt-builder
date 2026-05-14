@@ -1899,3 +1899,76 @@ spec の「構造変更なし、tokens.css 適用のみ」確定方針を踏襲�
 - Modal / Footer の Figma Component Set Audit 再確認（spec ↔ Figma 整合性 cross-check）
 
 ---
+
+## Session 2026-05-14 (#32) — Modal / Footer Component Set Audit 再確認（spec ↔ Figma cross-check）
+
+**契機**: 前 Session #31 で Case Study の spec gap を解消した流れで、Modal / Footer も spec ↔ Figma の整合性を再 audit。Tier 1-2 補完が三位一体達成しているはずだが、**配置や boundary の隠れた問題**がないか cross-check した。
+
+### 成果
+
+| Set | Audit 結果 | アクション |
+|---|---|---|
+| **Modal `62:33`** | ✅ 全項目 OK（3 variants × 3 sizes × property `variant` × Set boundary 全て整合）| **修正不要**。spec md に `v0.2-audit-ok` を Change Log 追記 |
+| **Footer `60:95`** | ⚠️ 3 variants が x=0, y=0 で**重なり**配置 / sitemap が standard と中身同等 | **配置修正 + spec gap 記録**。Set boundary を 1440×329 → 1440×1044 に拡張 |
+
+### Modal Audit 詳細（✅ 修正不要）
+
+```
+Set: 62:33 "Modal" / 2200×345 / layoutMode=NONE
+Variants:
+  - variant=confirmation (62:5)  400×219, x=0,    y=0
+  - variant=detail       (62:13) 800×236, x=500,  y=0
+  - variant=sheet        (62:21) 800×345, x=1400, y=0
+Property: variant = ["confirmation", "detail", "sheet"]
+```
+
+3 variants が水平方向に並んで配置済み、各サイズは spec の **max-width 規律**（confirmation 400 / detail 800 / sheet 100%）と整合。Set boundary 2200×345 も全 variants 内包済み。
+
+### Footer Audit 詳細（⚠️ 修正実施）
+
+**Before**:
+```
+Set: 60:95 "Footer" / 1440×329 / layoutMode=NONE
+Variants（全て x=0, y=0 で重なり）:
+  - variant=standard (60:5)  1440×329, x=0, y=0
+  - variant=minimal  (60:44) 1440×226, x=0, y=0  ← 重なり
+  - variant=sitemap  (60:56) 1440×329, x=0, y=0  ← 重なり
+```
+
+**After**:
+```
+Set: 60:95 "Footer" / 1440×1044 / layoutMode=NONE
+Variants:
+  - variant=standard (60:5)  1440×329, x=0, y=0
+  - variant=minimal  (60:44) 1440×226, x=0, y=389  (329+60 gap)
+  - variant=sitemap  (60:56) 1440×329, x=0, y=675  (389+226+60 gap)
+```
+
+### Footer の spec gap 発見（v0.3 残課題）
+
+screenshot で確認した結果、**Figma 上の sitemap variant の中身が standard と実質同等**。spec § Variants では Sitemap = 「Standard + 詳細 Sitemap（多列カテゴリ・4 列）」。
+
+| Layer | Standard | Sitemap | spec 想定 |
+|---|---|---|---|
+| Liquid | `.footer__nav` 3 列 | `.footer-sitemap .footer__nav` **4 列**（CSS で差別化済）| 4 列 |
+| Figma | Nav 3 列 | Nav 3 列（standard と同じ）| 4 列にすべき |
+
+→ **spec ↔ Liquid は整合、spec ↔ Figma に gap**。Liquid 先行実装と同じ構図（学び 66）。**v0.3 で sitemap variant を 4 列に再構築**する Known TODO として記録。
+
+### 学んだこと（追加）
+
+67. **三位一体達成済の component でも、再 Audit すると配置 / boundary / 細部整合性の隠れた問題が見つかる**: Modal / Footer は前々回（#28 / #27）に spec ↔ Liquid を整合させていたが、**Figma 側の配置（variants 重なり）と内容差別化（sitemap 4 列化）の 2 つの問題**が再 audit で発覚。**「三位一体達成」は spec / Figma / Liquid の 3 層の "存在" が揃った状態であり、"完璧性" は別**。**周期的な cross-check audit** を組み込むことで、後から見つかる小さな整合性問題を早期に拾える。再 audit の所要時間は 1 component あたり数分程度。
+
+68. **spec ↔ Figma の gap は「片方が正解、もう一方が追従するべき」と判断する**: Footer sitemap の 4 列化問題は、**spec が正、Figma が追従するべき**（Liquid は既に追従済み）。逆に Case Study の logo-list は **Liquid が先行、Figma が追従**（Session #31）。**3 層のうちどこに最新の意思決定が反映されているかを毎回判断し、他 2 層を追従させる**のが gap 解消の基本ルール。仕様 = spec / 動作 = Liquid / 視覚 = Figma の役割を意識する。
+
+69. **layoutMode=NONE の Component Set で variants を append すると同位置に重なる典型ケースが Issue 4 系の再発**: 学び 24, 26 で記載済の「1D 拡張 = 既存 variants の縦/横並びパターンを inspect で確認、その規則を踏襲」。Footer は Figma 初期生成時の append 時点で variant 配置を怠っていたと推定される（過去の SKILL 適用前の手作業生成？）。新規 variant 追加だけでなく **既存 Set の Audit でも variant 配置の重なりチェック**を含めるべき。Issue 4 の延長として「Phase 0 Audit-first チェックリスト」に追加候補。
+
+### Known TODOs
+
+- **Footer sitemap variant の 4 列化**（v0.3 / spec ↔ Figma gap 解消）
+- TOP ページに新 sections 配置判断（Week 5 QA）
+- fam-footer-v2 / fam-case-study を「LP/ブログ専用」ラベルに整理
+- Tier 3 以下（FormField / Input / Progress / Spinner）の Liquid 化要否判断
+- 他 component の周期 Audit（Header / Hero / Plan Card / Bento / FAQ / Profile）
+
+---

@@ -646,6 +646,10 @@ Footer は **CTA を持たない**。Header / Hero / Section の文脈で CTA �
 移行戦略: 新規ページは `fambox-footer.liquid` を採用。fam-footer-v2 は撤去せず**並存**（LP の世界観差別化として保持）。Week 5 QA で TOP 反映時に置換判断。
 
 ## Change Log
+- v0.2-figma-layout (2026-05-14): Session #32 で variants の重なり (x=0, y=0) を解消。y 順に縦並べ（standard y=0 / minimal y=389 / sitemap y=675、gap 60px）。Set boundary を 1440×329 → **1440×1044** に明示 resize
 - v0.2-liquid (2026-05-14): `fambox-footer.liquid` 三位一体達成。3 variants 内包 + `nav_column` block + 3 presets。SNS 5 種 inline SVG / Legal URL settings 化 / `fam-footer-v2.liquid` とは並存（後者は LP 用として保持）
 - v0.2-figma (2026-05-12): Audit #4 で Component Set `60:95` を既存確認。3 variants 実装済（standard / minimal / sitemap）
 - v0.2 (2026-04-28): Worksheet §19 確定（3 Variants / Ink 背景固定 / Logo 左 / SNS 必須 40px / Bottom = Copyright + Legal のみ / CTA なし / 4 禁止項目明示）。既存 Liquid（fam-footer-v2 / fambox/sections/footer）の実測抽出をベースに L4 Component 化
+
+## Known TODOs（v0.3 候補）
+- ⚠️ **Figma sitemap variant の 4 列化**: Liquid 側は `.footer-sitemap .footer__nav { grid-template-columns: repeat(4, 1fr); }` で 4 列差別化済だが、Figma 上の `variant=sitemap` (60:56) は中身が standard と同等（3 列）。v0.3 で 4 列に再構築して spec ↔ Figma ↔ Liquid の三位一体を完全化する
