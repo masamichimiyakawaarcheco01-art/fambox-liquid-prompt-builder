@@ -1972,3 +1972,69 @@ screenshot で確認した結果、**Figma 上の sitemap variant の中身が s
 - 他 component の周期 Audit（Header / Hero / Plan Card / Bento / FAQ / Profile）
 
 ---
+
+## Session 2026-05-14 (#33) — Footer sitemap variant 4 列化（spec ↔ Figma ↔ Liquid 完全整合）
+
+**契機**: Session #32 で発見した Footer sitemap の spec gap（Liquid は 4 列 / Figma は 3 列）を解消。Phase 2 拡張ではなく **Component 内部構造の追加**（既存 column の clone + 文言入れ替え）で対応。
+
+### 成果
+
+| 操作 | 内容 |
+|---|---|
+| BUSINESS column 追加 | sitemap variant 60:56 の Nav container 60:62 に 4 列目を追加（`129:123`）|
+| 文言入れ替え | BUSINESS / 法人向けプラン / 導入事例 / パートナー |
+| spec md 更新 | `components/footer.md` に v0.3-figma-sitemap + 4 列構造表追加、Known TODOs から解消 |
+
+### 実装フロー（既存 column clone パターン）
+
+1. **Audit**: sitemap 60:56 の構造を walk → Nav container 60:62 内に 3 columns（PRODUCTS 60:63 / COMPANY 60:68 / SUPPORT 60:73）を確認
+2. **Font 検出**: 既存 PRODUCTS column の各 text の fontName を Set で収集して `loadFontAsync`
+3. **Clone**: `productsColumn.clone()` でテンプレ複製
+4. **append**: Nav container は HORIZONTAL auto-layout なので `appendChild` で自動末尾配置（x=398, gap 48）
+5. **文言入れ替え**: clone 内の TEXT node 4 つ（見出し + 3 リンク）を順に書き換え
+
+結果: BUSINESS column が x=398, w=98, h=111 で配置、Nav container 928×111 内に収まる。
+
+### 設計判断: BUSINESS 文言の決定理由
+
+spec の Liquid Sitemap preset は `ABOUT / PRODUCTS / SUPPORT / BUSINESS` だが、**Figma 既存の見出しは PRODUCTS / COMPANY / SUPPORT** という日本語ストア構成。既存 3 列の見出しを書き換えず、4 列目だけ追加する非侵襲アプローチを採用:
+
+- 既存変更なし: PRODUCTS / COMPANY / SUPPORT
+- 4 列目追加: **BUSINESS**（法人向けプラン / 導入事例 / パートナー）
+
+Liquid 側の preset は default 値であり、エディタで自由に書き換え可能なため、**Figma の見出しと Liquid の preset が 100% 一致する必要はない**（学び 63 と整合）。
+
+### TEXT node 防御コード（Issue 16 再発防止）
+
+audit script で `node.layoutMode` / `node.children` を TEXT node に直接 access して TypeError が連続発生（2 回）。最終的に `'layoutMode' in node` / `'children' in node` の **in 演算子 check** で解決。Issue として記録:
+
+#### 🐛 Issue 16: walk スクリプトで TEXT node の属性アクセスで TypeError
+- **症状**: `node.layoutMode: no such property 'layoutMode' on TEXT node`、続いて `node.children: no such property 'children'`
+- **原因**: `null` への OR フォールバック (`node.layoutMode || null`) は **property 自体が存在しない**場合は getter のエラーが先に発生する。TEXT node は LayoutMixin / ChildrenMixin を実装していない
+- **修復**: `'<key>' in node` で属性存在を check してから access
+- **再発防止**: 汎用 walk スクリプトの defensive helper を SKILL に追加候補。Issue 16 として「Component / Frame と TEXT / VECTOR の MixIn 差異」を記載
+
+```js
+// ❌ Bad: getter throws on TEXT
+out.layoutMode = node.layoutMode || null;
+
+// ✅ Good: check existence first
+if ('layoutMode' in node) out.layoutMode = node.layoutMode;
+```
+
+### 学んだこと（追加）
+
+70. **Component 内部構造の追加は「既存 child の clone + 文言入れ替え」が最速**: 新規 Component / variant 生成ではなく、**既存と同じ構造を持つ child を clone して中身だけ書き換える**。フォント / spacing / 色 / auto-layout 全てが自動継承され、文言だけ 4 行入れ替えれば終わる。10 分タスク。新規ゼロベース実装と比較して **5-10 倍速い**。既存 design system に追加するときの黄金パターン。学び 19-20 の Instance/再利用 カテゴリに追加。
+
+71. **「spec の preset 文言」と「Figma の見出し」は完全一致を求めない**: Liquid preset は **default 値** に過ぎず、エディタで書き換えられる。Figma 側は**既存ストアの実際の見出し**に合わせるのが自然（ユーザーの認知負荷を増やさない）。**spec / Figma / Liquid の三位一体は "構造" の整合性であって "文言" の完全一致ではない**。3 層で文言が違っても、構造（カラム数 / 階層 / property 名）が揃っていれば三位一体達成。学び 63 の補強。
+
+72. **TEXT / VECTOR / ELLIPSE 等の non-container node は LayoutMixin / ChildrenMixin を持たない**: 汎用 walk スクリプトで属性 access する時、container node（FRAME / COMPONENT / COMPONENT_SET / GROUP / SECTION / INSTANCE）と非 container node の区別を意識する。**`'<key>' in node` で属性存在を確認**してから access するか、container 系の type を allowlist で filter する。
+
+### Known TODOs
+
+- TOP ページに新 sections 配置判断（Week 5 QA）
+- fam-footer-v2 / fam-case-study を「LP/ブログ専用」ラベルに整理
+- Tier 3 以下（FormField / Input / Progress / Spinner）の Liquid 化要否判断
+- 他 component の周期 Audit（Header / Hero / Plan Card / Bento / FAQ / Profile）
+
+---
