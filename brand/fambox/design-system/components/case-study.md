@@ -319,10 +319,11 @@ related:
 
 - File: `FAMBOX Design System`（`QsiBrc2v20BYw76YHI9x3e`）
 - Page: `5. Components Header / Drawer / Footer / Modal / Contact Form / Plan Card / Case Study`
-- **Component Set ID**: `66:91` ✅（Audit #4 で既存確認、2026-05-12）
-- **実装済 variants**: 2（`variant`: tile / story）
-- ⚠ Spec gap: spec §14 は「3 レイアウト併用」想定。tile/story の 2 variant で足りるか v0.3 で要レビュー
-- 📝 Liquid 側では spec §14 準拠で 3 patterns（tile-grid / story / logo-list）を全て実装済。Figma 側の logo-list variant 追加が v0.3 残課題
+- **Component Set ID**: `66:91` ✅（Audit #4 で既存確認、2026-05-12 / Session #31 で variant 拡張）
+- **実装済 variants**: 3（`variant`: tile / story / **logo-list** ← Session #31 追加）
+- **Variant node IDs**: tile=`66:50` / story=`66:70` / logo-list=`118:123`
+- **logo-list の構造**: 1200×240 / 5 列 × 2 行 = 10 ロゴ placeholder（200×80 / corner radius 4 / "Team N" ラベル）
+- ✅ Spec gap 解消: spec §14 の 3 patterns（カード一覧 / ストーリー / ロゴリスト）と Figma の 3 variants が完全整合
 
 ## Liquid 実装
 
@@ -352,6 +353,7 @@ related:
 移行戦略: 個別ブログ記事は `fam-case-study.liquid` を継続使用。TOP / 一覧ページは `fambox-case-study.liquid` の preset から選択。Week 5 QA で TOP 反映時に判断。
 
 ## Change Log
+- v0.2-figma-logo-list (2026-05-14): Phase 2 拡張で `variant=logo-list`（node `118:123`）を追加。spec §14 の 3 patterns と Figma の 3 variants が完全整合。Set 全体を 1220×1372 に明示 resize（layoutMode=NONE は子の overflow を自動補正しないため）
 - v0.2-liquid (2026-05-14): `fambox-case-study.liquid` 三位一体達成。spec §レイアウトパターン 3 patterns（tile-grid / story / logo-list）を 1 file に統合。3 block types + 3 presets。煽り表現排除の placeholder 整備。fam-case-study.liquid とは並存（後者はブログ記事用として保持）
 - v0.2-figma (2026-05-12): Audit #4 で Component Set `66:91` を既存確認。tile / story の 2 variant 実装済
 - v0.2 (2026-04-20): Worksheet §14 確定（3レイアウト併用・全Data Viz活用・公表/匿名混在）

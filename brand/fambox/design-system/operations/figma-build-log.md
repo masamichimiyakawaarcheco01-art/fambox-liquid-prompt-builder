@@ -1837,3 +1837,65 @@ spec の「構造変更なし、tokens.css 適用のみ」確定方針を踏襲�
 - Tier 3 以下の component（FormField / Input / Progress / Spinner 等）の Liquid 化判断（必要性が低ければ skip）
 
 ---
+
+## Session 2026-05-14 (#31) — Case Study Component Set 66:91 へ logo-list variant 追加（Phase 2 拡張 / spec gap 解消）
+
+**契機**: 前 Session #30 で記録した Known TODOs「Figma に Case Study `logo-list` variant 追加」に着手。spec §14 の 3 patterns（カード一覧 / ストーリー / ロゴリスト）と Figma の 2 variants（tile / story）の **gap を Figma 側で解消**。Liquid 側は Session #30 で先行実装済みのため、本セッションで Figma を spec ↔ Liquid に追従させた。
+
+### 成果
+
+| 成果物 | 内容 |
+|---|---|
+| `variant=logo-list`（node `118:123`）追加 | Case Study Component Set `66:91` に 3 つ目の variant を追加 |
+| Set bounding 拡張 | `66:91` を 1220×1032 → **1220×1372** に明示 resize（layoutMode=NONE は子の overflow を自動補正しないため） |
+| 10 logo placeholder | 5 列 × 2 行で配置（200×80 / corner radius 4 / "Team 1〜10" ラベル / Inter Medium 12px） |
+| spec md 更新 | `components/case-study.md` の Figma 参照を variants 3 に更新、Change Log に v0.2-figma-logo-list 追記 |
+
+### Phase 2 適用フロー
+
+1. **Audit-first**（SKILL Step 0 / 必須）: `66:91` の現状確認
+   - 既存 variants: `variant=tile`（66:50 / 360×458 / x=0, y=0）/ `variant=story`（66:70 / 720×1032 / x=500, y=0）
+   - Set: layoutMode=NONE / 1220×1032
+   - Property: `variant` = ["tile", "story"]
+2. **新規 Component 作成**: `figma.createComponent()` で `variant=logo-list` を生成し `set.appendChild()`
+3. **配置**: layoutMode=NONE のため明示位置 `x=0, y=1092`（story 末端 + 60 gap）
+4. **Auto Layout 構築**: variant 内部を VERTICAL（2 rows）+ 各 row を HORIZONTAL（5 logo slots）
+5. **Set bounding 明示 resize**: 子の `y + h = 1332` + padding 40 = **1372** に Set.resize() で拡張
+6. **logo slot サイズ修正**: auto-layout HORIZONTAL を後付けすると resize 値が HUG にリセットされる現象に遭遇 → `primaryAxisSizingMode='FIXED'` + `counterAxisSizingMode='FIXED'` + `layoutSizingHorizontal='FIXED'` の三点セットで明示
+
+### 発生問題と修復
+
+#### 🐛 Issue 13: COMPONENT_SET (layoutMode=NONE) は子の overflow を自動補正しない
+- **症状**: Set 66:91 に y=1092 の variant を append しても Set 自体は 1220×1032 のまま → logo-list が Set boundary 外に位置
+- **原因**: COMPONENT_SET の layoutMode=NONE は **自由配置モード**。子の bounding box を自動で fold しない
+- **修復**: 子の `y + h` を計算して `set.resize(1220, 1372)` で明示拡張
+- **再発防止**: SKILL Phase 2 拡張時、layoutMode=NONE の Set に variant を追加する場合は **resize 必須** をチェックリスト化
+
+#### 🐛 Issue 14: auto-layout を後付けすると resize 値が HUG に化ける
+- **症状**: 初回スクリプトで `slot.resize(200, 80)` → `slot.layoutMode = 'HORIZONTAL'` の順で実行 → screenshot で slot が縦長に表示
+- **原因**: `layoutMode = 'HORIZONTAL'` を呼ぶと、`primary/counterAxisSizingMode` がデフォルト AUTO（HUG）になり、内容（12px text）にフィットして縦長に縮む
+- **修復**: 2 段階目スクリプトで `primaryAxisSizingMode='FIXED'` + `counterAxisSizingMode='FIXED'` + `layoutSizingHorizontal/Vertical='FIXED'` を明示してから `resize(200, 80)`
+- **再発防止**: auto-layout 設定後の resize は **sizing mode を明示**。`resize → layoutMode → resize` の 2 段階を最初から書く
+
+#### 🐛 Issue 15: Math.max(...arr.map(v => v.y + v.height)) で NaN 発生
+- **症状**: spreadした max が NaN を返し、set.resize() で `Property "width" failed validation: Expected number, received nan`
+- **推定原因**: スクリプト atomic context で何かの中間値が NaN になった（再現性は低い）
+- **修復**: debug script で各 child の x/y/width/height/type を return → 全て正常な number であることを確認 → 明示値 `set.resize(1220, 1372)` で回避
+- **再発防止**: Phase 2 で Set サイズ計算する時は、計算式より **観測値ベースの明示値** が安全
+
+### 学んだこと（追加）
+
+64. **COMPONENT_SET の bounding は layoutMode によって挙動が違う**: `layoutMode=VERTICAL/HORIZONTAL` の Set は子の追加で自動拡張するが、**`layoutMode=NONE` の Set は子が overflow しても拡張しない**。Phase 2 で variant を append する時、layoutMode を必ず audit して、NONE なら明示 resize を計画する。学び 9-12 の Layout カテゴリに追加。
+
+65. **auto-layout を後付けする時は sizing mode を明示する三点セット**: `layoutMode='HORIZONTAL'/'VERTICAL'` を後から設定すると、`primaryAxisSizingMode` / `counterAxisSizingMode` が AUTO（HUG）になり、それ以前の resize 値が無効化される。回避策は **(1) `primaryAxisSizingMode='FIXED'`、(2) `counterAxisSizingMode='FIXED'`、(3) `layoutSizingHorizontal/Vertical='FIXED'`** の三点セットを resize の前後で必ず明示。Issue 5 の延長系として SKILL に明記。
+
+66. **spec ↔ Figma の gap 解消は Liquid 先行 → Figma 追従が現実的**: Session #30 で Liquid を spec 準拠の 3 patterns で先行実装し、本セッションで Figma を追従させた。**Liquid → Figma の順は逆方向に見えるが、(1) Liquid の方が「いま動く本番反映物」、(2) Figma 操作は SKILL でスクリプト化されているため後追いが早い、(3) spec ↔ Liquid 整合さえ取れていれば三位一体は時間差で達成可能** → **gap が見つかったら "Liquid を spec に追従させる" → "Figma を spec に追従させる" の 2 段階で OK**。学び 62 の補強。
+
+### Known TODOs
+
+- TOP ページに `fambox-case-study.liquid` 配置（Week 5 QA で判断）
+- fam-case-study.liquid を「ブログ記事用」ラベルに整理
+- Tier 3 以下の component の Liquid 化要否判断
+- Modal / Footer の Figma Component Set Audit 再確認（spec ↔ Figma 整合性 cross-check）
+
+---
