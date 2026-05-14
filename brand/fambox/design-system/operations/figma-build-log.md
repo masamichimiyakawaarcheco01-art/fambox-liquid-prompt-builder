@@ -2038,3 +2038,74 @@ if ('layoutMode' in node) out.layoutMode = node.layoutMode;
 - 他 component の周期 Audit（Header / Hero / Plan Card / Bento / FAQ / Profile）
 
 ---
+
+## Session 2026-05-14 (#34) — 7 Component Sets 一括 Audit（全件 OK 確認）
+
+**契機**: Session #32-33 で Footer に隠れた問題（variants 重なり / sitemap 3 列）が見つかった経験から、**Tier 1 component の周期 Audit** を実施。1 スクリプトで 7 set 一括 audit する効率的フローを確立。
+
+### Audit 結果サマリ（7/7 OK）
+
+| # | Set | ID | Variants | 配置 / 配置規則 | 状態 |
+|---|---|---|---|---|---|
+| 1 | Header | 59:33 | 3 (standard / minimal / mega) | 全 1440×80, y=0/120/240（gap 40 縦並び）| ✅ OK |
+| 2 | Hero Section | 67:73 | **12** (variant 4 × height 3) | 4×3 matrix（COL 1500 × ROW 750）| ✅ OK |
+| 3 | Subscription Plan Card | 65:110 | 2 (standard / featured) | 320×587, x=0/400（横並び）| ✅ OK |
+| 4 | Bento Grid | 91:107 | 3 (standard / editorial / autofit) | 横並び（standard 936 → editorial 1160 → autofit 936）| ✅ OK |
+| 5 | Bento Tile | 87:26 | **40** (variant 4 × size 5 × featured 2) | 完全 3D matrix（最大 4900×2000）| ✅ OK |
+| 6 | FAQ | 93:90 | 1 (carousel) | 1440×560 単独 | ✅ OK（spec 想定通り）|
+| 7 | Profile | 96:79 | 1 (section) | 1440×760 単独 | ✅ OK（spec 想定通り）|
+
+**累計 variants**: 3 + 12 + 2 + 3 + 40 + 1 + 1 = **62 variants** すべて整然配置。重なり 0 件 / overflow 0 件 / property 名 spec 完全整合。
+
+### 一括 Audit スクリプトの設計
+
+7 set を 1 スクリプトで for-loop して以下 3 軸を観測:
+
+```js
+// Axis 1: variant 配置の重なり検出
+const posCount = {};
+variants.forEach(v => { posCount[`${v.x},${v.y}`] = (posCount[`${v.x},${v.y}`] || 0) + 1; });
+const overlapping = Object.entries(posCount).filter(([k, n]) => n > 1);
+
+// Axis 2: Set boundary overflow 検出
+const maxRight = Math.max(...variants.map(v => v.x + v.w));
+const maxBottom = Math.max(...variants.map(v => v.y + v.h));
+const overflow = { right: Math.max(0, maxRight - setW), bottom: Math.max(0, maxBottom - setH) };
+
+// Axis 3: property definitions の取得
+const propDefs = reloaded.componentPropertyDefinitions;
+```
+
+返り値は `overlapping: null` / `overflow: null` であれば OK。**異常検出が `!= null` 条件で書ける**ので、後続 audit を自動化しやすい構造。
+
+### Hero と Bento Tile の matrix 整然配置を確認
+
+Hero（12 variants）と Bento Tile（40 variants）は **2D / 3D matrix 配置**で複雑だが、x/y 計算が完全に整然:
+
+**Hero（4 variant × 3 height）**:
+- variant 軸: video-fullscreen (x=0) / video-split (x=1500) / image-editorial (x=3000) / minimal-text (x=4500)
+- height 軸: compact (y=0) / default (y=750) / tall (y=1500)
+- 全 12 variants が 1440×{400|550|700} で配置済
+
+**Bento Tile（4 variant × 5 size × 2 featured）**:
+- featured=false: x 0/600/1200/1800 (variant 4 軸)
+- featured=true:  x 2500/3100/3700/4300 (featured 軸で 700 offset)
+- size 軸: 1x1 y=0 / 2x1 y=400 / 1x2 y=800 / 2x2 y=1200 / 3x2 y=1600
+
+学び 24, 26 の「2D matrix layout は COL×ROW で機械的に配置」を完璧に実装している。**過去セッション（#9-19）で SKILL 適用済**の Set はその後も整然性が維持されている → SKILL の効果が観測できる。
+
+### 学んだこと（追加）
+
+73. **三位一体達成済の Set は SKILL の effect が継続して観測できる**: Hero（12v）/ Bento Tile（40v）/ Plan Card（2v）等、**過去に SKILL Phase 1-3 で生成された Set は数 ヶ月後の Audit でも 100% 整然**。逆に Footer のような **SKILL 適用前に手作業で作られた Set は重なり / 差別化不足 / property 不整合が残る**。「**Audit で問題が出るのは SKILL 適用前の遺産**」が経験則として成り立つ。次世代の Audit は「SKILL 適用日」を tag として記録すると、優先 audit 対象を絞り込める。
+
+74. **一括 Audit スクリプトは "異常を null で表現" すると後続自動化が容易**: `overlapping: null` / `overflow: null` のように **OK 状態を null** で表現すると、`results.filter(r => r.overlapping || r.overflow)` で異常 set だけ抽出できる。さらに **threshold（例: overflow > 10px は警告）** を加えれば段階的 audit が可能。次回以降の Audit セッションでは、本スクリプトを `figma-component-from-spec` SKILL の Step 0 audit テンプレに昇格させる候補。
+
+### Known TODOs
+
+- 一括 Audit スクリプトを SKILL Step 0 の audit テンプレに昇格（既存ロジックの再利用化）
+- TOP ページに新 sections 配置判断（Week 5 QA）
+- fam-footer-v2 / fam-case-study を「LP/ブログ専用」ラベルに整理
+- Tier 3 以下（FormField / Input / Progress / Spinner）の Liquid 化要否判断
+- Drawer (Header 派生?) / Contact Form Set の Audit（残 Tier 1-2 完了）
+
+---
