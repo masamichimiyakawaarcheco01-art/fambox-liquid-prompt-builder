@@ -448,5 +448,96 @@ OKRと連動させて「DSの効果」を可視化。
 
 ---
 
+## 7. 完成度ダッシュボード（spec ↔ Figma ↔ Liquid 三位一体）
+
+> 学び 77（N/3 ラベル化）の実装。各 Component の **3 層存在** を即可視化。
+> 凡例: ✅ = 存在、❌ = 未作成、⚪ = 評価対象外（Pattern として L4 に内包 / Primitive は Snippet レベル運用）
+> 最終更新: 2026-05-14 / Session #38
+
+### 7-A. L4 Components（10 件 / Section 化対象）
+
+| Component | spec md | Figma Set | Liquid section | N/3 | Status | 残課題 |
+|---|---|---|---|---|---|---|
+| Header | ✅ header.md | ✅ `59:33` (3v) | ❌ | **2/3** | 🟡 Liquid 未作成 | Liquid 化（v0.3 候補）|
+| Hero | ✅ hero-section.md | ✅ `67:73` (12v) | ✅ fambox-hero-v17-video (578行) | **3/3** | ✅ 三位一体 | preset 拡充（v0.4）|
+| Plan Card | ✅ subscription-plan-card.md | ✅ `65:110` (2v) | ✅ fambox-subscription-plan (506行) | **3/3** | ✅ 三位一体 | — |
+| Bento Grid | ✅ bento-grid.md | ✅ `91:107` (3v) | ❌ | **2/3** | 🟡 Liquid 未作成 | Liquid 化（v0.3 候補）|
+| Modal | ✅ modal.md | ✅ `62:33` (3v) | ✅ fambox-modal (672行) | **3/3** | ✅ 三位一体 | — |
+| Footer | ✅ footer.md | ✅ `60:95` (3v / 4列 sitemap) | ✅ fambox-footer (665行) | **3/3** | ✅ 三位一体 | — |
+| FAQ | ✅ faq.md | ✅ `93:90` (1v) | ✅ fambox-faq (419行) | **3/3** | ✅ 三位一体 | Accordion variant（v0.3 拡張枠）|
+| Profile | ✅ profile.md | ✅ `96:79` (1v) | ✅ fambox-profile (321行) | **3/3** | ✅ 三位一体 | Card variant（v0.3 拡張枠）|
+| Case Study | ✅ case-study.md | ✅ `66:91` (3v / logo-list 追加済) | ✅ fambox-case-study (1102行) | **3/3** | ✅ 三位一体 | — |
+| Contact Form | ✅ contact-form.md | ✅ `98:121` (1v) | ✅ fambox-contact-form (942行) | **3/3** | ✅ 三位一体 | review/success variant 追加（v0.4）/ Notifications テンプレ手動設定 |
+| Drawer | ❌ | ❌ | ❌ | **0/3** | ⚫ 未着手 | spec から開始（顕在化時）|
+
+**L4 サマリ**: 11 中 **8 件 三位一体達成（3/3）** / 2 件 2/3（Header, Bento Grid）/ 1 件 0/3（Drawer）
+
+### 7-B. L3 Patterns（4 件 / 一部のみ Section 評価）
+
+| Pattern | spec md | Figma Set | Liquid section | N/3 | Status |
+|---|---|---|---|---|---|
+| Card | ✅ card.md | ✅ `57:35` (4v) | ⚪ L4 内包（fambox-bento 等）| Pattern OK | Pattern level ✅ |
+| Form Field | ✅ form-field.md | ✅ Figma Set | ⚪ Contact Form 内包 | Pattern OK | Pattern level ✅ |
+| Stat Card | ✅ stat-card.md | ✅ `64:49` (6v) | ✅ fambox-stat-grid (454行) | **3/3** | ✅ 三位一体 |
+| Bento Tile | ✅ bento-tile.md | ✅ `87:26` (40v) | ⚪ Bento Grid 内包想定 | Pattern OK | Pattern level ✅ |
+
+**L3 サマリ**: 4 中 **1 件 独立 Section（3/3）** / 3 件 Pattern として L4 に内包（評価対象外で正常）
+
+### 7-C. L2 Primitives（6 件 / Snippet レベル運用）
+
+L2 は通常 **Liquid Section ではなく Snippet (`{%- render '...' -%}`) または Inline コードで運用**。三位一体は **spec ↔ Figma の 2/2 で完了**と定義。
+
+| Primitive | spec md | Figma Set | N/2 | Status |
+|---|---|---|---|---|
+| Button | ✅ button.md | ✅ `46:32` (60v) | **2/2** | ✅ Primitive 完成 |
+| Input | ✅ input.md | ✅ `50:26` (12v) | **2/2** | ✅ Primitive 完成 |
+| Avatar | ✅ avatar.md | ✅ `53:32` (20v) | **2/2** | ✅ Primitive 完成 |
+| Form Controls | ✅ form-controls.md | ✅ `54:16` (9v) | **2/2** | ✅ Primitive 完成 |
+| Progress | ✅ progress.md | ✅ `55:11` (5v) | **2/2** | ✅ Primitive 完成 |
+| Spinner | ❌ | ✅ `55:21` (3v) | **1/2** | 🟡 spec gap（Figma 先行）|
+
+**L2 サマリ**: 6 中 **5 件 Primitive 完成（2/2）** / 1 件 1/2（Spinner の spec gap）
+
+### 7-D. その他 TOP ページ用 Liquid sections（DS spec 厳密対応外）
+
+> 以下は **TOP ページ専用の合成 section**。DS の L4 Component を**内包・組み合わせ**して使う。三位一体 Section の preset / 内包で代替可能なものもあるが、独自レイアウト保持のため共存。
+
+| Liquid section | 役割 | 移行戦略 |
+|---|---|---|
+| fambox-active-plans / -v2 | プラン表示の TOP 専用 | Plan Card section 内包に統合候補 |
+| fambox-blog-carousel | ブログ記事カルーセル | Bento Grid 内包に統合候補 |
+| fambox-easy-cooking | 「3 分で完成」訴求 | Hero preset で代替済（Session #26）|
+| fambox-interview | インタビュー風 case | Case Study section に統合候補 |
+| fambox-menu-showcase | メニュー横スクロール | 独自 Pattern 保持（tokens.css 移行ガイドあり、Session #26）|
+| fambox-model-case | モデル case 表示 | Case Study tile-grid preset に統合候補 |
+| fambox-nutrition-service | 栄養サービス紹介 | Bento Grid preset で代替候補 |
+| fambox-plan-features | プラン特徴一覧 | Bento Grid preset で代替済（Session #25）|
+| fambox-spirit | 「fam-spirit」TOP コア | Bento Grid preset で代替済（Session #25）|
+| fambox-value-proposition | 価値提案 | Bento Grid preset で代替済（Session #25）|
+
+### 7-E. 旧 / LP 専用 Liquid（並存保持）
+
+| Liquid section | 用途 | 並存理由 |
+|---|---|---|
+| fam-footer-v2 | LP 用フッター（コーナー SVG 4 枚の独自世界観）| LP の表現を破壊しないため fambox-footer と並存 |
+| fam-case-study | ブログ記事用 1-story | DS 標準 fambox-case-study とは用途が異なる |
+| fam-achievement / -item / -voices / -issues | 旧個別セクション | 段階的に fambox-* preset へ移行予定 |
+
+### 7-F. 全体ステータス（2026-05-14 時点）
+
+```
+L4 Components:    8/11 三位一体達成 (73%) ✅✅✅✅✅✅✅✅🟡🟡⚫
+L3 Patterns:      4/4 Pattern level OK   (100%) ✅✅✅✅
+L2 Primitives:    5/6 Primitive 完成      (83%) ✅✅✅✅✅🟡
+Section 累計新規行: 5,540行 (modal 672 + footer 665 + stat-grid 454 +
+                              case-study 1102 + contact-form 942 + hero 578 + plan 506 +
+                              faq 419 + profile 321 等)
+```
+
+**次のフォーカス**: Header / Bento Grid の Liquid 化（L4 残 2 件）→ L4 完全制覇 10/10 へ。Drawer は spec から着手（顕在化時）。
+
+---
+
 ## 改訂履歴
+- v0.2-dashboard (2026-05-14): 完成度ダッシュボード（§7）追加。L4 10/11 中 8 件三位一体達成・L3 4/4 Pattern OK・L2 5/6 Primitive 完成の現状を可視化。Session #38。
 - v0.1（2026-04-20）: 初稿。6記事フレームワーク統合＋FAM v0.5 48要素継承マップ＋FAMBOX独自63要素＋段階ロードマップ完成。

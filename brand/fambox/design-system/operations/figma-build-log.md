@@ -2335,3 +2335,62 @@ spec § Do/Don't 準拠で、placeholder / helper text に煽り表現を一切�
 - 完成度ダッシュボード作成（current.md / 学び 77 実装）
 
 ---
+
+## Session 2026-05-14 (#38) — 完成度ダッシュボード作成（current.md §7 / 学び 77 実装）
+
+**契機**: Session #36 で導入した **N/3 ラベル**を全 component に適用、`current.md` に **§7 完成度ダッシュボード**として体系化。学び 77（3 層中 N 層存在で完成度を可視化）の正式実装。
+
+### 成果
+
+| 編集箇所 | 内容 |
+|---|---|
+| `current.md §7-A` | L4 Components 11 件（Drawer 含む）の N/3 表 |
+| `current.md §7-B` | L3 Patterns 4 件の Pattern level 評価 |
+| `current.md §7-C` | L2 Primitives 6 件の N/2 表（Snippet レベル運用前提）|
+| `current.md §7-D` | TOP ページ専用 sections 10 件の移行戦略表 |
+| `current.md §7-E` | 旧 / LP 専用 Liquid 並存リスト |
+| `current.md §7-F` | 全体ステータス（L4=8/11, L3=4/4, L2=5/6）|
+| `current.md` 改訂履歴 | v0.2-dashboard 追記 |
+
+### 評価モデルの 3 階層化
+
+L2 / L3 / L4 で **三位一体の定義が異なる**ことを明示:
+
+| Layer | 三位一体の定義 | 評価方式 |
+|---|---|---|
+| **L4 Components** | spec ↔ Figma ↔ Liquid section | **N/3** |
+| **L3 Patterns** | spec ↔ Figma ↔ (Section or L4 内包) | Pattern level OK / 一部 N/3（Stat Card のみ）|
+| **L2 Primitives** | spec ↔ Figma（Liquid は Snippet で運用） | **N/2** |
+
+これにより「Button が 3/3 じゃないから未完成」のような誤判定を防ぐ。**Primitive は Section 化が逆に不適切**であり、現状の **2/2 が完成形**。
+
+### L4 ステータス（2026-05-14 時点）
+
+```
+✅ 三位一体達成 (8/11):
+   Hero / Plan Card / Modal / Footer / FAQ / Profile / Case Study / Contact Form
+
+🟡 2/3 (Liquid 未作成):
+   Header / Bento Grid
+
+⚫ 0/3 (全層未着手):
+   Drawer
+```
+
+### 学んだこと（追加）
+
+82. **ダッシュボードは「3 層存在」だけでなく「層の役割の違い」も明示する**: L2 / L3 / L4 で三位一体の定義が異なる（L4=section, L3=pattern or section, L2=snippet）。**同じ N/3 表記を全 layer に適用すると誤判定が起きる**ため、layer 別に評価モデルを分ける。L4=N/3 / L2=N/2 / L3=Pattern level という 3 つの基準を明示することで「Button が Section 化されていないのは正常」が即理解できる。学び 77 の補強。
+
+83. **TOP ページ専用 section と DS 標準 section は別カテゴリで管理する**: `fambox-spirit` `fambox-value-proposition` 等の TOP 専用 section は DS L4 Component と直接対応しない（合成 section）。ダッシュボードで **§7-D「TOP ページ専用」**として分離し、**「将来どの DS section/preset に統合可能か」**を移行戦略として明記する。これにより、TOP ページの整理タスクが DS のクリーンさを汚染しない。
+
+84. **「Pattern level OK」は積極的に評価項目に入れる**: Card / Form Field / Bento Tile は **Liquid section として独立**しないが、L4 Component（Bento Grid / Contact Form / Subscription Plan 等）に**内包**されている。これは spec の意図通りで、独立 Section が無い = 完成形。**「Pattern level OK」というラベル**を用意することで「N/3 表記で 2/3 と表示されてしまう」誤評価を避けられる。
+
+### Known TODOs
+
+- L4 残 2 件の Liquid 化（Header / Bento Grid）→ 三位一体 10/10 達成
+- Drawer spec 着手（顕在化時）
+- TOP ページ専用 section の preset 統合（移行戦略 §7-D 参照）
+- Shopify Notifications テンプレート設定（宮川さん手動）
+- 完成度ダッシュボードの **定期更新**（次回 component 追加時 / spec gap 解消時 / Session #N で current.md §7 を update する習慣化）
+
+---
