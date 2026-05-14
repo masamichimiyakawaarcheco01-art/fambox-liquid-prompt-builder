@@ -1,10 +1,10 @@
 ---
 name: figma-component-from-spec
-description: Markdown 仕様（components/*.md）から Figma Component Set を生成・更新・統合・最適化する手順。Marc-Antoine 流の Audit-first（既存生成 + Phase 2/3 事前 audit）/ 小さく作って大きく展開 / Phase 戦略（1=新規 / 2=property 拡張 / 3=参照確立 / 4=コンテンツ最適化）/ instance swap / 寸法から size 自動推定 / 補修ヘルパー関数群 / Build Log 蓄積 を体系化したスキル。Use when generating a Figma Component Set from a spec md, expanding variants, replacing placeholders, swapping instances, or fixing auto-layout overflow after size expansion. Triggers on "Figma に Component を作って", "spec から Figma 化", "L2/L3/L4 を Figma 化", "Component Set 拡張", "variant property 追加", "instance に置換", "featured 追加", "instance を swap", "height property 追加", "auto-layout 補修", "見切れ修正", "padding override", "spec と Figma の整合性確認".
-version: 0.6
-last_updated: 2026-05-12
+description: Markdown 仕様（components/*.md）から Figma Component Set を生成・更新・統合・最適化する手順。Marc-Antoine 流の Audit-first（既存生成 + Phase 2/3 事前 audit + 周期 cross-check 詳細 Audit）/ 小さく作って大きく展開 / Phase 戦略（1=新規 / 2=property 拡張 / 3=参照確立 / 4=コンテンツ最適化）/ instance swap / 寸法から size 自動推定 / 補修ヘルパー関数群 / Build Log 蓄積 を体系化したスキル。Use when generating a Figma Component Set from a spec md, expanding variants, replacing placeholders, swapping instances, fixing auto-layout overflow after size expansion, or running periodic spec ↔ Figma consistency audits. Triggers on "Figma に Component を作って", "spec から Figma 化", "L2/L3/L4 を Figma 化", "Component Set 拡張", "variant property 追加", "instance に置換", "featured 追加", "instance を swap", "height property 追加", "auto-layout 補修", "見切れ修正", "padding override", "spec と Figma の整合性確認", "Component Set Audit", "variant 配置検証".
+version: 0.7
+last_updated: 2026-05-14
 owner: 宮川（FAMBOX DS）
-origin: Marc-Antoine（Smart City Kit）の 4 層スタック（L1 Transport / L2 Skill / L3 Tokens / L4 CLAUDE.md / L5 Audit-first）を FAMBOX に翻訳。2026-05-12 の 18 セッションで蓄積した 43 項の学び + 12 の実問題（Issue 1-12 — 全件解消／回避策あり）+ Phase 1/2/3/4 戦略 + Phase 2/3 事前 audit + Phase 3 の 2 パターン + Phase 4 補修ヘルパー 3 種 を体系化
+origin: Marc-Antoine（Smart City Kit）の 4 層スタック（L1 Transport / L2 Skill / L3 Tokens / L4 CLAUDE.md / L5 Audit-first）を FAMBOX に翻訳。2026-05-12 の 26 セッション（学び 56 / Issue 12）+ 2026-05-14 の 8 セッション（学び 57-74 / Issue 13-16）で蓄積した知見を体系化。v0.7 では Session #32-34 で確立した「周期 cross-check Audit」を Step 0.5 として正式化
 ---
 
 # figma-component-from-spec
@@ -50,6 +50,97 @@ return results;
 **該当 spec と一致する Component Set が存在する場合**:
 - それを起点にして「spec ↔ Figma の差分」だけを補完する（新規生成ではなく audit + 補完）
 - 例: Card は既に存在していて shadow だけ未適用だった → shadow 1 つ追加で完了
+
+### Step 0.5: 詳細 Audit テンプレ（v0.7 追加・周期 cross-check 用）
+
+Step 0 の列挙だけでは見落とす「**variant 配置の重なり / Set boundary overflow / property 名の不整合**」を **1 スクリプトで一括検出**する詳細 Audit。Session #32-34 で確立し、Footer の variants 重なり（学び 69）/ sitemap 3 列問題（学び 68）を検出した実績あり。
+
+**使うタイミング**:
+- 新規実装の前に既存 Set との整合確認をしたい
+- 三位一体達成済の Set に対する周期 audit（学び 67: 達成済でも隠れた問題が見つかる）
+- 複数 Set を一括で audit したい
+
+```js
+// 詳細 Audit テンプレ（複数 Set を一括 cross-check）
+// 異常を null で表現 → results.filter(r => r.overlapping || r.overflow) で抽出可能（学び 74）
+const targets = [
+  { id: '59:33',  label: 'Header' },
+  { id: '67:73',  label: 'Hero' },
+  // ... 必要なだけ追加
+];
+
+const results = [];
+for (const t of targets) {
+  const set = await figma.getNodeByIdAsync(t.id);
+  if (!set) { results.push({ ...t, error: 'NOT FOUND' }); continue; }
+
+  let parent = set.parent;
+  while (parent && parent.type !== 'PAGE') parent = parent.parent;
+  if (parent) await figma.setCurrentPageAsync(parent);
+  const reloaded = await figma.getNodeByIdAsync(t.id);
+
+  const variants = reloaded.children.map(v => ({
+    name: v.name,
+    w: Math.round(v.width), h: Math.round(v.height),
+    x: Math.round(v.x), y: Math.round(v.y),
+  }));
+
+  // 軸 1: variant 配置の重なり検出
+  const posCount = {};
+  variants.forEach(v => { posCount[`${v.x},${v.y}`] = (posCount[`${v.x},${v.y}`] || 0) + 1; });
+  const overlapping = Object.entries(posCount).filter(([, n]) => n > 1).map(([k, n]) => `${n}@${k}`);
+
+  // 軸 2: Set boundary overflow 検出
+  const maxRight = Math.max(...variants.map(v => v.x + v.w));
+  const maxBottom = Math.max(...variants.map(v => v.y + v.h));
+  const setW = Math.round(reloaded.width), setH = Math.round(reloaded.height);
+  const overflow = {
+    right: Math.max(0, maxRight - setW),
+    bottom: Math.max(0, maxBottom - setH),
+  };
+
+  // 軸 3: property definitions
+  const propDefs = reloaded.componentPropertyDefinitions || {};
+  const props = Object.keys(propDefs).map(k => ({
+    key: k, type: propDefs[k].type, variantOptions: propDefs[k].variantOptions || null,
+  }));
+
+  results.push({
+    ...t,
+    setName: reloaded.name, setW, setH, setLayoutMode: reloaded.layoutMode || null,
+    page: parent ? parent.name : null,
+    variantCount: variants.length, variants, properties: props,
+    overlapping: overlapping.length ? overlapping : null,    // null = OK
+    overflow: (overflow.right > 0 || overflow.bottom > 0) ? overflow : null,  // null = OK
+  });
+}
+
+return { auditedSets: results.length, results };
+```
+
+**結果の解釈**:
+- `overlapping: null` && `overflow: null` → 配置 OK
+- `overlapping: [...]` → 同位置に複数 variants 存在（Issue 4 系再発 / SKILL 適用前の遺産が典型）
+- `overflow: { right: N, bottom: M }` → variant が Set boundary を超えている（Issue 13 系 / Phase 2 拡張後の resize 忘れが典型）
+
+**spec ↔ Figma の整合性 cross-check**:
+- `variantCount` を spec md の `## Variants` 数と突き合わせ
+- `properties[].variantOptions` を spec の variant 名と突き合わせ
+- 不一致は **spec が正 / Figma が追従するべき** か **Figma が正 / spec が古い** かを判断（学び 68）
+
+**defensive コード（Issue 16 再発防止）**:
+- TEXT / VECTOR / ELLIPSE 等の非 container node は LayoutMixin / ChildrenMixin を持たない
+- 子の階層を walk する場合は `'children' in node` / `'layoutMode' in node` で属性存在 check してから access
+
+```js
+// ❌ Bad: TEXT node で getter が throw
+out.layoutMode = node.layoutMode || null;
+out.children = node.children ? node.children.map(walk) : null;
+
+// ✅ Good: 属性存在を確認
+if ('layoutMode' in node) out.layoutMode = node.layoutMode;
+if ('children' in node && node.children) out.children = node.children.map(walk);
+```
 
 ### Step 1: Spec md を一次資料として読み込む
 
@@ -415,7 +506,11 @@ N. ...
 
 ---
 
-## 既知の罠（Issue 1-7）
+## 既知の罠（Issue 1-16）
+
+> v0.7 注: Issue 13-16 は figma-build-log.md Session #31-33 を参照。本 SKILL では Issue 1-12 の本文のみ記載。
+
+
 
 セッションで実際に踏んだ罠と対処。これらを **回避する書き方を最初から採用** する。
 
@@ -486,7 +581,19 @@ N. ...
 
 ---
 
-## ベストプラクティス（学び 1-20）
+## ベストプラクティス（学び 1-74）
+
+> v0.7 注: 学び 21-74 の本文は figma-build-log.md の各 Session ヘッダに記載（Session #8-#34）。
+> 主要な v0.7 追加学び:
+> - 学び 64: COMPONENT_SET の bounding は layoutMode で挙動が違う（NONE は自動拡張しない）
+> - 学び 65: auto-layout を後付けする時は sizing mode 三点セット明示
+> - 学び 67: 三位一体達成済でも周期 Audit で隠れた問題が見つかる
+> - 学び 68: spec ↔ Figma の gap は 3 層のどこに最新の意思決定があるか判断して追従
+> - 学び 70: 既存 child の clone + 文言入れ替えが新規生成より 5-10 倍速
+> - 学び 73: SKILL 適用済 Set は数ヶ月後の Audit でも 100% 整然
+> - 学び 74: 一括 Audit スクリプトは「OK 状態を null」で表現すると後続自動化が容易
+
+
 
 セッションで蓄積した実用知。コード書く前に再確認すべき。
 
@@ -563,8 +670,17 @@ N. ...
 
 ## チェックリスト（コミット前）
 
+### Step 0.5 (詳細 Audit) — v0.7 追加・周期 cross-check
+- [ ] 対象 Set の `variantCount` と spec md の `## Variants` 数が一致した
+- [ ] `properties[].variantOptions` と spec の variant 名が完全一致した（kebab-case / 順序）
+- [ ] `overlapping: null`（同位置に複数 variants が無い、Issue 4 / 69 系再発なし）
+- [ ] `overflow: null`（variant が Set boundary 内、Issue 13 系の resize 忘れなし）
+- [ ] layoutMode=NONE の Set は子の y+h が Set.height 以内（学び 64）
+- [ ] cross-check で gap が見つかった場合、**spec / Liquid / Figma のどこに最新の意思決定**があるかを判断し、他 2 層を追従させた（学び 68）
+
 ### Phase 1 (新規生成)
 - [ ] Step 0 Audit-first を実行した（既存 Component Set 一覧を確認した）
+- [ ] **Step 0.5 詳細 Audit** で重複や類似 Set がないことを確認した（v0.7）
 - [ ] spec md を完全読み込み、Variants / Sizes / Props / Do-Don't を把握した
 - [ ] 使う Variables / Effect Styles の ID を取得した
 - [ ] Variable 健全性（alias 純白固定化なし）を確認した
@@ -576,7 +692,8 @@ N. ...
 - [ ] 既存 variants の x/y 配置規則を inspect で確認した
 - [ ] 1D 拡張でも 2D matrix 配置でレビューしやすくした（学び 38）
 - [ ] clone 後 `primaryAxisSizingMode = 'FIXED'` を明示した（Issue 5 回避）
-- [ ] Set 全体を再 resize して新 variants が収まることを確認した
+- [ ] **auto-layout 後付け時は sizing mode 三点セットを明示**（primaryAxis / counterAxis / layoutSizingHorizontal=Vertical 全て FIXED）— Issue 14 回避（v0.7）
+- [ ] Set 全体を再 resize して新 variants が収まることを確認した（layoutMode=NONE は自動拡張しない、学び 64・Issue 13 回避）
 
 ### Phase 3 (Component 間参照)
 - [ ] **Phase 3 事前 audit (v0.5 必須)**: target placeholder size × source Component variant size を全件照合した（Issue 11 回避）

@@ -2109,3 +2109,76 @@ Hero（12 variants）と Bento Tile（40 variants）は **2D / 3D matrix 配置*
 - Drawer (Header 派生?) / Contact Form Set の Audit（残 Tier 1-2 完了）
 
 ---
+
+## Session 2026-05-14 (#35) — SKILL.md を v0.7 に昇格（一括 Audit を Step 0.5 として正式化）
+
+**契機**: Session #34 の Known TODOs「一括 Audit スクリプトを SKILL Step 0 audit テンプレに昇格」に着手。Session #32-34 で 3 連続で価値を発揮した一括 Audit スクリプトを、**SKILL.md 内部に Step 0.5 として正式化** + **チェックリスト統合** + **frontmatter / Issue / 学びカウンタ更新**を実施。
+
+### 成果
+
+| 編集箇所 | 内容 |
+|---|---|
+| frontmatter `version` | 0.6 → **0.7** |
+| frontmatter `last_updated` | 2026-05-12 → 2026-05-14 |
+| frontmatter `description` | 「周期 cross-check Audit」trigger を追加 |
+| frontmatter `origin` | v0.7 で蓄積した 18 学び（57-74）+ 4 Issue（13-16）を反映 |
+| **Step 0.5 新設**（line 54-144）| 詳細 Audit テンプレ（**88 行**）を新規追加 |
+| `## 既知の罠` タイトル | (Issue 1-7) → **(Issue 1-16)** + v0.7 注追記 |
+| `## ベストプラクティス` タイトル | (学び 1-20) → **(学び 1-74)** + 主要 v0.7 追加学び 7 個を bullet で記載 |
+| チェックリスト 新設 | Step 0.5 詳細 Audit 用の 6 項目 |
+| チェックリスト Phase 1 拡張 | Step 0.5 を実施した行を追加 |
+| チェックリスト Phase 2 拡張 | auto-layout 後付け時の sizing mode 三点セット項目を追加（Issue 14 回避） |
+| 行数 | 610 → **727 行**（+117 行） |
+
+### Step 0.5 の内容
+
+```
+- 一括 Audit スクリプト（30 行程度）
+- 3 軸観測（重なり / overflow / property defs）
+- 異常を null で表現する設計（学び 74）
+- 結果の解釈ガイド（OK / Issue 4 系再発 / Issue 13 系再発）
+- spec ↔ Figma の cross-check ルール（学び 68）
+- defensive コード（Issue 16: 'key' in node check）
+```
+
+「使うタイミング」を明示:
+1. 新規実装の前に既存 Set との整合確認
+2. 三位一体達成済の Set に対する周期 audit
+3. 複数 Set を一括で audit
+
+### チェックリスト「Step 0.5」項目（v0.7 新設）
+
+```
+- [ ] variantCount と spec md の Variants 数が一致
+- [ ] properties[].variantOptions と spec の variant 名が完全一致
+- [ ] overlapping: null（Issue 4 / 69 系再発なし）
+- [ ] overflow: null（Issue 13 系の resize 忘れなし）
+- [ ] layoutMode=NONE の Set は子の y+h が Set.height 以内（学び 64）
+- [ ] cross-check で gap が見つかった場合、spec/Liquid/Figma の最新を判断して追従（学び 68）
+```
+
+### 設計判断: 学び・Issue の本文は build log 側に温存
+
+学び 21-74 と Issue 13-16 の**本文（症状 / 原因 / 修復 / 再発防止）は figma-build-log.md 側にのみ記載**し、SKILL.md には**タイトルとカウンタ更新のみ**反映。理由:
+
+1. SKILL.md を**短く保つ**（既に 727 行 / これ以上膨らむと運用負担）
+2. 学び本文は**セッション履歴と紐づいて意味を持つ**（build log の方が文脈豊か）
+3. SKILL.md は**手順書**としての性質を維持（参照リンクで build log に飛ばす）
+
+代わりに SKILL.md には **「主要な v0.7 追加学び 7 個」**を bullet で並べる早見表を `## ベストプラクティス` 直下に配置。次に SKILL を読む人が **どの学びが新しいか** を一目で把握できる。
+
+### 学んだこと（追加）
+
+75. **SKILL は「手順書 + カウンタ + 早見表」の 3 層で運用すると膨張せず継続可能**: 学び 21+ / Issue 13+ は build log 側に温存し、SKILL は **タイトル更新 + 早見表 + 参照リンク**で十分。SKILL の役割は「次の人がすぐ実行できる手順書」であり、学びの**ストック**は build log。SKILL に学びの**フロー（最新ハイライト）**を入れることで、両者が補完関係になる。継続セッションでも SKILL は線形に膨張しない設計。
+
+76. **チェックリスト追加は v0.X ラベルで version 履歴を埋め込む**: 「Step 0.5 詳細 Audit — v0.7 追加」のように **追加 version を section タイトルに書く**ことで、SKILL を読む人が **新規 vs 既存 手順**を即区別できる。Phase 1-4 のチェックリストも `v0.5 必須` / `v0.6 追加` 等の tag を付け継続。同様に **コード snippet の冒頭コメント**にも「v0.7 追加」を入れる規律を継続。
+
+### Known TODOs
+
+- TOP ページに新 sections 配置判断（Week 5 QA）
+- fam-footer-v2 / fam-case-study を「LP/ブログ専用」ラベルに整理
+- Tier 3 以下の Liquid 化要否判断
+- Drawer / Contact Form Set の Audit（Step 0.5 を実戦投入）
+- SKILL v0.8 候補: テストフェーズ（Phase 5）/ brand 横展開のパラメータ化
+
+---
