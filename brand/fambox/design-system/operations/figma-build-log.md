@@ -1726,3 +1726,114 @@ spec の「構造変更なし、tokens.css 適用のみ」確定方針を踏襲�
 - 本番テーマへの移植リハーサル（Week 5 QA 準備、※今期スコープ外）
 
 ---
+
+## Session 2026-05-14 (#29) — L3 Pattern Stat Card → Stat Grid Liquid 化（三位一体達成）
+
+**契機**: Footer の次は Tier 1-2 補完。stat-card.md は spec §Liquid 実装例が既に 5 パターン書かれていたため、**spec 追記の前段は不要**。直接 Liquid 化に着手。L3 Pattern は単体配置よりも「複数並列で見せる」用途が多いため、Stat Card そのものではなく **Stat Grid** という上位 L4 セクションとして実装した。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| Stat Grid Liquid section | `sections/fambox-stat-grid.liquid` (454 行) | size 3 × layout 2 + cols range + 3 presets |
+| spec md 更新 | `components/stat-card.md` | `## Liquid 実装` 追加、Change Log に v0.2-liquid 追記 |
+
+### 設計判断（学び 61 への布石）
+
+**L3 Pattern を「複数並列で見せる」L4 化**:
+- stat-card.md は L3 Pattern なので、本来は単体配置可能（Hero 内 / Card 内 / Bento 内）
+- ただし**単独で 1 Stat だけ section に置く実用性は低い** → 複数並列 (KPI Grid) が本命
+- Stat Card 1 個 = 1 block、複数 block を grid 配置する section にした
+- `cols_pc` (1-6 range) × `cols_sp` (1-3 range) でレイアウト柔軟性を確保
+
+**Anti 厳守の実装**:
+- カウントアップ JS なし（静的提示 / spec §Don't 準拠）
+- Unit は CSS `font-size: 0.4em` 固定 → schema からは触れない（情報階層を守る）
+- Value 色は Drive (#FC5214) 固定（Sky/Deep/Ink 切替不可 / v0.3 課題）
+- 1 block = 1 数字（spec §Don't「1 Stat に複数数字を並べない」を block 構造で物理的にガード）
+
+**SP 縮退の自動化**:
+- Large (96px) → SP 64px、Default (56px) → SP 48px に CSS で縮退
+- horizontal layout は ≤480px で vertical に自動切替（情報密度を保つ）
+
+**Accessibility 強化**:
+- `role="list"` / `role="listitem"` で Stat 群を意味的にリスト化
+- `sr_prefix` setting で「マイナス」「およそ」等の SR 補助テキストを `<span class="visually-hidden">` で挿入可能（spec §Accessibility 準拠）
+
+### 検証
+
+- `wc -l`: 454 行
+- Schema JSON: valid（settings 10 / block_types 1 / presets 3）
+- preset blocks: KPI 4 / Big Numbers 3 / Single Stat 1
+- Liquid tag balance: `{% %}` 34 pairs / `{{ }}` 47 pairs
+
+### 学んだこと（追加）
+
+61. **L3 Pattern の Liquid 化は「複数並列の L4 化」が現実的な選択肢**: Stat Card は L3 Pattern として「単体で使える」が、**単独で section に置く実用性は低い**。section という単位は「ページに 1 ブロック並ぶもの」が前提なので、L3 Pattern を section 化するなら「複数並べる」前提で **L4 グリッドにラップ**する設計が自然。**1 block = 1 Pattern instance** にすれば、spec §Don't「1 Stat に複数数字」もブロック構造で物理的にガードできる。spec のレベル（L3）と Liquid のレベル（L4 section）はずれていい。
+
+---
+
+## Session 2026-05-14 (#30) — L4 Case Study 3 patterns 統合 Liquid 化（三位一体達成）
+
+**契機**: stat-card と連続して、最後の Tier 1-2 補完 Case Study に着手。spec §レイアウトパターン は 3 patterns (tile-grid / story / logo-list) 想定だが、Figma は 2 variants (tile / story) のみで **logo-list が Figma 未整備**だった。本セッションで Liquid 側だけ先に 3 patterns 全部実装し、Figma 側の logo-list 追加は v0.3 残課題とした。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| Case Study Liquid section | `sections/fambox-case-study.liquid` (1102 行) | 3 patterns 内包 + 3 block types + 3 presets |
+| spec md 更新 | `components/case-study.md` | `## Liquid 実装` + `## 既存との関係` 追加、Change Log に v0.2-liquid 追記 |
+
+### 設計判断（学び 62 への布石）
+
+**3 patterns を 1 file に統合する spec gap 解消**:
+- Figma は tile/story の 2 variants（logo-list 不在）
+- spec §レイアウトパターン は 3 patterns 想定
+- **Liquid 側で 3 patterns 全部実装** → spec ↔ Liquid は 100% 整合、Figma は v0.3 で logo-list 追加して三位一体達成へ
+- Liquid 側が**spec ベースの最新仕様を先行実装**する形に（Figma 追従待ち）
+
+**3 block types の使い分け**:
+- `case_card` (tile-grid 用): image / meta / team_name / summary / stat_value-unit-label / link_url
+- `strategy_point` (story 用): text のみ（食事戦略の各ポイント、Story の中で list 表示）
+- `logo_item` (logo-list 用): logo image / team_name（alt + placeholder）
+- pattern 切替時に他 block type は自動的に**無視される**（`{% if block.type == ... %}` ガード）
+
+**煽り表現排除の placeholder 整備**:
+- spec §トーン規律で「劇的」「絶対」「保証」「優勝」が NG
+- **preset / settings の default 値を全て事実ベース表現に統一**
+  - ✅「12 ヶ月の継続でコンディションが安定」
+  - ✅「シーズン後半でも練習強度を維持」
+  - ✅「目に見える変化が出るまでに 3 ヶ月」
+- エディタで宮川さんが書き換える時の「お手本」として機能
+
+**カード全体リンク化の動的タグ切替**:
+- `link_url` が指定されているカードだけ `<a>` タグに、空なら `<div>` に動的切替
+- `{%- assign card_tag = 'div' -%}` → `{%- if block.settings.link_url != blank -%}{%- assign card_tag = 'a' -%}{%- endif -%}`
+- 開閉タグを `<{{ card_tag }}>...</{{ card_tag }}>` で出力（Liquid 動的タグ生成パターン）
+
+**Logo List の grayscale + opacity 演出**:
+- spec §3 ロゴリストは「社会的証明」用途で**控えめさが正解**
+- `filter: grayscale(100%)` + `opacity: 0.7` → hover で復元
+- DNA Anti「ブランド借り（有名選手起用のみ）」を避ける = 派手に見せない演出と整合
+
+### 検証
+
+- `wc -l`: 1102 行
+- Schema JSON: valid（settings 35 / block_types 3 / presets 3）
+- preset blocks: Tile Grid 3 / Story 3 (strategy_point) / Logo List 10
+- Liquid tag balance: `{% %}` 120 pairs / `{{ }}` 117 pairs / section 3 開閉（中の `<section>` 含む）/ article 1 開閉
+
+### 学んだこと（追加）
+
+62. **spec ↔ Figma の variants 数がずれている時、Liquid は spec 側を先行実装する**: spec §レイアウトパターン は 3 patterns、Figma は 2 variants という gap があった場合、**Liquid は spec ベースで 3 patterns 全部書く**のが正解。理由 = (1) spec が最新の意思決定を反映している、(2) Liquid は本番反映の唯一の手段で「Figma に無い variant も実装する必要がある」、(3) Figma の追従は別タスクとして残せる。**spec ↔ Liquid の整合性 > spec ↔ Figma ↔ Liquid の三者整合性**。先行実装の判断を Change Log に残せば後で Figma に反映する根拠になる。
+
+63. **DS 標準 section の `placeholder` / `preset` default 値は「お手本」として機能する**: ユーザー（宮川さん）はエディタで書き換えるが、最初に表示される default 文言が**そのままトーンの基準**になる。case-study.md の spec §トーン規律「煽り表現禁止」を実装に落とすには、**preset / settings の default を全て事実ベースに統一**するだけで十分。「劇的」を default に書かなければ、書き換え時にも「劇的」を打たないバイアスがかかる。**DS 標準の規律は preset の文言設計で担保される**。
+
+### Known TODOs
+
+- Figma に Case Study `logo-list` variant 追加（v0.3 / spec gap 解消）
+- TOP ページに `fambox-case-study.liquid` 配置（Week 5 QA で判断）
+- fam-case-study.liquid を「ブログ記事用」ラベルに整理（コメント追記 or rename 検討）
+- Tier 3 以下の component（FormField / Input / Progress / Spinner 等）の Liquid 化判断（必要性が低ければ skip）
+
+---

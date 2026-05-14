@@ -322,7 +322,36 @@ related:
 - **Component Set ID**: `66:91` ✅（Audit #4 で既存確認、2026-05-12）
 - **実装済 variants**: 2（`variant`: tile / story）
 - ⚠ Spec gap: spec §14 は「3 レイアウト併用」想定。tile/story の 2 variant で足りるか v0.3 で要レビュー
+- 📝 Liquid 側では spec §14 準拠で 3 patterns（tile-grid / story / logo-list）を全て実装済。Figma 側の logo-list variant 追加が v0.3 残課題
+
+## Liquid 実装
+
+- **File**: `sections/fambox-case-study.liquid`（1102 行）
+- **Patterns**: tile-grid / story / logo-list の 3 種を 1 file に統合（spec §レイアウトパターン 完全準拠）
+- **Schema**: 35 settings + 3 block types (`case_card` / `strategy_point` / `logo_item`) + 3 presets
+- **Tile Grid**: 3列レスポンシブ / Big Stat（Drive 色固定）/ カード全体リンク化（link_url 指定時に `<a>` タグ切替）
+- **Story**: Hero + Before/After + Big Stat（Dark 背景）+ Strategy points (`strategy_point` block) + Quote + CTA 2 種
+- **Logo List**: 2-5 列レスポンシブ / grayscale + opacity 0.7 → hover で復元（控えめな社会的証明）
+- **トーン規律準拠**: preset の placeholder 文言を「煽り表現禁止」（spec §トーン規律）に準拠
+  - ✅「12 ヶ月の継続で安定」「コンディションが安定」「練習強度を維持」
+  - ✕「劇的」「絶対」「保証」「優勝」は使用していない
+- **Accessibility**: `<blockquote>` + `<cite>` で出典明示 / 画像 alt は具体的に設定可能 / `role="list"` で grid 化
+- **既存 fam-case-study.liquid との関係**: 旧ブログ記事用 story Liquid は**並存保持**（Footer と同じ判断）
+
+## 既存 fam-case-study.liquid との関係
+
+| 項目 | fam-case-study.liquid（旧）| fambox-case-study.liquid（新）|
+|---|---|---|
+| 用途 | ブログ記事テンプレ専用（1 story per article）| DS 標準（3 patterns 切替）|
+| Pattern | story 1 種のみ | tile-grid / story / logo-list 3 種 |
+| Block | thumbnail / 区切り / 本文ブロック | case_card / strategy_point / logo_item |
+| spec 準拠 | 旧 worksheet 由来 | spec v0.2 §14 完全準拠 |
+| トーン | 自由記述 | placeholder で煽り表現を排除 |
+| 用途 | 個別ブログ記事 | TOP / 事例一覧 / 関連事例 / 社会的証明 |
+
+移行戦略: 個別ブログ記事は `fam-case-study.liquid` を継続使用。TOP / 一覧ページは `fambox-case-study.liquid` の preset から選択。Week 5 QA で TOP 反映時に判断。
 
 ## Change Log
+- v0.2-liquid (2026-05-14): `fambox-case-study.liquid` 三位一体達成。spec §レイアウトパターン 3 patterns（tile-grid / story / logo-list）を 1 file に統合。3 block types + 3 presets。煽り表現排除の placeholder 整備。fam-case-study.liquid とは並存（後者はブログ記事用として保持）
 - v0.2-figma (2026-05-12): Audit #4 で Component Set `66:91` を既存確認。tile / story の 2 variant 実装済
 - v0.2 (2026-04-20): Worksheet §14 確定（3レイアウト併用・全Data Viz活用・公表/匿名混在）

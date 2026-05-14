@@ -330,6 +330,18 @@ Bento Grid 内    → bento-stat-focus（内部は Stat Card と同じ CSS）
 - **実装済 variants**: 6（`size`: compact / default / large × `layout`: vertical / horizontal）
 - ✅ Spec の「3 Sizes × 2 Layouts = 6 variants」と完全整合
 
+## Liquid 実装
+
+- **File**: `sections/fambox-stat-grid.liquid`（454 行）
+- **配置形態**: L3 Pattern を「複数並列で見せる」L4 セクションとして実装。1 Stat = 1 block
+- **Schema**: 10 settings + 1 block type (`stat_item`) + 3 presets
+- **Settings**: size (3) / layout (2) / cols_pc (1-6) / cols_sp (1-3) / eyebrow / title / lead / bg_color
+- **Block**: value / unit / label / period / sr_prefix（5 fields、`label` のみ必須・他は空なら非表示）
+- **Presets**: KPI (Compact × Horizontal × 4列) / Big Numbers (Large × Vertical × 3列) / Single Stat (Hero 級 1列)
+- **Anti 準拠**: カウントアップ JS なし（静的提示）/ Unit 0.4em 固定 / Value Drive 色固定 / Sky/Deep/Ink 切替不可（v0.2）
+- **Accessibility**: `role="list"` / `role="listitem"` + `sr_prefix` で `<span class="visually-hidden">` の SR 補助テキスト出力
+
 ## Change Log
+- v0.2-liquid (2026-05-14): `fambox-stat-grid.liquid` 三位一体達成。L3 Pattern を複数並列する L4 セクションとして実装。3 sizes × 2 layouts × 列数 range で 1 ファイルが 36+ パターンを表現
 - v0.2-figma (2026-05-12): Audit #4 で Component Set `64:49` を既存確認。Spec の 3 sizes × 2 layouts = 6 variants と整合
 - v0.2 (2026-04-28): Worksheet §23 確定（3 Sizes / 2 Layouts / Drive 固定 / 4 禁止項目明示）。Card Flat と Bento Tile Stat-focus を統合し汎用 L3 Pattern として独立化
