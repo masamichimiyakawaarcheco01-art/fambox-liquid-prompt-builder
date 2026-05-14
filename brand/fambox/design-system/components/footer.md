@@ -622,6 +622,30 @@ Footer は **CTA を持たない**。Header / Hero / Section の文脈で CTA �
 - **Component Set ID**: `60:95` ✅（Audit #4 で既存確認、2026-05-12）
 - **実装済 variants**: 3（`variant`: standard / minimal / sitemap）
 
+## Liquid 実装
+
+- **File**: `sections/fambox-footer.liquid`（665 行）
+- **Schema**: 18 settings + 1 block type (`nav_column`) + 3 presets（Standard / Minimal / Sitemap）
+- **Block**: `nav_column` は Shopify ナビ (`link_list`) 連携 + manual_links（"ラベル|URL" 改行区切り）の二段構え。fallback により presets で即配置可能
+- **SNS**: Instagram / YouTube / note / X (Twitter) / TikTok の 5 種を inline SVG で対応（snippet 依存なし）
+- **Legal**: Privacy / Terms / 特商法の URL は settings 化（条件分岐で空なら非表示）
+- **Accessibility**: `<footer role="contentinfo">` + `<nav aria-label="...">` + SNS `aria-label` + `prefers-reduced-motion` 対応
+- **既存資産**: `fam-footer-v2.liquid` (旧 LP 用) は **共存保持**。本ファイルが spec v0.2 準拠の新標準
+
+## 既存 fam-footer-v2.liquid との関係
+
+| 項目 | fam-footer-v2.liquid（旧）| fambox-footer.liquid（新）|
+|---|---|---|
+| 構造 | コーナー SVG 4 枚 + brand area + nav columns + SNS（独自レイアウト）| spec v0.2 準拠（Brand + Nav + Social + Bottom row）|
+| Variant | 1 種（実質 Standard 系）| 3 種（standard / minimal / sitemap）切替可 |
+| SNS | snippet 依存 / アイコン色独自管理 | inline SVG / 40×40 円形ボタン統一 |
+| Legal | hard-coded URL | settings 化（URL 空なら非表示）|
+| Bottom 背景 | コーナー SVG 重畳 | `rgba(0,0,0,0.3)` + 上罫線（spec 準拠）|
+| 用途 | LP / プロモ（独自世界観）| **DS 標準 / 本番 TOP / Checkout / 全ページ共通**|
+
+移行戦略: 新規ページは `fambox-footer.liquid` を採用。fam-footer-v2 は撤去せず**並存**（LP の世界観差別化として保持）。Week 5 QA で TOP 反映時に置換判断。
+
 ## Change Log
+- v0.2-liquid (2026-05-14): `fambox-footer.liquid` 三位一体達成。3 variants 内包 + `nav_column` block + 3 presets。SNS 5 種 inline SVG / Legal URL settings 化 / `fam-footer-v2.liquid` とは並存（後者は LP 用として保持）
 - v0.2-figma (2026-05-12): Audit #4 で Component Set `60:95` を既存確認。3 variants 実装済（standard / minimal / sitemap）
 - v0.2 (2026-04-28): Worksheet §19 確定（3 Variants / Ink 背景固定 / Logo 左 / SNS 必須 40px / Bottom = Copyright + Legal のみ / CTA なし / 4 禁止項目明示）。既存 Liquid（fam-footer-v2 / fambox/sections/footer）の実測抽出をベースに L4 Component 化

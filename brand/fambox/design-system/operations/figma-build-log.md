@@ -1671,3 +1671,58 @@ spec の「構造変更なし、tokens.css 適用のみ」確定方針を踏襲�
 - 本番テーマへの移植リハーサル（Week 5 QA 準備）
 
 ---
+
+## Session 2026-05-14 (#28) — L4 Footer Liquid 化（三位一体達成）
+
+**契機**: Session #27（Modal）と連続して、Known TODOs の **Footer Liquid 化** に着手。前回判断「既存 `fam-footer-v2.liquid` を refactor」は**並存方式に変更**: fam-footer-v2 は LP 用として保持し、spec v0.2 準拠の新ファイル `fambox-footer.liquid` を**新規追加**するルートで進めた。理由 = 旧ファイルを上書きすると LP の世界観（コーナー SVG 4 枚 + 独自レイアウト）が破壊される / 本番反映前の段階で既存実装を消す必要はない / DS 標準は新ファイルが担う。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| Footer Liquid section | `sections/fambox-footer.liquid` (665 行) | 3 variants 内包 + `nav_column` block + 3 presets |
+| spec md 更新 | `components/footer.md` | `## Liquid 実装` + `## 既存 fam-footer-v2.liquid との関係` 追加、Change Log に v0.2-liquid 追記 |
+
+### 設計判断（学び 59 への布石）
+
+**「refactor」ではなく「並存」を選んだ理由**:
+1. fam-footer-v2.liquid は LP / プロモ専用の世界観（コーナー SVG 4 枚）を表現している → 構造刷新で失われる
+2. DS 標準（spec v0.2）と LP 用世界観は**役割が違う** → 1 ファイルにまとめるべきでない
+3. Week 5 QA / 本番反映の段階で、ページ単位に「どちらの footer を使うか」を判断する自由度を残す
+4. 旧ファイルを撤去するコスト > 並存させるコスト（footer は section テンプレート単位で選択可能）
+
+**`nav_column` block の二段構え**:
+- 主: Shopify ナビ (`link_list` setting) を選択 → エディタ上で管理しやすい
+- 副: `manual_links` textarea（"ラベル|URL" 改行区切り）の fallback → preset で即配置可能
+- preset で manual_links を仕込むと、エディタで Shopify ナビを後から設定するだけで切替できる
+
+**SNS の inline SVG 化**:
+- 旧実装は `{%- render 'icon', name: 'social-instagram-white' -%}` snippet 依存
+- 新実装は 5 種（Instagram / YouTube / note / X / TikTok）を inline SVG で同梱 → **snippet 未配置の本番テーマでも即動作**
+- 40×40 円形ボタン + hover で Drive 色 (#FC5214) に切替（spec Q4 準拠）
+
+**Legal URL の settings 化**:
+- 旧実装は hard-coded `/policies/privacy-policy` 等
+- 新実装は URL settings 3 個（空なら非表示）→ **ストア差替え対応・本番/staging で URL 違っても対応可**
+
+### 検証
+
+- `wc -l`: 665 行
+- Schema JSON: valid（settings 18 / blocks 1 type / presets 3）
+- preset blocks: Standard 3 / Minimal 0 / Sitemap 4
+- Liquid tag balance: `{% %}` 62 pairs / `{{ }}` 66 pairs / footer/section/style 各 1 開閉
+
+### 学んだこと（追加）
+
+59. **既存実装と DS 標準は「並存」が原則。refactor は本番反映の段階で判断する**: 既存の独自世界観 Liquid（fam-footer-v2 のコーナー SVG 4 枚等）を spec 準拠で**置き換える**判断は、ページ単位の用途を理解してから行うべき。**「DS 標準は新規ファイルとして増設」が安全**で、ページ単位の `section` 選択で切替できる Shopify の仕組みを活かせば、旧ファイルを残しても害がない。**spec → Liquid の三位一体は "旧実装の廃止" を必須としない**。
+
+60. **SNS / Legal は snippet 依存 / hard-coded URL を避け、section 内自己完結 + settings 化する**: `{% render 'icon' %}` snippet 依存は**そのテーマに snippet が無いと動かない**。本番テーマや staging で「Footer が壊れる」原因の典型。**inline SVG で自己完結**させ、URL は settings で受ける形にすれば、**section ファイルをコピーするだけで他テーマでも動く**。DS 標準 section の**移植性**が桁違いに上がる。
+
+### Known TODOs
+
+- TOP ページの footer を `fambox-footer.liquid` に切替（Week 5 QA で判断）
+- fam-footer-v2.liquid は LP 専用ラベルに整理（コメント追記 or rename 検討）
+- Stat Card / Case Study の Liquid 化（spec に Liquid 例追記 → 化の 2 段階）
+- 本番テーマへの移植リハーサル（Week 5 QA 準備、※今期スコープ外）
+
+---
