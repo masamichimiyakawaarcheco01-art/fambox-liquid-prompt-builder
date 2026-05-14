@@ -2235,3 +2235,103 @@ spec / Figma は揃っているが、Liquid section が無い。理由:
 - TOP ページに新 sections 配置判断（Week 5 QA）
 
 ---
+
+## Session 2026-05-14 (#37) — Contact Form Liquid 化（三位一体達成 3/3）
+
+**契機**: Session #36 で Contact Form が 2/3（spec ↔ Figma 整合 / Liquid 未作成）と判定された状態を **3/3 三位一体達成**へ。Shopify `{% form 'contact' %}` の特殊作法 + 11 フィールド + 2 step 画面遷移 + バリデーション + GA4 連動を 1 ファイルに統合。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| Contact Form Liquid | `sections/fambox-contact-form.liquid` (942 行) | 11 fields + 2 step + validation + GA4 |
+| spec md 更新 | `components/contact-form.md` | v0.3-liquid Change Log / 11 フィールド ↔ Liquid 実装対応表 / Known TODOs 更新 |
+
+### 設計判断: 2 step を JS で制御（Shopify ページ遷移なし）
+
+spec §画面遷移は「同画面 inline 確認」想定。**Shopify form は 1 ページで完結**するように JS で 2 step を切替:
+
+```
+[input step]
+  ↓ "内容を確認する" → validateAllFields() → 値転記 → review step 表示
+[review step]
+  ↓ "修正する" → input step 復帰（入力値保持）
+  ↓ "送信する" → form.submit() → Shopify が処理
+```
+
+**長所**:
+- 入力値が JS state に乗らない（HTML form の input value がそのまま保持）→ Shopify form の `form.errors` 時の入力保持と相性が良い
+- GA4 event の `funnel_step: 4` で「確認 → 送信」を区別不要（送信時 1 イベントで集計）
+- ページ遷移 0 で離脱率を下げる（spec の意図）
+
+### バリデーション戦略
+
+3 層の validation を組み合わせ:
+
+| 層 | 実装 | 検出 |
+|---|---|---|
+| HTML5 | `required` / `pattern` / `minlength` / `maxlength` / `type=email` | ブラウザ標準 UI |
+| JS（field 単位） | onBlur で `validateField(field)` | 入力中の早期 feedback |
+| JS（送信前一括） | `validateAllFields()` → first invalid に focus | 「内容を確認する」押下時 |
+| Shopify | `form.errors` | サーバー側（spam / リレー失敗）|
+
+field 単位エラーは `.is-error` class + `.cf__error` 表示で UI 統一。
+
+### GA4 連動（KR5-1）
+
+```js
+form.addEventListener('submit', function () {
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'contact_form_submit', { funnel_step: 4 });
+    window.gtag('event', 'generate_lead');
+  }
+});
+```
+
+spec § Privacy & Tracking 記載の **`funnel_step` (4) + `contact_form_submit` + `generate_lead`** を実装。KR5-1（コンバージョン計測）と直接連動。
+
+### DNA Anti 排除の placeholder 整備
+
+spec § Do/Don't 準拠で、placeholder / helper text に煽り表現を一切使わない:
+
+| ✅ Do（実装した文言）| ✕ Don't（使わなかった文言） |
+|---|---|
+| 「例: ◯◯高校サッカー部」 | 「無料相談」「今すぐお問い合わせ」「絶対」 |
+| 「お問い合わせ内容をご記入ください（10〜500字）」 | 「ご相談はお気軽に！」（! 付き煽り） |
+| 「通常24時間以内（営業日）に担当者よりご連絡いたします。」 | 「24時間以内に必ずお返事します！」（保証煽り）|
+
+### 検証
+
+- `wc -l`: 942 行
+- Schema JSON: valid（settings 13 / preset 1）
+- Liquid tag balance: `{% %}` 45 pairs / `{{ }}` 98 pairs
+- Shopify form 開閉: 1 set
+- 11 fields `contact[<name>]` の全件 grep: 全件 hit（company / sport / name / role / email / phone / team_size / inquiry_type / body / timing / privacy_agreed）
+
+### 三位一体達成サマリ（Contact Form 3/3）
+
+| 層 | 状態 |
+|---|---|
+| spec | `components/contact-form.md`（v0.3、11 fields / バリデーション / CTA / 自動返信メール）✅ |
+| Figma | Component Set `98:121`（variant=input, 768×1200, 7 fields + Submit）✅ Audit OK |
+| Liquid | `sections/fambox-contact-form.liquid`（11 fields full / 2 step / GA4 / Shopify form）✅ |
+
+学び 77（N/3 ラベル化）に従い、本セッションで Contact Form を **2/3 → 3/3 に昇格**。
+
+### 学んだこと（追加）
+
+79. **Shopify form 系 section は「Liquid 内 2 step + 値転記」が最もシンプル**: 多くの site で「入力 → 確認 → 送信」3 ページ遷移を実装するが、Shopify form の場合は **HTML form 1 個で完結 + JS で step 切替 + 値転記**が最もシンプル。Shopify form の `form.errors` 時の入力値保持と相性が良く、サーバー往復が 1 回で済む。spec §画面遷移の「同画面 inline 確認」要求にも自然に合致。
+
+80. **GA4 / KR 連動は Liquid 内に script として埋め込むのが運用上強い**: 別 JS ファイルに分けると「どの section から発火するか」がブラックボックスになりがち。**Liquid section 内に gtag 呼び出しを書く**ことで、**section を配置するだけで GA4 計測が自動有効化**される。KR5-1 のような KPI 直結のイベントは特に「section と event の 1:1 対応」が運用しやすい。Liquid section の自己完結性（学び 60）の延長。
+
+81. **Shopify Notifications（自動返信メール）テンプレートは Liquid 側で完結しない**: 自動返信メールは Shopify 管理画面の `Settings > Notifications` で編集する別物。Liquid section は form 投稿の入口のみを担当し、メール本文は宮川さん手動で **spec §自動返信メール 準拠**にコピペする必要がある。**Liquid と Notifications の境界**を spec md に明記しないと、後で「メール本文が spec と違う」事故が起きる → Known TODOs に明示記録。
+
+### Known TODOs
+
+- **Shopify Notifications テンプレート設定**（宮川さん手動 / spec §自動返信メール 準拠）
+- Figma `variant=review` / `variant=success` 追加（Phase 2 拡張、Contact Form の Figma 側 v0.4）
+- Figma 残 4 フィールド追加（既存 input variant 内へ）
+- TOP ページに新 sections 配置判断（Week 5 QA）
+- 完成度ダッシュボード作成（current.md / 学び 77 実装）
+
+---

@@ -307,13 +307,43 @@ FAMBOX
   - SP layout: Form 全幅 / button 全幅 / select OS ネイティブ UI
 
 ## Change Log
-- v0.3-audit-ok (2026-05-14): Session #36 で SKILL v0.7 Step 0.5 詳細 Audit を実戦投入。Set `98:121` の 1 variant (`variant=input`, 768×1200) は重なり / overflow なし、property 名も spec と完全整合。**配置 OK / 修正不要**。三位一体は spec ↔ Figma 整合済（**Liquid 未作成**は v0.3 残課題）
-- v0.3-figma (2026-05-12): Figma Component Set `98:121` 新規生成（input variant 1個 / 代表 7 フィールド + Submit Button instance）。FormField パターン化が機能、必須 badge も spec 通り Drive bg + white。残 4 フィールド・確認/Success フェーズは v0.3 拡張枠
+- v0.3-liquid (2026-05-14): `fambox-contact-form.liquid` (942 行) 新規追加。**三位一体達成（spec ↔ Figma ↔ Liquid 3/3）**。Shopify `{% form 'contact' %}` 採用 / 11 フィールド全実装 / 2 step 制御（入力 → 確認 → 送信）/ HTML5 + JS バリデーション / GA4 contact_form_submit + generate_lead イベント発火 / 文字数カウンタ / Privacy URL settings 化 / 煽り placeholder 排除
+- v0.3-audit-ok (2026-05-14): Session #36 で SKILL v0.7 Step 0.5 詳細 Audit を実戦投入。Set `98:121` の 1 variant (`variant=input`, 768×1200) は重なり / overflow なし、property 名も spec と完全整合。**配置 OK / 修正不要**
+- v0.3-figma (2026-05-12): Figma Component Set `98:121` 新規生成（input variant 1個 / 代表 7 フィールド + Submit Button instance）。FormField パターン化が機能、必須 badge も spec 通り Drive bg + white
 - v0.3 (2026-04-27): Worksheet §12 拡張承認（11フィールド化）— **電話番号 任意→必須**（緊急連絡確保）/ **利用検討時期 select 任意 を正式採用**（リード温度判定）/ 役職 8選択肢確認
 - v0.2 (2026-04-20): Worksheet §12 確定（10フィールド・inline確認・カスタム自動返信）
 
-## Known TODOs（v0.3-v0.4 候補）
-- **Liquid 化**: `sections/fambox-contact-form.liquid` 新規作成（spec の 11 フィールド + Shopify Contact form タグ + バリデーション + 自動返信メール）
+## Liquid 実装
+
+- **File**: `sections/fambox-contact-form.liquid`（942 行）
+- **Schema**: 13 settings + 1 preset（block なし — 11 フィールドは hard-coded）
+- **Shopify form**: `{% form 'contact' %}` を採用、`contact[<field>]` の name 規約に従う
+- **2 step JS 制御**: 入力 step → 「内容を確認する」→ 確認 step（readonly 表示）→「送信する」or「修正する」（spec §画面遷移 準拠）
+- **バリデーション**: HTML5（required / pattern / minlength / maxlength）+ JS onBlur で field 単位エラー表示 + 送信前一括検証
+- **エラー表示**: `form.errors` を受けた場合は notice + 入力 step に強制復帰（入力値は Shopify form が保持）
+- **送信成功**: `form.posted_successfully?` で success notice 表示、入力/確認 step は閉じる
+- **GA4 連動**: 送信時に `gtag('event', 'contact_form_submit', { funnel_step: 4 })` + `generate_lead`（KR5-1 連動）
+- **Accessibility**: 全 field に `<label>` 紐付け / required + badge 両表記 / radio group は `role="radiogroup"` / Privacy リンクは `target="_blank" rel="noopener"`
+- **DNA Anti 排除**: 「無料相談」「今すぐ」等の煽り placeholder を使用しない、Privacy 同意は default unchecked
+
+## 11 フィールド ↔ Liquid 実装対応表
+
+| # | フィールド | 入力タイプ | 必須 | Shopify name | バリデーション |
+|---|---|---|---|---|---|
+| 1 | 会社名・団体名 | text | ✅ | `contact[company]` | required, maxlength 100 |
+| 2 | 競技・種目 | text | ✅ | `contact[sport]` | required, maxlength 50 |
+| 3 | お名前 | text | ✅ | `contact[name]` | required, maxlength 50, autocomplete=name |
+| 4 | 役職 | select 8 | ✅ | `contact[role]` | required（8 options 直接記述）|
+| 5 | メール | email | ✅ | `contact[email]` | required, type=email, autocomplete=email |
+| 6 | 電話番号 | tel | ✅ | `contact[phone]` | required, pattern=`[0-9\-]{10,13}`, autocomplete=tel |
+| 7 | 選手数・チーム規模 | select 5 | ✅ | `contact[team_size]` | required（5 options 直接記述）|
+| 8 | 問合せ種別 | radio 4 | ✅ | `contact[inquiry_type]` | required（4 radio）|
+| 9 | お問合せ内容 | textarea | ✅ | `contact[body]` | required, minlength 10, maxlength 500, 文字数カウンタ |
+| 10 | 利用検討時期 | select 4 | — | `contact[timing]` | 任意（4 options + 空 option）|
+| 11 | プライバシー同意 | checkbox | ✅ | `contact[privacy_agreed]` | required |
+
+## Known TODOs（v0.4 候補）
 - **Figma `variant=review` 追加**: 確認フェーズの readonly 表示（Phase 2 拡張）
 - **Figma `variant=success` 追加**: 送信完了画面（Phase 2 拡張、TOPに戻る + 事例を見る の 2 CTA）
-- **Figma 残 4 フィールド追加**: 競技・種目 / 電話番号 / 選手数・チーム規模 / 利用検討時期
+- **Figma 残 4 フィールド追加**: 競技・種目 / 電話番号 / 選手数・チーム規模 / 利用検討時期（既存 input variant に追加）
+- **Shopify Notifications**: 自動返信メールテンプレを Shopify 管理画面の Notifications で spec §自動返信メール 通りに設定（宮川さん手動）

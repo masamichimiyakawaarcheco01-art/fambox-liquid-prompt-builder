@@ -1,0 +1,942 @@
+<!-- ============================================
+     FAMBOX Contact Form Section
+     sections/fambox-contact-form.liquid
+     Spec: brand/fambox/design-system/components/contact-form.md (v0.3)
+     Figma Component Set: 98:121
+     ============================================
+     11 fields（spec §フィールド構成 準拠）:
+       1. 会社名・団体名 (text, required)
+       2. 競技・種目 (text, required)
+       3. お名前 (text, required)
+       4. 役職 (select 8 options, required)
+       5. メール (email, required)
+       6. 電話番号 (tel, required)  ★ 2026-04-27 任意 → 必須
+       7. 選手数・チーム規模 (select 5 options, required)
+       8. 問合せ種別 (radio 4 options, required)
+       9. 問合せ内容 (textarea, required, 10-500字)
+       10. 利用検討時期 (select 4 options, 任意)   ★ 2026-04-27 追加
+       11. プライバシーポリシー同意 (checkbox, required)
+
+     画面遷移: 同画面 inline 確認 → 送信
+       [1] 入力画面 → 「内容を確認する」
+       [2] 確認画面（readonly）→ 「送信する」or「修正する」
+       [3] Success（Shopify 標準遷移 or thanks ページ）
+
+     Anti（spec §Don't 準拠）:
+       - 「無料相談」「今すぐ」等の煽り文言禁止
+       - 任意項目を必須にしない
+       - Submit 後にエラーで全消去しない（Shopify form の入力保持を活用）
+       - Privacy 同意 Default Checked 禁止（オプトイン原則）
+
+     GA4: contact_form_submit + generate_lead（KR5-1 連動）
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-contact-form-' | append: section.id
+  assign form_id = 'contact-form-' | append: section.id
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap');
+
+  /* ============================================
+     RESET
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     SECTION BASE
+     ============================================ */
+  #{{ sec_id }} {
+    width: 100%;
+    background: {{ section.settings.bg_color }};
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  #{{ sec_id }} .cf__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 96px 24px;
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .cf__inner {
+      padding: 120px 64px;
+    }
+  }
+
+  #{{ sec_id }} .cf__form-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  /* ============================================
+     HEADER
+     ============================================ */
+  #{{ sec_id }} .cf__header {
+    margin-bottom: 48px;
+    text-align: left;
+  }
+  #{{ sec_id }} .cf__eyebrow {
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #FC5214 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    margin-bottom: 12px !important;
+    display: block;
+  }
+  #{{ sec_id }} .cf__title {
+    font-size: 32px !important;
+    font-weight: 600 !important;
+    line-height: 1.5 !important;
+    color: #1B1D1A !important;
+    margin: 0 !important;
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .cf__title {
+      font-size: 40px !important;
+    }
+  }
+  #{{ sec_id }} .cf__subtitle {
+    margin-top: 16px !important;
+    font-size: 16px !important;
+    line-height: 1.75 !important;
+    color: #5C5F58 !important;
+  }
+
+  /* ============================================
+     STEP control（input vs review）
+     ============================================ */
+  #{{ sec_id }} .cf__step {
+    display: none;
+  }
+  #{{ sec_id }} .cf__step.is-active {
+    display: block;
+  }
+
+  /* ============================================
+     FIELD
+     ============================================ */
+  #{{ sec_id }} .cf__field {
+    margin-bottom: 24px;
+  }
+  #{{ sec_id }} .cf__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #1B1D1A !important;
+    letter-spacing: normal !important;
+  }
+  #{{ sec_id }} .cf__badge {
+    display: inline-block;
+    padding: 2px 6px;
+    background: #FC5214;
+    color: #fff !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    border-radius: 2px;
+    letter-spacing: 0.04em !important;
+  }
+  #{{ sec_id }} .cf__badge--optional {
+    background: rgba(0, 0, 0, 0.08);
+    color: #5C5F58 !important;
+  }
+  #{{ sec_id }} .cf__helper {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px !important;
+    color: #8A8D87 !important;
+    line-height: 1.5 !important;
+  }
+  #{{ sec_id }} .cf__error {
+    display: none;
+    margin-top: 6px;
+    font-size: 13px !important;
+    color: #D32F2F !important;
+    line-height: 1.5 !important;
+  }
+  #{{ sec_id }} .cf__field.is-error .cf__error {
+    display: block;
+  }
+  #{{ sec_id }} .cf__field.is-error .cf__input,
+  #{{ sec_id }} .cf__field.is-error .cf__textarea,
+  #{{ sec_id }} .cf__field.is-error .cf__select {
+    border-color: #D32F2F;
+  }
+
+  /* ============================================
+     INPUT / TEXTAREA / SELECT
+     ============================================ */
+  #{{ sec_id }} .cf__input,
+  #{{ sec_id }} .cf__textarea,
+  #{{ sec_id }} .cf__select {
+    width: 100%;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid rgba(27, 29, 26, 0.16);
+    border-radius: 8px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    color: #1B1D1A !important;
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  #{{ sec_id }} .cf__input:focus,
+  #{{ sec_id }} .cf__textarea:focus,
+  #{{ sec_id }} .cf__select:focus {
+    outline: none;
+    border-color: #FC5214;
+    box-shadow: 0 0 0 3px rgba(252, 82, 20, 0.16);
+  }
+  #{{ sec_id }} .cf__input::placeholder,
+  #{{ sec_id }} .cf__textarea::placeholder {
+    color: #B3B5B0;
+  }
+  #{{ sec_id }} .cf__textarea {
+    min-height: 144px;
+    resize: vertical;
+  }
+  #{{ sec_id }} .cf__select-wrap {
+    position: relative;
+  }
+  #{{ sec_id }} .cf__select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #5C5F58;
+    border-bottom: 2px solid #5C5F58;
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+  #{{ sec_id }} .cf__select {
+    padding-right: 40px;
+  }
+
+  /* ============================================
+     RADIO / CHECKBOX
+     ============================================ */
+  #{{ sec_id }} .cf__radio-list,
+  #{{ sec_id }} .cf__checkbox-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  #{{ sec_id }} .cf__radio,
+  #{{ sec_id }} .cf__checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+    color: #1B1D1A !important;
+  }
+  #{{ sec_id }} .cf__radio input[type="radio"],
+  #{{ sec_id }} .cf__checkbox input[type="checkbox"] {
+    margin-top: 2px;
+    width: 20px;
+    height: 20px;
+    accent-color: #FC5214;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  #{{ sec_id }} .cf__checkbox a {
+    color: #FC5214 !important;
+    text-decoration: underline;
+  }
+
+  /* ============================================
+     ACTIONS
+     ============================================ */
+  #{{ sec_id }} .cf__actions {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+  #{{ sec_id }} .cf__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    padding: 0 40px;
+    border-radius: 4px;
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    cursor: pointer;
+    transition: background 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+    text-decoration: none !important;
+  }
+  #{{ sec_id }} .cf__btn--primary {
+    background: #FC5214;
+    color: #fff !important;
+    border: 1px solid #FC5214;
+  }
+  #{{ sec_id }} .cf__btn--primary:hover {
+    background: #E14710;
+    border-color: #E14710;
+  }
+  #{{ sec_id }} .cf__btn--ghost {
+    background: transparent;
+    color: #1B1D1A !important;
+    border: 1px solid rgba(27, 29, 26, 0.2);
+  }
+  #{{ sec_id }} .cf__btn--ghost:hover {
+    border-color: #1B1D1A;
+    background: rgba(27, 29, 26, 0.04);
+  }
+  @media (max-width: 480px) {
+    #{{ sec_id }} .cf__actions {
+      flex-direction: column-reverse;
+    }
+    #{{ sec_id }} .cf__btn {
+      width: 100%;
+    }
+  }
+
+  /* ============================================
+     REVIEW（確認フェーズ readonly 表示）
+     ============================================ */
+  #{{ sec_id }} .cf__review-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  #{{ sec_id }} .cf__review-item {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .cf__review-item {
+      grid-template-columns: 220px 1fr;
+      gap: 16px;
+    }
+  }
+  #{{ sec_id }} .cf__review-label {
+    font-size: 13px !important;
+    color: #5C5F58 !important;
+    font-weight: 600 !important;
+  }
+  #{{ sec_id }} .cf__review-value {
+    font-size: 15px !important;
+    color: #1B1D1A !important;
+    line-height: 1.7 !important;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  #{{ sec_id }} .cf__review-empty {
+    color: #B3B5B0 !important;
+  }
+
+  /* ============================================
+     SUCCESS / FORM ERRORS
+     ============================================ */
+  #{{ sec_id }} .cf__notice {
+    padding: 20px 24px;
+    border-radius: 8px;
+    margin-bottom: 32px;
+    font-size: 15px !important;
+    line-height: 1.7 !important;
+  }
+  #{{ sec_id }} .cf__notice--success {
+    background: rgba(76, 175, 80, 0.08);
+    border: 1px solid rgba(76, 175, 80, 0.32);
+    color: #2E7D32 !important;
+  }
+  #{{ sec_id }} .cf__notice--error {
+    background: rgba(211, 47, 47, 0.06);
+    border: 1px solid rgba(211, 47, 47, 0.32);
+    color: #D32F2F !important;
+  }
+  #{{ sec_id }} .cf__notice ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+  }
+
+  /* ============================================
+     prefers-reduced-motion
+     ============================================ */
+  @media (prefers-reduced-motion: reduce) {
+    #{{ sec_id }} .cf__input,
+    #{{ sec_id }} .cf__textarea,
+    #{{ sec_id }} .cf__select,
+    #{{ sec_id }} .cf__btn {
+      transition: none !important;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <div class="cf__inner">
+    <div class="cf__form-wrap">
+
+      {%- comment -%} ===== Header ===== {%- endcomment -%}
+      <header class="cf__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="cf__eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        <h2 class="cf__title">{{ section.settings.title | newline_to_br }}</h2>
+        {%- if section.settings.subtitle != blank -%}
+          <p class="cf__subtitle">{{ section.settings.subtitle | newline_to_br }}</p>
+        {%- endif -%}
+      </header>
+
+      {%- comment -%} ===== Shopify form: 成功時に form.posted_successfully? が true ===== {%- endcomment -%}
+      {%- form 'contact', id: form_id, class: 'cf__form' -%}
+
+        {%- if form.posted_successfully? -%}
+          <div class="cf__notice cf__notice--success" role="status" aria-live="polite">
+            {{ section.settings.success_message | default: 'お問い合わせを承りました。通常24時間以内（営業日）に担当者よりご連絡いたします。' | newline_to_br }}
+          </div>
+        {%- endif -%}
+
+        {%- if form.errors -%}
+          <div class="cf__notice cf__notice--error" role="alert">
+            <strong>入力内容に不備があります：</strong>
+            <ul>
+              {%- for field in form.errors -%}
+                <li>{{ form.errors.messages[field] }}</li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} ====== STEP 1: 入力フェーズ ====== {%- endcomment -%}
+        <div class="cf__step cf__step--input is-active" data-step="input">
+
+          {%- comment -%} 1. 会社名・団体名 {%- endcomment -%}
+          <div class="cf__field" data-field="company">
+            <label class="cf__label" for="{{ sec_id }}-company">
+              会社名・団体名 <span class="cf__badge">必須</span>
+            </label>
+            <input
+              type="text" id="{{ sec_id }}-company"
+              name="contact[company]" class="cf__input"
+              required maxlength="100"
+              autocomplete="organization"
+              placeholder="例: ◯◯高校サッカー部"
+            >
+            <p class="cf__error" data-error="company">会社名・団体名をご入力ください</p>
+          </div>
+
+          {%- comment -%} 2. 競技・種目 {%- endcomment -%}
+          <div class="cf__field" data-field="sport">
+            <label class="cf__label" for="{{ sec_id }}-sport">
+              競技・種目 <span class="cf__badge">必須</span>
+            </label>
+            <input
+              type="text" id="{{ sec_id }}-sport"
+              name="contact[sport]" class="cf__input"
+              required maxlength="50"
+              placeholder="例: サッカー / ラグビー / バスケットボール"
+            >
+            <p class="cf__error" data-error="sport">競技・種目をご入力ください</p>
+          </div>
+
+          {%- comment -%} 3. お名前 {%- endcomment -%}
+          <div class="cf__field" data-field="name">
+            <label class="cf__label" for="{{ sec_id }}-name">
+              お名前 <span class="cf__badge">必須</span>
+            </label>
+            <input
+              type="text" id="{{ sec_id }}-name"
+              name="contact[name]" class="cf__input"
+              required maxlength="50"
+              autocomplete="name"
+              placeholder="例: 山田 太郎"
+            >
+            <p class="cf__error" data-error="name">お名前をご入力ください</p>
+          </div>
+
+          {%- comment -%} 4. 役職 (select) {%- endcomment -%}
+          <div class="cf__field" data-field="role">
+            <label class="cf__label" for="{{ sec_id }}-role">
+              役職 <span class="cf__badge">必須</span>
+            </label>
+            <div class="cf__select-wrap">
+              <select id="{{ sec_id }}-role" name="contact[role]" class="cf__select" required>
+                <option value="">選択してください</option>
+                <option value="監督">監督</option>
+                <option value="コーチ">コーチ</option>
+                <option value="専属栄養士">専属栄養士</option>
+                <option value="マネージャー">マネージャー</option>
+                <option value="学校・クラブ事務局">学校・クラブ事務局</option>
+                <option value="選手本人">選手本人</option>
+                <option value="保護者">保護者</option>
+                <option value="その他">その他</option>
+              </select>
+            </div>
+            <p class="cf__error" data-error="role">役職をご選択ください</p>
+          </div>
+
+          {%- comment -%} 5. メール {%- endcomment -%}
+          <div class="cf__field" data-field="email">
+            <label class="cf__label" for="{{ sec_id }}-email">
+              メールアドレス <span class="cf__badge">必須</span>
+            </label>
+            <input
+              type="email" id="{{ sec_id }}-email"
+              name="contact[email]" class="cf__input"
+              required
+              autocomplete="email"
+              placeholder="例: name@example.com"
+            >
+            <p class="cf__error" data-error="email">正しいメールアドレスをご入力ください</p>
+          </div>
+
+          {%- comment -%} 6. 電話番号 ★必須 {%- endcomment -%}
+          <div class="cf__field" data-field="phone">
+            <label class="cf__label" for="{{ sec_id }}-phone">
+              電話番号 <span class="cf__badge">必須</span>
+            </label>
+            <input
+              type="tel" id="{{ sec_id }}-phone"
+              name="contact[phone]" class="cf__input"
+              required
+              pattern="[0-9\-]{10,13}"
+              autocomplete="tel"
+              placeholder="例: 03-1234-5678"
+            >
+            <span class="cf__helper">半角数字とハイフン（例: 03-1234-5678）</span>
+            <p class="cf__error" data-error="phone">半角数字とハイフンでご入力ください（例: 03-1234-5678）</p>
+          </div>
+
+          {%- comment -%} 7. 選手数・チーム規模 (select) {%- endcomment -%}
+          <div class="cf__field" data-field="team_size">
+            <label class="cf__label" for="{{ sec_id }}-team-size">
+              選手数・チーム規模 <span class="cf__badge">必須</span>
+            </label>
+            <div class="cf__select-wrap">
+              <select id="{{ sec_id }}-team-size" name="contact[team_size]" class="cf__select" required>
+                <option value="">選択してください</option>
+                <option value="〜10名">〜10名</option>
+                <option value="11〜30名">11〜30名</option>
+                <option value="31〜50名">31〜50名</option>
+                <option value="51〜100名">51〜100名</option>
+                <option value="101名以上">101名以上</option>
+              </select>
+            </div>
+            <p class="cf__error" data-error="team_size">選手数をご選択ください</p>
+          </div>
+
+          {%- comment -%} 8. 問合せ種別 (radio) {%- endcomment -%}
+          <div class="cf__field" data-field="inquiry_type">
+            <span class="cf__label">
+              お問合せ種別 <span class="cf__badge">必須</span>
+            </span>
+            <div class="cf__radio-list" role="radiogroup" aria-label="お問合せ種別">
+              <label class="cf__radio">
+                <input type="radio" name="contact[inquiry_type]" value="資料を見たい" required>
+                <span>資料を見たい（資料DL希望）</span>
+              </label>
+              <label class="cf__radio">
+                <input type="radio" name="contact[inquiry_type]" value="一度話を聞いてみたい" required>
+                <span>一度話を聞いてみたい（相談希望）</span>
+              </label>
+              <label class="cf__radio">
+                <input type="radio" name="contact[inquiry_type]" value="試食してみたい" required>
+                <span>試食してみたい（サンプル希望）</span>
+              </label>
+              <label class="cf__radio">
+                <input type="radio" name="contact[inquiry_type]" value="その他" required>
+                <span>その他（下記の問合せ内容に記載）</span>
+              </label>
+            </div>
+            <p class="cf__error" data-error="inquiry_type">問合せ種別をお選びください</p>
+          </div>
+
+          {%- comment -%} 9. 問合せ内容 (textarea) {%- endcomment -%}
+          <div class="cf__field" data-field="body">
+            <label class="cf__label" for="{{ sec_id }}-body">
+              お問合せ内容 <span class="cf__badge">必須</span>
+            </label>
+            <textarea
+              id="{{ sec_id }}-body"
+              name="contact[body]" class="cf__textarea"
+              required minlength="10" maxlength="500"
+              placeholder="お問い合わせ内容をご記入ください（10〜500字）"
+            ></textarea>
+            <span class="cf__helper"><span data-counter>0</span> / 500 字</span>
+            <p class="cf__error" data-error="body">10字以上500字以内でご入力ください</p>
+          </div>
+
+          {%- comment -%} 10. 利用検討時期 (任意) {%- endcomment -%}
+          <div class="cf__field" data-field="timing">
+            <label class="cf__label" for="{{ sec_id }}-timing">
+              利用検討時期 <span class="cf__badge cf__badge--optional">任意</span>
+            </label>
+            <div class="cf__select-wrap">
+              <select id="{{ sec_id }}-timing" name="contact[timing]" class="cf__select">
+                <option value="">選択してください</option>
+                <option value="すぐ">すぐ</option>
+                <option value="1か月以内">1か月以内</option>
+                <option value="3か月以内">3か月以内</option>
+                <option value="未定">未定</option>
+              </select>
+            </div>
+          </div>
+
+          {%- comment -%} 11. プライバシー同意 (checkbox) {%- endcomment -%}
+          <div class="cf__field" data-field="privacy">
+            <div class="cf__checkbox-wrap">
+              <label class="cf__checkbox">
+                <input type="checkbox" id="{{ sec_id }}-privacy" name="contact[privacy_agreed]" value="同意" required>
+                <span>
+                  <a href="{{ section.settings.privacy_url | default: '/policies/privacy-policy' }}" target="_blank" rel="noopener">プライバシーポリシー</a>に同意します <span class="cf__badge">必須</span>
+                </span>
+              </label>
+            </div>
+            <p class="cf__error" data-error="privacy">プライバシーポリシーにご同意ください</p>
+          </div>
+
+          <div class="cf__actions">
+            <button type="button" class="cf__btn cf__btn--primary" data-action="review">
+              {{ section.settings.cta_review_label | default: '内容を確認する' }}
+            </button>
+          </div>
+        </div>
+
+        {%- comment -%} ====== STEP 2: 確認フェーズ ====== {%- endcomment -%}
+        <div class="cf__step cf__step--review" data-step="review">
+          <h3 class="cf__title" style="font-size: 24px !important; margin-bottom: 24px !important;">
+            {{ section.settings.review_heading | default: '内容のご確認' }}
+          </h3>
+
+          <ul class="cf__review-list">
+            <li class="cf__review-item">
+              <span class="cf__review-label">会社名・団体名</span>
+              <span class="cf__review-value" data-review="company"></span>
+            </li>
+            <li class="cf__review-item">
+              <span class="cf__review-label">競技・種目</span>
+              <span class="cf__review-value" data-review="sport"></span>
+            </li>
+            <li class="cf__review-item">
+              <span class="cf__review-label">お名前</span>
+              <span class="cf__review-value" data-review="name"></span>
+            </li>
+            <li class="cf__review-item">
+              <span class="cf__review-label">役職</span>
+              <span class="cf__review-value" data-review="role"></span>
+            </li>
+            <li class="cf__review-item">
+              <span class="cf__review-label">メールアドレス</span>
+              <span class="cf__review-value" data-review="email"></span>
+            </li>
+            <li class="cf__review-item">
+              <span class="cf__review-label">電話番号</span>
+              <span class="cf__review-value" data-review="phone"></span>
+            </li>
+            <li class="cf__review-item">
+              <span class="cf__review-label">選手数・チーム規模</span>
+              <span class="cf__review-value" data-review="team_size"></span>
+            </li>
+            <li class="cf__review-item">
+              <span class="cf__review-label">お問合せ種別</span>
+              <span class="cf__review-value" data-review="inquiry_type"></span>
+            </li>
+            <li class="cf__review-item">
+              <span class="cf__review-label">お問合せ内容</span>
+              <span class="cf__review-value" data-review="body"></span>
+            </li>
+            <li class="cf__review-item">
+              <span class="cf__review-label">利用検討時期</span>
+              <span class="cf__review-value" data-review="timing"></span>
+            </li>
+          </ul>
+
+          <div class="cf__actions">
+            <button type="button" class="cf__btn cf__btn--ghost" data-action="edit">
+              {{ section.settings.cta_edit_label | default: '修正する' }}
+            </button>
+            <button type="submit" class="cf__btn cf__btn--primary" data-action="submit">
+              {{ section.settings.cta_submit_label | default: '送信する' }}
+            </button>
+          </div>
+        </div>
+
+      {%- endform -%}
+
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var SEC_ID = {{ sec_id | json }};
+    var section = document.getElementById(SEC_ID);
+    if (!section) return;
+
+    var form = section.querySelector('.cf__form');
+    if (!form) return;
+    var inputStep  = section.querySelector('[data-step="input"]');
+    var reviewStep = section.querySelector('[data-step="review"]');
+    var reviewBtn  = section.querySelector('[data-action="review"]');
+    var editBtn    = section.querySelector('[data-action="edit"]');
+    var submitBtn  = section.querySelector('[data-action="submit"]');
+
+    // ===== 文字数カウンタ =====
+    var body = section.querySelector('[name="contact[body]"]');
+    var counter = section.querySelector('[data-counter]');
+    if (body && counter) {
+      var updateCounter = function () { counter.textContent = body.value.length; };
+      body.addEventListener('input', updateCounter);
+      updateCounter();
+    }
+
+    // ===== バリデーション（最小限、HTML5 + spec 準拠の追加チェック）=====
+    function validateField(field) {
+      var input = field.querySelector('input, select, textarea');
+      // radio は group で扱う
+      var isRadioGroup = field.querySelector('input[type="radio"]') !== null;
+      var valid = true;
+      if (isRadioGroup) {
+        var radios = field.querySelectorAll('input[type="radio"]');
+        valid = Array.prototype.some.call(radios, function (r) { return r.checked; });
+      } else if (input.type === 'checkbox') {
+        valid = input.checked;
+      } else if (input.required && !input.value.trim()) {
+        valid = false;
+      } else if (input.type === 'email' && input.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
+        valid = false;
+      } else if (input.type === 'tel' && input.value && !/^[0-9\-]{10,13}$/.test(input.value)) {
+        valid = false;
+      } else if (input.tagName === 'TEXTAREA' && input.required) {
+        var len = input.value.trim().length;
+        if (len < 10 || len > 500) valid = false;
+      }
+      field.classList.toggle('is-error', !valid);
+      return valid;
+    }
+
+    function validateAllFields() {
+      var fields = inputStep.querySelectorAll('.cf__field');
+      var firstInvalid = null;
+      var allValid = true;
+      fields.forEach(function (field) {
+        var valid = validateField(field);
+        if (!valid) {
+          allValid = false;
+          if (!firstInvalid) firstInvalid = field;
+        }
+      });
+      if (firstInvalid) {
+        var firstInput = firstInvalid.querySelector('input, select, textarea');
+        if (firstInput) firstInput.focus();
+      }
+      return allValid;
+    }
+
+    // onBlur で field 単位バリデーション
+    var fields = inputStep.querySelectorAll('.cf__field');
+    fields.forEach(function (field) {
+      var inputs = field.querySelectorAll('input, select, textarea');
+      inputs.forEach(function (input) {
+        input.addEventListener('blur', function () {
+          // 空 + 未 touch なら error 出さない
+          if (!input.value && input.tagName !== 'SELECT' && input.type !== 'checkbox' && input.type !== 'radio') return;
+          validateField(field);
+        });
+      });
+    });
+
+    // ===== 「内容を確認する」 =====
+    if (reviewBtn) {
+      reviewBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (!validateAllFields()) return;
+        // review 画面に値を転記
+        var pairs = {
+          company:      section.querySelector('[name="contact[company]"]').value,
+          sport:        section.querySelector('[name="contact[sport]"]').value,
+          name:         section.querySelector('[name="contact[name]"]').value,
+          role:         section.querySelector('[name="contact[role]"]').value,
+          email:        section.querySelector('[name="contact[email]"]').value,
+          phone:        section.querySelector('[name="contact[phone]"]').value,
+          team_size:    section.querySelector('[name="contact[team_size]"]').value,
+          inquiry_type: (section.querySelector('input[name="contact[inquiry_type]"]:checked') || {}).value || '',
+          body:         section.querySelector('[name="contact[body]"]').value,
+          timing:       section.querySelector('[name="contact[timing]"]').value,
+        };
+        for (var key in pairs) {
+          if (!Object.prototype.hasOwnProperty.call(pairs, key)) continue;
+          var slot = section.querySelector('[data-review="' + key + '"]');
+          if (!slot) continue;
+          if (pairs[key]) {
+            slot.textContent = pairs[key];
+            slot.classList.remove('cf__review-empty');
+          } else {
+            slot.textContent = '（未入力）';
+            slot.classList.add('cf__review-empty');
+          }
+        }
+        // 切替
+        inputStep.classList.remove('is-active');
+        reviewStep.classList.add('is-active');
+        // スクロールして review を最上部に
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    // ===== 「修正する」 =====
+    if (editBtn) {
+      editBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        reviewStep.classList.remove('is-active');
+        inputStep.classList.add('is-active');
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    // ===== 送信時の GA4 イベント（KR5-1 連動）=====
+    form.addEventListener('submit', function () {
+      if (typeof window.gtag === 'function') {
+        try {
+          window.gtag('event', 'contact_form_submit', { funnel_step: 4 });
+          window.gtag('event', 'generate_lead');
+        } catch (e) { /* noop */ }
+      }
+    });
+
+    // ===== Shopify form の posted_successfully? や errors 時は input 段階に戻す =====
+    var notice = section.querySelector('.cf__notice');
+    if (notice) {
+      // エラー時は review を閉じて input に
+      if (notice.classList.contains('cf__notice--error')) {
+        reviewStep.classList.remove('is-active');
+        inputStep.classList.add('is-active');
+      }
+      // 成功時は両 step とも閉じる（notice だけ表示）
+      if (notice.classList.contains('cf__notice--success')) {
+        inputStep.classList.remove('is-active');
+        reviewStep.classList.remove('is-active');
+      }
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Contact Form セクション",
+  "tag": "section",
+  "class": "fambox-contact-form-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "基本設定"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "#FAFAFA"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "CONTACT"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "タイトル",
+      "default": "お問い合わせ"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "サブタイトル",
+      "default": "通常24時間以内（営業日）に担当者よりご連絡いたします。"
+    },
+    {
+      "type": "header",
+      "content": "── 確認・送信 ──"
+    },
+    {
+      "type": "text",
+      "id": "review_heading",
+      "label": "確認画面の見出し",
+      "default": "内容のご確認"
+    },
+    {
+      "type": "text",
+      "id": "cta_review_label",
+      "label": "確認ボタン文言",
+      "default": "内容を確認する"
+    },
+    {
+      "type": "text",
+      "id": "cta_edit_label",
+      "label": "修正ボタン文言",
+      "default": "修正する"
+    },
+    {
+      "type": "text",
+      "id": "cta_submit_label",
+      "label": "送信ボタン文言",
+      "default": "送信する"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "送信完了メッセージ",
+      "default": "お問い合わせを承りました。通常24時間以内（営業日）に担当者よりご連絡いたします。"
+    },
+    {
+      "type": "header",
+      "content": "── プライバシー ──"
+    },
+    {
+      "type": "url",
+      "id": "privacy_url",
+      "label": "プライバシーポリシー URL",
+      "info": "未設定なら /policies/privacy-policy を使用"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Form セクション",
+      "settings": {
+        "bg_color": "#FAFAFA",
+        "eyebrow": "CONTACT",
+        "title": "お問い合わせ",
+        "subtitle": "通常24時間以内（営業日）に担当者よりご連絡いたします。",
+        "review_heading": "内容のご確認",
+        "cta_review_label": "内容を確認する",
+        "cta_edit_label": "修正する",
+        "cta_submit_label": "送信する",
+        "success_message": "お問い合わせを承りました。通常24時間以内（営業日）に担当者よりご連絡いたします。",
+        "privacy_url": "/policies/privacy-policy"
+      }
+    }
+  ]
+}
+{% endschema %}
