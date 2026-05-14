@@ -2394,3 +2394,94 @@ L2 / L3 / L4 で **三位一体の定義が異なる**ことを明示:
 - 完成度ダッシュボードの **定期更新**（次回 component 追加時 / spec gap 解消時 / Session #N で current.md §7 を update する習慣化）
 
 ---
+
+## Session 2026-05-14 (#39) — Header Liquid 化（三位一体達成 / L4 9/11）
+
+**契機**: Session #38 ダッシュボードで Header が 2/3（spec ↔ Figma 整合 / Liquid 未作成）と判定。**L4 の三位一体 8/11 → 9/11** への昇格。3 軸（variant × height × sticky_mode）の組合せ表現を 1 ファイルに統合。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| Header Liquid | `sections/fambox-header.liquid` (719 行) | 3 variants × 3 heights × 3 sticky modes 内包 + 4 presets |
+| spec md 更新 | `components/header.md` | v0.3-liquid Change Log / Liquid 実装セクション / 3 軸組合せ ↔ preset 表 |
+| current.md 更新 | `§7-A` Header 行を 2/3 → **3/3** / 全体ステータス 8/11 → **9/11** / 累計行数 5,540 → 6,259 |
+
+### 3 軸組合せの表現方式
+
+spec の 3 variants × 3 heights × 3 sticky modes = **27 通り**を 1 Liquid ファイルで表現する設計:
+
+```
+class="header header-{{ variant }} header--{{ height }} header--{{ sticky_mode }}"
+```
+
+- `header-{{ variant }}`: standard / minimal / mega
+- `header--{{ height }}`: compact / default / tall
+- `header--{{ sticky_mode }}`: sticky / scroll-up / static
+
+**CSS class の直交性**で 27 通りを表現 → 1 select 切替で組合せ自由。**preset で頻出 4 パターン**（Standard / Minimal / Tall / Scroll-up）を即配置できるよう preset 化。理論的には Modal/Footer の「N variants 内包」をさらに 3 軸に拡張した形。
+
+### 設計のキモ: scroll-up モードの JS 実装
+
+spec §Sticky Modes で「下方向で隠れ、上方向で再表示」を要求。**section 自己完結の JS**で実装:
+
+```js
+if (STICKY_MODE === 'scroll-up') {
+  var lastY = window.scrollY;
+  var THRESHOLD = 8; // micro-scroll でチラつかせない
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY;
+    var dy = y - lastY;
+    if (Math.abs(dy) < THRESHOLD) return;
+    if (y > header.offsetHeight && dy > 0) {
+      header.classList.add('is-hidden');
+    } else {
+      header.classList.remove('is-hidden');
+    }
+    lastY = y;
+  }, { passive: true });
+}
+```
+
+- **THRESHOLD 8px** で micro-scroll の振動を吸収
+- **`{ passive: true }`** で scroll perf を保つ
+- `STICKY_MODE` が `scroll-up` 以外なら **JS をそもそも登録しない**（Modal の section と同じ自己完結原則 / 学び 60）
+
+### DNA 規律の実装での担保
+
+spec の Anti リストを **CSS / 構造で物理的に作れないように**する:
+
+| Anti | 実装での担保 |
+|---|---|
+| ハンバーガー単独禁止 | hamburger ボタン要素を **存在させない** + SP で横スクロールメニュー強制 |
+| Drive ベタ塗り禁止 | `.header { background: #fff }` 固定、settings で変更不可 |
+| Logo Drive 背景禁止 | header bg は white 固定なので物理的に発生しない |
+| メニュー Display サイズ禁止 | `font-size: 16px !important` 固定、settings なし |
+| Primary CTA 2 個以上禁止 | settings は `cta_label` 1 個のみ、複数 CTA を schema で作れない |
+
+**schema で複数 CTA を許さない** ことが「DNA 違反を schema 段階で阻止」する強い設計。学び 71（spec preset 文言と Figma 見出しは完全一致を求めない）の補強として「**spec の Anti は schema で物理的に作れないように設計する**」が新原則。
+
+### 検証
+
+- `wc -l`: 719 行
+- Schema JSON: valid（17 settings / 4 presets）
+- Liquid tag balance: `{% %}` 58 / `{{ }}` 77 / `<header>` 1 / `<section>` 1
+- Schema JSON エラー（label 内エスケープ忘れ）を 1 回修正
+
+### 学んだこと（追加）
+
+85. **3 軸組合せは "CSS class の直交性" で 1 ファイル内に表現できる**: spec が「N variants × M sizes × K states」のような多軸組合せを要求する場合、`class="<base> <axis1> <axis2> <axis3>"` の形で **直交した CSS class** を組み合わせれば、theoretical N×M×K 全パターンを 1 ファイル内で表現できる。preset で **頻出パターンに名前を付けて即配置**できるようにすれば、エディタの UX も損なわない。Header の 3×3×3 = 27 通りを 1 ファイル + 4 preset で表現できたのが好例。Modal の 3 variants / Footer の 3 variants × N nav columns の延長系として体系化可能。
+
+86. **spec の Anti は "schema で物理的に作れないように" 設計する**: 「Header に Primary CTA 2 個禁止」のような DNA Anti は、ドキュメントに書くだけでなく **schema で複数 CTA settings を許さない構造**にする。「ハンバーガー禁止」も hamburger ボタン要素を**コードに存在させない**。エディタ操作で **物理的に違反パターンを作れない**ようにすることで、運用上の Anti 違反事故をゼロにする。学び 81（Shopify Notifications の境界を spec で明記）の延長として、「**spec の Anti は実装層で予防する**」が新原則。
+
+87. **section の JS は機能依存条件で「そもそも登録しない」のが最もシンプル**: scroll-up モード用の scroll listener は、`STICKY_MODE === 'scroll-up'` のときだけ `addEventListener` する。`scroll-up` 以外の組合せでは listener が一切走らない。**「機能 off のときは JS が存在しないかのように振る舞う」** という設計が、複数 section 共存時の perf を最適化する。学び 60（section 内自己完結 / snippet 依存しない）の延長系。
+
+### Known TODOs
+
+- **Bento Grid Liquid 化**: L4 残 1 件 / 三位一体 10/10 達成へ（Bento Tile 内包想定、独立 1 セッション 60-90 min）
+- Drawer spec 着手（顕在化時 / Header と連動）
+- Figma `height` / `sticky-mode` property 追加（v0.4、Phase 2 拡張）
+- TOP ページ専用 section の preset 統合（移行戦略 §7-D 参照）
+- 完成度ダッシュボードの定期更新習慣化
+
+---

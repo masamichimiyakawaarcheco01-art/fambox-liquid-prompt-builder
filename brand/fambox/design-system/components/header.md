@@ -596,5 +596,36 @@ button.md v0.3 の Primary State をそのまま継承（hover で translateY(-2
 - ⚠ Spec gap: spec の `height`（compact/default/tall）と `sticky-mode`（none/sticky/slide-down）は Figma 未実装。v0.3 で別 property として追加検討
 
 ## Change Log
+- v0.3-liquid (2026-05-14): `fambox-header.liquid` (719 行) 新規追加。**三位一体達成（spec ↔ Figma ↔ Liquid 3/3）**。3 variants × 3 heights × 3 sticky modes を 1 ファイルに統合、4 presets（Standard / Minimal / Tall / Scroll-up）。Logo: html SVG / image / text の 3 段階 fallback / Menu: link_list + manual_links の二段構え / SP 横スクロールメニュー（DNA 既定 ハンバーガー不採用）/ scroll-up モード JS で実装 / GA4 `header_cta_click` 発火 / skip link 同梱
 - v0.2-figma (2026-05-12): Audit #4 で Component Set `59:33` を既存確認。3 variants 実装済、heights/sticky-mode は v0.3 で追加検討
 - v0.2 (2026-04-28): Worksheet §18 確定（3 Variants / 3 Heights / 3 Sticky Modes / Logo 左固定 / Primary CTA 1 個 / SP 横スクロール DNA 既定 / 4 禁止項目明示）。既存 Liquid（fam/sections/header / fam-header-menu / fambox/sections/header）の実測抽出をベースに L4 Component 化
+
+## Liquid 実装
+
+- **File**: `sections/fambox-header.liquid`（719 行）
+- **Schema**: 17 settings + 4 presets（Standard / Minimal / Tall / Scroll-up）
+- **3 軸組合せ**: variant (3) × height (3) × sticky_mode (3) = **理論上 27 組合せ**を 1 ファイルで切替
+- **Logo fallback 3 段**: `logo_svg` (html) → `logo` (image_picker) → `logo_text` (text) の優先順
+- **Menu 2 段**: Shopify `link_list` 優先、未設定時は `manual_links`（"ラベル|URL"）fallback
+- **SP 横スクロール**: 990px 未満で `overflow-x: auto`、scrollbar 非表示、ハンバーガー不採用（DNA 規律）
+- **scroll-up モード**: JS で scrollY 差分（THRESHOLD 8px）で `is-hidden` 切替、micro-scroll でチラつかない
+- **Mega Menu**: variant=mega + Shopify nav の子 link がある時のみ表示、SP では非表示で横スクロールに統一
+- **GA4 連動**: `data-gtag-cta="header_main_cta"` で `header_cta_click` イベント発火（funnel_step: 1 / KR5-1 連動）
+- **Accessibility**: `<header role="banner">` / `<nav aria-label>` / aria-current="page" / icon link aria-label / skip link （`href="#main-content"`）/ `prefers-reduced-motion` 対応
+- **DNA Anti 排除**: ハンバーガーなし / Drive ベタ塗りなし / Logo は Drive 背景禁止 / CTA は Primary 1 個固定
+
+## 3 軸組合せ ↔ preset 対応
+
+| Preset | variant | height | sticky_mode | 想定用途 |
+|---|---|---|---|---|
+| Standard | standard | default | sticky | 通常ページ全般 |
+| Minimal | minimal | default | sticky | LP / Checkout |
+| Tall | standard | tall (96) | sticky | TOP / Hero と並列 |
+| Scroll-up | standard | compact (64) | scroll-up | Blog 詳細 / Long LP |
+
+理論上 27 組合せだが、preset で**頻出 4 パターン**を即配置できる。残りは settings 切替で対応可能。
+
+## Known TODOs（v0.4 候補）
+- **Figma `height` property 追加**: spec の 3 heights (compact/default/tall) を Figma の Property に追加（Phase 2 拡張）
+- **Figma `sticky-mode` property 追加**: spec の 3 sticky modes を Figma に反映（Phase 2 拡張、デモ向け）
+- **Drawer Component**: SP の補助ドロワー（spec で言及）→ 別 component として spec 着手時に Header と連動

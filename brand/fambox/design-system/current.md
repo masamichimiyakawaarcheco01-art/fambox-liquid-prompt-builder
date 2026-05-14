@@ -458,7 +458,7 @@ OKRと連動させて「DSの効果」を可視化。
 
 | Component | spec md | Figma Set | Liquid section | N/3 | Status | 残課題 |
 |---|---|---|---|---|---|---|
-| Header | ✅ header.md | ✅ `59:33` (3v) | ❌ | **2/3** | 🟡 Liquid 未作成 | Liquid 化（v0.3 候補）|
+| Header | ✅ header.md | ✅ `59:33` (3v) | ✅ fambox-header (719行) | **3/3** | ✅ 三位一体 | Figma height/sticky-mode property 追加（v0.4）|
 | Hero | ✅ hero-section.md | ✅ `67:73` (12v) | ✅ fambox-hero-v17-video (578行) | **3/3** | ✅ 三位一体 | preset 拡充（v0.4）|
 | Plan Card | ✅ subscription-plan-card.md | ✅ `65:110` (2v) | ✅ fambox-subscription-plan (506行) | **3/3** | ✅ 三位一体 | — |
 | Bento Grid | ✅ bento-grid.md | ✅ `91:107` (3v) | ❌ | **2/3** | 🟡 Liquid 未作成 | Liquid 化（v0.3 候補）|
@@ -470,7 +470,7 @@ OKRと連動させて「DSの効果」を可視化。
 | Contact Form | ✅ contact-form.md | ✅ `98:121` (1v) | ✅ fambox-contact-form (942行) | **3/3** | ✅ 三位一体 | review/success variant 追加（v0.4）/ Notifications テンプレ手動設定 |
 | Drawer | ❌ | ❌ | ❌ | **0/3** | ⚫ 未着手 | spec から開始（顕在化時）|
 
-**L4 サマリ**: 11 中 **8 件 三位一体達成（3/3）** / 2 件 2/3（Header, Bento Grid）/ 1 件 0/3（Drawer）
+**L4 サマリ**: 11 中 **9 件 三位一体達成（3/3）** / 1 件 2/3（Bento Grid）/ 1 件 0/3（Drawer）
 
 ### 7-B. L3 Patterns（4 件 / 一部のみ Section 評価）
 
@@ -526,15 +526,15 @@ L2 は通常 **Liquid Section ではなく Snippet (`{%- render '...' -%}`) ま�
 ### 7-F. 全体ステータス（2026-05-14 時点）
 
 ```
-L4 Components:    8/11 三位一体達成 (73%) ✅✅✅✅✅✅✅✅🟡🟡⚫
+L4 Components:    9/11 三位一体達成 (82%) ✅✅✅✅✅✅✅✅✅🟡⚫
 L3 Patterns:      4/4 Pattern level OK   (100%) ✅✅✅✅
 L2 Primitives:    5/6 Primitive 完成      (83%) ✅✅✅✅✅🟡
-Section 累計新規行: 5,540行 (modal 672 + footer 665 + stat-grid 454 +
+Section 累計新規行: 6,259行 (modal 672 + footer 665 + stat-grid 454 +
                               case-study 1102 + contact-form 942 + hero 578 + plan 506 +
-                              faq 419 + profile 321 等)
+                              faq 419 + profile 321 + header 719)
 ```
 
-**次のフォーカス**: Header / Bento Grid の Liquid 化（L4 残 2 件）→ L4 完全制覇 10/10 へ。Drawer は spec から着手（顕在化時）。
+**次のフォーカス**: Bento Grid の Liquid 化（L4 残 1 件）→ L4 完全制覇 10/10 へ。Drawer は spec から着手（顕在化時）。
 
 ---
 
