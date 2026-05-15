@@ -461,7 +461,7 @@ OKRと連動させて「DSの効果」を可視化。
 | Header | ✅ header.md | ✅ `59:33` (3v) | ✅ fambox-header (719行) | **3/3** | ✅ 三位一体 | Figma height/sticky-mode property 追加（v0.4）|
 | Hero | ✅ hero-section.md | ✅ `67:73` (12v) | ✅ fambox-hero-v17-video (578行) | **3/3** | ✅ 三位一体 | preset 拡充（v0.4）|
 | Plan Card | ✅ subscription-plan-card.md | ✅ `65:110` (2v) | ✅ fambox-subscription-plan (506行) | **3/3** | ✅ 三位一体 | — |
-| Bento Grid | ✅ bento-grid.md | ✅ `91:107` (3v) | ❌ | **2/3** | 🟡 Liquid 未作成 | Liquid 化（v0.3 候補）|
+| Bento Grid | ✅ bento-grid.md | ✅ `91:107` (3v) | ✅ fambox-bento-grid (740行) | **3/3** | ✅ 三位一体 | — |
 | Modal | ✅ modal.md | ✅ `62:33` (3v) | ✅ fambox-modal (672行) | **3/3** | ✅ 三位一体 | — |
 | Footer | ✅ footer.md | ✅ `60:95` (3v / 4列 sitemap) | ✅ fambox-footer (665行) | **3/3** | ✅ 三位一体 | — |
 | FAQ | ✅ faq.md | ✅ `93:90` (1v) | ✅ fambox-faq (419行) | **3/3** | ✅ 三位一体 | Accordion variant（v0.3 拡張枠）|
@@ -470,7 +470,7 @@ OKRと連動させて「DSの効果」を可視化。
 | Contact Form | ✅ contact-form.md | ✅ `98:121` (1v) | ✅ fambox-contact-form (942行) | **3/3** | ✅ 三位一体 | review/success variant 追加（v0.4）/ Notifications テンプレ手動設定 |
 | Drawer | ❌ | ❌ | ❌ | **0/3** | ⚫ 未着手 | spec から開始（顕在化時）|
 
-**L4 サマリ**: 11 中 **9 件 三位一体達成（3/3）** / 1 件 2/3（Bento Grid）/ 1 件 0/3（Drawer）
+**L4 サマリ**: 11 中 **10 件 三位一体達成（3/3）** / 0 件 2/3 / 1 件 0/3（Drawer）— **L4 完全制覇 10/10 達成 🏆**（Drawer 除く）
 
 ### 7-B. L3 Patterns（4 件 / 一部のみ Section 評価）
 
@@ -479,7 +479,7 @@ OKRと連動させて「DSの効果」を可視化。
 | Card | ✅ card.md | ✅ `57:35` (4v) | ⚪ L4 内包（fambox-bento 等）| Pattern OK | Pattern level ✅ |
 | Form Field | ✅ form-field.md | ✅ Figma Set | ⚪ Contact Form 内包 | Pattern OK | Pattern level ✅ |
 | Stat Card | ✅ stat-card.md | ✅ `64:49` (6v) | ✅ fambox-stat-grid (454行) | **3/3** | ✅ 三位一体 |
-| Bento Tile | ✅ bento-tile.md | ✅ `87:26` (40v) | ⚪ Bento Grid 内包想定 | Pattern OK | Pattern level ✅ |
+| Bento Tile | ✅ bento-tile.md | ✅ `87:26` (40v) | ✅ fambox-bento-grid 内 `bento_tile` block | Pattern OK | Pattern level ✅（v0.3-liquid で実体化）|
 
 **L3 サマリ**: 4 中 **1 件 独立 Section（3/3）** / 3 件 Pattern として L4 に内包（評価対象外で正常）
 
@@ -526,15 +526,17 @@ L2 は通常 **Liquid Section ではなく Snippet (`{%- render '...' -%}`) ま�
 ### 7-F. 全体ステータス（2026-05-14 時点）
 
 ```
-L4 Components:    9/11 三位一体達成 (82%) ✅✅✅✅✅✅✅✅✅🟡⚫
+L4 Components:    10/11 三位一体達成 (91%) ✅✅✅✅✅✅✅✅✅✅⚫  🏆 完全制覇
 L3 Patterns:      4/4 Pattern level OK   (100%) ✅✅✅✅
 L2 Primitives:    5/6 Primitive 完成      (83%) ✅✅✅✅✅🟡
-Section 累計新規行: 6,259行 (modal 672 + footer 665 + stat-grid 454 +
+Section 累計新規行: 6,999行 (modal 672 + footer 665 + stat-grid 454 +
                               case-study 1102 + contact-form 942 + hero 578 + plan 506 +
-                              faq 419 + profile 321 + header 719)
+                              faq 419 + profile 321 + header 719 + bento-grid 740)
 ```
 
-**次のフォーカス**: Bento Grid の Liquid 化（L4 残 1 件）→ L4 完全制覇 10/10 へ。Drawer は spec から着手（顕在化時）。
+**🏆 L4 完全制覇達成（10/10、Drawer 除く）**
+
+**次のフォーカス**: Drawer は spec から着手（顕在化時）。L3 / L2 は現状で完成形。**TOP ページへの新 sections 配置（Week 5 QA）** が次の主要工程。
 
 ---
 

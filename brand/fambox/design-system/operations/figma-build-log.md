@@ -2485,3 +2485,132 @@ spec の Anti リストを **CSS / 構造で物理的に作れないように**�
 - 完成度ダッシュボードの定期更新習慣化
 
 ---
+
+## Session 2026-05-15 (#40) — Bento Grid Liquid 化（🏆 L4 完全制覇 10/10 達成）
+
+**契機**: Session #39 ダッシュボードで残る最後の 2/3 だった Bento Grid を 3/3 に。**L4 10 components の三位一体完全達成**（Drawer 除く）の節目セッション。Bento Tile（L3）も同 file に内包し、**L3 の Pattern level OK ラベル**を実体化。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| Bento Grid Liquid | `sections/fambox-bento-grid.liquid` (740 行) | Grid 3 variants + Tile 4×5×2 を 1 file 統合 + 3 presets |
+| bento-grid.md | v0.3-liquid Change Log 追記 |
+| bento-tile.md | v0.3-liquid Change Log 追記（Pattern として section 内包の正式記録）|
+| current.md §7-A | Bento Grid 2/3 → **3/3** / L4 サマリ 9/10 → **10/10 🏆** |
+| current.md §7-B | Bento Tile を Pattern level **v0.3-liquid で実体化**と記載 |
+| current.md §7-F | 全体ステータス 9/11 → **10/11 (91%)** / 累計行数 6,259 → 6,999 |
+
+### 設計判断: 1 file に Grid + Tile を統合
+
+spec 上は L4 Grid と L3 Tile が別 component だが、**Tile は Grid 外で単独使用しない**（spec § 概要「Tile は単体で存在せず、必ず Bento Grid 内に配置される」）。よって:
+
+```
+✅ 採用: 1 file (fambox-bento-grid.liquid) に Grid + Tile (block) を内包
+❌ 不採用: 2 file (fambox-bento-grid + fambox-bento-tile) で分離
+```
+
+理由:
+1. **使用文脈の一致**: Tile は Grid 内専用 → 別 section に分ける意味なし
+2. **CSS が共有**: tile-1x1/2x1/.../3x2 の class は Grid の column system と直接連動
+3. **block の柔軟性**: variant / size / featured / glass_opacity 等を block setting で表現可能
+4. **エディタ UX**: 1 Grid section 内で N 個の Tile を追加・並べ替えが直感的
+
+→ L3 Pattern が「**L4 内包**」される設計を Liquid でも実装し、§7-B の **Pattern level OK ラベル**が実装と整合。
+
+### Tile の 4 variants × 5 sizes × 2 featured × glass 5 階調 を block で表現
+
+```
+block:bento_tile {
+  tile_variant: standard / glass / image-fill / stat-focus
+  tile_size: 1x1 / 2x1 / 1x2 / 2x2 / 3x2
+  featured: bool
+  glass_opacity: 1-5 (glass variant 専用)
+  + variant 別 fields（title / body / image / stat_value / ...）
+}
+```
+
+Liquid 内で `{% case tile_variant %}` の分岐ではなく、**CSS class 直交性で variant 切替**:
+
+```liquid
+assign t_class = 'bento-tile bento-' | append: t_variant
+                  | append: ' tile-' | append: t_size
+if t_variant == 'glass'
+  assign t_class = t_class | append: ' bento-glass--' | append: t_glass
+endif
+if t_featured
+  assign t_class = t_class | append: ' bento-tile--featured'
+endif
+```
+
+学び 85（3 軸組合せは CSS class の直交性で 1 ファイル内に表現可能）の Bento での再実装。**variant ごとの HTML 構造は分岐**（Glass / Image-fill / Stat-focus / Standard）だが、**class 設計は直交**。
+
+### 3 presets の用途
+
+| Preset | variant | gap | blocks | 用途 |
+|---|---|---|---|---|
+| Standard | standard | md | 6 (主役 2x2 + Stat 2 + 横長 1 + 1x1×2) | TOP 一般エリア（主役強弱） |
+| Editorial | editorial | lg | 6 (Glass 主役 2x2 + Stat 2 + Image-fill 横長 + Standard 2) | TOP 主役エリア / Brand DNA 反映 |
+| Auto-fit | autofit | sm | 4 (Stat 4 並列) | KPI Grid / Dashboard |
+
+Stat Grid (Session #29) との差別化:
+- **Stat Grid**: 1 種類の数字を**密度高く**並べる（columns range で 1-6 列）
+- **Bento Auto-fit**: **混在 variants で KPI 訴求**（Stat-focus を grid に dense pack）
+
+### DNA 規律の schema での担保（学び 86 の継続適用）
+
+```
+- 12 タイル以上禁止 → block: { limit: 12 }
+- 同サイズ単調並列禁止 → 4 variants + 5 sizes を併用奨励（preset で実演）
+- Drive 全タイル背景禁止 → variant に "drive-fill" を作らず、featured で Drive 枠のみ提供
+- Glass + Image-fill mix-blend 禁止 → 互いに別 variant（同時選択不可）
+```
+
+### L3 Pattern の Liquid 実体化のパターン化
+
+Bento Tile のように **「L3 だが L4 に内包される Pattern」** の Liquid 化は、**L4 section の block として実装**するのが正解。同様の構図:
+
+- ✅ **Bento Tile → Bento Grid block**（本セッションで実装）
+- ✅ **FormField → Contact Form 内（Session #37 で 11 field 直接実装）**
+- ✅ **Card → Bento Tile / Case Study / Plan Card 内（Pattern として継承）**
+
+`current.md §7-B` の Pattern level OK ラベルは、これらの **「Pattern が L4 に正しく内包されている状態」** を表す。**独立 Section が無い = 完成形**である Pattern を明示する設計。
+
+### 検証
+
+- `wc -l`: 740 行
+- Schema JSON: valid（settings 8 / 1 block type with 19 settings / 3 presets）
+- preset blocks: Standard 6 / Editorial 6 / Auto-fit 4
+- Liquid tag balance: `{% %}` 71 / `{{ }}` 107
+- 4 variant × 5 size × 2 featured + Glass 5 階調 = 200 通りの組合せを block setting で表現可能
+
+### 🏆 マイルストーン: L4 三位一体 10/10 達成（Drawer 除く）
+
+```
+✅ Header / Hero / Plan Card / Bento Grid / Modal / Footer /
+   FAQ / Profile / Case Study / Contact Form
+```
+
+| 残課題 | 状態 |
+|---|---|
+| Drawer | 0/3（spec から着手、顕在化時）|
+| L2 Spinner | 1/2（spec gap、Figma 先行）|
+| 三位一体定期 audit | 完成度ダッシュボード §7 で可視化済 |
+
+### 学んだこと（追加）
+
+88. **「L3 は L4 に内包される」を Liquid で実装する正解は "block として内包"**: spec で L3 Pattern が L4 Component の一部として運用される場合（Bento Tile in Bento Grid / FormField in Contact Form / Card in 多数の L4）、Liquid 化は **L4 section の block type として実装**するのが運用上最もスッキリする。独立 section を作ると **配置場所が分散・編集 UX が悪化・spec の依存関係を壊す**。「**1 L4 = 1 section / その L3 = block**」の規律が運用負荷を最小化する。
+
+89. **三位一体 10/10 達成は "L3 → block 化" まで含めて完成**: 数値上の 10/10 はあくまで L4 Section 単位の指標だが、**実質的な完成は L3 Pattern が L4 内に正しく内包**されてはじめて成立する。Bento Tile が「Pattern level OK / 実体化」と current.md §7-B に書ける状態が **真の完成**。次世代の DS audit では「L4 N/3 と L3 Pattern level の同時クロスチェック」を Step 0.5 に追加候補。
+
+90. **マイルストーンはダッシュボードに数字で刻む**: 「10/11 (91%)」「🏆 完全制覇」のように **current.md §7-F に明示数値**を入れることで、進捗が一目で伝わる。プロジェクトの後半段階では **何が残っているか**より **何が達成されたか**を可視化する方が、ステークホルダー（宮川さん / 須藤さん / バングラ部隊）の意思決定を加速する。学び 77（N/3 ラベル）の延長で「**達成数値の積極可視化**」を新原則化。
+
+### Known TODOs
+
+- TOP ページに新 sections 配置（Week 5 QA、宮川さん作業 / 本番反映スコープ）
+- fam-* レガシー sections の "LP/ブログ専用" ラベル整理（コメント追記 or rename）
+- Drawer spec 着手（顕在化時、Header と連動）
+- L2 Spinner spec 着手（spec gap 解消、軽量）
+- SKILL v0.8 候補（Phase 5 テスト / brand 横展開のパラメータ化）
+
+---

@@ -477,6 +477,7 @@ Bento Tile は **Bento Grid 内に配置される**。Grid 側は:
   - **Bento Grid editorial の主役 instances を `featured=true` に切替**（Issue 8 解消の Phase 3 実装、次セッション）
 
 ## Change Log
+- v0.3-liquid (2026-05-15): `fambox-bento-grid.liquid` 内に **Bento Tile を block として内包**（独立 Liquid section は作成しない）。Tile 4 variants × 5 sizes × 2 featured + Glass 5 階調 を `bento_tile` block の settings で完全表現。**Pattern level OK の典型ケース**（spec § 7-B 参照）。Stat-focus は Stat Card と同じ Drive 56px ロジック（学び 56 のトークン再利用）
 - v0.3-figma+featured (2026-05-12): Session #13 で **featured boolean variant property を追加**（20 → 40 variants）。featured=true で Drive 2px stroke 適用、Bento Grid editorial の主役識別を Tile 側で表現可能に（Issue 8 解消の準備）。SKILL v0.3 Phase 2 の実証実験 1 回目
 - v0.3-figma (2026-05-12): Session #10 で 残 4 sizes を追加し **20 variants 完備**（4 variant × 5 size）。size property が認識され、Bento 5 sizes 体系が Figma 上で完全に表現可能に
 - v0.2-figma (2026-05-12): Figma Component Set `87:26` 新規生成（4 variants × default size 2×2 のみ）。残 4 sizes と state は v0.3 で順次追加

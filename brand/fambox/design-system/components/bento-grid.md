@@ -395,6 +395,7 @@ L3 Bento Tile（**bento-tile.md**）と一体運用。Tile は単体で存在せ
   - **3x1 placeholder の解消**: standard variant に 3x1 wide が残存していたが Tile に 3x1 size がないため 2x1 + resize で対応。Spec の Tile sizes を 3x1 含むか v0.4 で判断
 
 ## Change Log
+- v0.3-liquid (2026-05-15): `fambox-bento-grid.liquid` (740 行) 新規追加。**三位一体達成（spec ↔ Figma ↔ Liquid 3/3）**。Grid 3 variants（standard / editorial / autofit）× Tile 4 variants × 5 sizes × 2 featured を 1 ファイル + `bento_tile` block で表現。**Bento Tile（L3）も同 file 内に内包**（独立 section なし）。3 presets（Standard 6 tiles / Editorial 6 tiles + 主役 / Auto-fit 4 KPI）/ Glass 5 階調 (1-5) / Featured Drive 枠 / Stat-focus 56px / Image-fill 全面 overlay
 - v0.3-figma-完成 (2026-05-12): Session #14 で **3 variants 全 placeholder を Bento Tile instance に置換完了** + editorial 主役 2 個を featured=true 版に swap。Issue 8 完全解消。standard / autofit / editorial の全 22 tile placeholder が双方向参照に
 - v0.3-figma (2026-05-12): Session #11 で editorial variant の placeholder 9 個を Bento Tile instance に置換完了。Tile (87:26) と Grid (91:107) の双方向参照が確立。次は standard / autofit variant の同手順置換 + 主役識別の復活
 - v0.2-figma (2026-05-12): Figma Component Set `91:107` 新規生成（3 variants × placeholder grid demo）。Editorial で対角線パターン A を視覚化、主役タイルを Drive 2px 枠で識別。Bento Tile instance への置換は v0.3
