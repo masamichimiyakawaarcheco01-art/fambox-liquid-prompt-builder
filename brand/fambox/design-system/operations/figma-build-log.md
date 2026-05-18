@@ -3390,3 +3390,59 @@ for prop in ['padding', 'margin', 'gap', 'top', 'right', 'bottom', 'left']:
 - マジックナンバー 2 色（`#92939c` / `#545655`）→ caption/sub 集約 sed（B-5 と並行）
 
 ---
+
+## Session 2026-05-18 (#51) — 🏆 Phase B-5 完遂: DS 標準 7 sections 全 Token 化達成
+
+**契機**: Session #50 で確立した 6-pass Python script を **batch 化**して残 6 sections に一括適用。1 セッションで Phase B-5 完了 = **DS 標準 7 sections すべて Token 化達成**。
+
+### Batch 実行結果
+
+| File | Replace | Lines | Hex 残 | var() refs |
+|---|---:|---:|---:|---:|
+| fambox-footer.liquid | 55 | 665 | 0 | 55 |
+| fambox-header.liquid | 65 | 719 | 0 | 66 |
+| fambox-bento-grid.liquid | 75 | 740 | 1 (schema default) | 72 |
+| fambox-stat-grid.liquid | 48 | 454 | 1 (schema default) | 48 |
+| fambox-case-study.liquid | 149 | 1,102 | 2→1 (schema default) | 150 |
+| fambox-contact-form.liquid | 101 | 942 | 0 | 94 |
+| **計（6 sections）** | **493** | **4,622** | **3 (schema)** | **485** |
+| fambox-modal.liquid (Session #50) | 79 | 672 | 0 | 82 |
+| **🏆 累計 7 sections** | **572** | **5,294** | **3 (schema)** | **567** |
+
+### 残存 hex 4 → 3 件への絞り込み
+
+| 残存 | 件数 | 理由 |
+|---|---:|---|
+| `"bg_color": "#ffffff"` (schema default) | 3 | **Shopify schema は CSS 変数を解釈しない技術制約** — Liquid 内 CSS では `var(--bg-primary)` だが、schema JSON は静的値必須 |
+| `#e8e8e8` (linear-gradient 内) | 1 → 0 | `var(--border-base)` (#ececec) で集約完了（最終 pass）|
+
+### 学び 118-120
+
+118. **DS Token 化は 「6-pass × N files」で 1 セッション完了**: Session #50 で 1 ファイル実証 → Session #51 で残 6 ファイル batch。**572 件の置換 / 5,294 行のコード**を **1 Python script の 1 回実行で完了**。手動 Edit なら 20+ セッション要する作業を **2 セッションで終わらせる**設計。Token 化は実証パターンができれば線形にスケール。
+
+119. **Shopify schema JSON の default 値は CSS 変数化できない技術制約**: Liquid 内 `<style>` では `background: var(--bg-primary)` だが、`{% schema %}` 内の `"bg_color": "#ffffff"` は **静的 hex 値が必須**（Shopify エディタが解釈するため）。schema default の 3 件 `#ffffff` 残存は **意図的・技術的に正しい状態**。学び 116（CSS @media 制約）の Shopify schema 版。
+
+120. **Token 化完了の正しい指標は "Hex 残存 0" ではなく "意図しない Hex 残存 0"**: 全直値を排除することは目的ではなく、**意図的に残すべき直値 = schema default / @media / Component-specific サイズ / border-width** を明確化することが Token 化の本質。学び 117（Component 固有数値を残すべき）の延長として、「**残存直値の説明可能性**」が Token 化品質の指標。
+
+### 🎯 FAMBOX DS v0.5 Token 化進捗
+
+```
+✅ Step 1-5:    de facto Token 抽出
+✅ Phase B-1:   表記統一（hex 全小文字 / Drive 統一）
+✅ Phase B-2:   マジックナンバー逆引き
+✅ Phase B-3:   current.md §1-A〜§1-I 更新
+✅ Phase B-4:   CSS Tokens snippet 化 (133 tokens)
+✅ Phase B-5:   DS 標準 7 sections の Variable 置換完了 (572 件 / 567 var refs)
+```
+
+**全 Phase 完了** 🏆。OKR Task 1-2-a「DS 作成」期限 (2026-06-30) まで 6 週間残しで DS v0.5 Token 化に到達。
+
+### Known TODOs（Phase B 完了後）
+
+- theme.liquid への `{% render 'fambox-tokens.css' %}` 配置（宮川さん手動）
+- 視覚回帰テスト（Shopify エディタプレビュー / Liquid Pipeline）
+- **TOP 専用 sections 15 ファイル** の Token 化（次 Phase: B-6 候補 / fambox-active-plans / blog-carousel / spirit / etc）
+- §1-J Variable Mode（light/dark）設計（v0.6 候補）
+- Figma Variables への同期（Tokens Studio 等の Figma↔Code 連携、§5 残論点 #3 と連動）
+
+---

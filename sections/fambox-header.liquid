@@ -51,16 +51,16 @@
     position: absolute;
     left: -9999px;
     top: 0;
-    background: #1b1d1a;
-    color: #fff !important;
-    padding: 12px 16px;
+    background: var(--color-ink);
+    color: var(--color-white) !important;
+    padding: var(--space-1-5) var(--space-2);
     text-decoration: none;
-    font-size: 14px;
+    font-size: var(--fs-body-sm);
     z-index: 999;
   }
   #{{ sec_id }} .header__skip:focus {
     left: 0;
-    outline: 2px solid #fc5214;
+    outline: 2px solid var(--color-drive);
     outline-offset: 2px;
   }
 
@@ -69,11 +69,11 @@
      ============================================ */
   #{{ sec_id }} .header {
     width: 100%;
-    background: #fff;
-    color: #1b1d1a;
+    background: var(--color-white);
+    color: var(--color-ink);
     border-bottom: 1px solid rgba(27, 29, 26, 0.08);
     z-index: 100;
-    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-family: var(--font-ja) !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -96,7 +96,7 @@
     position: sticky;
     top: 0;
     transform: translateY(0);
-    transition: transform 250ms ease-out;
+    transition: transform var(--duration-base) var(--ease-out);
   }
   #{{ sec_id }} .header--scroll-up.is-hidden {
     transform: translateY(-100%);
@@ -115,13 +115,13 @@
     height: 100%;
     max-width: 1440px;
     margin: 0 auto;
-    padding: 0 24px;
-    gap: 16px;
+    padding: 0 var(--space-3);
+    gap: var(--space-2);
   }
   @media (min-width: 1024px) {
     #{{ sec_id }} .header__inner {
-      padding: 0 48px;
-      gap: 24px;
+      padding: 0 var(--space-5);
+      gap: var(--space-3);
     }
   }
 
@@ -134,7 +134,7 @@
     flex-shrink: 0;
     height: 50%;
     text-decoration: none;
-    color: #1b1d1a;
+    color: var(--color-ink);
   }
   #{{ sec_id }} .header__logo img,
   #{{ sec_id }} .header__logo svg {
@@ -143,10 +143,10 @@
     display: block;
   }
   #{{ sec_id }} .header__logo-text {
-    font-family: 'Poppins', sans-serif !important;
+    font-family: var(--font-en) !important;
     font-size: 22px !important;
-    font-weight: 700 !important;
-    color: #1b1d1a !important;
+    font-weight: var(--fw-bold) !important;
+    color: var(--color-ink) !important;
     letter-spacing: 0.02em !important;
     line-height: 1 !important;
   }
@@ -163,7 +163,7 @@
   #{{ sec_id }} .header__menu-list {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: var(--space-3);
     list-style: none;
     margin: 0;
     padding: 0;
@@ -173,25 +173,25 @@
   }
   #{{ sec_id }} .header__menu-link {
     display: inline-block;
-    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
-    font-size: 16px !important;
-    font-weight: 500 !important;
-    color: #1b1d1a !important;
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-body) !important;
+    font-weight: var(--fw-medium) !important;
+    color: var(--color-ink) !important;
     text-decoration: none !important;
     letter-spacing: normal !important;
     line-height: 1.4 !important;
     white-space: nowrap;
     padding: 8px 0;
-    transition: color 150ms ease-out;
+    transition: color var(--duration-fast) var(--ease-out);
   }
   #{{ sec_id }} .header__menu-link:hover,
   #{{ sec_id }} .header__menu-link:focus-visible {
-    color: #fc5214 !important;
+    color: var(--color-drive) !important;
     outline: none;
   }
   #{{ sec_id }} .header__menu-link.is-active,
   #{{ sec_id }} .header__menu-link[aria-current="page"] {
-    color: #fc5214 !important;
+    color: var(--color-drive) !important;
     text-decoration: underline !important;
     text-underline-offset: 8px !important;
     text-decoration-thickness: 2px !important;
@@ -214,11 +214,11 @@
       display: none;
     }
     #{{ sec_id }} .header__menu-list {
-      gap: 16px;
+      gap: var(--space-2);
       padding: 0 8px;
     }
     #{{ sec_id }} .header__menu-link {
-      font-size: 14px !important;
+      font-size: var(--fs-body-sm) !important;
     }
   }
 
@@ -228,7 +228,7 @@
   #{{ sec_id }} .header__utilities {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-1);
     flex-shrink: 0;
   }
   #{{ sec_id }} .header__icon-link {
@@ -237,16 +237,16 @@
     justify-content: center;
     width: 44px;
     height: 44px;
-    color: #1b1d1a;
+    color: var(--color-ink);
     text-decoration: none;
-    border-radius: 9999px;
-    transition: background 150ms ease-out;
+    border-radius: var(--radius-pill);
+    transition: background var(--duration-fast) var(--ease-out);
   }
   #{{ sec_id }} .header__icon-link:hover {
     background: rgba(27, 29, 26, 0.06);
   }
   #{{ sec_id }} .header__icon-link:focus-visible {
-    outline: 2px solid #fc5214;
+    outline: 2px solid var(--color-drive);
     outline-offset: 2px;
   }
   #{{ sec_id }} .header__icon-link svg {
@@ -275,32 +275,32 @@
     align-items: center;
     justify-content: center;
     height: 44px;
-    padding: 0 24px;
-    background: #fc5214;
-    color: #fff !important;
-    border: 1px solid #fc5214;
-    border-radius: 9999px;
-    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
+    padding: 0 var(--space-3);
+    background: var(--color-drive);
+    color: var(--color-white) !important;
+    border: 1px solid var(--color-drive);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-body-sm) !important;
+    font-weight: var(--fw-semibold) !important;
     line-height: 1 !important;
     letter-spacing: normal !important;
     text-decoration: none !important;
     white-space: nowrap;
     cursor: pointer;
-    transition: background 150ms ease-out, transform 150ms ease-out, box-shadow 150ms ease-out;
+    transition: background var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
   }
   #{{ sec_id }} .header__cta:hover {
-    background: #e14710;
-    border-color: #e14710;
+    background: var(--color-drive-hover);
+    border-color: var(--color-drive-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(252, 82, 20, 0.24);
+    box-shadow: var(--shadow-drive-glow);
   }
   @media (max-width: 480px) {
     #{{ sec_id }} .header__cta {
       height: 40px;
-      padding: 0 16px;
-      font-size: 13px !important;
+      padding: 0 var(--space-2);
+      font-size: var(--fs-caption-lg) !important;
     }
   }
 
@@ -322,12 +322,12 @@
     position: absolute;
     top: 100%;
     left: 0;
-    margin-top: 8px;
-    background: #fff;
+    margin-top: var(--space-1);
+    background: var(--color-white);
     border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 8px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-    padding: 16px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-4);
+    padding: var(--space-2);
     min-width: 240px;
     display: none;
     z-index: 101;
@@ -342,19 +342,19 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--space-1);
   }
   #{{ sec_id }} .header__mega-link {
     display: block;
     padding: 6px 0;
-    color: #1b1d1a !important;
+    color: var(--color-ink) !important;
     text-decoration: none !important;
-    font-size: 14px !important;
+    font-size: var(--fs-body-sm) !important;
     line-height: 1.5 !important;
-    transition: color 150ms ease-out;
+    transition: color var(--duration-fast) var(--ease-out);
   }
   #{{ sec_id }} .header__mega-link:hover {
-    color: #fc5214 !important;
+    color: var(--color-drive) !important;
   }
   @media (max-width: 989px) {
     /* SP では mega panel を出さない（横スクロールに統一） */
