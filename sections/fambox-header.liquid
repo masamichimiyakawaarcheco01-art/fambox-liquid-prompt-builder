@@ -461,21 +461,14 @@
         {%- comment -%} Account icon（Standard / Mega のみ）{%- endcomment -%}
         {%- if variant != 'minimal' and section.settings.show_account -%}
           <a href="{{ routes.account_url | default: '/account' }}" class="header__icon-link" aria-label="アカウント">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
+            {%- render 'fambox-icon', name: 'user', size: 'sm' -%}
           </a>
         {%- endif -%}
 
         {%- comment -%} Cart icon（Standard / Mega のみ）{%- endcomment -%}
         {%- if variant != 'minimal' and section.settings.show_cart -%}
           <a href="{{ routes.cart_url | default: '/cart' }}" class="header__icon-link" aria-label="カート">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="9" cy="21" r="1"></circle>
-              <circle cx="20" cy="21" r="1"></circle>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
+            {%- render 'fambox-icon', name: 'cart', size: 'sm' -%}
           </a>
         {%- endif -%}
 

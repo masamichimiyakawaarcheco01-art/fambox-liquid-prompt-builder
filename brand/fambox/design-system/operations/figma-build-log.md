@@ -3631,3 +3631,106 @@ Session #56 (60-90 min): Phase A 着手 — L0 翻訳表ドラフト
 - theme.liquid 統合（宮川さん手動）/ 視覚回帰テスト
 
 ---
+
+## Session 2026-05-18 (#54) — Phase B-7 完遂: Lucide Icon snippet 化 + Tokens Studio 評価ドキュメント
+
+**契機**: Session #53 で論点 #2 (Lucide) と #3 (Tokens Studio) が確定 → Part A (即実装) + Part B (試用準備) を 1 セッションで完了。
+
+### Part A: Lucide Icon snippet 化（実装）
+
+#### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| Icon snippet | `snippets/fambox-icon.liquid` (130 行) | 17 アイコン搭載（10 Lucide 系 + 5 SNS brand + fallback）|
+| Section 置換 | 4 sections / 10 icons | inline SVG → `{% render 'fambox-icon' %}` |
+
+#### Icon カテゴリ
+
+**Lucide 系 UI アイコン（stroke 1.5px / spec §1-I 1-29 整合）**:
+- cart, user, close, chevron-left/right/down, check, menu, search, arrow-right
+
+**SNS Brand Logo（filled path）**:
+- instagram, youtube, note, x-social, tiktok
+
+**Fallback**: 不明な name には circle + ! のデフォルトアイコンを表示（`data-fambox-icon-unknown` 属性で debug 可能）
+
+#### 置換実績
+
+| Section | 削減行数 | render 数 |
+|---|---:|---:|
+| fambox-footer.liquid | 10 行 | 5 (SNS) |
+| fambox-header.liquid | 7 行 | 2 (user/cart) |
+| fambox-modal.liquid | 3 行 | 1 (close) |
+| fambox-blog-carousel.liquid | 0 行* | 2 (chevron) |
+| **計** | **20 行削減** | **10 箇所** |
+
+*chevron は 1 行 inline だったので置換しても行数変化なし、ただし可読性向上
+
+#### 使い方（標準化）
+
+```liquid
+{% render 'fambox-icon', name: 'cart', size: 'md' %}
+{% render 'fambox-icon', name: 'instagram', size: 'sm' %}
+{% render 'fambox-icon', name: 'close', size: 'md', color: '#fc5214' %}
+```
+
+| size | px |
+|---|---|
+| xs | 16 |
+| sm | 20 |
+| md | 24 (既定) |
+| lg | 32 |
+| xl | 48 |
+
+L1 Tokens `--icon-xs/sm/md/lg/xl` と完全整合。
+
+### Part B: Tokens Studio 評価ドキュメント（試用準備）
+
+#### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| 評価ドキュメント | `operations/2026-05-18-tokens-studio-evaluation.md` | 8 セクション / 試用シナリオ + 既存 token JSON サンプル + ROI チェックリスト 7 項 |
+
+#### 構成
+
+1. Tokens Studio とは（公式情報 / ライセンス）
+2. FAMBOX で導入する価値（解決したい課題 4 件）
+3. 試用シナリオ Phase 1-4（インストール → import → 双方向同期 → ROI 判定）
+4. 既存 fambox-tokens.css.liquid を JSON 化したサンプル（主要 50+ tokens / 即 import 可能）
+5. brand mode サポート（§5 #4 連動 / **Tokens Studio 採用の最大メリット**）
+6. **ROI チェックリスト 7 項目**（5+ ✅ なら継続、4 以下なら **プラン B 切替判断**）
+7. 試用結果記入欄（宮川さん手動 / 記入後 Session #55 着手）
+8. 関連リソース
+
+#### 切替判断ロジック（学び 123 の実装）
+
+```
+試用後の判定:
+  5+ ✅: プラン A 継続 → 本格運用準備
+  4 以下 ✅: プラン B 切替 → generate-dashboard.py 拡張 (8-10h)
+
+主要評価ポイント:
+  #6 brand themes 機能が無料版で使える ← 最重要
+  (Pro 版必須の場合は ROI が下がる)
+```
+
+学び 123「推奨と異なる選択にはリスク明示 + 切替条件」の実装。試用結果を本ドキュメントに記入することで、判断履歴が permanent に残る。
+
+### 学び 125-127
+
+125. **Liquid snippet は filled path + stroke-based の 2 系統 icon を共存できる**: Lucide の line icon (stroke="currentColor") と SNS brand logo (fill=色) は性質が異なるが、**1 snippet 内に `{% case name %}` で分岐**することで統一インターフェース化できる。利用側は `{% render 'fambox-icon', name: 'cart' %}` `{% render 'fambox-icon', name: 'instagram' %}` の同じ呼び出しで両方扱える。**「snippet は表現の多様性を吸収する境界線」**として運用。
+
+126. **新ツール導入の試用は "Claude 直接実行不可" でも "評価ドキュメント + 宮川さん手動" の協業で進められる**: Figma プラグインのような Claude が直接操作できないツールでも、**評価チェックリスト + 試用シナリオ + 既存資産の import サンプル**を準備すれば、宮川さん試用 → 結果記入 → 次セッションで判断 のフロー化が可能。学び 105「memory は draft + 手動転記の 2 段階」の延長として、**「外部ツール評価は draft + 手動試用の 2 段階」**を新運用パターンに。
+
+127. **ICON snippet 化は将来の指数的削減を可能にする**: 今回 10 箇所で 20 行削減だが、**N 箇所で使えば各箇所 3-4 行の inline SVG = 指数的削減**。100 箇所で使えば 300-400 行削減。重要なのは **「即効性ある削減」より「将来の追加コスト = 1 行」**を担保すること。次回 icon 追加時のコスト: snippet 内に 1 case 追加（5-10 行）+ 使う場所で 1 行 render。**初期投資 130 行で N 箇所への線形展開を可能にする設計**。
+
+### Known TODOs
+
+- 宮川さん手動: Tokens Studio 試用 + 評価ドキュメント §7 記入
+- Session #55 開始時に試用結果を確認 → プラン A 継続 or B 切替判断
+- 残 SVG が大きい sections (active-plans / hero-v17-video / profile / plan-features 等) の brand logo SVG は **そのまま inline 保持**（学び 121 / 117 / 67）
+- theme.liquid に `{% render 'fambox-tokens.css' %}` 配置（宮川さん手動 / 視覚回帰テスト前提）
+
+---
