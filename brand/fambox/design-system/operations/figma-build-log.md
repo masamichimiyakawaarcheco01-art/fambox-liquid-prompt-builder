@@ -2850,3 +2850,38 @@ spec md 数: 5
 - DS ダッシュボードの自動生成スクリプト化（次世代 Audit ツール候補）
 
 ---
+
+## Session 2026-05-15 (#44) — fam-item の File 記載 mismatch 解消（軽量タスク）
+
+**契機**: Session #41 で発見した「fam-item.liquid 内部の `File: sections/fam-solution.liquid` 記載」mismatch を解消。`/Users/.../sections/fam-item.liquid` 内のコメント不整合を修正。
+
+### 修正内容
+
+| 修正前（line 17）| 修正後 |
+|---|---|
+| `File: sections/fam-solution.liquid`（旧名） | `File: sections/fam-item.liquid`（実 file 名と一致） |
+
+### 関連する Legacy ラベルの整合性向上
+
+CSS class prefix `fsol__*` と id `fsol-` は **旧名「fam-solution」の名残**。これらは **変更すると視覚崩壊のリスク**があるため保持（class 名変更は撤去まで延期）。Legacy ラベル comment を更新:
+
+| 修正前 | 修正後 |
+|---|---|
+| `※ File 名は fam-item だが内部記載は fam-solution（旧名残り）` | `※ CSS class prefix \`fsol__*\` / id \`fsol-\` は旧名「fam-solution」の名残（class 名変更は視覚崩壊リスクあり、撤去まで保持）` |
+| Status タグ: `... / file-name-mismatch` | Status タグ: `... / class-prefix-legacy` |
+
+**「file-name-mismatch」タグを `class-prefix-legacy` に変更**: file 名は実 file と一致したので mismatch は解消、残るのは **class 名の旧名残り**（こちらは意図的に保持）という正しい状態に。
+
+### 学んだこと（追加）
+
+100. **「mismatch 解消」と「legacy 保持」を区別する**: ファイル名と内部記載が違う `file-name-mismatch` は **コメント修正で即解消可能**だが、CSS class prefix `fsol__*` のような **動作に影響する旧名残り**は **意図的に保持**（class 名変更は視覚崩壊リスクあり、撤去前に変更しない）。**「修正できる mismatch」と「保持すべき legacy」を Status タグで区別**することで、運用者の判断負荷を下げる。学び 91（legacy と deprecated は別概念）の補強。
+
+### Known TODOs
+
+- TOP ページに新 sections 配置（Week 5 QA）
+- LEGACY 4 件の段階的撤去
+- Drawer spec 着手（顕在化時）
+- DS ダッシュボードの自動生成スクリプト化（次世代 Audit ツール候補）
+- 学び 100 を踏まえた「mismatch vs legacy」タグ整理を全 fam-* ファイルで確認
+
+---
