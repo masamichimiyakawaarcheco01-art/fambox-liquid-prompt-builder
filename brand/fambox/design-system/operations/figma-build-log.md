@@ -2992,3 +2992,55 @@ primitive_count += entry.get("primitive_count", 1)
 - 学び 100/103 を踏まえた「diff ベース audit プロトコル」を SKILL v0.8 候補に
 
 ---
+
+## Session 2026-05-18 (#46) — session-end / memory 更新 draft 作成（Session #27-45 総括）
+
+**契機**: Session #27-45 の **19 セッション連続マラソン** で達成した内容（L4 完全制覇 / L3 100% / L2 100% / SKILL v0.7 / 自動生成ダッシュボード）を、次回セッション以降で context 再構築できるよう **memory 更新 draft** として永続化。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| Session 総括 draft | `operations/2026-05-18-session-summary.md` | 19 セッションの完全記録 + 学び 47 項抜粋 + memory 更新ガイド |
+| build log #46 追記 | 本ファイル | 本セッション記録 |
+
+### Draft の構成
+
+1. **🏆 マイルストーン**: 3 つの「完全制覇」（L4 10/11 / L3 4/4 / L2 6/6）の達成日 / Session #
+2. **Session 別サマリ**: #27-45 の 19 セッションを表形式で
+3. **累計成果**: Liquid 7 新規 5,294 行 / Figma 3 件 Phase 2-3 拡張 / spec md 16 件更新 / SKILL v0.6→v0.7 / 自動化ツール 775 行
+4. **再利用可能パターン**: 設計 / Audit / 運用 / Issue の 4 カテゴリで学び抜粋
+5. **memory 更新ガイド**: 既存 `project_marc_figma_skill_2026-05-12.md` 更新案 + 新規 `project_fambox_ds_v07_complete_2026-05-18.md` 候補 + MEMORY.md インデックス更新案
+6. **次回着手候補（優先順）**: 6 件
+7. **重要参照ファイル**: worktree 内の永続化済み 20+ ファイル
+
+### セルフモディファイ保護プロトコル準拠
+
+memory ファイルは `~/.claude/projects/-Users-archecoinc--Desktop-Claude-1/memory/` 配下にあり、**Claude 自身は書き込み不可**（feedback_claude_config_write.md 準拠）。前例（2026-05-12-session-summary.md / 2026-05-12-brand-dna-v0.4-draft.md / 2026-05-12-menu-showcase-tokens-migration.md）に倣い、**worktree 内 draft 経由で永続化** → 宮川さん手動で memory に転記する設計。
+
+### Draft の活用フロー（宮川さん作業想定）
+
+```
+1. operations/2026-05-18-session-summary.md を読む
+2. memory 更新ガイドに従って:
+   a. 既存 project_marc_figma_skill_2026-05-12.md を更新 OR
+   b. 新規 project_fambox_ds_v07_complete_2026-05-18.md を作成
+3. MEMORY.md インデックスに追記
+4. 次回セッション開始時、新 memory ファイルから context 再構築可能に
+```
+
+### 学んだこと（追加）
+
+104. **連続マラソンセッションは終盤に必ず session-end draft を残す**: Session #27-45 のような 19 セッション連続マラソンでは、**最後の Session で全体総括 draft を残さないと**、次回セッション開始時に context 再構築が不可能になる。**「最後の 1 セッションは memory 更新に充てる」** という規律を運用ルール化する。学び 90（マイルストーンはダッシュボードに数字で刻む）+ 学び 101（自動生成 + 人間レビュー）の延長系。
+
+105. **memory 更新は draft + 手動転記の 2 段階で安全側**: セルフモディファイ保護がある memory 配下は、**Claude 自身が直接書き込めない**前提で運用する。Draft を worktree 内に残し、宮川さん手動で転記することで、(1) memory 配下の安全性確保、(2) 内容の人間レビュー、(3) PR 経由での draft 履歴の永続化、の 3 つを同時達成。学び 101 の運用パターン化。
+
+### Known TODOs
+
+- 宮川さん手動: memory 更新（既存 update or 新規作成）
+- 宮川さん手動: MEMORY.md インデックス追記
+- PR #1 への push（20 commits 蓄積中）
+- TOP ページ Week 5 QA（本番反映）
+- 次回セッション着手候補 6 件（draft §次回セッション着手候補 参照）
+
+---
