@@ -2885,3 +2885,110 @@ CSS class prefix `fsol__*` と id `fsol-` は **旧名「fam-solution」の名�
 - 学び 100 を踏まえた「mismatch vs legacy」タグ整理を全 fam-* ファイルで確認
 
 ---
+
+## Session 2026-05-18 (#45) — DS ダッシュボード自動生成スクリプト化（v0.3-dashboard Phase 1）
+
+**契機**: Session #43 の表記標準化が定着したので、**ダッシュボード生成を自動化**して current.md §7 のメンテナンスコストを下げる。Session #38-43 で蓄積した「N/3 ラベル / 3 つの数え方 / Figma 内訳明示 / 統合 spec md / Pattern level OK」の概念を全て **1 スクリプトに統合**。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| メインスクリプト | `operations/scripts/generate-dashboard.py` (425 行) | fixture + 実 file scan → Markdown 生成 |
+| Audit fixture | `operations/scripts/figma-sets.json` (205 行) | Figma Component Set audit 結果の手動更新 fixture |
+| README | `operations/scripts/README.md` (145 行) | 使い方 / 設計意図 / Phase 1-3 ロードマップ |
+| **合計** | 3 files | **775 行** |
+
+### スクリプトの設計
+
+#### 入力（ハイブリッド方式）
+
+| 情報源 | 取得方法 | 更新頻度 |
+|---|---|---|
+| spec md 存在 | `(COMPONENTS_DIR / md_name).exists()` で scan | リアルタイム |
+| Liquid section 存在 & 行数 | `path.exists()` + 行数カウント | リアルタイム |
+| Figma Set ID / variants 内訳 | `figma-sets.json` から load | Audit 実行時に手動更新 |
+
+→ **「動的に変わるもの」は scan、「Figma audit が必要なもの」は fixture**。両者をマージして N/3 / N/2 計算 + Markdown 生成。
+
+#### 出力
+
+stdout のみ。current.md への自動上書きは**意図的にしない**:
+
+```bash
+python3 brand/fambox/design-system/operations/scripts/generate-dashboard.py > /tmp/dashboard.md
+diff /tmp/dashboard.md brand/fambox/design-system/current.md  # 人間レビュー
+```
+
+学び 94（ダッシュボード自体も Audit 対象）に従い、**自動生成 = 真実 ではない**ことを示す。人間レビューを必須にすることで、false-positive / false-negative の最終チェックを残す。
+
+### 3 つの数え方を fixture で明示（学び 97 の実装）
+
+L2 Primitives の **個別 Primitive 数**を fixture で明示:
+
+```json
+{
+  "name": "Form Controls",
+  "primitive_count": 3,    ← Checkbox + Radio + Toggle で 3
+}
+```
+
+スクリプトは:
+- Figma Set 数: `len(L2)` = **6**
+- 個別 Primitive 数: `sum(primitive_count)` = 1+1+1+3+1+1 = **8**
+- spec md 数: `len(unique(spec_md))` = **5**（progress.md と form-controls.md が統合）
+
+の 3 つを自動カウント → 出力に併記。
+
+### 初回実行で発見した bug
+
+**初回出力で「個別 Primitive 数 10/10」と誤算**。原因:
+
+```python
+# ❌ Bug: spec_integration を / で split して数えると、
+#     Progress Bar 行と Spinner 行で「Progress Bar / Spinner」が
+#     2 件 × 2 回 = 4 件カウントされる
+primitive_count += len(integration.split("/"))
+
+# ✅ Fix: fixture で primitive_count を明示 (Form Controls=3, 他=1)
+primitive_count += entry.get("primitive_count", 1)
+```
+
+→ 修正後 **8/8** で current.md と一致。これは **学び 94（ダッシュボード自体も audit 対象）の即実証**。スクリプトを書いたら **必ず実行 → 結果を既存 dashboard と diff** してから commit する規律が重要。
+
+### Phase 1-3 ロードマップ（README より）
+
+#### Phase 1（現在 / v0.3-dashboard）✅ 達成
+- fixture + 実 file scan のハイブリッド
+- stdout 出力（人間レビュー必須）
+- N/3 + 3 つの数え方併記
+- Figma variants 内訳明示
+
+#### Phase 2（候補 / v0.4-dashboard）
+- Figma audit の **自動連携**（`use_figma` 経由で fixture を自動更新）
+- current.md §7 への **差分自動反映**（git diff -p で適用可能な patch 出力）
+- **Stale 検出**（fixture last_audit が 30 日以上前なら警告）
+- §7-D / §7-E（TOP / LP 専用）の自動 scan
+
+#### Phase 3（候補 / v0.5-dashboard）
+- 複数 brand（FAM / FAMBOX）横展開
+- CI 統合（PR 時に diff コメント自動投稿）
+- ダッシュボード履歴の version 管理
+
+### 学んだこと（追加）
+
+101. **「自動生成スクリプト + 人間レビュー」のハイブリッドが安全側**: ダッシュボードを完全自動上書きにすると、**false-negative / false-positive の検出能力が落ちる**（学び 94）。stdout 出力 → 人間が diff レビュー → 手動反映の **3 step プロセス**を採用することで、自動化の効率と人間のレビュー眼の両立。「**自動化は 80%、最後の 20% は人間**」が DS 運用の経験則。
+
+102. **fixture（手動更新）+ 実 file scan（自動）のハイブリッドは更新頻度の差を吸収する**: spec md / Liquid section の **追加・削除は実 file scan で即追従**、Figma Set 内訳は **Audit 実行時に fixture を手動更新**。「**頻度の違う情報源を別管理にする**」ことで、不要な手動更新を減らしつつ Figma audit の鮮度を維持。Phase 2 で Figma 自動連携が入れば fixture も実 file 化できる。
+
+103. **新規スクリプトは初回実行で bug を出すのが普通、`current.md` との diff を必ず取る**: 今回 `primitive_count` の計算で 10/10 と誤算した bug は、**既存 current.md（8/8）との diff で即検出**。新規ダッシュボード生成スクリプトは **必ず既存値との一致を最初に検証**してから commit する。「diff = 自動 audit のゴールデンチェック」が新原則。学び 94 / 100 の補強。
+
+### Known TODOs
+
+- TOP ページに新 sections 配置（Week 5 QA）
+- LEGACY 4 件の段階的撤去
+- Drawer spec 着手（顕在化時）
+- generate-dashboard.py の Phase 2 拡張（Figma 自動連携 / Stale 検出）
+- 学び 100/103 を踏まえた「diff ベース audit プロトコル」を SKILL v0.8 候補に
+
+---

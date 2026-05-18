@@ -1,0 +1,205 @@
+{
+  "_meta": {
+    "description": "FAMBOX DS Figma Component Set fixture（Audit 結果の手動アップデート対象）",
+    "last_audit": "2026-05-15",
+    "last_audit_session": "#42",
+    "file_key": "QsiBrc2v20BYw76YHI9x3e",
+    "update_protocol": "Step 0.5 詳細 Audit (SKILL v0.7) で取得した properties[].variantOptions をそのまま反映"
+  },
+  "L4": [
+    {
+      "name": "Header",
+      "spec_md": "header.md",
+      "spec_section": null,
+      "figma_id": "59:33",
+      "variants": "3v / standard / minimal / mega",
+      "liquid": "fambox-header.liquid",
+      "note": "Figma height/sticky-mode property 追加（v0.4）"
+    },
+    {
+      "name": "Hero",
+      "spec_md": "hero-section.md",
+      "spec_section": null,
+      "figma_id": "67:73",
+      "variants": "12v / 4 variant × 3 height",
+      "liquid": "fambox-hero-v17-video.liquid",
+      "note": "preset 拡充（v0.4）"
+    },
+    {
+      "name": "Plan Card",
+      "spec_md": "subscription-plan-card.md",
+      "spec_section": null,
+      "figma_id": "65:110",
+      "variants": "2v / standard / featured",
+      "liquid": "fambox-subscription-plan.liquid",
+      "note": ""
+    },
+    {
+      "name": "Bento Grid",
+      "spec_md": "bento-grid.md",
+      "spec_section": null,
+      "figma_id": "91:107",
+      "variants": "3v / standard / editorial / autofit",
+      "liquid": "fambox-bento-grid.liquid",
+      "note": ""
+    },
+    {
+      "name": "Modal",
+      "spec_md": "modal.md",
+      "spec_section": null,
+      "figma_id": "62:33",
+      "variants": "3v / confirmation / detail / sheet",
+      "liquid": "fambox-modal.liquid",
+      "note": ""
+    },
+    {
+      "name": "Footer",
+      "spec_md": "footer.md",
+      "spec_section": null,
+      "figma_id": "60:95",
+      "variants": "3v / standard / minimal / sitemap-4列",
+      "liquid": "fambox-footer.liquid",
+      "note": ""
+    },
+    {
+      "name": "FAQ",
+      "spec_md": "faq.md",
+      "spec_section": null,
+      "figma_id": "93:90",
+      "variants": "1v / carousel",
+      "liquid": "fambox-faq.liquid",
+      "note": "Accordion variant（v0.3 拡張枠）"
+    },
+    {
+      "name": "Profile",
+      "spec_md": "profile.md",
+      "spec_section": null,
+      "figma_id": "96:79",
+      "variants": "1v / section",
+      "liquid": "fambox-profile.liquid",
+      "note": "Card variant（v0.3 拡張枠）"
+    },
+    {
+      "name": "Case Study",
+      "spec_md": "case-study.md",
+      "spec_section": null,
+      "figma_id": "66:91",
+      "variants": "3v / tile / story / logo-list",
+      "liquid": "fambox-case-study.liquid",
+      "note": ""
+    },
+    {
+      "name": "Contact Form",
+      "spec_md": "contact-form.md",
+      "spec_section": null,
+      "figma_id": "98:121",
+      "variants": "1v / input",
+      "liquid": "fambox-contact-form.liquid",
+      "note": "review/success variant 追加（v0.4）/ Notifications テンプレ手動設定"
+    },
+    {
+      "name": "Drawer",
+      "spec_md": null,
+      "spec_section": null,
+      "figma_id": null,
+      "variants": null,
+      "liquid": null,
+      "note": "spec から開始（顕在化時）"
+    }
+  ],
+  "L3": [
+    {
+      "name": "Card",
+      "spec_md": "card.md",
+      "figma_id": "57:35",
+      "variants": "4v / standard / flat / image / horizontal",
+      "liquid": null,
+      "embedded_in": "fambox-bento 等 L4 に内包",
+      "level": "Pattern OK"
+    },
+    {
+      "name": "Form Field",
+      "spec_md": "form-field.md",
+      "figma_id": "56:34",
+      "variants": "4v / state: default/focus/error/disabled",
+      "liquid": null,
+      "embedded_in": "Contact Form 内包",
+      "level": "Pattern OK"
+    },
+    {
+      "name": "Stat Card",
+      "spec_md": "stat-card.md",
+      "figma_id": "64:49",
+      "variants": "6v / 3 size × 2 layout",
+      "liquid": "fambox-stat-grid.liquid",
+      "embedded_in": null,
+      "level": "3/3"
+    },
+    {
+      "name": "Bento Tile",
+      "spec_md": "bento-tile.md",
+      "figma_id": "87:26",
+      "variants": "40v / 4 variant × 5 size × 2 featured",
+      "liquid": null,
+      "embedded_in": "fambox-bento-grid 内 `bento_tile` block",
+      "level": "Pattern OK (v0.3-liquid で実体化)"
+    }
+  ],
+  "L2": [
+    {
+      "name": "Button",
+      "spec_md": "button.md",
+      "spec_section": null,
+      "spec_integration": null,
+      "figma_id": "46:32",
+      "variants": "60v",
+      "note": null
+    },
+    {
+      "name": "Input",
+      "spec_md": "input.md",
+      "spec_section": null,
+      "spec_integration": null,
+      "figma_id": "50:26",
+      "variants": "12v",
+      "note": null
+    },
+    {
+      "name": "Avatar",
+      "spec_md": "avatar.md",
+      "spec_section": null,
+      "spec_integration": null,
+      "figma_id": "53:32",
+      "variants": "20v",
+      "note": null
+    },
+    {
+      "name": "Form Controls",
+      "spec_md": "form-controls.md",
+      "spec_section": null,
+      "spec_integration": "Checkbox / Radio / Toggle の 3 kind",
+      "figma_id": "54:16",
+      "variants": "9v / 3 kind × 3 state",
+      "note": "3 Primitive 内包",
+      "primitive_count": 3
+    },
+    {
+      "name": "Progress Bar",
+      "spec_md": "progress.md",
+      "spec_section": "Progress Bar",
+      "spec_integration": "Progress Bar / Spinner",
+      "figma_id": "55:11",
+      "variants": "5v / value 0-100",
+      "note": null
+    },
+    {
+      "name": "Spinner",
+      "spec_md": "progress.md",
+      "spec_section": "Spinner",
+      "spec_integration": "Progress Bar / Spinner",
+      "figma_id": "55:21",
+      "variants": "3v / size sm/md/lg",
+      "note": "Session #42 で false-negative 修正"
+    }
+  ]
+}
