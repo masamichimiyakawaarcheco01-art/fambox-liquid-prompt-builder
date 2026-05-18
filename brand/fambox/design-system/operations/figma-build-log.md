@@ -3734,3 +3734,61 @@ L1 Tokens `--icon-xs/sm/md/lg/xl` と完全整合。
 - theme.liquid に `{% render 'fambox-tokens.css' %}` 配置（宮川さん手動 / 視覚回帰テスト前提）
 
 ---
+
+## Session 2026-05-18 (#54-extension) — Tokens Studio 完全 import 用 JSON 生成
+
+**契機**: 「Tokens Studio プラグインをインストールしたい」のユーザーリクエスト。Claude は Figma UI を直接操作できないため、**インストール手順 + 即 import 可能な完全 JSON ファイル**を提供。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| **完全 import JSON** | `operations/scripts/tokens-studio-import.json` | 23 categories / **133 tokens 完全 1:1 対応** |
+| 評価ドキュメント更新 | `operations/2026-05-18-tokens-studio-evaluation.md` §3 Phase 2 | Option B（推奨）に JSON ファイルへのパスとカテゴリ別 token 数を明記 |
+
+### tokens-studio-import.json の構造
+
+```
+{
+  "$metadata": { ... tokenSetOrder ... },
+  "fambox": {
+    "color": { drive, drive-hover, drive-light, ink, sub, ... },   # 12
+    "bg": { primary, secondary, tertiary },                         # 3
+    "border": { light, base, soft, subtle },                        # 4
+    "semantic": { success, warning, error, info },                  # 4
+    "data": { 1-6 },                                                # 6
+    "glass": { 1-5 },                                               # 5
+    "white-overlay": { 04, 08, 10, 15, 30, 60, 85, 90 },             # 8
+    "ink-overlay": { 04, 06, 08, 16, 20 },                          # 5
+    "alias": { cta, cta-hover, focus-ring, link, link-hover },     # 5
+    ... (Typography / Spacing / Motion / Shadow / Radius / Breakpoint / Z-index / Icon) ...
+  }
+}
+```
+
+**特徴**:
+- Tokens Studio 標準カテゴリ（type: color / fontFamilies / fontWeights / fontSizes / lineHeights / spacing / sizing / borderRadius / boxShadow / other）に **完全準拠**
+- alias は `{fambox.color.drive}` 参照記法で表現
+- shadow は `{ x, y, blur, spread, color, type }` 構造で展開（type: boxShadow）
+
+### インストール 5 ステップ（ユーザー向けガイド / 約 5 分）
+
+```
+Step 1: Figma で FAMBOX Design System file を開く
+Step 2: Cmd + / で「Tokens Studio」検索
+Step 3: 「Tokens Studio for Figma」を Run（無料版）
+Step 4: 右側パネルに UI が表示されることを確認
+Step 5: Tools → Load JSON → tokens-studio-import.json を選択
+        → 133 tokens がツリー表示される
+```
+
+### 学び 128
+
+128. **「Claude 直接操作不可」のツールには "完全 import ファイル + 手順ガイド" の 2 点セットで支援する**: Figma プラグインのような外部ツールは Claude が UI 操作できないが、**ユーザー側の作業を最短化**できる。今回は (1) インストール手順 5 ステップ、(2) 既存 133 tokens の完全 import JSON、の 2 つを準備。**ユーザー側は「Load JSON」ボタン 1 クリックで完了**。Claude の貢献は「手動作業を 1 アクションに凝縮する」こと。学び 105（memory は draft + 手動転記）/ 126（評価ドキュメント + 手動試用）の延長として、**「手動作業の凝縮」**を新原則化。
+
+### Known TODOs
+
+- **宮川さん**: Figma で Tokens Studio をインストール → JSON import → 評価 §7 記入
+- Session #55 で試用結果確認 → プラン A 継続 or B 切替
+
+---

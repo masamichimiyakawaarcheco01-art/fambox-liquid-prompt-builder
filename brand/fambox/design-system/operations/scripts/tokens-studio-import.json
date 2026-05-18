@@ -1,0 +1,321 @@
+{
+  "$metadata": {
+    "tokenSetOrder": ["fambox"],
+    "description": "FAMBOX Design System v0.5 — 完全な 133 tokens を Tokens Studio 形式に変換。Session #54 Part B（2026-05-18）で生成。snippets/fambox-tokens.css.liquid と spec §1-A〜§1-I に完全準拠。"
+  },
+  "fambox": {
+    "color": {
+      "drive": {
+        "value": "#fc5214",
+        "type": "color",
+        "description": "Primary Drive color (Brand DNA / spec §1-A 1-1)"
+      },
+      "drive-hover": {
+        "value": "#e14710",
+        "type": "color",
+        "description": "Drive hover state"
+      },
+      "drive-light": {
+        "value": "#ff7a51",
+        "type": "color",
+        "description": "Drive light variant"
+      },
+      "drive-glow": {
+        "value": "rgba(252, 82, 20, 0.32)",
+        "type": "color",
+        "description": "Glow shadow base"
+      },
+      "ink": {
+        "value": "#1b1d1a",
+        "type": "color",
+        "description": "Main text color"
+      },
+      "sub": {
+        "value": "#5c5f58",
+        "type": "color",
+        "description": "Secondary text"
+      },
+      "caption": {
+        "value": "#8a8d87",
+        "type": "color",
+        "description": "Caption / meta text"
+      },
+      "placeholder": {
+        "value": "#dddddd",
+        "type": "color",
+        "description": "Placeholder text"
+      },
+      "white": {
+        "value": "#ffffff",
+        "type": "color",
+        "description": "On-dark text / pure white"
+      },
+      "disabled": {
+        "value": "#b3b5b0",
+        "type": "color",
+        "description": "Disabled state"
+      },
+      "sky": {
+        "value": "#4a90e2",
+        "type": "color",
+        "description": "Secondary Sky color (仮値・v0.6 で確定)"
+      },
+      "deep": {
+        "value": "#2c3e50",
+        "type": "color",
+        "description": "Secondary Deep color (仮値・v0.6 で確定)"
+      }
+    },
+    "bg": {
+      "primary": { "value": "#ffffff", "type": "color" },
+      "secondary": { "value": "#fafafa", "type": "color" },
+      "tertiary": { "value": "#f3f3f3", "type": "color" }
+    },
+    "border": {
+      "light": {
+        "value": "rgba(27, 29, 26, 0.08)",
+        "type": "color",
+        "description": "Hairline divider"
+      },
+      "base": {
+        "value": "#ececec",
+        "type": "color",
+        "description": "Form / card border"
+      },
+      "soft": {
+        "value": "#d0d1db",
+        "type": "color",
+        "description": "Section divider 1-2px"
+      },
+      "subtle": {
+        "value": "rgba(27, 29, 26, 0.04)",
+        "type": "color",
+        "description": "Extremely soft border"
+      }
+    },
+    "semantic": {
+      "success": { "value": "#2e7d32", "type": "color" },
+      "warning": { "value": "#f57c00", "type": "color" },
+      "error": { "value": "#d32f2f", "type": "color" },
+      "info": { "value": "#1976d2", "type": "color" }
+    },
+    "data": {
+      "1": { "value": "#fc5214", "type": "color", "description": "drive" },
+      "2": { "value": "#2e7d32", "type": "color", "description": "success-green" },
+      "3": { "value": "#1976d2", "type": "color", "description": "info-blue" },
+      "4": { "value": "#f57c00", "type": "color", "description": "warning-orange" },
+      "5": { "value": "#7b1fa2", "type": "color", "description": "purple" },
+      "6": { "value": "#00838f", "type": "color", "description": "teal" }
+    },
+    "glass": {
+      "1": { "value": "rgba(0, 0, 0, 0.05)", "type": "color" },
+      "2": { "value": "rgba(0, 0, 0, 0.1)", "type": "color" },
+      "3": { "value": "rgba(0, 0, 0, 0.3)", "type": "color" },
+      "4": { "value": "rgba(0, 0, 0, 0.6)", "type": "color" },
+      "5": { "value": "rgba(0, 0, 0, 0.8)", "type": "color" }
+    },
+    "white-overlay": {
+      "04": { "value": "rgba(255, 255, 255, 0.04)", "type": "color" },
+      "08": { "value": "rgba(255, 255, 255, 0.08)", "type": "color" },
+      "10": { "value": "rgba(255, 255, 255, 0.1)", "type": "color" },
+      "15": { "value": "rgba(255, 255, 255, 0.15)", "type": "color" },
+      "30": { "value": "rgba(255, 255, 255, 0.3)", "type": "color" },
+      "60": { "value": "rgba(255, 255, 255, 0.6)", "type": "color" },
+      "85": { "value": "rgba(255, 255, 255, 0.85)", "type": "color" },
+      "90": { "value": "rgba(255, 255, 255, 0.9)", "type": "color" }
+    },
+    "ink-overlay": {
+      "04": { "value": "rgba(27, 29, 26, 0.04)", "type": "color" },
+      "06": { "value": "rgba(27, 29, 26, 0.06)", "type": "color" },
+      "08": { "value": "rgba(27, 29, 26, 0.08)", "type": "color" },
+      "16": { "value": "rgba(27, 29, 26, 0.16)", "type": "color" },
+      "20": { "value": "rgba(27, 29, 26, 0.2)", "type": "color" }
+    },
+    "alias": {
+      "cta": { "value": "{fambox.color.drive}", "type": "color" },
+      "cta-hover": { "value": "{fambox.color.drive-hover}", "type": "color" },
+      "focus-ring": { "value": "{fambox.color.drive}", "type": "color" },
+      "link": { "value": "{fambox.color.drive}", "type": "color" },
+      "link-hover": { "value": "{fambox.color.drive-hover}", "type": "color" }
+    },
+    "fontFamily": {
+      "ja": {
+        "value": "Hiragino Sans, Hiragino Kaku Gothic ProN, Meiryo, sans-serif",
+        "type": "fontFamilies"
+      },
+      "en": {
+        "value": "Poppins, sans-serif",
+        "type": "fontFamilies"
+      }
+    },
+    "fontWeight": {
+      "regular": { "value": "400", "type": "fontWeights" },
+      "medium": { "value": "500", "type": "fontWeights" },
+      "semibold": { "value": "600", "type": "fontWeights" },
+      "bold": { "value": "700", "type": "fontWeights" }
+    },
+    "fontSize": {
+      "caption": { "value": "12", "type": "fontSizes" },
+      "caption-lg": { "value": "13", "type": "fontSizes" },
+      "body-sm": { "value": "14", "type": "fontSizes" },
+      "body-md": { "value": "15", "type": "fontSizes" },
+      "body": { "value": "16", "type": "fontSizes" },
+      "body-lg": { "value": "18", "type": "fontSizes" },
+      "h4": { "value": "20", "type": "fontSizes" },
+      "h3": { "value": "24", "type": "fontSizes" },
+      "h3-mobile": { "value": "28", "type": "fontSizes" },
+      "h2": { "value": "32", "type": "fontSizes" },
+      "h2-large": { "value": "40", "type": "fontSizes" },
+      "h1": { "value": "48", "type": "fontSizes" },
+      "display": { "value": "56", "type": "fontSizes" },
+      "hero": { "value": "64", "type": "fontSizes" },
+      "mega": { "value": "96", "type": "fontSizes" }
+    },
+    "lineHeight": {
+      "tight": { "value": "1.2", "type": "lineHeights" },
+      "heading": { "value": "1.4", "type": "lineHeights" },
+      "base": { "value": "1.5", "type": "lineHeights" },
+      "body": { "value": "1.75", "type": "lineHeights" },
+      "relaxed": { "value": "1.8", "type": "lineHeights" }
+    },
+    "letterSpacing": {
+      "en": { "value": "-0.02em", "type": "letterSpacing" },
+      "ja": { "value": "0.02em", "type": "letterSpacing" },
+      "uppercase": { "value": "0.12em", "type": "letterSpacing" },
+      "button": { "value": "0.04em", "type": "letterSpacing" }
+    },
+    "space": {
+      "0-5": { "value": "4", "type": "spacing" },
+      "1": { "value": "8", "type": "spacing" },
+      "1-5": { "value": "12", "type": "spacing" },
+      "2": { "value": "16", "type": "spacing" },
+      "3": { "value": "24", "type": "spacing" },
+      "4": { "value": "32", "type": "spacing" },
+      "4-5": { "value": "40", "type": "spacing" },
+      "5": { "value": "48", "type": "spacing" },
+      "6": { "value": "64", "type": "spacing" },
+      "7": { "value": "96", "type": "spacing" },
+      "8": { "value": "120", "type": "spacing" }
+    },
+    "sectionSpacing": {
+      "sp": { "value": "96", "type": "spacing" },
+      "pc": { "value": "120", "type": "spacing" }
+    },
+    "duration": {
+      "fast": { "value": "150", "type": "other", "description": "ms" },
+      "base": { "value": "250", "type": "other", "description": "ms" },
+      "slow": { "value": "350", "type": "other", "description": "ms" },
+      "breathing": { "value": "2000", "type": "other", "description": "ms / 呼吸アニメ" }
+    },
+    "ease": {
+      "out": { "value": "ease-out", "type": "other" },
+      "in": { "value": "ease-in", "type": "other" },
+      "in-out": { "value": "ease-in-out", "type": "other" }
+    },
+    "shadow": {
+      "1": {
+        "value": {
+          "x": "0",
+          "y": "1",
+          "blur": "2",
+          "spread": "0",
+          "color": "rgba(0, 0, 0, 0.04)",
+          "type": "dropShadow"
+        },
+        "type": "boxShadow",
+        "description": "Hairline / card 静止"
+      },
+      "2": {
+        "value": {
+          "x": "0",
+          "y": "4",
+          "blur": "8",
+          "spread": "0",
+          "color": "rgba(0, 0, 0, 0.08)",
+          "type": "dropShadow"
+        },
+        "type": "boxShadow"
+      },
+      "3": {
+        "value": {
+          "x": "0",
+          "y": "8",
+          "blur": "16",
+          "spread": "0",
+          "color": "rgba(0, 0, 0, 0.12)",
+          "type": "dropShadow"
+        },
+        "type": "boxShadow",
+        "description": "Card hover lift"
+      },
+      "4": {
+        "value": {
+          "x": "0",
+          "y": "12",
+          "blur": "24",
+          "spread": "0",
+          "color": "rgba(0, 0, 0, 0.16)",
+          "type": "dropShadow"
+        },
+        "type": "boxShadow"
+      },
+      "5": {
+        "value": {
+          "x": "0",
+          "y": "24",
+          "blur": "48",
+          "spread": "0",
+          "color": "rgba(0, 0, 0, 0.24)",
+          "type": "dropShadow"
+        },
+        "type": "boxShadow",
+        "description": "Modal / overlay"
+      },
+      "drive-glow": {
+        "value": {
+          "x": "0",
+          "y": "8",
+          "blur": "16",
+          "spread": "0",
+          "color": "rgba(252, 82, 20, 0.24)",
+          "type": "dropShadow"
+        },
+        "type": "boxShadow",
+        "description": "CTA hover glow"
+      }
+    },
+    "radius": {
+      "xs": { "value": "2", "type": "borderRadius" },
+      "sm": { "value": "4", "type": "borderRadius" },
+      "md": { "value": "8", "type": "borderRadius" },
+      "lg": { "value": "16", "type": "borderRadius", "description": "Sheet modal 上端" },
+      "circle": { "value": "9999", "type": "borderRadius", "description": "50% 相当 / avatar / icon button" },
+      "pill-cta": { "value": "50", "type": "borderRadius" },
+      "pill": { "value": "9999", "type": "borderRadius" }
+    },
+    "breakpoint": {
+      "sp-sm": { "value": "480", "type": "sizing" },
+      "sp-max": { "value": "767", "type": "sizing" },
+      "tablet": { "value": "768", "type": "sizing" },
+      "pc": { "value": "1024", "type": "sizing" },
+      "container-max": { "value": "1440", "type": "sizing" }
+    },
+    "layer": {
+      "base": { "value": "1", "type": "other" },
+      "1": { "value": "2", "type": "other", "description": "card hover lift" },
+      "2": { "value": "10", "type": "other", "description": "dropdown / tooltip" },
+      "3": { "value": "50", "type": "other", "description": "sticky CTA bar" },
+      "4": { "value": "100", "type": "other", "description": "Header / Drawer" },
+      "5": { "value": "1000", "type": "other", "description": "Modal / Overlay" },
+      "6": { "value": "9999", "type": "other", "description": "Toast / Critical alert" }
+    },
+    "icon": {
+      "xs": { "value": "16", "type": "sizing" },
+      "sm": { "value": "20", "type": "sizing" },
+      "md": { "value": "24", "type": "sizing" },
+      "lg": { "value": "32", "type": "sizing" },
+      "xl": { "value": "48", "type": "sizing" },
+      "stroke": { "value": "1.5", "type": "borderWidth" }
+    }
+  }
+}

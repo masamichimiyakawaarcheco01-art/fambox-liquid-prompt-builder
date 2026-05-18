@@ -66,9 +66,49 @@
 3. → 既存 257 variants の Figma Variables が Tokens Studio に取り込まれる想定
 4. **想定外動作 / エラーが出たら本ドキュメント §6「リスク評価」へ**
 
-#### Option B: 既存 CSS Tokens (133 个) を JSON で import
+#### Option B: 既存 CSS Tokens (133 个) を JSON で import — ⭐ 推奨
 
-下記 §4 の JSON サンプルを Tokens Studio の `Tools → Load JSON` で読み込み。
+**Session #54 で 133 tokens の完全 JSON を生成済**:
+
+```
+File: brand/fambox/design-system/operations/scripts/tokens-studio-import.json
+内容: 23 categories / 133 tokens (snippets/fambox-tokens.css.liquid と完全 1:1 対応)
+```
+
+**読み込み手順**:
+1. Tokens Studio UI の右下 `Tools` (3点メニュー or 歯車アイコン)
+2. `Load JSON` を選択
+3. 上記 JSON ファイルを選択 → import
+4. 23 カテゴリ / 133 tokens がツリー表示されることを確認
+
+**カテゴリ別 token 数**:
+
+| Category | Tokens |
+|---|---:|
+| color | 12 |
+| bg | 3 |
+| border | 4 |
+| semantic | 4 |
+| data | 6 |
+| glass | 5 |
+| white-overlay | 8 |
+| ink-overlay | 5 |
+| alias | 5 |
+| fontFamily | 2 |
+| fontWeight | 4 |
+| fontSize | 15 |
+| lineHeight | 5 |
+| letterSpacing | 4 |
+| space | 11 |
+| sectionSpacing | 2 |
+| duration | 4 |
+| ease | 3 |
+| shadow | 6 |
+| radius | 7 |
+| breakpoint | 5 |
+| layer | 7 |
+| icon | 6 |
+| **合計** | **133** |
 
 ### Phase 3: 双方向同期テスト（30-45 min）
 
