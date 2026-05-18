@@ -114,7 +114,7 @@
     padding: 4px 24px 4px 4px;
     border-radius: 42px;
     border: none !important;
-    background: #1B1D1A;
+    background: #1b1d1a;
     color: rgba(255,255,255,0.9) !important;
     font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
     font-size: 15px !important;
@@ -133,12 +133,12 @@
   }
   #{{ sec_id }} .ap__tab--active {
     background: rgba(255,255,255,0.9) !important;
-    color: #1B1D1A !important;
+    color: #1b1d1a !important;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   }
   #{{ sec_id }} .ap__tab--active:hover {
     background: rgba(255,255,255,0.9) !important;
-    color: #1B1D1A !important;
+    color: #1b1d1a !important;
   }
   #{{ sec_id }} .ap__tab-avatar {
     width: 64px;
@@ -149,7 +149,7 @@
     flex-shrink: 0;
   }
   #{{ sec_id }} .ap__tab--active .ap__tab-avatar {
-    background: #FB4C15;
+    background: #fc5214;
   }
   #{{ sec_id }} .ap__tab-avatar img {
     width: 100%;
@@ -250,21 +250,21 @@
     font-family: 'Poppins', sans-serif !important;
     font-size: 20px !important;
     font-weight: 500 !important;
-    color: #1B1D1A !important;
+    color: #1b1d1a !important;
     margin-bottom: 4px !important;
   }
   #{{ sec_id }} .ap__card-ja {
     font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
     font-size: 13px !important;
     font-weight: 500 !important;
-    color: #92939C !important;
+    color: #92939c !important;
     margin-bottom: 16px !important;
   }
   #{{ sec_id }} .ap__card-target {
     font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
     font-size: 14px !important;
     font-weight: 500 !important;
-    color: #1B1D1A !important;
+    color: #1b1d1a !important;
     line-height: 170% !important;
     margin-bottom: 16px !important;
     min-height: 48px;
@@ -284,7 +284,7 @@
     font-size: 13px !important;
     color: #545655 !important;
     padding-bottom: 8px;
-    border-bottom: 1px solid #ECECEC;
+    border-bottom: 1px solid #ececec;
   }
   #{{ sec_id }} .ap__card-spec:last-child {
     border-bottom: none;
@@ -295,7 +295,7 @@
   }
   #{{ sec_id }} .ap__card-spec-value {
     font-weight: 600 !important;
-    color: #1B1D1A !important;
+    color: #1b1d1a !important;
   }
 
   /* 価格 */
@@ -307,12 +307,12 @@
     font-family: 'Poppins', sans-serif !important;
     font-size: 28px !important;
     font-weight: 500 !important;
-    color: #FB4C15 !important;
+    color: #fc5214 !important;
   }
   #{{ sec_id }} .ap__card-price-main span {
     font-size: 14px !important;
     font-weight: 400 !important;
-    color: #92939C !important;
+    color: #92939c !important;
   }
 
   /* CTA */
@@ -487,7 +487,7 @@
               {%- if block.settings.tab_image != blank -%}
                 {{ block.settings.tab_image | image_url: width: 96 | image_tag: alt: block.settings.tab_main }}
               {%- else -%}
-                <div style="width:100%;height:100%;border-radius:50%;background:{% if forloop.first %}#FB4C15{% else %}rgba(255,255,255,0.3){% endif %};display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;">{%- comment -%}not empty{%- endcomment -%}</div>
+                <div style="width:100%;height:100%;border-radius:50%;background:{% if forloop.first %}#fc5214{% else %}rgba(255,255,255,0.3){% endif %};display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;">{%- comment -%}not empty{%- endcomment -%}</div>
               {%- endif -%}
             </div>
             <div class="ap__tab-label">
@@ -602,7 +602,7 @@
         if (av) av.style.background = 'rgba(255,255,255,0.3)';
       });
       var activeAv = this.querySelector('.ap__tab-avatar > div');
-      if (activeAv) activeAv.style.background = '#FB4C15';
+      if (activeAv) activeAv.style.background = '#fc5214';
 
       /* カードグループ切替 */
       groups.forEach(function(g) {
@@ -686,7 +686,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "背景色",
-      "default": "#FB4C15"
+      "default": "#fc5214"
     },
     {
       "type": "textarea",

@@ -3126,3 +3126,76 @@ tokens-extracted.md 末尾に **Phase B-1〜B-5** を明示:
 - §5 残論点 5 件（命名規則は実態ベースで de facto 確定済、Figma 構造 / アイコン / Tokens Studio / FAM-FAMBOX 統合は未決定）
 
 ---
+
+## Session 2026-05-18 (#48) — Phase B-1 / B-2 / B-3 一括実行（Token 化基盤完成）
+
+**契機**: Session #47 の Phase B-1〜B-5 計画から **B-1 / B-2 / B-3 を 1 セッションで完遂**。これで CSS snippet 化（B-4）の前提条件がすべて揃った。
+
+### 成果
+
+| Phase | 内容 | 変更 |
+|---|---|---|
+| **B-1 完全版** | 全 hex 小文字統一 + Drive 表記揺れ解消 | 21 files / **565 chars 置換** |
+| **B-2** | マジックナンバー 3 色逆引き | 用途確定（divider / caption-near / sub-near）|
+| **B-3** | current.md §1-A / §1-C / §1-D / §1-G 更新 | spec を実装に揃え（**学び 106 の実装**）|
+
+### B-1 詳細
+
+#### Step 1: sed で Drive 色統一 + `#FFF` 小文字化（macOS BSD sed）
+
+```bash
+for f in sections/fambox-*.liquid; do
+  sed -i '' -e 's/#FB4C15/#FC5214/g' -e 's/#FFFFFF/#fff/g' -e 's/#FFF\b/#fff/g' "$f"
+done
+```
+
+→ Drive `#FB4C15` 24 件 → `#FC5214` に統一済（最終 63 件）。ただし他の大文字 6 桁 hex（`#FAFAFA` 等）は対象外で残った。
+
+#### Step 2: Python で全 hex 小文字統一
+
+```python
+hex_pattern = re.compile(r'#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b')
+new_content = hex_pattern.sub(lambda m: '#' + m.group(1).lower(), content)
+```
+
+→ **21 files / 565 chars 置換**。`#FAFAFA` → `#fafafa` / `#ECECEC` → `#ececec` 等全 hex 小文字化。
+
+### B-2 逆引き判断
+
+| Color | 既存 Token 距離 | 推奨アクション |
+|---|---|---|
+| `#d0d1db` | 既存に類似なし | **新規 `--border-soft` 追加**（4 段目）|
+| `#92939c` | `#8a8d87` (caption) と微差 | spec で「caption に集約」明示 / 視覚不変 |
+| `#545655` | `#5c5f58` (sub) と微差 | spec で「sub に集約」明示 / 視覚不変 |
+
+「**完全に独立した Token として扱うか、既存 Token に集約するか**」は **視覚的差**で判断。HSL で hue 差 / lightness 差を見て、視覚的に区別不能なら統合推奨。
+
+### B-3 spec 更新の方針（学び 106 実装）
+
+current.md §1 を **「spec が現実離れしている」前提で、実装に揃える方向**で更新:
+
+| Token カテゴリ | 旧 spec | 新 spec（v0.5 実装整合）| 学び |
+|---|---|---|---|
+| Drive 色 | 3値 | **4値**（hover #E14710 追加）| 106: 実装 → spec |
+| Spacing | 8 段階（8/16/24/32/48/64/96/160）| **11 段階**（4/8/12/16/24/32/40/48/64/96/120）| 107: 80/20 |
+| Duration | 150/300/600 | **150/250/350** | 73: 実装が正 |
+| Line-height | 3 段階（1.2/1.75/1.5）| **5 段階**（1.2/1.4/1.5/1.75/1.8）| 73: 実装が正 |
+| Breakpoint | 3 段階 | **4 段階**（SP-sm 480 追加）| 73: 実装が正 |
+| Section spacing PC | 160 | **120**（実装に整合）| 73 |
+
+### 学んだこと（追加）
+
+109. **BSD sed と GNU sed の `\b` 互換性問題は Python で吸収する**: macOS の BSD sed では `\b` (word boundary) が動作しない / 動作が異なる。複雑な regex を含む grep-and-replace は **Python の `re` モジュールでスクリプト化**する方が、(1) クロスプラットフォーム動作、(2) 単体テスト可能、(3) 再実行で冪等 の 3 つのメリット。
+
+110. **「既存 Token への集約」と「新規 Token 追加」は視覚的差で判断する**: マジックナンバー `#92939c` (caption-near) / `#545655` (sub-near) は HSL で既存 Token と微差。**視覚的に区別不能なら既存 Token に集約**、明確に区別される場合のみ新規 Token 追加（`#d0d1db` は divider 用途で他色と用途が異なるため新規）。Token 数の膨張を防ぐ判断基準。
+
+111. **spec 更新は「マーカー付き」で履歴を残す**: `**4値**（追加: soft #D0D1DB）+ **soft 追加 Session #48**` のように **spec 内に Session 番号と差分を明示**することで、後から見た人が「どこが新規追加か」を即把握できる。`v0.5 継承` 列を残しつつ、🔶 / + Session #N 追加 / 修正 等のマーカーで段階更新を可視化。学び 76（チェックリスト追加は v0.X ラベル）の延長系。
+
+### Known TODOs
+
+- **Phase B-4**: `snippets/fambox-tokens.css.liquid` 新規作成（Session #49）
+- **Phase B-5**: 7 sections の Variable 置換（Session #50-53 想定）
+- マジックナンバー 2 色（`#92939c` / `#545655`）を `--color-caption` / `--color-sub` に sed 一括置換（次セッションで実行）
+- §1-E Elevation / §1-F Radius / §1-H Z-index / §1-I Icon / §1-J Variable Mode の spec 更新（B-3 残り）
+
+---

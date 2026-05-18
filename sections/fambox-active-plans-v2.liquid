@@ -139,7 +139,7 @@
     padding: 4px 24px 4px 4px;
     border-radius: 42px;
     border: none !important;
-    background: #1B1D1A;
+    background: #1b1d1a;
     color: rgba(255,255,255,0.9) !important;
     font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
     font-size: 15px !important;
@@ -154,7 +154,7 @@
   #{{ sec_id }} .apv2__tab:hover { background: #2c2e2b; }
   #{{ sec_id }} .apv2__tab--active {
     background: rgba(255,255,255,0.95) !important;
-    color: #1B1D1A !important;
+    color: #1b1d1a !important;
     box-shadow: 0 4px 16px rgba(0,0,0,0.12);
   }
   #{{ sec_id }} .apv2__tab-avatar {
@@ -165,7 +165,7 @@
     flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
   }
-  #{{ sec_id }} .apv2__tab--active .apv2__tab-avatar { background: #FB4C15; }
+  #{{ sec_id }} .apv2__tab--active .apv2__tab-avatar { background: #fc5214; }
   #{{ sec_id }} .apv2__tab-avatar img {
     width: 100%; height: 100%;
     object-fit: cover;
@@ -307,14 +307,14 @@
       background: #fff !important;
     }
     #{{ sec_id }} .apv2__card-text { width: 100%; height: auto; padding: 20px; }
-    #{{ sec_id }} .apv2__card-ja { color: #92939C !important; font-size: 13px !important; }
-    #{{ sec_id }} .apv2__card-plan { color: #1B1D1A !important; font-size: 24px !important; }
-    #{{ sec_id }} .apv2__card-divider { background: #ECECEC !important; margin: 16px 0; }
-    #{{ sec_id }} .apv2__card-target { color: #1B1D1A !important; font-size: 14px !important; }
-    #{{ sec_id }} .apv2__card-spec { color: #545655 !important; border-bottom-color: #ECECEC; }
-    #{{ sec_id }} .apv2__card-spec-value { color: #1B1D1A !important; }
+    #{{ sec_id }} .apv2__card-ja { color: #92939c !important; font-size: 13px !important; }
+    #{{ sec_id }} .apv2__card-plan { color: #1b1d1a !important; font-size: 24px !important; }
+    #{{ sec_id }} .apv2__card-divider { background: #ececec !important; margin: 16px 0; }
+    #{{ sec_id }} .apv2__card-target { color: #1b1d1a !important; font-size: 14px !important; }
+    #{{ sec_id }} .apv2__card-spec { color: #545655 !important; border-bottom-color: #ececec; }
+    #{{ sec_id }} .apv2__card-spec-value { color: #1b1d1a !important; }
     #{{ sec_id }} .apv2__card-price-label { color: #545655 !important; }
-    #{{ sec_id }} .apv2__card-price-main { color: #FB4C15 !important; font-size: 28px !important; }
+    #{{ sec_id }} .apv2__card-price-main { color: #fc5214 !important; font-size: 28px !important; }
     #{{ sec_id }} .apv2__card-cta {
       width: 100% !important;
       background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95)) !important;
@@ -430,7 +430,7 @@
                 {%- if block.settings.tab_image != blank -%}
                   {{ block.settings.tab_image | image_url: width: 128 | image_tag: alt: block.settings.tab_main }}
                 {%- else -%}
-                  <div style="width:100%;height:100%;border-radius:50%;background:{% if forloop.first %}#FB4C15{% else %}rgba(255,255,255,0.3){% endif %};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">{%- comment -%}av{%- endcomment -%}</div>
+                  <div style="width:100%;height:100%;border-radius:50%;background:{% if forloop.first %}#fc5214{% else %}rgba(255,255,255,0.3){% endif %};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">{%- comment -%}av{%- endcomment -%}</div>
                 {%- endif -%}
               </div>
               <div class="apv2__tab-label">
@@ -464,7 +464,7 @@
         if (av) av.style.background = 'rgba(255,255,255,0.3)';
       });
       var activeAv = this.querySelector('.apv2__tab-avatar > div');
-      if (activeAv) activeAv.style.background = '#FB4C15';
+      if (activeAv) activeAv.style.background = '#fc5214';
 
       groups.forEach(function(g) { g.classList.remove('apv2__cards-group--active'); });
       var tg = secEl.querySelector('[data-group="' + target + '"]');
@@ -498,7 +498,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "背景色",
-      "default": "#FB4C15"
+      "default": "#fc5214"
     },
     {
       "type": "textarea",

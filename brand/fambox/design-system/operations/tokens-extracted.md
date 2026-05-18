@@ -418,5 +418,65 @@ grep -ohE "#[0-9a-fA-F]{6}|#[0-9a-fA-F]{3}" sections/fambox-*.liquid | sort | un
 ## Status
 
 - ✅ Step 1-3 完了（grep 抽出 → de facto Token 表）
-- 🟡 Step 4: spec gap 検出（本ファイル §8 サマリで網羅）
-- 🟡 Step 5: 次セッション引き継ぎ（本ファイル末尾 Phase B-1〜B-5）
+- ✅ Step 4: spec gap 検出（本ファイル §8 サマリで網羅）
+- ✅ Step 5: 次セッション引き継ぎ（本ファイル末尾 Phase B-1〜B-5）
+
+---
+
+## Session #48 実行ログ（2026-05-18）
+
+### Phase B-1 完全版（実施）
+
+`#FB4C15` 24件 → `#FC5214` に統一、その後 Python で全 hex を**小文字統一**（21 files / 565 chars 置換）:
+
+```
+files changed: 21
+chars replaced: 565
+```
+
+**Before/After**:
+- Before: `#FB4C15` 24 / `#FFFFFF` 10 / `#FFF` 64 件
+- After:  `#FB4C15` 0 / `#FFFFFF` 0 / `#FFF` 0 / `#FC5214` 63 / `#fff` 64 件
+- 副産物: `#FAFAFA` → `#fafafa` / `#ECECEC` → `#ececec` 等の全 hex も小文字化
+
+### Phase B-2 マジックナンバー逆引き（実施）
+
+| Color | 出現箇所 | 用途 | 判断 |
+|---|---|---|---|
+| `#d0d1db` (5) | fambox-blog-carousel / value-proposition / menu-showcase | 区切り線 (divider 1-2px) | **新規 `--border-soft` 追加**（spec §1-A 1-5 に追加済）|
+| `#92939c` (4) | fambox-active-plans / active-plans-v2 / menu-showcase | カード sub text (color, 13px) | `--color-caption` #8a8d87 に集約（視覚的に区別なし）|
+| `#545655` (4) | fambox-active-plans / active-plans-v2 / model-case | カード本文 (color) | `--color-sub` #5c5f58 に集約（視覚的に区別なし）|
+
+### Phase B-3 spec 更新（実施）
+
+current.md §1-A / §1-C / §1-D / §1-G を v0.5 実装に揃えて更新:
+
+- §1-A Primary: 3値 → **4値**（`--color-drive-hover #E14710` 追加）
+- §1-A Ink/Text: placeholder #DDD を明示
+- §1-A Border: 3値 → **4値**（`--border-soft #D0D1DB` 追加）
+- §1-A Semantic Alias: **`--color-disabled #B3B5B0`** 追加
+- §1-C Spacing: scale を 8/16/24/32/48/64/96/160 → **4/8/12/16/24/32/40/48/64/96/120** に拡張（11 段階）
+- §1-C Section spacing: PC 160 → **120**（実装に整合）
+- §1-D duration: 150/300/600 → **150/250/350** に修正
+- §1-D easing: ease-out 中心に集約
+- §1-D line-height: 3 → **5 段階拡張**（tight 1.2 / heading 1.4 / base 1.5 / body 1.75 / relaxed 1.8）
+- §1-G breakpoint: 3 → **4 段階拡張**（SP-sm 480 追加）
+
+---
+
+## 次セッション（Session #49）の作業案
+
+### Phase B-4: `snippets/fambox-tokens.css.liquid` 新規作成（60-90 min）
+
+Session #47 §Phase B-4 のテンプレに従って実装。Session #48 で確定した命名（`--space-0.5` 〜 `--space-8`、`--duration-fast/base/slow` 等）を使う。
+
+### Phase B-5: 既存 7 sections の Variable 参照置換（60-90 min × N）
+
+優先順:
+1. `fambox-modal.liquid`（最小 / 依存少 / 実証用）
+2. `fambox-footer.liquid`（実証で得たパターンを横展開）
+3. `fambox-bento-grid.liquid` / `fambox-header.liquid`
+4. `fambox-contact-form.liquid` / `fambox-case-study.liquid`（大規模）
+5. `fambox-stat-grid.liquid`（後回し）
+
+各セッションで **1-2 sections を置換 → screenshot で視覚不変を確認 → commit**。

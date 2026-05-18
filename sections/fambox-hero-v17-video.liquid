@@ -5,14 +5,14 @@
      SP: 390 × 650px
   ============================================================ */
 .fv17 {
---orange: #FB4C15;
---dark:   #1B1D1A;
+--orange: #fc5214;
+--dark:   #1b1d1a;
 position: relative;
 z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
 width: 100%;
 height: 650px;
 overflow: hidden;
-background: #FAFAFA;
+background: #fafafa;
 font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
 -webkit-font-smoothing: antialiased;
   }
@@ -272,14 +272,14 @@ object-position: center center;
 .fv17-bg-video--right { display: none; }
 /* ── グラデーション: ::before 疑似要素で確実に表示 ──
        外部要素・z-index競合・stacking context 問題をすべて回避
-       高さ325px、#FAFAFA 100% → 透明 0%
+       高さ325px、#fafafa 100% → 透明 0%
     ── */
 .fv17::before {
 content: '';
 position: absolute;
 top: 0; left: 0; right: 0;
 height: 325px;
-background: linear-gradient(to bottom, #FAFAFA 0%, rgba(250,250,250,0) 100%);
+background: linear-gradient(to bottom, #fafafa 0%, rgba(250,250,250,0) 100%);
 z-index: 3;
 pointer-events: none;
     }

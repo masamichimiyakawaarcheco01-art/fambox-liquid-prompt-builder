@@ -122,15 +122,24 @@ FAM v0.5 CSS変数をベースに構造化。**3階層翻訳表の2段目**。
 ## 1-A. Color Tokens
 | # | カテゴリ | 項目数 | v0.5継承 |
 |---|---|---|---|
-| 1-1 | Primary（Drive） | 3値（base/light/glow） | ✅ |
+| 1-1 | Primary（Drive） | **4値**（base #FC5214 / hover #E14710 / light #FF7A51 / glow） | ✅ + **hover 追加 Session #48** |
 | 1-2 | Secondary（Sky/Deep） | 2値 | ✅ |
-| 1-3 | Ink / Text 5段階 | 5値 | ✅ |
-| 1-4 | Background 3階層 | 3値 | ✅ |
-| 1-5 | Border（Light/Base/Subtle） | 3値 | ✅ |
-| 1-6 | Semantic（Success/Warning/Error/Info） | 4値 | ✅ |
+| 1-3 | Ink / Text 5段階 | 5値（ink #1B1D1A / sub #5C5F58 / caption #8A8D87 / placeholder #DDD / white #fff）| ✅ + **placeholder 追加 Session #48** |
+| 1-4 | Background 3階層 | 3値（primary #fff / secondary #FAFAFA / tertiary #F3F3F3）| ✅ |
+| 1-5 | Border（Light/Base/Soft/Subtle） | **4値**（追加: soft #D0D1DB）| ✅ + **soft 追加 Session #48** |
+| 1-6 | Semantic（Success/Warning/Error/Info） | 4値（error #D32F2F / success #2E7D32）| ✅ |
 | 1-7 | Data Color Palette | 6値 | ✅ |
-| 1-8 | Glass Opacity（5階調） | 5値 | ✅ |
-| 1-9 | **Semantic Alias**（意味参照） | 例: `--color-cta = --color-drive`、`--color-focus-ring = --color-drive` | **FAMBOX新設** |
+| 1-8 | Glass Opacity（5階調） | 5値（0.05/0.1/0.3/0.6/0.8）| ✅ |
+| 1-9 | **Semantic Alias**（意味参照） | 例: `--color-cta = --color-drive`、`--color-focus-ring = --color-drive`、**`--color-disabled = #B3B5B0`** | **FAMBOX新設** + Session #48 で disabled 追加 |
+
+### v0.5 実装からの逆抽出（Session #47-48 / de facto 確定）
+
+**Drive 表記揺れ解消**: `#FB4C15`（24件）を `#FC5214` に統一（Session #48）。**`#FC5214` を Drive base color の正式値**として確定。
+
+**マジックナンバー統合判断**:
+- `#92939c`（4件 / カード sub text）→ **`--color-caption #8A8D87`** に集約推奨（微小差 / 視覚的に区別なし）
+- `#545655`（4件 / カード本文）→ **`--color-sub #5C5F58`** に集約推奨（微小差 / 視覚的に区別なし）
+- `#d0d1db`（5件 / 区切り線）→ **`--border-soft` として新規追加**（既存 Token と用途が異なる）
 
 ## 1-B. Typography Tokens
 | # | 項目 | v0.5継承 |
@@ -147,16 +156,46 @@ FAM v0.5 CSS変数をベースに構造化。**3階層翻訳表の2段目**。
 | # | 項目 | v0.5継承 |
 |---|---|---|
 | 1-17 | Base unit 8px | ✅ |
-| 1-18 | Scale（8/16/24/32/48/64/96/160） | ✅ |
-| 1-19 | Section spacing（SP 96 / PC 160） | ✅ |
+| 1-18 | Scale **拡張**（4/8/12/16/24/32/40/48/64/96/120）| ✅ + **0.5/1.5/4.5/8 追加 Session #48**（実装で頻出）|
+| 1-19 | Section spacing（SP 96 / PC 120）| ✅ + **160→120 修正 Session #48**（実装は 120 が中心）|
 | 1-20 | Component spacing（16/24/32） | ✅ |
+
+### Spacing scale v0.5 命名（実装に揃えて確定）
+
+| Token | px |
+|---|---|
+| `--space-0.5` | 4 |
+| `--space-1` | 8 |
+| `--space-1.5` | 12 |
+| `--space-2` | 16 |
+| `--space-3` | 24 |
+| `--space-4` | 32 |
+| `--space-4.5` | 40 |
+| `--space-5` | 48 |
+| `--space-6` | 64 |
+| `--space-7` | 96 |
+| `--space-8` | 120 |
 
 ## 1-D. Motion Tokens
 | # | 項目 | v0.5継承 |
 |---|---|---|
-| 1-21 | duration（150/300/600ms） | ✅ |
-| 1-22 | easing（ease-in/out/inout） | ✅ |
-| 1-23 | 呼吸アニメ（2秒サイクル） | ✅ |
+| 1-21 | duration **更新**（150/250/350ms）| 🔶 + **Session #48 で 150/300/600 → 150/250/350 に修正**（実装と整合）|
+| 1-22 | easing（ease-out 中心）| ✅ + **`--ease-out` を default に集約**（実装は ease-out が 80%）|
+| 1-23 | 呼吸アニメ（2秒サイクル）| ✅ |
+| 1-24 | line-height **拡張**（1.2/1.4/1.5/1.75/1.8）| ✅ + **3 → 5 段階拡張 Session #48** |
+
+### Motion / Typography line-height v0.5 命名
+
+| Token | 値 | 用途 |
+|---|---|---|
+| `--duration-fast` | 150ms | hover / focus transition |
+| `--duration-base` | 250ms | modal open/close / nav slide |
+| `--duration-slow` | 350ms | sheet variant slide-up |
+| `--lh-tight` | 1.2 | heading H1/H2 |
+| `--lh-heading` | 1.4 | heading H3/H4 |
+| `--lh-base` | 1.5 | caption / form field |
+| `--lh-body` | 1.75 | body 標準 |
+| `--lh-relaxed` | 1.8 | quote / 強調本文 |
 
 ## 1-E. Elevation / Shadow Tokens
 | # | 項目 | v0.5継承 |
@@ -171,7 +210,15 @@ FAM v0.5 CSS変数をベースに構造化。**3階層翻訳表の2段目**。
 ## 1-G. Breakpoint Tokens
 | # | 項目 | v0.5継承 |
 |---|---|---|
-| 1-26 | SP/Tablet/PC（〜767/768-1023/1024+） | ✅ |
+| 1-26 | SP-sm/SP/Tablet/PC **拡張**（〜480/481-767/768-1023/1024+）| ✅ + **480 (SP-sm) 追加 Session #48**（実装で Header / Modal SP layout に頻出）|
+
+| Token | 範囲 | 用途 |
+|---|---|---|
+| `--bp-sp-sm` | 480px | Header / Modal の SP small（actions 縦並びへ切替）|
+| `--bp-sp-max` | 767px | SP 上限 |
+| `--bp-tablet` | 768px | Tablet 下限 |
+| `--bp-pc` | 1024px | PC 下限 |
+| `--container-max` | 1440px | コンテナ最大幅 |
 
 ## 1-H. Z-index Tokens
 | # | 項目 | 状態 |
