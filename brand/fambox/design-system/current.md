@@ -494,9 +494,9 @@ L2 は通常 **Liquid Section ではなく Snippet (`{%- render '...' -%}`) ま�
 | Avatar | ✅ avatar.md | ✅ `53:32` (20v) | **2/2** | ✅ Primitive 完成 |
 | Form Controls | ✅ form-controls.md | ✅ `54:16` (9v) | **2/2** | ✅ Primitive 完成 |
 | Progress | ✅ progress.md | ✅ `55:11` (5v) | **2/2** | ✅ Primitive 完成 |
-| Spinner | ❌ | ✅ `55:21` (3v) | **1/2** | 🟡 spec gap（Figma 先行）|
+| Spinner | ✅ progress.md §Spinner（統合記載）| ✅ `55:21` (3v) | **2/2** | ✅ Primitive 完成（Session #42 で再評価）|
 
-**L2 サマリ**: 6 中 **5 件 Primitive 完成（2/2）** / 1 件 1/2（Spinner の spec gap）
+**L2 サマリ**: 6 中 **6 件 Primitive 完成（2/2）** 🏆 — Session #42 で Spinner の spec が progress.md 内に統合記載されていることを確認、false-negative 修正
 
 ### 7-D. その他 TOP ページ用 Liquid sections（DS spec 厳密対応外）
 
@@ -550,15 +550,21 @@ L2 は通常 **Liquid Section ではなく Snippet (`{%- render '...' -%}`) ま�
 ```
 L4 Components:    10/11 三位一体達成 (91%) ✅✅✅✅✅✅✅✅✅✅⚫  🏆 完全制覇
 L3 Patterns:      4/4 Pattern level OK   (100%) ✅✅✅✅
-L2 Primitives:    5/6 Primitive 完成      (83%) ✅✅✅✅✅🟡
+L2 Primitives:    6/6 Primitive 完成     (100%) ✅✅✅✅✅✅  🏆 完全制覇
 Section 累計新規行: 6,999行 (modal 672 + footer 665 + stat-grid 454 +
                               case-study 1102 + contact-form 942 + hero 578 + plan 506 +
                               faq 419 + profile 321 + header 719 + bento-grid 740)
 ```
 
-**🏆 L4 完全制覇達成（10/10、Drawer 除く）**
+**🏆 L4 + L2 + L3 すべての層で「ほぼ完全」状態へ**
 
-**次のフォーカス**: Drawer は spec から着手（顕在化時）。L3 / L2 は現状で完成形。**TOP ページへの新 sections 配置（Week 5 QA）** が次の主要工程。
+| Layer | 状態 | 残課題 |
+|---|---|---|
+| L4 Components | 10/11（91%）🏆 | Drawer 1 件のみ（spec から着手・顕在化時）|
+| L3 Patterns | 4/4（100%）🏆 | 完成 |
+| L2 Primitives | 6/6（100%）🏆 | 完成（Session #42 で Spinner を 2/2 と再評価）|
+
+**次のフォーカス**: Drawer は顕在化時。**TOP ページへの新 sections 配置（Week 5 QA）** が次の主要工程。
 
 ---
 

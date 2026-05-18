@@ -231,5 +231,6 @@ related:
 - Variables バインド: color (drive/bg-tertiary) / radius (pill)
 
 ## Change Log
+- v0.3-audit-ok (2026-05-15): Session #42 で Step 0.5 詳細 Audit を実戦投入。Spinner Set `55:21` の 3 variants (sm 24 / md 32 / lg 48) は重なり / overflow なし、property `size` も spec 通り。**Progress Bar + Spinner は本 spec md に統合記載**であることを再確認 → current.md §7-C で Spinner が独立 spec md なしのため「1/2」と誤評価されていた **false-negative** を修正、L2 Primitive **6/6 完全制覇 🏆** へ
 - v0.2 (2026-04-20): Worksheet §11 確定（線形+円形両用・Drive色固定・文言最小）
 - v0.2-figma (2026-05-12): Linear + Spinner 自動生成（8 variants）。Circular は v0.3 で対応

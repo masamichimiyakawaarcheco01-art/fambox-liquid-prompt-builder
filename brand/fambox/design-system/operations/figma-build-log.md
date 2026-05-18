@@ -2686,3 +2686,83 @@ ASCII box-drawing（`╔ ║ ═ ╚`）で **目を引くヘッダー**。VS Co
 - L2 Spinner spec 着手
 
 ---
+
+## Session 2026-05-15 (#42) — Spinner spec 再評価（🏆 L2 Primitive 6/6 完全制覇）
+
+**契機**: Session #41 ダッシュボードで Spinner が「1/2 spec gap」と判定されていたため、独立 `spinner.md` 新規作成を予定して着手。しかし audit 開始時点で **spec が既に progress.md 内に統合記載**されていることが判明 → **false-negative 修正**セッションへ転換。
+
+### Audit 結果（Step 0.5 実戦投入 3 回目）
+
+| Set | 結果 |
+|---|---|
+| Spinner `55:21` | ✅ OK: 3 variants (sm 24×24 / md 32×32 / lg 48×48) / 配置整然（y=0/80/160）/ property `size` spec 整合 / 重なり・overflow なし |
+
+### spec gap の真相
+
+`progress.md` の構造を確認:
+
+```
+## Progress Bar (line 30-113)
+## Spinner (line 114-150)  ← spec 完備
+## Loading テキスト (line 154-191)
+## Figma 参照 (line 218-231)  ← Spinner Set 55:21 明記
+## Change Log
+```
+
+**Spinner spec は最初から `progress.md §Spinner` に統合記載**されていた:
+- 3 sizes（24/32/48）/ stroke 2-3px / Drive 色固定
+- 1秒/回転 linear infinite / 75% 円弧（一部欠け）
+- HTML/CSS 実装例 / prefers-reduced-motion 対応
+- Loading テキスト連動（送信中・決済中の「処理中です…」）
+- NG 文言禁止リスト（「もう少しお待ちください！」等の煽り）
+
+→ **spec 充実度は他 L2 と同等以上**。「spec gap」判定は **false-negative**（実態より低い評価）だった。
+
+### false-negative の原因
+
+ダッシュボード作成時（Session #38）に「spec md の **ファイル名 spinner.md が無い** → spec ❌」と短絡判定した。**L2 Primitive は機能カテゴリで md を共通化**するケースがある:
+
+| md ファイル | 含まれる Primitive |
+|---|---|
+| `progress.md` | **Progress Bar + Spinner**（共に「進捗・読み込み」表現） |
+| `button.md` | Button only |
+| `input.md` | Input only |
+| `avatar.md` | Avatar only |
+| `form-controls.md` | Checkbox + Radio + Toggle（共に「選択 input」表現）|
+
+→ **form-controls.md も同様に 3 件の Primitive を統合記載**している。これは **L2 設計の正しい姿**（機能カテゴリ単位で md を統合）。
+
+### 成果
+
+| 編集箇所 | 内容 |
+|---|---|
+| `current.md §7-C` Spinner 行 | 1/2 → **2/2** に修正、spec の場所を「progress.md §Spinner（統合記載）」と明記 |
+| `current.md §7-C` L2 サマリ | 5/6 → **6/6 完全制覇 🏆** |
+| `current.md §7-F` 全体ステータス | L2 83% → **100% 🏆** / 3 層すべての layer で「ほぼ完全」状態に |
+| `progress.md` Change Log | v0.3-audit-ok 追記、false-negative 修正の経緯を記録 |
+
+### 🏆 マイルストーン: L2 Primitive 6/6 完全制覇
+
+```
+✅ Button / Input / Avatar / Form Controls / Progress / Spinner
+```
+
+L4 (10/11) + L3 (4/4) + L2 (6/6) で **3 層すべての layer で「ほぼ完全」状態**到達。残課題は L4 Drawer 1 件のみ（spec から着手 / 顕在化時）。
+
+### 学んだこと（追加）
+
+94. **Audit は false-positive（過大評価）と false-negative（過小評価）の両方を検出する**: 一般的に audit は「**実態 < ダッシュボード表記**」の false-positive（盛りすぎ）を検出する道具と考えられがちだが、**false-negative も同等に重要**。本セッションで Spinner が「1/2」と過小評価されていたのは、**ダッシュボード作成時の単純な見落とし**（ファイル名検索のみで spec 内容を確認しなかった）。Step 0.5 詳細 Audit を**ダッシュボード生成後にも実施**することで、両方向の誤判定を補正できる。学び 67（再 Audit で隠れた問題が見つかる）の補強として、「**ダッシュボード自体も audit 対象**」が新原則。
+
+95. **L2 Primitive は機能カテゴリ単位で md を統合するのが正しい設計**: `progress.md` が Progress Bar + Spinner、`form-controls.md` が Checkbox + Radio + Toggle を統合記載しているのは **機能カテゴリの一貫性**を担保するため。**「1 機能カテゴリ = 1 spec md = N Primitives（関連性高）」** の設計規律が、運用上「どこに何を書くか」の判断負荷を下げる。次世代の spec 設計（v0.4+）でもこの規律を継続。
+
+96. **完成度ダッシュボードは "spec の存在" を機械的判定するだけでなく "spec 内容の充実度" まで踏み込む**: ファイル名一致だけで `N/3` を判定すると false-negative が起きる。「spec md が **どこかに**含まれている / **どの md** の **どの section** に書かれている」を明示することで、統合 md 構成の Primitive を正しく評価できる。current.md §7-C の Spinner 行が「progress.md §Spinner（統合記載）」と書かれていることが**正しい記録**。
+
+### Known TODOs
+
+- TOP ページに新 sections 配置（Week 5 QA）
+- LEGACY 4 件の段階的撤去
+- Drawer spec 着手（顕在化時）
+- fam-item の File 記載 mismatch（軽微 / rename or コメント修正）
+- 完成度ダッシュボードの「**spec md 統合記載**」を明示する書式の標準化（form-controls.md にも 3 Primitive 含む → 該当行に「(統合記載)」表記）
+
+---
