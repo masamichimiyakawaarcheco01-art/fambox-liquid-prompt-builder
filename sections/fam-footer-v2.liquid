@@ -1,4 +1,19 @@
 {% comment %}theme-check-disable UndefinedObject{% endcomment %}
+{% comment %}
+  ╔════════════════════════════════════════════════════════════
+  ║ 🎨 LP-ONLY SECTION（並存保持 / DS 標準ではない）
+  ║ ────────────────────────────────────────────────────────────
+  ║ Status:    LP / プロモ用フッター（コーナー SVG 4 枚の独自世界観）
+  ║ DS 対応:    fambox-footer.liquid（3 variants: standard / minimal / sitemap）
+  ║              が DS 標準 / spec v0.2 §Variants 完全準拠
+  ║ 並存理由:    LP のアートディレクション（コーナー SVG）を破壊しない
+  ║              DS 標準は誠実 / 控えめ路線、LP は表現性重視で役割が違う
+  ║ 移行戦略:    ✅ 並存継続（撤去不要）
+  ║              - 通常ページ / Checkout / TOP → fambox-footer
+  ║              - LP / プロモ → fam-footer-v2（このファイル）
+  ║ Status タグ: legacy-but-active / lp-only / not-deprecated
+  ╚════════════════════════════════════════════════════════════
+{% endcomment %}
 {% comment %} === FAM Custom Footer V2 === {% endcomment %}
 {%- liquid
   assign has_sns = false

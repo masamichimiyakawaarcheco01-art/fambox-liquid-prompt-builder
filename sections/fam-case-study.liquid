@@ -1,4 +1,19 @@
 {% comment %}
+  ╔════════════════════════════════════════════════════════════
+  ║ 📝 BLOG-ARTICLE SECTION（並存保持 / DS 標準ではない）
+  ║ ────────────────────────────────────────────────────────────
+  ║ Status:    ブログ記事用 1-story テンプレ（thumbnail + 区切り + 本文）
+  ║ DS 対応:    fambox-case-study.liquid（story pattern）が DS 標準
+  ║              spec §レイアウトパターン 3 patterns を 1 file 統合済
+  ║ 並存理由:    ブログ記事の構造を保存（記事ごとに section レベルで配置）
+  ║              DS 標準は TOP / 一覧 / 関連事例 用、ブログ記事用は別物
+  ║ 移行戦略:    ✅ 並存継続（撤去不要）
+  ║              - 個別ブログ記事 → fam-case-study（このファイル）
+  ║              - TOP / 事例一覧 / 関連事例 → fambox-case-study
+  ║ Status タグ: legacy-but-active / blog-only / not-deprecated
+  ╚════════════════════════════════════════════════════════════
+{% endcomment %}
+{% comment %}
   fam-case-study.liquid
   FAM 導入事例セクション - ブログ記事テンプレート用
   カスタマイザーでブロックを追加・並び替えして構成します

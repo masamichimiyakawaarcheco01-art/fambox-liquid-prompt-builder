@@ -2614,3 +2614,75 @@ Bento Tile のように **「L3 だが L4 に内包される Pattern」** の Li
 - SKILL v0.8 候補（Phase 5 テスト / brand 横展開のパラメータ化）
 
 ---
+
+## Session 2026-05-15 (#41) — fam-* レガシー sections のラベル整理（3 カテゴリ分類）
+
+**契機**: Session #40 で L4 完全制覇 10/10 達成した直後、`sections/` 配下に残る 6 件の `fam-*` レガシー Liquid section について、**ファイル冒頭にラベルコメントを追加して 3 カテゴリ分類**を実施。Week 5 QA 前の整理タスク。
+
+### 成果
+
+| ファイル | 行数 | カテゴリ | ラベル |
+|---|---|---|---|
+| `fam-achievement.liquid` | 306 | ⚠ LEGACY | pre-DS / pending-migration |
+| `fam-case-study.liquid` | 928 | 📝 BLOG-ARTICLE | legacy-but-active / blog-only / not-deprecated |
+| `fam-footer-v2.liquid` | 546 | 🎨 LP-ONLY | legacy-but-active / lp-only / not-deprecated |
+| `fam-issues.liquid` | 276 | ⚠ LEGACY | pre-DS / pending-migration / spec-undecided |
+| `fam-item.liquid` | 300 | ⚠ LEGACY | pre-DS / pending-migration / file-name-mismatch |
+| `fam-voices.liquid` | 529 | ⚠ LEGACY | pre-DS / pending-migration |
+| current.md §7-E | — | — | 3 カテゴリ分類表で書き換え |
+
+### ラベル comment フォーマット（統一）
+
+```liquid
+{% comment %}
+  ╔════════════════════════════════════════════════════════════
+  ║ <カテゴリアイコン> <カテゴリ名>（並存保持の理由）
+  ║ ────────────────────────────────────────────────────────────
+  ║ Status:      <現状の役割>
+  ║ DS 対応:      <fambox-* への代替先 or 並存判断>
+  ║ 並存理由:    <なぜ撤去しないか>
+  ║ 移行戦略:    <次のアクション>
+  ║ DS 完成度:   current.md §7-D / §7-E 参照
+  ║ Status タグ: <legacy / lp-only / blog-only / pending-migration 等>
+  ╚════════════════════════════════════════════════════════════
+{% endcomment %}
+```
+
+ASCII box-drawing（`╔ ║ ═ ╚`）で **目を引くヘッダー**。VS Code / Cursor / Shopify エディタでファイルを開いた瞬間に「これは何者か」が判別できる。
+
+### 3 カテゴリの判定軸
+
+| カテゴリ | 撤去予定? | 並存理由 | 例 |
+|---|---|---|---|
+| ⚠ **LEGACY** (pre-DS / pending-migration) | ✅ 撤去予定（Week 5 QA で判断）| DS 代替先が確定済、移行作業のみ | fam-achievement / fam-issues / fam-item / fam-voices |
+| 📝 **BLOG-ARTICLE** (legacy-but-active / not-deprecated) | ❌ 撤去しない | DS 標準は別用途、ブログ専用として恒久使用 | fam-case-study |
+| 🎨 **LP-ONLY** (legacy-but-active / not-deprecated) | ❌ 撤去しない | LP の独自表現性、DS 路線とは別世界観 | fam-footer-v2 |
+
+**重要**: 全部を撤去するのではなく、**「DS 標準で代替できるもの」**と**「独自の役割で恒久使用するもの」**を明確に分ける。後者にも「legacy」と書いてあるが **`-but-active` を併記**して **動作中・非推奨ではない**ことを示す。
+
+### current.md §7-E の刷新
+
+旧 §7-E は単一の並存表だったが、3 カテゴリに分割:
+- 🎨 LP-ONLY
+- 📝 BLOG-ARTICLE
+- ⚠ LEGACY / pending-migration
+
+加えて移行手順（Week 5 QA で実行する 3 ステップ）を明記。
+
+### 学んだこと（追加）
+
+91. **「legacy」と「deprecated」は別概念。撤去か継続かを明示する**: ファイル名や class 名で「legacy」「old」と書かれていても、**運用継続が前提のもの**（LP-ONLY / blog 専用）がある。**legacy = 撤去予定**と短絡せず、`legacy-but-active / not-deprecated` のような明示タグで**運用継続の意図**を示す。逆に「pre-DS / pending-migration」は撤去予定の明示。タグ語彙の標準化が運用混乱を防ぐ。
+
+92. **ASCII box-drawing ヘッダーはエディタで目を引く有効な手段**: `╔ ║ ═ ╚` のような box-drawing 文字を使うラベルコメントは、**普通の `{% comment %}` ブロックの 10 倍の視認性**。ファイルを開いた瞬間に **「これは特殊扱いの section」** が直感伝達できる。学び 90（ダッシュボードに数字で刻む）の延長系として、**「重要情報は視覚的に強調する」** が新原則。
+
+93. **ラベル comment は spec / dashboard / 実装の 3 層連動を作る**: `fam-* file → current.md §7-E → DS Dashboard` の参照リンクが Comment 内に書かれていることで、**どこを開いてもファイルの位置づけが理解できる**。ファイルが孤立せず、**spec md / dashboard / build log との接続**を file 内コメントで担保することで、**1 年後にファイルを見る人**にも文脈が伝わる。「**file 内コメントは spec / dashboard への入り口**」が新原則。
+
+### Known TODOs
+
+- TOP ページに新 sections 配置（Week 5 QA、宮川さん作業）
+- ⚠ LEGACY 4 件の段階的撤去（Week 5 QA で判断、TOP から 1 つずつ）
+- fam-item の file 名 vs 内部 file 記載のミスマッチ（File: sections/fam-solution.liquid と書いてある）→ rename or コメント修正
+- Drawer spec 着手（顕在化時、Header と連動）
+- L2 Spinner spec 着手
+
+---

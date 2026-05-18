@@ -517,11 +517,33 @@ L2 は通常 **Liquid Section ではなく Snippet (`{%- render '...' -%}`) ま�
 
 ### 7-E. 旧 / LP 専用 Liquid（並存保持）
 
-| Liquid section | 用途 | 並存理由 |
+> Session #41（2026-05-15）で各ファイル冒頭に **ラベルコメント**を追加（3 カテゴリ分類）。エディタで開いた瞬間に役割が判別できる。
+
+#### 🎨 LP-ONLY（legacy-but-active / 撤去不要）
+
+| Liquid section | 用途 | 並存理由 / 移行戦略 |
 |---|---|---|
-| fam-footer-v2 | LP 用フッター（コーナー SVG 4 枚の独自世界観）| LP の表現を破壊しないため fambox-footer と並存 |
-| fam-case-study | ブログ記事用 1-story | DS 標準 fambox-case-study とは用途が異なる |
-| fam-achievement / -item / -voices / -issues | 旧個別セクション | 段階的に fambox-* preset へ移行予定 |
+| fam-footer-v2 (546行) | LP / プロモ用フッター（コーナー SVG 4 枚の独自世界観）| LP のアートディレクションを破壊しない。通常ページは fambox-footer、LP は fam-footer-v2 を継続使用 |
+
+#### 📝 BLOG-ARTICLE（legacy-but-active / 撤去不要）
+
+| Liquid section | 用途 | 並存理由 / 移行戦略 |
+|---|---|---|
+| fam-case-study (928行) | ブログ記事用 1-story テンプレ | 個別ブログ記事は fam-case-study を継続使用、TOP / 一覧 / 関連事例 は fambox-case-study |
+
+#### ⚠ LEGACY / pending-migration（v0.4-0.5 で撤去予定）
+
+| Liquid section | 用途 | DS 代替先 |
+|---|---|---|
+| fam-achievement (306行) | 旧 TOP「導入実績」（ticker 形式）| fambox-bento-grid Auto-fit preset で代替可 |
+| fam-issues (276行) | 旧 TOP「課題（ISSUES）訴求」| fambox-bento-grid Editorial Glass/Image-fill で代替候補（spec 未確定）|
+| fam-item (300行) | 旧 TOP「商品タイトル（勝負メシ）」| fambox-bento-grid Editorial / Standard preset で代替可 |
+| fam-voices (529行) | 旧 TOP「アスリートの声」| fambox-case-study tile-grid preset / fambox-bento-grid Editorial で代替候補 |
+
+移行手順（Week 5 QA で実行）:
+1. TOP に fambox-* preset を配置
+2. プレビューで視覚比較（旧 vs 新）
+3. 承認後に fam-* を撤去 → 最終的に L4 三位一体達成 sections のみで TOP 構成完了
 
 ### 7-F. 全体ステータス（2026-05-14 時点）
 
