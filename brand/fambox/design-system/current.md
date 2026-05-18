@@ -456,18 +456,20 @@ OKRと連動させて「DSの効果」を可視化。
 
 ### 7-A. L4 Components（10 件 / Section 化対象）
 
+> **表記ルール（v0.3-dashboard 標準化 / Session #43）**: Figma Set 列は `<ID> (<Nv> / <内訳>)` 形式で variant 構成を明示
+
 | Component | spec md | Figma Set | Liquid section | N/3 | Status | 残課題 |
 |---|---|---|---|---|---|---|
-| Header | ✅ header.md | ✅ `59:33` (3v) | ✅ fambox-header (719行) | **3/3** | ✅ 三位一体 | Figma height/sticky-mode property 追加（v0.4）|
-| Hero | ✅ hero-section.md | ✅ `67:73` (12v) | ✅ fambox-hero-v17-video (578行) | **3/3** | ✅ 三位一体 | preset 拡充（v0.4）|
-| Plan Card | ✅ subscription-plan-card.md | ✅ `65:110` (2v) | ✅ fambox-subscription-plan (506行) | **3/3** | ✅ 三位一体 | — |
-| Bento Grid | ✅ bento-grid.md | ✅ `91:107` (3v) | ✅ fambox-bento-grid (740行) | **3/3** | ✅ 三位一体 | — |
-| Modal | ✅ modal.md | ✅ `62:33` (3v) | ✅ fambox-modal (672行) | **3/3** | ✅ 三位一体 | — |
-| Footer | ✅ footer.md | ✅ `60:95` (3v / 4列 sitemap) | ✅ fambox-footer (665行) | **3/3** | ✅ 三位一体 | — |
-| FAQ | ✅ faq.md | ✅ `93:90` (1v) | ✅ fambox-faq (419行) | **3/3** | ✅ 三位一体 | Accordion variant（v0.3 拡張枠）|
-| Profile | ✅ profile.md | ✅ `96:79` (1v) | ✅ fambox-profile (321行) | **3/3** | ✅ 三位一体 | Card variant（v0.3 拡張枠）|
-| Case Study | ✅ case-study.md | ✅ `66:91` (3v / logo-list 追加済) | ✅ fambox-case-study (1102行) | **3/3** | ✅ 三位一体 | — |
-| Contact Form | ✅ contact-form.md | ✅ `98:121` (1v) | ✅ fambox-contact-form (942行) | **3/3** | ✅ 三位一体 | review/success variant 追加（v0.4）/ Notifications テンプレ手動設定 |
+| Header | ✅ header.md | ✅ `59:33` (3v / standard / minimal / mega) | ✅ fambox-header (719行) | **3/3** | ✅ 三位一体 | Figma height/sticky-mode property 追加（v0.4）|
+| Hero | ✅ hero-section.md | ✅ `67:73` (12v / 4 variant × 3 height) | ✅ fambox-hero-v17-video (578行) | **3/3** | ✅ 三位一体 | preset 拡充（v0.4）|
+| Plan Card | ✅ subscription-plan-card.md | ✅ `65:110` (2v / standard / featured) | ✅ fambox-subscription-plan (506行) | **3/3** | ✅ 三位一体 | — |
+| Bento Grid | ✅ bento-grid.md | ✅ `91:107` (3v / standard / editorial / autofit) | ✅ fambox-bento-grid (740行) | **3/3** | ✅ 三位一体 | — |
+| Modal | ✅ modal.md | ✅ `62:33` (3v / confirmation / detail / sheet) | ✅ fambox-modal (672行) | **3/3** | ✅ 三位一体 | — |
+| Footer | ✅ footer.md | ✅ `60:95` (3v / standard / minimal / sitemap-4列) | ✅ fambox-footer (665行) | **3/3** | ✅ 三位一体 | — |
+| FAQ | ✅ faq.md | ✅ `93:90` (1v / carousel) | ✅ fambox-faq (419行) | **3/3** | ✅ 三位一体 | Accordion variant（v0.3 拡張枠）|
+| Profile | ✅ profile.md | ✅ `96:79` (1v / section) | ✅ fambox-profile (321行) | **3/3** | ✅ 三位一体 | Card variant（v0.3 拡張枠）|
+| Case Study | ✅ case-study.md | ✅ `66:91` (3v / tile / story / logo-list) | ✅ fambox-case-study (1102行) | **3/3** | ✅ 三位一体 | — |
+| Contact Form | ✅ contact-form.md | ✅ `98:121` (1v / input) | ✅ fambox-contact-form (942行) | **3/3** | ✅ 三位一体 | review/success variant 追加（v0.4）/ Notifications テンプレ手動設定 |
 | Drawer | ❌ | ❌ | ❌ | **0/3** | ⚫ 未着手 | spec から開始（顕在化時）|
 
 **L4 サマリ**: 11 中 **10 件 三位一体達成（3/3）** / 0 件 2/3 / 1 件 0/3（Drawer）— **L4 完全制覇 10/10 達成 🏆**（Drawer 除く）
@@ -476,27 +478,36 @@ OKRと連動させて「DSの効果」を可視化。
 
 | Pattern | spec md | Figma Set | Liquid section | N/3 | Status |
 |---|---|---|---|---|---|
-| Card | ✅ card.md | ✅ `57:35` (4v) | ⚪ L4 内包（fambox-bento 等）| Pattern OK | Pattern level ✅ |
-| Form Field | ✅ form-field.md | ✅ Figma Set | ⚪ Contact Form 内包 | Pattern OK | Pattern level ✅ |
-| Stat Card | ✅ stat-card.md | ✅ `64:49` (6v) | ✅ fambox-stat-grid (454行) | **3/3** | ✅ 三位一体 |
-| Bento Tile | ✅ bento-tile.md | ✅ `87:26` (40v) | ✅ fambox-bento-grid 内 `bento_tile` block | Pattern OK | Pattern level ✅（v0.3-liquid で実体化）|
+| Card | ✅ card.md | ✅ `57:35` (4v / standard / flat / image / horizontal) | ⚪ L4 内包（fambox-bento 等）| Pattern OK | Pattern level ✅ |
+| Form Field | ✅ form-field.md | ✅ `56:34` (4v / state: default/focus/error/disabled) | ⚪ Contact Form 内包 | Pattern OK | Pattern level ✅ |
+| Stat Card | ✅ stat-card.md | ✅ `64:49` (6v / 3 size × 2 layout) | ✅ fambox-stat-grid (454行) | **3/3** | ✅ 三位一体 |
+| Bento Tile | ✅ bento-tile.md | ✅ `87:26` (40v / 4 variant × 5 size × 2 featured) | ✅ fambox-bento-grid 内 `bento_tile` block | Pattern OK | Pattern level ✅（v0.3-liquid で実体化）|
 
 **L3 サマリ**: 4 中 **1 件 独立 Section（3/3）** / 3 件 Pattern として L4 に内包（評価対象外で正常）
 
-### 7-C. L2 Primitives（6 件 / Snippet レベル運用）
+### 7-C. L2 Primitives（6 単位 / 8 Primitive 内訳 / Snippet レベル運用）
 
 L2 は通常 **Liquid Section ではなく Snippet (`{%- render '...' -%}`) または Inline コードで運用**。三位一体は **spec ↔ Figma の 2/2 で完了**と定義。
+
+**表記ルール（v0.3-dashboard 標準化 / Session #43）**:
+- 1 行 = 1 **DS 要素単位**（spec md ファイル数ではなく Figma Component Set 数で数える）
+- spec が **統合記載**の場合は spec 列に「`<md ファイル> §<section>（統合: <他要素>）`」と明示
+- Figma Set が **内訳を持つ**場合は「(<variant数>v / 内訳: <kind>)」を Figma 列に明示
 
 | Primitive | spec md | Figma Set | N/2 | Status |
 |---|---|---|---|---|
 | Button | ✅ button.md | ✅ `46:32` (60v) | **2/2** | ✅ Primitive 完成 |
 | Input | ✅ input.md | ✅ `50:26` (12v) | **2/2** | ✅ Primitive 完成 |
 | Avatar | ✅ avatar.md | ✅ `53:32` (20v) | **2/2** | ✅ Primitive 完成 |
-| Form Controls | ✅ form-controls.md | ✅ `54:16` (9v) | **2/2** | ✅ Primitive 完成 |
-| Progress | ✅ progress.md | ✅ `55:11` (5v) | **2/2** | ✅ Primitive 完成 |
-| Spinner | ✅ progress.md §Spinner（統合記載）| ✅ `55:21` (3v) | **2/2** | ✅ Primitive 完成（Session #42 で再評価）|
+| **Form Controls** | ✅ form-controls.md **（統合: Checkbox / Radio / Toggle の 3 kind）** | ✅ `54:16` (9v / 3 kind × 3 state) | **2/2** | ✅ Primitive 完成（**3 Primitive 内包**）|
+| **Progress Bar** | ✅ progress.md §Progress Bar **（統合: Progress Bar / Spinner）** | ✅ `55:11` (5v / value 0-100) | **2/2** | ✅ Primitive 完成 |
+| **Spinner** | ✅ progress.md §Spinner **（統合: Progress Bar / Spinner）** | ✅ `55:21` (3v / size sm/md/lg) | **2/2** | ✅ Primitive 完成（Session #42 で false-negative 修正）|
 
-**L2 サマリ**: 6 中 **6 件 Primitive 完成（2/2）** 🏆 — Session #42 で Spinner の spec が progress.md 内に統合記載されていることを確認、false-negative 修正
+**L2 サマリ**:
+- **Figma Component Set 数で 6/6 完全制覇 🏆**（Button / Input / Avatar / Form Controls / Progress Bar / Spinner）
+- **個別 Primitive 数では 8/8**（Form Controls 内訳 3 kind を分解した場合）
+- **spec md 数では 5/5**（progress.md / form-controls.md は統合記載で複数 Primitive を含む）
+- 統合 spec md は **「機能カテゴリ単位で md を統合」**が正しい設計（学び 95）。3 つの数え方が一致する構造になっている
 
 ### 7-D. その他 TOP ページ用 Liquid sections（DS spec 厳密対応外）
 

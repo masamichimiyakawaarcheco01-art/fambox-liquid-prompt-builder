@@ -2766,3 +2766,87 @@ L4 (10/11) + L3 (4/4) + L2 (6/6) で **3 層すべての layer で「ほぼ完�
 - 完成度ダッシュボードの「**spec md 統合記載**」を明示する書式の標準化（form-controls.md にも 3 Primitive 含む → 該当行に「(統合記載)」表記）
 
 ---
+
+## Session 2026-05-15 (#43) — 完成度ダッシュボード書式の標準化（v0.3-dashboard）
+
+**契機**: Session #42 の Spinner false-negative 修正で「**ダッシュボード自体も Audit 対象**」（学び 94）が確立。本セッションでは current.md §7 全体を **3 つの数え方が一致する構造** に標準化、表記ルールを明文化。
+
+### 成果
+
+| 編集箇所 | 内容 |
+|---|---|
+| §7-A L4 表記ルール明示 | 表頭に「**Figma Set 列は `<ID> (<Nv> / <内訳>)` 形式**」を明記 |
+| §7-A 全 11 行の Figma Set 列 | variant 構成を明示（例: `59:33` (3v / standard / minimal / mega)）|
+| §7-B 全 4 行の Figma Set 列 | 内訳明示（特に Bento Tile 40v = 4 variant × 5 size × 2 featured を明示）|
+| §7-C 標準書式定義 + 全 6 行刷新 | 統合 spec md / 内訳付き Figma Set / 3 つの数え方を明示 |
+| §7-C L2 サマリ | 「**Figma Set 数 6/6** / **個別 Primitive 数 8/8** / **spec md 数 5/5**」の **3 つの数え方が一致**することを明文化 |
+
+### 統合記載 spec md（2 件）
+
+| spec md | 含まれる Primitive/section | 設計意図 |
+|---|---|---|
+| `progress.md` | Progress Bar + Spinner + Loading テキスト | 「進捗・読み込み」機能カテゴリで統合 |
+| `form-controls.md` | Checkbox + Radio + Toggle | 「選択 input」機能カテゴリで統合 |
+
+学び 95（L2 Primitive は機能カテゴリ単位で md を統合するのが正しい設計）の正式記録。
+
+### 表記ルール v0.3-dashboard
+
+```
+1 行 = 1 DS 要素単位（Figma Component Set 数で数える）
+
+spec 列:
+  - 単一記載: ✅ <md ファイル>
+  - 統合記載: ✅ <md ファイル> §<section>（統合: <他要素>）
+
+Figma 列:
+  - 単一 property: ✅ <ID> (<Nv> / <内訳列挙>)
+  - 多軸 property: ✅ <ID> (<Nv> / <軸A> × <軸B> [× <軸C>])
+
+Liquid 列:
+  - 独立 section: ✅ <ファイル名> (<行数>)
+  - L4 内包: ⚪ <内包先>
+  - 未作成: ❌
+```
+
+### 3 つの数え方の根拠
+
+L2 は **3 つの数え方が全て一致する構造**になっている:
+
+```
+Figma Component Set 数: 6
+  → Button / Input / Avatar / Form Controls / Progress Bar / Spinner
+
+個別 Primitive 数: 8
+  → Button / Input / Avatar / Checkbox / Radio / Toggle / Progress Bar / Spinner
+  (Form Controls の 3 kind を分解)
+
+spec md 数: 5
+  → button.md / input.md / avatar.md / form-controls.md / progress.md
+  (form-controls.md と progress.md は統合記載)
+```
+
+**全部 OK でも数字が違う**が、これは**意味のある違い**:
+- 6 = Figma で管理しているコンポーネント単位
+- 8 = ユーザーが認識する独立した UI 要素
+- 5 = エンジニアが触る spec md ファイル数
+
+ダッシュボードはこの 3 つを **一覧で見せる**ことで、関係者の認知ギャップを埋める。
+
+### 学んだこと（追加）
+
+97. **完成度ダッシュボードは "3 つの数え方"（Figma Set / 個別要素 / spec md）を併記すると認知ギャップが埋まる**: 「L2 6/6」と書くと「Figma で 6 個」なのか「spec で 6 個」なのか曖昧。**3 つの数え方を併記**することで、デザイナー（Figma 視点）/ ユーザー（個別要素視点）/ エンジニア（spec md 視点）の認知が同期する。違う数字が出ても **「意味のある違い」** として説明できる構造が、ダッシュボードの説得力を上げる。学び 96 の延長として「**ダッシュボードは複数視点から数える**」を新原則化。
+
+98. **Figma Set 列は variant 内訳を明示すると Audit 結果が即読み取れる**: `(3v)` だけでは「何の 3 variants か」が不明。`(3v / standard / minimal / mega)` のように **variant 名を列挙**または **軸構成（4×3 等）を明示**することで、ダッシュボードを開いた瞬間に Figma の構造把握ができる。Audit スクリプト（Step 0.5）の返り値 `properties[].variantOptions` をそのままダッシュボードに反映する書式に揃えることで、**Audit 結果とダッシュボードが直接連動**する。
+
+99. **「機能カテゴリ単位で spec md を統合」は L2 だけでなく L3/L4 でも適用可能だが、現状 L3/L4 は 1:1 で良い**: L2 で Form Controls / Progress + Spinner が統合されているのに対し、L3/L4 は 1 spec md = 1 component の 1:1 設計。これは **L4 が複雑度高（独立した運用判断が必要）**なため。L2 は **小さく相互置換可能な単位**なので統合が機能する。**「component の独立度に応じた spec md 統合判断」** が DS 設計のもう 1 つの規律。
+
+### Known TODOs
+
+- TOP ページに新 sections 配置（Week 5 QA）
+- LEGACY 4 件の段階的撤去
+- Drawer spec 着手（顕在化時）
+- fam-item の File 記載 mismatch
+- DS ダッシュボードの自動生成スクリプト化（次世代 Audit ツール候補）
+
+---
