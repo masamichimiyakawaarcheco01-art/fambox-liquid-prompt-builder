@@ -3446,3 +3446,106 @@ for prop in ['padding', 'margin', 'gap', 'top', 'right', 'bottom', 'left']:
 - Figma Variables への同期（Tokens Studio 等の Figma↔Code 連携、§5 残論点 #3 と連動）
 
 ---
+
+## Session 2026-05-18 (#52) — 🏆 Phase B-6 完遂: 全 fambox-* 22 sections Token 化達成
+
+**契機**: Session #51 で DS 標準 7 sections の Token 化完了。残 TOP 専用 + 既存 DS 15 sections（**1,182 件の var() refs 累計**へ）を **同じ batch script** で一気に処理し、**FAMBOX DS 全 Liquid section の Token 化完遂**。
+
+### Batch 実行結果（15 sections）
+
+| File | Replace | Lines | var() |
+|---|---:|---:|---:|
+| fambox-active-plans-v2.liquid | 66 | 678 | 82 |
+| fambox-active-plans.liquid | 70 | 865 | 87 |
+| fambox-blog-carousel.liquid | 32 | 447 | 38 |
+| fambox-easy-cooking.liquid | 5 | 351 | 7 |
+| fambox-faq.liquid | 35 | 419 | 40 |
+| fambox-hero-v17-video.liquid | 29 | 578 | 31 |
+| fambox-interview.liquid | 21 | 315 | 30 |
+| fambox-menu-showcase.liquid | 21 | 264 | 21 |
+| fambox-model-case.liquid | 37 | 450 | 47 |
+| fambox-nutrition-service.liquid | 17 | 327 | 20 |
+| fambox-plan-features.liquid | 28 | 396 | 32 |
+| fambox-profile.liquid | 27 | 380 | 32 |
+| fambox-spirit.liquid | 36 | 841 | 41 |
+| fambox-subscription-plan.liquid | 31 | 506 | 43 |
+| fambox-value-proposition.liquid | 41 | 513 | 46 |
+| **小計 (15 sections)** | **496** | **7,330** | **597** |
+| + Final cleanup pass | **17** | — | — |
+| **計** | **513** | — | — |
+
+### 🏆 累計 (全 22 fambox-* sections)
+
+```
+Phase B-5 (Session #50-51): 7 sections / 572 件置換 / 567 var() refs
+Phase B-6 (Session #52):   15 sections / 513 件置換 / 615 var() refs (cleanup 含む)
+─────────────────────────────────────────────────────────────────────
+🏆 累計            22 sections / 1,085 件置換 / 1,182 var() refs
+```
+
+### Final cleanup の置換ルール（17 件）
+
+```python
+# white の小文字 6 桁 (Phase B-1 漏れ)
+'#ffffff' → 'var(--color-white)'
+
+# caption-near
+'#999' → 'var(--color-caption)'
+'#666' → 'var(--color-sub)'
+
+# ink-near
+'#333' → 'var(--color-ink)'
+
+# drive-near (hue 微差で集約)
+'#ff4a00' → 'var(--color-drive)'
+
+# border-base-near
+'#d0d0d0' → 'var(--border-base)'
+
+# ink 濃淡 (集約)
+'#2c2e2b' → 'var(--color-ink)'
+'#0f0f0f' → 'var(--color-ink)'
+```
+
+### 最終残存 hex 5 件（全て意図的）
+
+| 残存 | 件数 | 理由 |
+|---|---:|---|
+| schema `"default": "#ffffff"` 等 | 3+ | Shopify schema は CSS 変数を解釈しない（学び 119） |
+| schema `"default": "#e71422"` | 1 | 同上 |
+| コメント内 `#ECECEC` | 1 | コメント文字列、置換不要 |
+| inline SVG `fill="#ccc"` | 2 | **CSS 変数は inline SVG fill では使えない**（学び 121 新規）|
+| `linear-gradient(135deg, #2a2c2a 0%, #1a1c1a 50%, #2a2c2a 100%)` | 1 | 3 段グラデの連続色（Token 化で視覚崩壊リスク）|
+
+すべて **学び 120「意図しない hex 残存 0」** に該当 ✅。
+
+### 学び 121
+
+121. **inline SVG の fill / stroke attribute は CSS 変数を受け取れない技術制約**: `<rect fill="#ccc"/>` の `fill` 属性は **SVG presentation attribute** で、CSS 変数 `var(--color-base)` を直接書けない（一部ブラウザで未対応 / 仕様外）。回避策は (1) inline SVG を CSS で `fill: var(--token)` で上書き、(2) `<style>` 内で `[fill="#ccc"] { fill: var(--token) }` を書く、(3) hex を直接維持。**Liquid section 内で inline SVG を使う場合は hex 直値を許容する判断**が現実解。学び 116（CSS @media 制約）/ 119（schema 制約）に並ぶ **CSS 変数の技術制約 No.3**。
+
+### 🎯 FAMBOX DS v0.5 Token 化 全完遂
+
+```
+✅ Step 1-5:    de facto Token 抽出
+✅ Phase B-1:   表記統一
+✅ Phase B-2:   マジックナンバー逆引き
+✅ Phase B-3:   current.md §1-A〜§1-I 更新
+✅ Phase B-4:   CSS Tokens snippet 化 (133 tokens)
+✅ Phase B-5:   DS 標準 7 sections Token 化 (572 件 / 567 var)
+✅ Phase B-6:   TOP 専用 + 残 DS 15 sections Token 化 (513 件 / 615 var)
+───────────────────────────────────────────
+🏆 累計:        22 sections / 1,085 件置換 / 1,182 var() refs
+```
+
+OKR Task 1-2-a「DS 作成」期限 (2026-06-30) を **6 週間前倒し達成**。残課題は本番テーマへの統合（宮川さん手動）と視覚回帰テスト。
+
+### Known TODOs（次フェーズ）
+
+- theme.liquid への `{% render 'fambox-tokens.css' %}` 配置（宮川さん手動）
+- 視覚回帰テスト（Shopify エディタプレビュー）
+- **Figma Variables への同期**（Tokens Studio 等 / §5 残論点 #3）
+- **Drawer L4 spec 着手**（残 1 component / 顕在化時）
+- §1-J Variable Mode（light/dark）設計（v0.6 候補）
+- §5 残論点 4 件の決定（命名規則は de facto 確定済、残: Figma 構造 / アイコン / Tokens Studio / FAM-FAMBOX 統合）
+
+---

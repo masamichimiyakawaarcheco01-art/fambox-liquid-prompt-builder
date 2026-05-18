@@ -41,7 +41,7 @@
     z-index: 1;
     width: 100%;
     margin: 0 auto;
-    padding: 120px 56px;
+    padding: var(--space-8) 56px;
     display: grid;
     grid-template-columns: 1.05fr 0.95fr;
     gap: 56px;
@@ -53,43 +53,43 @@
   #{{ sec_id }} .ns__title {
     font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
     margin: 0 0 37px !important;
-    font-size: 40px !important;
+    font-size: var(--fs-h2-large) !important;
     line-height: 180% !important;
-    font-weight: 500 !important;
-    color: #1b1d1a !important;
+    font-weight: var(--fw-medium) !important;
+    color: var(--color-ink) !important;
     letter-spacing: normal !important;
     text-transform: none !important;
   }
 
   #{{ sec_id }} .ns__lead {
     margin: 0 0 37px !important;
-    color: #1b1d1a !important;
-    font-size: 16px !important;
+    color: var(--color-ink) !important;
+    font-size: var(--fs-body) !important;
     line-height: 180% !important;
-    font-weight: 400 !important;
+    font-weight: var(--fw-regular) !important;
   }
 
   #{{ sec_id }} .ns__body {
     margin: 0 !important;
-    color: #1b1d1a !important;
-    font-size: 16px !important;
+    color: var(--color-ink) !important;
+    font-size: var(--fs-body) !important;
     line-height: 180% !important;
-    font-weight: 500 !important;
+    font-weight: var(--fw-medium) !important;
   }
 
   /* ===== 右の黒スタック ===== */
   #{{ sec_id }} .ns__stack {
-    background: #0f0f0f;
+    background: var(--color-ink);
     overflow: hidden;
   }
 
   #{{ sec_id }} .ns__card {
-    padding: 40px 18px !important;
+    padding: var(--space-4-5) 18px !important;
     border-bottom: 1px solid rgba(255,255,255,0.08) !important;
     background: rgba(0,0,0,0.55) !important;
     display: flex !important;
     align-items: center !important;
-    gap: 16px !important;
+    gap: var(--space-2) !important;
   }
 
   #{{ sec_id }} .ns__card-image {
@@ -120,7 +120,7 @@
   }
 
   #{{ sec_id }} .ns__card:nth-child(2) {
-    background: #2c2e2b !important;
+    background: var(--color-ink) !important;
   }
 
   #{{ sec_id }} .ns__card:last-child {
@@ -129,9 +129,9 @@
 
   #{{ sec_id }} .ns__card-title {
     margin: 0 0 8px !important;
-    color: #fff !important;
-    font-size: 18px !important;
-    font-weight: 600 !important;
+    color: var(--color-white) !important;
+    font-size: var(--fs-body-lg) !important;
+    font-weight: var(--fw-semibold) !important;
     line-height: 180% !important;
     font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
     letter-spacing: normal !important;
@@ -141,9 +141,9 @@
   #{{ sec_id }} .ns__card-desc {
     margin: 0 !important;
     color: rgba(255,255,255,0.86) !important;
-    font-size: 14px !important;
+    font-size: var(--fs-body-sm) !important;
     line-height: 180% !important;
-    font-weight: 500 !important;
+    font-weight: var(--fw-medium) !important;
     font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif !important;
   }
 
@@ -154,14 +154,14 @@
     }
 
     #{{ sec_id }} .ns__inner {
-      padding: 80px 24px;
+      padding: 80px var(--space-3);
       grid-template-columns: 1fr;
       gap: 22px;
     }
 
     #{{ sec_id }} .ns__title {
       margin: 0 0 32px !important;
-      font-size: 28px !important;
+      font-size: var(--fs-h3-mobile) !important;
     }
 
     #{{ sec_id }} .ns__lead {
@@ -239,7 +239,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "背景色",
-      "default": "#fc5214"
+      "default": "var(--color-drive)"
     },
     {
       "type": "header",
