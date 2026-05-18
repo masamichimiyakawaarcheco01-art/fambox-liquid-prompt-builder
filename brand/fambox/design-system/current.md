@@ -496,11 +496,58 @@ OKRと連動させて「DSの効果」を可視化。
 
 ## 5. 残論点（先に決めるべき）
 
-1. **Figmaマスターファイルの構造**: 1ファイル集約 or 機能別分割？
-2. **アイコンセット選定**: Lucide / Phosphor / Heroicons / 自作（Brand DNA L4-18 と連動）
-3. **Tokens Studio 等のFigma→Code同期ツールを入れるか**（工数と ROI の判断）
-4. **命名規則の最終形**: BEM / アトミック / 単純ハイフン区切り のいずれを採用するか
-5. **FAM と FAMBOX の DS を分離するか統合するか**（単一DS or マルチブランドDS）
+> **Session #53（2026-05-18）で 4 論点を一括決定** — Phase A〜D の前提条件解除。半年保留の戦略判断を解消。
+
+### 5-1. Figmaマスターファイルの構造 ✅ 決定: **プラン A（1 ファイル集約）**
+- **採用**: 現状維持（`QsiBrc2v20BYw76YHI9x3e` の単一ファイル運用継続）
+- **理由**: 22 Sets / 257 variants 時点で性能問題なし、Audit script そのまま使える、Component 間参照（学び 27-29）が同一ファイル内で完結
+- **モニタリング**: Component 数 500+ 到達時に Layer 別 / Brand 別分割を再検討
+
+### 5-2. アイコンセット選定 ✅ 決定: **プラン A（Lucide 採用）**
+- **採用**: Lucide（オープンソース / 1.5px stroke / ISC ライセンス / 商用可）
+- **理由**: spec §1-I の **stroke 1.5px** と完全整合、DNA「誠実 / 控えめ」と整合（線細め）、1000+ icons で網羅性高、無料
+- **実行計画**:
+  - Phase B-7（次セッション候補）: `snippets/fambox-icon.liquid` 新規作成
+  - 既存 fambox-header の Cart/Account / fambox-footer の SNS 5 種 / contact-form の checkmark 等の inline SVG を `{% render 'fambox-icon', name: 'cart', size: 'md' %}` で置換
+  - 推定削減: **200+ 行の inline SVG**
+- **代替案見送り理由**: Phosphor (B) は 6 weight で表現性高だが DNA「シンプル」と過剰、自作 (C) はメンテ負荷蓄積
+
+### 5-3. Tokens Studio 等のFigma→Code同期ツールを入れるか ✅ 決定: **プラン A（Tokens Studio 導入）**
+- **採用**: Tokens Studio（Figma → JSON → CSS 自動同期）
+- **理由**: ユーザー判断で導入決定。Figma Variables との同期を**業界標準ツールで自動化**、multi-brand 対応にも有利
+- **実行計画**:
+  - Session #54 候補: プラグイン設定 + 既存 133 tokens import + 同期 workflow 確立（**初期 4-6 時間**）
+  - 並行で **generate-dashboard.py との連携**を検証（学び 102 ハイブリッド方式と整合）
+- **リスク（Change log に明示）**:
+  - 🟡 学習コスト発生（プラグイン仕様 + Figma Variables 機能との競合の懸念）
+  - 🟡 自前 script 拡張案（プラン B）と比較した ROI 検証を **Session #54 開始時に簡易試用**で確認
+  - 期待した自動化効果が得られない場合は **プラン B（generate-dashboard.py Phase 2 拡張）に切替**する余地を残す
+
+### 5-4. 命名規則の最終形 ✅ **de facto 確定済（Session #43）**
+- **採用**: kebab-case + カテゴリ prefix（BEM 風）
+- **理由**: Session #47-52 の Token 化で **22 sections × 1,182 var() refs** が `--color-*` / `--space-*` / `--fs-*` / `--bp-*` の規律で自然確立 → 学び 95-96 で正式化
+- **追加判断不要**
+
+### 5-5. FAM と FAMBOX の DS を分離するか統合するか ✅ 決定: **プラン A（統合 DS / マルチブランドモード）**
+- **採用**: 単一 DS で FAM/FAMBOX を切替（CSS 変数の brand mode で対応）
+- **理由**: SKILL / dashboard / Audit を共通化、Token は brand 別 override で対応、学び 102 ハイブリッド方式 + brand mode と整合
+- **実行計画**:
+  - §1-J Variable Mode（light/dark + brand）と統合
+  - `[data-brand="fam"]` / `[data-brand="fambox"]` で CSS 変数 override
+  - SKILL v0.8 候補「brand 横展開のパラメータ化」と直接連動
+  - generate-dashboard.py Phase 3「複数 brand 対応」が活きる
+- **実装着手タイミング**: Phase A（2026-06-30）以降、FAM 着手時。**現時点では設計方針確定のみ**で十分
+
+---
+
+### 4 論点決定後の影響
+
+| Phase / 工程 | 解除されたブロッカー |
+|---|---|
+| Phase A（L0 翻訳表）| 論点 #2 (アイコン) / #5 (brand) 確定で着手可能に |
+| Phase B-7 (アイコン snippet 化) | #2 確定で即着手 |
+| generate-dashboard.py Phase 2 | #3 で Tokens Studio に統合する方向に |
+| SKILL v0.8 | #5 brand 横展開のパラメータ化が決定 |
 
 ---
 

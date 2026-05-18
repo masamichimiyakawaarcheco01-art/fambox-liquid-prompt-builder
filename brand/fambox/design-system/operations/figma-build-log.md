@@ -3549,3 +3549,85 @@ OKR Task 1-2-a「DS 作成」期限 (2026-06-30) を **6 週間前倒し達成**
 - §5 残論点 4 件の決定（命名規則は de facto 確定済、残: Figma 構造 / アイコン / Tokens Studio / FAM-FAMBOX 統合）
 
 ---
+
+## Session 2026-05-18 (#53) — 🎯 §5 残論点 4 件 一括決定（半年保留の戦略判断解除）
+
+**契機**: ユーザーから「§5 残論点を 1 つずつ議論したい / 理由と成果を提示してほしい」のリクエスト。各論点について **3 つのプラン選択肢 + メリット/デメリット/工数/推奨度**を提示し、**全 4 論点で プラン A 採用**を確定。
+
+### 決定サマリ
+
+| 論点 | 採用プラン | 工数 | 即効性 |
+|---|---|---|---|
+| **#1 Figma 構造** | A: 1 ファイル集約（現状維持） | 0 h | — |
+| **#2 アイコンセット** | A: Lucide 採用 | 2-3 h | **高**（200+ 行 inline SVG 削減）|
+| **#3 Tokens 同期** | A: Tokens Studio 導入 | 初期 4-6 h | 中（mid-term ROI）|
+| **#4 brand 分離/統合** | A: 統合 DS（マルチブランドモード）| 設計のみ即 / 実装 6-8 h | 中（v1.0 戦略）|
+
+### 各論点の決定根拠と次工程
+
+#### #1 Figma 構造 → A 採用（現状維持）
+- 22 Sets / 257 variants 時点で性能問題なし
+- Audit script そのまま使える、Component 間参照（学び 27-29）が同一ファイル内で完結
+- 500+ 到達時に Layer 別 / Brand 別分割を再検討
+
+#### #2 アイコンセット → A 採用（Lucide）
+- spec §1-I stroke 1.5px と完全整合 / DNA「誠実 / 控えめ」と整合
+- 1000+ icons / ISC ライセンス / 商用可
+- **Phase B-7 候補**: `snippets/fambox-icon.liquid` 新規 → 既存 inline SVG 200+ 行削減
+
+#### #3 Tokens 同期 → A 採用（Tokens Studio 導入）
+- **私の推奨は B（自前 script 拡張）だったが、ユーザー判断で A 採用**
+- 業界標準ツールで Figma Variables ↔ CSS 自動同期 / multi-brand 対応に有利
+- **リスク（明示）**:
+  - 🟡 学習コスト発生（プラグイン仕様 + Figma Variables との競合の懸念）
+  - 🟡 Session #54 開始時に**簡易試用で ROI 検証**、期待効果が出ない場合は **プラン B（自前 script 拡張）に切替**する余地を残す
+
+#### #4 brand 分離/統合 → A 採用（統合 DS）
+- 単一 DS で FAM/FAMBOX を CSS 変数の brand mode で切替
+- SKILL / dashboard / Audit を共通化、Token は brand 別 override
+- §1-J Variable Mode（light/dark + brand）と統合
+- **現時点では設計方針確定のみ**、実装は Phase A 以降の FAM 着手時
+
+### 解除されたブロッカー
+
+| Phase / 工程 | 解除内容 |
+|---|---|
+| Phase A（L0 翻訳表）| 論点 #2 / #5 確定で **DNA→原則→Token の翻訳表が書ける** |
+| Phase B-7 アイコン snippet 化 | #2 確定で即着手可能 |
+| generate-dashboard.py Phase 2 | #3 で **Tokens Studio との統合**方針に |
+| SKILL v0.8 | #5 brand 横展開のパラメータ化が決定、開発着手可能 |
+
+### 次セッション以降の推奨着手順
+
+```
+Session #54 (60-90 min): #2 Lucide snippet 化（Phase B-7）+ Tokens Studio 簡易試用
+  - 前半: Lucide snippet 作成 + 既存 inline SVG 200+ 行を `{% render 'fambox-icon' %}` で置換
+  - 後半: Tokens Studio プラグイン試用 → ROI 評価（期待値乖離時は B 切替判断）
+
+Session #55 (60-90 min): #4 brand 統合の設計実装
+  - [data-brand="fam"] / [data-brand="fambox"] の CSS 変数 override 設計
+  - fambox-tokens.css.liquid に brand mode 拡張
+  - §1-J Variable Mode（light/dark + brand）統合
+
+Session #56 (60-90 min): Phase A 着手 — L0 翻訳表ドラフト
+  - DNA v1.0 → Design Principles（3-5 原則）→ Token 名 の対応表作成
+  - OKR Task 1-2-a「DS 作成」期限 2026-06-30 直結タスク
+```
+
+### 学び 122-124
+
+122. **「3 プラン選択肢 + メリット/デメリット/工数」の提示形式が戦略判断を 30 min で完了させる**: 半年保留されていた論点が、本セッションで **4 件すべて確定**。形式の力 = 選択肢を 3 つに絞る（CLAUDE.md「選択肢は最大 3 つ」原則）/ 工数を明示 / 推奨を 🌟 マークで明示 / メリットとデメリットを対称形で提示 / の 4 要素が判断速度を上げる。学び 90（マイルストーンに数字で刻む）の戦略判断版。
+
+123. **私の推奨と異なる選択をユーザーがしたら、リスクを明示し切替の余地を残す**: 論点 #3 で私の推奨は B（自前 script 拡張）だったが、ユーザーが A（Tokens Studio）を選択。これは正当な判断（業界標準 / multi-brand 対応）だが、**学習コスト + Figma Variables 競合**のリスクが想定される。Change log に **リスク + 切替条件**を明示することで、Session #54 開始時に簡易試用で再評価できる。**「ユーザー判断 + リスク明示 + 切替条件」の 3 点セット**が、合意形成と検証の両立に有効。
+
+124. **§5 残論点解除は "次の Phase の前提条件" を解除する**: 論点単体では小さく見えるが、**Phase A（L0 翻訳表）/ Phase B-7（アイコン snippet 化）/ generate-dashboard.py Phase 2 / SKILL v0.8** の 4 つが本セッションで**まとめてブロッカー解除**された。戦略判断は「**それ自体の成果**」より「**後続工程のブロッカー解除**」で価値を測るべき。1 セッションの ROI が、後続 4-5 セッションの **線形展開**を可能にする。
+
+### Known TODOs
+
+- **Session #54: Lucide snippet 化（Phase B-7）+ Tokens Studio 簡易試用**
+- **Session #55: brand 統合 mode 設計実装**
+- **Session #56: L0 翻訳表ドラフト着手（Phase A）**
+- 論点 #3 リスク再評価（Tokens Studio 簡易試用後 / Session #54 開始時）
+- theme.liquid 統合（宮川さん手動）/ 視覚回帰テスト
+
+---
