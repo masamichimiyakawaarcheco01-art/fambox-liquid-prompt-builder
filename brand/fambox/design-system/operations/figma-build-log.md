@@ -3044,3 +3044,85 @@ memory ファイルは `~/.claude/projects/-Users-archecoinc--Desktop-Claude-1/m
 - 次回セッション着手候補 6 件（draft §次回セッション着手候補 参照）
 
 ---
+
+## Session 2026-05-18 (#47) — L1 Tokens 化 Step 1-5: 既存 Liquid から de facto Token 表を逆抽出
+
+**契機**: マラソン後の振り返りで、L0 / L1 / L5-L7 が完成度ダッシュボード §7 で**評価対象外**であることが判明。最大のボトルネックは **L1 Tokens 化（OKR Task 1-2-a / 2026-06-30 期限）**。「実装が spec を追い越している現状では、実装から逆抽出する方が手戻りゼロ」の方針で **既存 Liquid 直値 grep → de facto Token 表作成**を実施。
+
+### 成果
+
+| 成果物 | 場所 | 内容 |
+|---|---|---|
+| de facto Token 表 | `operations/tokens-extracted.md` | 全 fambox-*.liquid (7 files / 5,294 行) の直値を grep 抽出 + L1 spec §1-A〜§1-J との gap 分析 |
+
+### Step 1: grep 抽出（5 min）
+
+| カテゴリ | 抽出パターン | 結果 |
+|---|---|---|
+| Color hex | `#[0-9a-fA-F]{3,6}` | 30+ 種類（hex 全変種）|
+| Color rgba | `rgba\([^)]+\)` | 20+ 種類 |
+| Spacing px | `\b[0-9]+px\b` | 30+ 種類（spacing / radius / breakpoint 混在）|
+| font-family | `font-family:` | 2 種類（Hiragino Sans 93 / Poppins 38）|
+| font-weight | `font-weight:` | 4 段階（400/500/600/700）|
+| transition | `transition:` | 10+ 種類 |
+| line-height | `line-height:` | 10+ 種類 |
+
+### Step 2-3: de facto Token 表作成
+
+11 カテゴリ別に整理（Color hex / rgba / Spacing / font-family / font-weight / font-size / line-height / Radius / Motion duration / Shadow / Breakpoint）。各 Token に **出現頻度 / spec § / Status** を付記。
+
+#### 主要発見
+
+1. **Drive 色の表記揺れ**: `#FC5214` (39 件) vs `#FB4C15` (24 件) — **要統一**
+2. **Spec gap (新規追加候補)**:
+   - Color: `--color-drive-hover` (#E14710) / `--color-placeholder` (#DDD) / `--color-disabled` (#B3B5B0)
+   - Spacing: `--space-0.5` (4px) / `--space-1.5` (12px) / `--space-4.5` (40px)
+   - Duration: spec 150/300/600 → 実装 150/250/350 で乖離（**spec を更新**推奨）
+   - Breakpoint: `--bp-sp-sm` (480px) 追加
+3. **Line-height 大乱立**: spec 3 段階 vs 実装 6 段階 → 5 段階拡張案
+4. **マジックナンバー 3 色**: `#D0D1DB` / `#92939C` / `#545655` — 要逆引き
+
+### Step 4: L1 spec との gap 検出
+
+current.md §1-A〜§1-J の宣言と grep 結果の差分を集計（tokens-extracted.md §8 サマリ）:
+
+| カテゴリ | de facto Token 数 | spec 整合 | spec 追加候補 | マジックナンバー |
+|---|---|---|---|---|
+| Color hex | 5 主要 + 15 副次 | 12 | 5 | 3 |
+| Spacing | 7 段階 | 5 | 3 | 0 |
+| Typography font-size | 11 段階 | 7 | 4 | 2 |
+| Motion duration | 4 段階 | 1 | 3 | 0 |
+| Shadow | 5 段階 | ✅ | 0 | 0 |
+
+→ **80% の Token は spec と整合、20% の改善余地**。これは「学び 73: SKILL 適用済 / 実装が動いているものは正」の原則を客観データで実証。
+
+### Step 5: 次セッション（Session #48-50 候補）への引き継ぎ
+
+tokens-extracted.md 末尾に **Phase B-1〜B-5** を明示:
+
+| Phase | 工数 | 内容 |
+|---|---|---|
+| B-1 | 30 min | Liquid 内表記統一（Drive 色 / `#FFF`→`#fff` / sed 一括）|
+| B-2 | 30 min | マジックナンバー 3 色の逆引き |
+| B-3 | 60 min | current.md §1 を実装に揃えて更新 |
+| B-4 | 60-90 min | `snippets/fambox-tokens.css.liquid` 新規作成 |
+| B-5 | 60-90 min × N | 既存 7 sections を Variable 参照に段階置換 |
+
+### 学んだこと（追加）
+
+106. **DS Token 化は "実装 → spec" の逆方向アプローチが手戻りゼロ**: spec を理想形で先に書いてから実装を合わせると、**理想と現実の差分が後から大量に出る**（実装で頻出する細部の値が spec にない / spec の値が実装で使われない）。**実装が既に動いている資産がある場合は、grep 抽出 → de facto Token 表 → spec 追従更新**が最短ルート。学び 73（SKILL 適用済 / 実装が正）の **DS Token 化への展開**。
+
+107. **80/20 ルールが DS Token 化でも成り立つ**: fambox-* 7 sections の Color hex 332 件のうち、**上位 5 色で 229 件（69%）をカバー**。spec の 80% は実装と既に整合、残り 20% が改善余地。完璧な Token 体系を目指すより、**80% を即 CSS 変数化 → 20% を spec 追加 or マジックナンバー排除**の段階的アプローチが効率的。
+
+108. **grep 出現頻度ランキングは Token 名の根拠になる**: `#1B1D1A` (88 件) が `--color-ink` であることは spec § 1-A 1-3 で明示されているが、**頻度ランキング**で見ると最頻 hex として確定する → **頻度 = 重要度の客観指標**。新 Token 命名で迷ったら、grep 頻度を 1 つの判断軸にできる。
+
+### Known TODOs
+
+- **Phase B-1**: Liquid 直値表記統一（Drive 色 sed 一括 / `#FFF` → `#fff`）
+- **Phase B-2**: マジックナンバー 3 色（#D0D1DB / #92939C / #545655）の逆引き
+- **Phase B-3**: current.md §1-A〜§1-J を実装に揃えて更新
+- **Phase B-4**: `snippets/fambox-tokens.css.liquid` 新規作成
+- **Phase B-5**: 既存 7 sections を Variable 参照に段階置換
+- §5 残論点 5 件（命名規則は実態ベースで de facto 確定済、Figma 構造 / アイコン / Tokens Studio / FAM-FAMBOX 統合は未決定）
+
+---
