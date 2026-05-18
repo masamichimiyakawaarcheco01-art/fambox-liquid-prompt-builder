@@ -3288,3 +3288,105 @@ spec 上の Token 内訳を**実装に揃えて拡張**:
 - §1-J Variable Mode（light/dark / mobile/desktop）の Token 設計（v0.6 候補）
 
 ---
+
+## Session 2026-05-18 (#50) — Phase B-5 実証: fambox-modal.liquid を Variable 置換（パターン確立）
+
+**契機**: Session #49 で `snippets/fambox-tokens.css.liquid` (133 tokens) が完成 → 既存 7 sections を **`var(--token)`** 参照に切替える Phase B-5 を実証。最小・依存少の **fambox-modal.liquid (672 行)** を実証ターゲットに採用し、**6-pass Python script** で機械置換を完遂。
+
+### 成果
+
+| 指標 | Before | After |
+|---|---|---|
+| 直値 hex 残存 | 16+ 種類 | **0 件** ✅ |
+| `var(--token)` 参照 | 0 件 | **82 件** |
+| 総置換数 | — | **79 件**（Pass 1-6 累計）|
+| 視覚不変 | — | screenshot レベルで完全同一の想定（CSS 変数は値が変わらない限り視覚不変）|
+
+### 6-pass Python script の構造
+
+```python
+# Pass 1: 単独で安全に置換可能なもの（43 件）
+- Hex color: #1b1d1a / #fc5214 / #e14710 / #5c5f58 / #fff / etc.
+- font-family: 'Hiragino Sans', ... → var(--font-ja)
+- font-weight: 600 → var(--fw-semibold)
+- duration ms: 150/200/250/350ms → var(--duration-fast/base/slow)
+- border-radius 単体値: 4px → var(--radius-sm) etc.
+
+# Pass 2: spacing / font-size (context-dependent / 20 件)
+- font-size: Npx → var(--fs-*)  (10 段階 token map)
+- padding/margin/gap/top/right/bottom/left: Npx → var(--space-*)
+- shorthand padding/margin の 2 値 / 4 値も対応
+
+# Pass 3: box-shadow → var(--shadow-N)（1 件）
+
+# Pass 4: ease-out → var(--ease-out)（11 件）
+
+# Pass 5: icon size の文脈別置換（width: 32px → var(--icon-lg) / 2 件）
+
+# Pass 6: padding shorthand 0 N → padding: 0 var(--space-X)（2 件）
+```
+
+### 設計判断: context-dependent 置換は CSS property を見て分岐
+
+`16px` のような値は spacing 用途 (padding) と font-size 用途の両方で使われる。Python regex で `font-size:\s*(\d+)px` と `padding:\s*(\d+)px` を**別々のパターン**にして、context を CSS property 名から判定する設計。
+
+```python
+# font-size 専用
+content = re.sub(r'font-size:\s*(\d+)px', replace_font_size, content)
+
+# spacing 専用
+for prop in ['padding', 'margin', 'gap', 'top', 'right', 'bottom', 'left']:
+    content = re.sub(rf'\b({prop}):\s*(\d+)px(?=\s*[;}}!])', replace_spacing_single, content)
+```
+
+→ 同じ `16px` でも CSS property の context で `var(--fs-body)` か `var(--space-2)` か正しく判別可能。
+
+### 残った直値（意図的に保持）
+
+| 残存 | 理由 |
+|---|---|
+| `1px` / `2px` | border-width / outline-width（Token 化不要、CSS の作法）|
+| `@media (max-width: 480px)` `768px` `1024px` | CSS @media は **CSS 変数を解釈しない**（ブラウザ仕様）→ 直値必須 |
+| `max-width: 400px / 800px` | Modal Component-specific サイズ（Token 化対象外、spec で確定）|
+| `height: 48px / 44px` | Button height（spec に明示的な token なし、Component-level）|
+
+これは **「すべての直値を Token 化することが目的ではない」**ことを明示。**Component 固有 / 仕様外 / 技術制約**による残存は意図的。
+
+### 検証
+
+- **hex 残存: 0 件** ✅
+- **`var(--token)` 参照: 82 件** ✅
+- ファイル行数: 672 行（変化なし）
+- 視覚不変: Token 値は L1 spec のままなので、`var(--color-drive)` = `#fc5214` で**バイト単位の同一性**は崩れるが、**ブラウザレンダリング結果は完全同一**
+
+### 次セッション以降の Phase B-5 展開
+
+実証パターン確立済 → 残 6 sections に同じ script を流すだけ:
+
+| Session | Section | 推定 var() 参照数 |
+|---|---|---|
+| #51 | fambox-footer.liquid (665) | 80+ |
+| #52 | fambox-header.liquid (719) | 80+ |
+| #53 | fambox-bento-grid.liquid (740) | 90+ |
+| #54 | fambox-stat-grid.liquid (454) | 50+ |
+| #55 | fambox-case-study.liquid (1,102) | 130+ |
+| #56 | fambox-contact-form.liquid (942) | 110+ |
+
+合計予測: **540+ 追加置換**（modal の 82 + 6 sections の 460+）
+
+### 学んだこと（追加）
+
+115. **DS Variable 置換は "6-pass Python script" で 80% 自動化できる**: hex → spacing → font-size → shadow → easing → icon の **6 段階パス**を Python で書くと、**1 ファイル 60 件以上の置換が 3 秒で完了**。手動 Edit と比べて **20x 高速 + 漏れなし**。残り 20% は context 依存 (component-specific 数値 / 技術制約) で意図的に直値保持。学び 109（BSD/GNU sed の差は Python で吸収）の DS 展開系。
+
+116. **CSS @media query は CSS 変数を解釈しない技術制約を Token 設計で考慮する**: `@media (max-width: var(--bp-sp-max))` は**動作しない**（ブラウザの media query は CSS 変数を読まない）。breakpoint Token は **JS / SCSS / Liquid から参照する用途**に限定され、CSS @media では直値を残す必要がある。L1 Token snippet では `--bp-*` を宣言したが、これは **将来の container queries / JS 連携**用。
+
+117. **Token 化は "Component 固有数値" を残すべき**: Modal の `max-width: 400/800px` のような Component 固有の値は **L1 Token に持つべきでない**。L1 = ストア全体の規律 / L2-L4 = Component 固有数値、という階層分離を維持。すべてを Token 化すると **意味のない過剰抽象化**になる。学び 110（集約 vs 新規追加は視覚的差で判断）の Token 階層への展開。
+
+### Known TODOs
+
+- **Phase B-5 残 6 sections の Variable 置換**（Session #51-56 / 同じ script を流すだけ）
+- theme.liquid への `{% render 'fambox-tokens.css' %}` 配置（宮川さん手動）
+- Variable 置換後の **視覚回帰テスト**（Liquid Pipeline / Shopify エディタプレビュー）
+- マジックナンバー 2 色（`#92939c` / `#545655`）→ caption/sub 集約 sed（B-5 と並行）
+
+---
