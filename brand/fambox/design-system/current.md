@@ -200,12 +200,31 @@ FAM v0.5 CSS変数をベースに構造化。**3階層翻訳表の2段目**。
 ## 1-E. Elevation / Shadow Tokens
 | # | 項目 | v0.5継承 |
 |---|---|---|
-| 1-24 | shadow-1〜5（5段階） | ✅ |
+| 1-24 | shadow-1〜5（5段階）+ **drive-glow**（CTA hover）| ✅ + **drive-glow 追加 Session #49**（CTA 強調影、`0 8px 16px rgba(252,82,20,0.24)`）|
+
+| Token | 値 | 用途 |
+|---|---|---|
+| `--shadow-1` | `0 1px 2px rgba(0,0,0,0.04)` | hairline / card 静止 |
+| `--shadow-2` | `0 4px 8px rgba(0,0,0,0.08)` | section 区切り |
+| `--shadow-3` | `0 8px 16px rgba(0,0,0,0.12)` | card hover lift |
+| `--shadow-4` | `0 12px 24px rgba(0,0,0,0.16)` | dropdown / mega menu |
+| `--shadow-5` | `0 24px 48px rgba(0,0,0,0.24)` | modal / overlay |
+| `--shadow-drive-glow` | `0 8px 16px rgba(252,82,20,0.24)` | CTA hover |
 
 ## 1-F. Radius Tokens
 | # | 項目 | v0.5継承 |
 |---|---|---|
-| 1-25 | radius-sm/md/pill-cta(50px)/pill(9999px) | ✅ |
+| 1-25 | radius-xs/sm/md/lg/circle/pill-cta/pill **拡張**（2/4/8/16/50%/50px/9999px）| ✅ + **Session #49 で 2/16/50% 追加**（badge / sheet modal / avatar）|
+
+| Token | 値 | 用途 |
+|---|---|---|
+| `--radius-xs` | 2px | badge 角 |
+| `--radius-sm` | 4px | input / small card |
+| `--radius-md` | 8px | card / modal / button base |
+| `--radius-lg` | 16px | sheet modal 上端 |
+| `--radius-circle` | 50% | avatar / icon button |
+| `--radius-pill-cta` | 50px | CTA pill button |
+| `--radius-pill` | 9999px | full pill / chip |
 
 ## 1-G. Breakpoint Tokens
 | # | 項目 | v0.5継承 |
@@ -223,14 +242,33 @@ FAM v0.5 CSS変数をベースに構造化。**3階層翻訳表の2段目**。
 ## 1-H. Z-index Tokens
 | # | 項目 | 状態 |
 |---|---|---|
-| 1-27 | z-index scale（base/raised/sticky/modal/toast） | **FAMBOX新設** |
+| 1-27 | z-index scale **拡張**（base/1/2/3/4/5/6 = 1/2/10/50/100/1000/9999）| **FAMBOX新設** + **Session #49 で 7 段階に具体化** |
+
+| Token | 値 | 用途 |
+|---|---|---|
+| `--layer-base` | 1 | base elements |
+| `--layer-1` | 2 | card hover lift |
+| `--layer-2` | 10 | dropdown / tooltip |
+| `--layer-3` | 50 | sticky CTA bar |
+| `--layer-4` | 100 | Header / Drawer |
+| `--layer-5` | 1000 | Modal / Overlay |
+| `--layer-6` | 9999 | Toast / Critical alert |
 
 ## 1-I. Icon Tokens
 | # | 項目 | 状態 |
 |---|---|---|
-| 1-28 | アイコンサイズ（16/24/32/48） | ✅ FAM v0.5 |
+| 1-28 | アイコンサイズ **拡張**（16/20/24/32/48）| ✅ FAM v0.5 + **Session #49 で 20 (sm) 追加** |
 | 1-29 | 線幅 1.5px | ✅ |
-| 1-30 | アイコンセット選定（Lucide/Phosphor/Heroicons/自作） | ❌ 未定 |
+| 1-30 | アイコンセット選定（Lucide/Phosphor/Heroicons/自作）| ❌ 未定（§5 残論点 #2）|
+
+| Token | 値 | 用途 |
+|---|---|---|
+| `--icon-xs` | 16px | inline icon / form helper |
+| `--icon-sm` | 20px | button icon |
+| `--icon-md` | 24px | header / nav icon |
+| `--icon-lg` | 32px | feature card |
+| `--icon-xl` | 48px | hero / large illustration |
+| `--icon-stroke` | 1.5px | line icon stroke width |
 
 ## 1-J. Variable Mode（端末別・テーマ別切替）
 | # | 項目 | 状態 |

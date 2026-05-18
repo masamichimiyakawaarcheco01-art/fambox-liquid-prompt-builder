@@ -466,9 +466,31 @@ current.md §1-A / §1-C / §1-D / §1-G を v0.5 実装に揃えて更新:
 
 ## 次セッション（Session #49）の作業案
 
-### Phase B-4: `snippets/fambox-tokens.css.liquid` 新規作成（60-90 min）
+### Phase B-4: `snippets/fambox-tokens.css.liquid` 新規作成（60-90 min）✅ Session #49 実施完了
 
 Session #47 §Phase B-4 のテンプレに従って実装。Session #48 で確定した命名（`--space-0.5` 〜 `--space-8`、`--duration-fast/base/slow` 等）を使う。
+
+**実装結果（Session #49）**:
+- ファイル: `snippets/fambox-tokens.css.liquid`（255 行）
+- 宣言された CSS 変数: **137 declarations / 133 unique tokens**
+- 内訳:
+  - §1-A Color: 50+ tokens（Drive 4 / Secondary 2 / Ink 5 / Background 3 / Border 4 / Semantic 4 / Data 6 / Glass 5 / White overlay 8 / Ink overlay 5 / Alias 6）
+  - §1-B Typography: 25 tokens（font-family 2 / weight 4 / size 14 / line-height 5 / letter-spacing 4）
+  - §1-C Spacing: 13 tokens（11段階 + section-spacing-sp/pc）
+  - §1-D Motion: 7 tokens（3 duration + 3 easing + breathing）
+  - §1-E Shadow: 6 tokens（5段階 + drive-glow）
+  - §1-F Radius: 7 tokens
+  - §1-G Breakpoint: 5 tokens
+  - §1-H Z-index: 7 tokens
+  - §1-I Icon: 6 tokens
+
+**使い方**:
+```liquid
+{%- comment -%} theme.liquid の <head> 内に配置 {%- endcomment -%}
+{% render 'fambox-tokens.css' %}
+```
+
+すべての fambox-* section が `var(--color-drive)` 等で参照可能になる。`prefers-reduced-motion: reduce` で duration を 0 に強制するフォールバックも同梱。
 
 ### Phase B-5: 既存 7 sections の Variable 参照置換（60-90 min × N）
 

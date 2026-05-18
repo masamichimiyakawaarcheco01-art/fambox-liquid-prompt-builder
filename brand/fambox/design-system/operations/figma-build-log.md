@@ -3199,3 +3199,92 @@ current.md §1 を **「spec が現実離れしている」前提で、実装に
 - §1-E Elevation / §1-F Radius / §1-H Z-index / §1-I Icon / §1-J Variable Mode の spec 更新（B-3 残り）
 
 ---
+
+## Session 2026-05-18 (#49) — Phase B-4 完遂: CSS Tokens snippet 化
+
+**契機**: Session #48 で B-1/B-2/B-3 を一括実行し、Token 化の前提条件がすべて揃った。本セッションで **`snippets/fambox-tokens.css.liquid` 新規作成**を実施、L1 spec §1-A〜§1-I の全 Token を CSS 変数として宣言。
+
+### 成果
+
+| 成果物 | 場所 | 行数 / Token 数 |
+|---|---|---|
+| **CSS Tokens snippet** | `snippets/fambox-tokens.css.liquid` | **255 行 / 133 unique tokens** |
+| spec 更新（B-3 残り）| `current.md §1-E / §1-F / §1-H / §1-I` | shadow / radius / z-index / icon の値表追加 |
+
+### snippet の構造（255 行 / 133 tokens）
+
+```
+:root {
+  /* §1-A Color: 50+ tokens */
+  --color-drive: #fc5214;
+  --color-drive-hover: #e14710;        ← Session #48 追加
+  --color-ink: #1b1d1a;
+  ...
+  --glass-1〜5: rgba(0,0,0, 0.05〜0.8);
+  --white-overlay-04〜90: ...           ← Session #47 抽出
+  --ink-overlay-04〜20: ...             ← Session #47 抽出
+
+  /* §1-B Typography: 25 tokens */
+  --font-ja / --font-en
+  --fw-regular〜bold
+  --fs-caption〜mega (14 段階)
+  --lh-tight〜relaxed (5 段階)         ← Session #48 拡張
+  --ls-en/ja/uppercase/button
+
+  /* §1-C Spacing: 11 段階 */
+  --space-0.5〜8                       ← Session #48 拡張
+
+  /* §1-D Motion: duration 3 + easing 3 + breathing */
+  --duration-fast/base/slow            ← Session #48 で 150/250/350 に修正
+
+  /* §1-E Shadow: 5 + drive-glow */
+  /* §1-F Radius: 7 段階 */
+  /* §1-G Breakpoint: 4 段階 */         ← Session #48 SP-sm 追加
+  /* §1-H Z-index: 7 段階 */
+  /* §1-I Icon: 6 段階 */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast/base/slow: 0ms;    /* spec §1-D 連携 */
+  }
+}
+```
+
+### 使い方
+
+theme.liquid の `<head>` 内に 1 行で配置:
+
+```liquid
+{% render 'fambox-tokens.css' %}
+```
+
+これで全 fambox-* section が `var(--color-drive)` 等で Token 参照可能に。
+
+### Phase B-3 残り（§1-E / §1-F / §1-H / §1-I 更新）
+
+spec 上の Token 内訳を**実装に揃えて拡張**:
+
+| §  | 旧 spec | 新 spec |
+|---|---|---|
+| 1-E Shadow | 5段階のみ | 5段階 + `--shadow-drive-glow`（CTA hover） |
+| 1-F Radius | sm/md/pill-cta/pill | **xs/sm/md/lg/circle/pill-cta/pill** の 7 段階 |
+| 1-H Z-index | base/raised/sticky/modal/toast | **base/1/2/3/4/5/6** の 7 段階具体化 |
+| 1-I Icon | 16/24/32/48 | **16/20/24/32/48** の 5 段階（sm 20 追加） |
+
+### 学んだこと（追加）
+
+112. **CSS 変数 snippet は "v0.X-dashboard" のように version 属性で配信制御する**: `<style data-fambox-tokens="v0.5">` のように **data 属性で version を埋め込む**ことで、DevTools で確認できる + 将来の段階移行（v0.6 token に切替）で**新旧 snippet の共存**が可能になる。学び 76（チェックリスト追加は v0.X ラベル）の CSS への展開。
+
+113. **prefers-reduced-motion を Token snippet レベルで吸収する**: `@media (prefers-reduced-motion: reduce) { :root { --duration-*: 0ms } }` で **CSS 変数自体を上書き**することで、各 section が `transition: all var(--duration-fast)` と書くだけで自動で reduced-motion 対応になる。各 section に `@media (prefers-reduced-motion)` を書く重複を排除。**Token snippet は単なる値の集約ではなく "横断的な動作制御" の入り口**。
+
+114. **glass / overlay scale は HSL ベースではなく "黒 / 白の透明度" で運用するのが Brand DNA 整合**: rgba(0,0,0,opacity) と rgba(255,255,255,opacity) の 2 系統だけに揃えることで、**画像 / グラデーション上の overlay 表現**が一貫する。HSL ベースの色付き overlay は **可読性を下げ、Anti（媚びた / 派手）**になる。spec §1-A 1-8 Glass Opacity の正式運用ガイド。
+
+### Known TODOs
+
+- **Phase B-5**: fambox-modal.liquid から段階的に Variable 置換（Session #50 候補）
+- マジックナンバー 2 色（`#92939c` / `#545655`）の sed 一括置換（B-5 と並行）
+- theme.liquid への `{% render 'fambox-tokens.css' %}` 配置（宮川さん手動 or B-5 で確認）
+- §1-J Variable Mode（light/dark / mobile/desktop）の Token 設計（v0.6 候補）
+
+---
