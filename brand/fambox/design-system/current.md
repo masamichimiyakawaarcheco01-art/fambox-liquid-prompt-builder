@@ -122,7 +122,7 @@ FAM v0.5 CSS変数をベースに構造化。**3階層翻訳表の2段目**。
 ## 1-A. Color Tokens
 | # | カテゴリ | 項目数 | v0.5継承 |
 |---|---|---|---|
-| 1-1 | Primary（Drive） | **4値**（base #FC5214 / hover #E14710 / light #FF7A51 / glow） | ✅ + **hover 追加 Session #48** |
+| 1-1 | Primary（Drive） | **4値**（base #FB4C15 / hover #E14710 / light #FC825B / glow） | ✅ + **hover 追加 Session #48** |
 | 1-2 | Secondary（Sky/Deep） | 2値 | ✅ |
 | 1-3 | Ink / Text 5段階 | 5値（ink #1B1D1A / sub #5C5F58 / caption #8A8D87 / placeholder #DDD / white #fff）| ✅ + **placeholder 追加 Session #48** |
 | 1-4 | Background 3階層 | 3値（primary #fff / secondary #FAFAFA / tertiary #F3F3F3）| ✅ |
@@ -134,7 +134,7 @@ FAM v0.5 CSS変数をベースに構造化。**3階層翻訳表の2段目**。
 
 ### v0.5 実装からの逆抽出（Session #47-48 / de facto 確定）
 
-**Drive 表記揺れ解消**: `#FB4C15`（24件）を `#FC5214` に統一（Session #48）。**`#FC5214` を Drive base color の正式値**として確定。
+**Drive 色の正式値（Session #54 で確定）**: `#FB4C15` を正式値とする（**Figma Variables / Tokens Studio v0.2 既存値を採用**）。Session #48 で実施した `#FB4C15` → `#fc5214` の sed は **逆方向だった**ため、Session #54 で `--color-drive: #FB4C15` に戻し、drive-light も Tokens Studio v0.2 値 `#FC825B` に整合。**Token はデザイン（Figma）が真実の源 / 実装が追従**の方針。
 
 **マジックナンバー統合判断**:
 - `#92939c`（4件 / カード sub text）→ **`--color-caption #8A8D87`** に集約推奨（微小差 / 視覚的に区別なし）
