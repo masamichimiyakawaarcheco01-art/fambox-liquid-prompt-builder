@@ -219,11 +219,66 @@ L4 Sensorial Assets          → 4. Quiet Drive                    → --color-d
 
 ### 5-A. DNA 由来
 
+| DNA 要素 | 引用（v0.6.3 原文）|
+|---|---|
+| L3-2 Tone of Voice | 硬質×温度／確信と熱量を兼ねた洗練／**静かな自信**（誠実・愚直・実直）／**"引き算"の美学**（アシックス的本質主義）|
+| L1-3 Brand Concept | **Your Step. Our Drive.** — あなたの挑戦が、スポーツの未来を動かす |
+| L4-A 視覚言語 6 軸 (FAMBOX 4-6 位) | Propulsive (4) / Ascending (5) / Pulsing (6) — Quiet Drive に統合（演出補助）|
+| L1-0 Anti | 表面的／派手／"映え"重視／盛り／キラキラ系ブランディング／過度な演出 |
+| L1-4 Core Values #1 **Drive** | 推進力で前へ押し出す |
+
 ### 5-B. Principle 定義
+
+**一文**: "Our Drive" は **静かな自信と引き算** で表現し、派手・映え・キラキラを徹底的に Anti とする。
+
+**解説**:
+- Brand Concept "Drive" は維持。ただし「**派手な推進**」ではなく「**確信に裏打ちされた推進**」
+- 色は `--color-drive: #FB4C15`（赤橙）を主軸とするが、glow 過多 / ネオン彩度 / 高彩度多色は禁止
+- タイポは Display サイズ (56px) を使うが、**1 画面 1 箇所限定**（視覚的「叫び」を作らない / multi-stack 禁止）
+- Shadow は `--shadow-1`〜`--shadow-2` を中心に。`--shadow-3`〜`--shadow-5` は modal/drawer 等の特殊用途のみ
+- アニメは Continuity 原則の duration を踏襲。drive 演出のための独自モーションは作らない
+
+**Do**:
+- Drive 色は CTA / 重要アクセント / drive 強調の限定使用（**面積比 5% 以下**を目安）
+- Display フォントは Hero の 1 箇所のみ、それ以外は H1-H3 で十分
+- shadow は `--shadow-1`(hairline) / `--shadow-2`(card hover) を中心
+
+**Anti**:
+- 全面 drive 色塗り / 大面積使用
+- 高彩度多色（neon green + neon pink 等）
+- glow shadow 多用（`--color-drive-glow` の連続適用）
+- Display サイズの multi-stack（巨大文字を連続配置）
+- `--shadow-5: 0 24px 48px ...` を card に適用（modal の威圧感を card に持ち込む）
 
 ### 5-C. 対応 Token
 
+| Token | 値 | なぜこの原則を支えるか |
+|---|---|---|
+| `--color-drive` | `#FB4C15` | Brand Concept "Drive" の核。彩度を抑えた赤橙で「派手すぎない推進」|
+| `--color-drive-hover` | `#e14710` | hover でわずかに暗化し、過度な変化を避ける |
+| `--color-drive-light` | `#FC825B` | 控えめなアクセント（背景・微強調）|
+| `--color-drive-glow` | `rgba(251, 76, 21, 0.32)` | glow 用、ただし **連続適用禁止**（CTA の 1 箇所のみ）|
+| `--fs-display` | `56px` | Hero の **1 箇所のみ**。multi-stack 禁止 |
+| `--fs-h1` | `48px` | 通常見出しはここまで。Display は控える |
+| `--fs-h2` | `32px` | section 見出し標準 |
+| `--fs-h3` | `24px` | sub section 見出し標準 |
+| `--shadow-1` | `0 1px 2px rgba(0,0,0,0.04)` | hairline / section 区切り |
+| `--shadow-2` | `0 4px 8px rgba(0,0,0,0.08)` | card hover の lift |
+| `--shadow-3`〜`--shadow-5` | 8-24px blur / modal | **Card 等の通常用途で使用禁止**（modal/drawer 専用）|
+
+**運用ルール**:
+- `--color-drive` の面積比は画面の 5% 以下を目安
+- `--fs-display` は Hero 1 箇所のみ（multi-stack 検出は Audit-first で行う）
+- shadow level は 1-2 を基本、3 以上は modal/drawer の特殊用途のみ
+
 ### 5-D. 実装シグナル
+
+- **Hero (fambox-hero-v17-video)**: Display サイズ (56px) の大型見出し + `--color-drive` の CTA。background は静止画 or 控えめな motion
+- **CTA Button**: `--color-drive` の Filled / hover で `--color-drive-hover`。`--color-drive-glow` は focus ring 用途のみ
+- **Bento Grid Editorial preset**: drive 色は accent として 1 タイルにのみ採用（全タイル drive 色は Anti）
+- **Stat Grid**: `--fs-display: 56px` で stat focus value。隣接 stat は `--fs-h2: 32px` / `--fs-h3: 24px` 程度に抑える
+- **Shadow 使用箇所**: card hover = `--shadow-2`、modal = `--shadow-5`、drawer = `--shadow-4`。**card に shadow-5 を使うのは Anti**
+- **新規 Component 設計時の Audit 質問**: 「drive 色の面積比は 5% 以下か？Display サイズの multi-stack はないか？shadow level は用途と合致しているか？」
 
 ## 6. 原則 5: Disciplined Craft
 
