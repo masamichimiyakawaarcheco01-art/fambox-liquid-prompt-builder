@@ -7,7 +7,7 @@ version: 0.1
 status: draft (DNA v0.6.3 ベース)
 session: Phase A (Session #55)
 last_updated: 2026-05-19
-source_dna: brand/fambox/brand-dna/current.md (v0.6.3)
+source_dna: /Users/archecoinc./Desktop/Claude_1/brand/fambox/brand-dna/current.md (v0.6.3 / main repo)
 source_tokens: snippets/fambox-tokens.css.liquid (v0.5 / 133 tokens)
 source_spec: docs/superpowers/specs/2026-05-19-fambox-l0-translation-table-design.md
 okr_link: OKR Task 1-2-a「DS 作成」期限 2026-06-30
