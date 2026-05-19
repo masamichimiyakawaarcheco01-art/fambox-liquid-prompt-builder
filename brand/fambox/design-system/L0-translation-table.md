@@ -53,13 +53,53 @@ L4 Sensorial Assets          → 4. Quiet Drive                    → --color-d
 
 ## 2. 原則 1: Evidence-driven
 
+### 2-A. DNA 由来
+
+### 2-B. Principle 定義
+
+### 2-C. 対応 Token
+
+### 2-D. 実装シグナル
+
 ## 3. 原則 2: Continuity
+
+### 3-A. DNA 由来
+
+### 3-B. Principle 定義
+
+### 3-C. 対応 Token
+
+### 3-D. 実装シグナル
 
 ## 4. 原則 3: Equal Partner
 
+### 4-A. DNA 由来
+
+### 4-B. Principle 定義
+
+### 4-C. 対応 Token
+
+### 4-D. 実装シグナル
+
 ## 5. 原則 4: Quiet Drive
 
+### 5-A. DNA 由来
+
+### 5-B. Principle 定義
+
+### 5-C. 対応 Token
+
+### 5-D. 実装シグナル
+
 ## 6. 原則 5: Disciplined Craft
+
+### 6-A. DNA 由来
+
+### 6-B. Principle 定義
+
+### 6-C. 対応 Token
+
+### 6-D. 実装シグナル
 
 ## 7. 原則間の優先度・矛盾時の解決ルール
 
