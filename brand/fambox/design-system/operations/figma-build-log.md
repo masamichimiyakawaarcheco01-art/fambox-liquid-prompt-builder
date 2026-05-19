@@ -3875,3 +3875,86 @@ Session #48 で実施した `#FB4C15` → `#fc5214` の sed は**逆方向**だ�
 - FAM brand 値確定後: brand mode override を実装（v0.6 候補）
 
 ---
+
+## Session 2026-05-18 (#54 ext-5) — 🏆 Tokens Studio v0.5 化完了 + ROI 評価 §7 確定
+
+**契機**: Session #54 ext-4 で選択肢 C ハイブリッド採用決定 → 残 22 件の新規追加と値修正を **JSON 一括置換**で実施。試用フェーズを正式に締めて、ROI §7 を完成。
+
+### 成果
+
+| 成果物 | 内容 |
+|---|---|
+| 完全統合 JSON | `operations/scripts/tokens-studio-v05-complete.json` (130 tokens / 744 行) |
+| Tokens Studio set 更新 | global > FAMBOX set を v0.2 (109) → v0.5 (130) に upgrade |
+| ROI 評価 §7 記入完了 | `2026-05-18-tokens-studio-evaluation.md` |
+
+### 一括置換フロー（3 分で完了）
+
+```
+Step 1: クリーンアップ（30 秒）
+  - drive-hover / disabled の不正階層 token を削除
+  - fambox-v0.5 New Set を削除
+
+Step 2: JSON ファイル準備（30 秒）
+  - tokens-studio-v05-complete.json を全選択コピー
+
+Step 3: Tokens Studio JSON view で全置換（1 分）
+  - global set 選択
+  - 右上 { } アイコン → JSON view
+  - 既存全選択 → ペースト
+  - Save
+
+Step 4: 確認（1 分）
+  - 130 tokens / brand 階層 / alias 階層 / 各 group 確認
+  - $metadata.version: v0.5
+```
+
+### ROI チェックリスト 7 項目 最終結果
+
+| # | 項目 | 結果 |
+|---|---|---|
+| 1 | インストール | ✅ |
+| 2 | Figma Variables 連携 | ✅ |
+| 3 | JSON import | ✅ |
+| 4 | 双方向同期 | 🟡 (本格運用で検証) |
+| 5 | CSS export | 🟡 (v0.4 dashboard で判定) |
+| 6 | brand themes 無料版 | ❌ (Pro 必須 / CSS で代替) |
+| 7 | 学習コスト | ✅ |
+
+→ **選択肢 C ハイブリッド採用**（4 ✅ + 2 🟡 + 1 ❌ / brand themes ❌ は CSS で代替）
+
+### 学び 133-135
+
+133. **個別追加 N 件より「完全統合 JSON を 1 ファイル生成して全置換」が圧倒的に効率的**: 22 件の個別追加 = 約 15 分、JSON 一括 = 3 分。Claude が直接ツール操作できない場合、**「ユーザーの操作回数を 1 に近づける」**設計が ROI 最大化の本質。学び 128 の延長として、**「個別操作よりまとめて 1 操作」**を運用パターン化。
+
+134. **「fambox-v0.5」New Set 作成は戦略確定前の段階で不要な分岐を生んだ**: Session #54 開始時に「方法 B: New Set 作成」を案内したが、ROI 評価で選択肢 C 確定後は既存 global set との統合が正解だった → **戦略確定前の準備作業は最小限に留める**。学び 126（外部ツール評価は draft + 手動試用の 2 段階）の補強として、**「試用段階での副作用を避ける設計」**。
+
+135. **JSON 一括置換は token 階層の修正にも有効**: ユーザーが個別追加で `FAMBOX.brand.drive-hover` のような階層ミスをしても、**完全統合 JSON で全置換すれば正しい階層に自動再構築**される。token 名で識別される設計のため、Figma Variables との bind も同名なら自動再 bind。**「Tokens Studio の token 構造は JSON で完全に決まる」**ことを利用できる強力なパターン。
+
+### Phase B / Tokens Studio 統合 累計成果
+
+```
+✅ Step 1-5:     de facto Token 抽出
+✅ Phase B-1:    表記統一
+✅ Phase B-2:    マジックナンバー逆引き
+✅ Phase B-3:    current.md §1 更新
+✅ Phase B-4:    CSS Tokens snippet 化 (133 tokens)
+✅ Phase B-5:    DS 標準 7 sections Token 化 (572 件 / 567 var)
+✅ Phase B-6:    TOP 専用 + 残 DS 15 sections Token 化 (513 件 / 615 var)
+✅ Phase B-7:    Lucide Icon snippet 化 (17 icons / 10 件置換)
+✅ Tokens Studio: v0.2 → v0.5 化 (109 → 130 tokens / 一括置換)
+🟡 brand mode:   CSS [data-brand="fam"] override (skeleton 配置済 / FAM 確定後実装)
+```
+
+**OKR Task 1-2-a 「DS 作成」期限 (2026-06-30) を 6 週間前倒し + Tokens Studio 一元管理体制も確立**
+
+### Known TODOs
+
+- **次セッション (#55) 候補**:
+  - Phase A 着手: L0 翻訳表ドラフト (DNA v1.0 → 原則 → Token / OKR 直結)
+  - theme.liquid 統合: `{% render 'fambox-tokens.css' %}` 配置 (宮川さん手動)
+  - 視覚回帰テスト (Shopify エディタプレビュー)
+  - FAM brand 値確定 → brand mode override 実装
+  - Drawer L4 spec 着手 (顕在化時)
+
+---

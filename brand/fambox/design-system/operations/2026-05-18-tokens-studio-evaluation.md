@@ -288,30 +288,47 @@ Tokens Studio の **Themes** 機能を使えば、§5 #4 で決定した **「�
 
 ---
 
-## 7. 試用結果記入欄
-
-宮川さん試用後、本欄に記入してから commit / Session #55 着手:
+## 7. 試用結果記入欄 ✅ 完了 (Session #54 ext-5 / 2026-05-18)
 
 ```
-試用日: ____
-試用時間: ___ min
+試用日: 2026-05-18
+試用時間: 約 90 min (Session #54 全体)
 
 チェックリスト判定:
-  #1 インストール: __
-  #2 Figma Variables import: __
-  #3 JSON import: __
-  #4 双方向同期: __
-  #5 CSS export: __
-  #6 brand themes 無料版: __
-  #7 学習コスト: __
-  合計 ✅: __ / 7
+  #1 インストール:           ✅ (公式 Community URL → Open in Figma で起動)
+  #2 Figma Variables import: ✅ (既存 v0.2 set 109 tokens が即表示)
+  #3 JSON import:            ✅ (v0.5 完全統合 JSON 130 tokens の一括置換動作)
+  #4 双方向同期:             🟡 (Figma Variables との bind 自動再構築見込み、本格運用で検証)
+  #5 CSS export:             🟡 (Settings → Export 未検証、generate-dashboard.py と整合判定は v0.4 dashboard で)
+  #6 brand themes 無料版:    ❌ (Manage themes に PRO バッジ / 月額 $15-20 必須)
+  #7 学習コスト:             ✅ (v2.11.7 UI は直感的、JSON view 経由なら一括操作可能)
+  合計 ✅: 4 / 7 (🟡 2 / ❌ 1)
 
 判定:
-  [ ] プラン A 継続（5+ ✅）→ 本格運用準備に進む
+  [ ] プラン A 継続（5+ ✅）→ 本格運用準備
   [ ] プラン B 切替（4 以下 ✅）→ generate-dashboard.py 拡張に進む
+  [x] 選択肢 C ハイブリッド ← 採用（Session #54 ext-4 で確定）
+
+選択肢 C を採用した理由:
+  - #1-3 + #7 で「Token 一元管理ツール」としての基本機能は無料版で十分
+  - #6 のみが ❌ だが、CSS `[data-brand=]` で完全代替可能
+  - 月額 $15-20 の課金を回避しながら §5 #4 brand 統合戦略を維持できる
+  - 既存 Tokens Studio v0.2 + Phase B 修正 + 22 件追加 = v0.5 化が完了
 
 備考 / 気づき:
-  -
+  - 既存 set (v0.2 / 2026-04-20 / 宮川さん作成) に v0.5 を統合できた
+  - drive 色 #FB4C15 は Figma が真実の源として維持、Liquid 側を追従
+    (学び 130: Token は種別で真実の源が違う)
+  - JSON view (右上 { } アイコン) の一括置換が最も効率的
+    (学び 133: 個別追加より「1 操作で N tokens 反映」)
+  - drive-hover / disabled を最初フラット階層で追加してしまったが、
+    JSON 一括置換で正しい階層 (brand/alias) に自動配置できた
+  - fambox-v0.5 New Set は戦略 C 確定後不要だったため削除済
+
+次の作業 (Session #55 候補):
+  - brand mode override の実装 (CSS [data-brand="fam"] / FAM brand 値確定後)
+  - theme.liquid に {% render 'fambox-tokens.css' %} 配置 (宮川さん手動)
+  - Phase A 着手 (L0 翻訳表 / OKR 2026-06-30 直結)
 ```
 
 ---
