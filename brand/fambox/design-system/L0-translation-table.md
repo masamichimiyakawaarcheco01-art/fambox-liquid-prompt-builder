@@ -381,6 +381,32 @@ Evidence-driven > Continuity > Equal Partner > Quiet Drive
 
 ## 8. Token 逆引き表
 
+### 8-1. 逆引きマトリクス
+
+凡例: ● = 主導原則 / ○ = 副次的に関与 / — = 無関係
+
+| Token カテゴリ | Evidence-driven | Continuity | Equal Partner | Quiet Drive | Disciplined Craft |
+|---|:---:|:---:|:---:|:---:|:---:|
+| **1-A. Color** | ●（`--color-data-*`）| — | ●（`--color-ink/sub/caption/bg-*`）| ●（`--color-drive*`）| ○（命名規則）|
+| **1-B. Typography** | ●（`--fs-caption*`, `--fw-medium`）| ○（lh-base リズム）| ●（`--fs-body`）| ●（`--fs-display` 規律）| ○（命名規則 `--fs-*` / `--fw-*`）|
+| **1-C. Spacing** | — | ●（等比スケール）| ○（hierarchy）| — | ●（規律 / 直値禁止）|
+| **1-D. Motion** | — | ●（`--duration-*` / `--ease-*`）| ○（控えめさ）| ○（drive 演出抑制）| ●（命名規則 `--duration-*`）|
+| **1-E. Shadow** | — | — | ○（威圧抑制）| ●（`--shadow-1〜2` / `--shadow-5` の用途制限）| ○（命名規則）|
+| **1-F. Radius** | — | — | — | ○（過度な角丸の抑制）| ●（`--radius-*` 7 値）|
+| **1-G. Breakpoint** | — | ○（連続的レスポンシブ）| — | — | ●（`--bp-*` 規律）|
+| **1-H. Z-index** | — | — | ○（modal 階層）| — | ●（直値禁止）|
+| **1-I. Icon** | — | — | ○（Lucide 1.5px / 控えめさ）| ●（誠実・控えめ）| ●（Lucide 採用規律）|
+| **1-J. Variable Mode** | — | ○（dark mode で continuity 維持）| ○（brand mode で対等の距離感を保つ）| ●（FAM brand mode で drive 色切替）| ●（mode 規律 `[data-brand]`）|
+
+### 8-2. 逆引きの読み方
+
+- **● が複数ある原則**: その Token カテゴリは複数の原則を同時に支える（例: 1-A Color は Evidence-driven / Equal Partner / Quiet Drive を同時に支える）
+- **Disciplined Craft の ● が多い**: 横断メタ原則として「命名規則」「規律」が全カテゴリに通底
+- **Evidence-driven の ● は Color と Typography のみ**: データ可視化と数値表現の階層に集中、その他カテゴリは関与せず
+- **Continuity の ● は Spacing と Motion**: 視覚リズム（spacing）と時間リズム（motion）の二層で連続性を生む
+
+新規 Component 設計時は、本表で「自分が触る Token カテゴリ」が「どの原則を支えるか」を確認してから着手すること。
+
 ## 9. 改訂履歴
 
 - v0.1 (2026-05-19 / Session #55): 初稿。DNA v0.6.3 ベース、5 原則確定（Evidence-driven / Continuity / Equal Partner / Quiet Drive / Disciplined Craft）、Token 逆引き表 10 カテゴリ × 5 原則。spec: `docs/superpowers/specs/2026-05-19-fambox-l0-translation-table-design.md`
