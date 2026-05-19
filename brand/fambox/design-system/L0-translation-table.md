@@ -26,7 +26,7 @@ DNA v0.6.3                  → Design Principles (本書 §2-§6)    → Tokens
 L1 Brand Core (Purpose/      → 1. Evidence-driven                → --color-data-*
  Vision/Concept/Values 6)      （L1-4 Science / L4-A 1位）          --fs-caption*
 L2 Strategic Core (Market/   → 2. Continuity                     → --space-* (等比)
- Target/JTBD/POD)              （L1-4 Continuity / L4-A 2位）       --motion-duration-*
+ Target/JTBD/POD)              （L1-4 Continuity / L4-A 2位）       --duration-*
 L3 Brand Personality         → 3. Equal Partner                  → --color-ink
  (Character/Tone/Voice/        （L3-5 共創者 / L4-A 3位）           --fs-body
  関係性)                                                            --bg-*
@@ -46,7 +46,7 @@ L4 Sensorial Assets          → 4. Quiet Drive                    → --color-d
 | # | Principle | 一文要約 | DNA 由来（主） | 主要 Token カテゴリ |
 |---|---|---|---|---|
 | 1 | **Evidence-driven** | 設計判断は論理・スポーツ栄養学・実績で裏打ちし、信頼を生む形で表現する | L1-4 Science / L4-A 1位 / L1-6 可能性の確率 / L1-4 Integrity | `--color-data-*` / `--fs-caption*` / `--fw-medium` |
-| 2 | **Continuity** | 定期便と習慣化の文脈に、視覚・時間・空間の連続的リズムを与える | L1-4 Continuity / L4-A 2位 / 定期便文脈 | `--space-*` 等比 / `--motion-duration-*` / `--border-light` |
+| 2 | **Continuity** | 定期便と習慣化の文脈に、視覚・時間・空間の連続的リズムを与える | L1-4 Continuity / L4-A 2位 / 定期便文脈 | `--space-*` 等比 / `--duration-*` / `--border-light` |
 | 3 | **Equal Partner** | 共創者として対等の距離感を保ち、過剰演出と上から目線を排する | L3-5 共創者 / L4-A 3位 / L1-4 Together | `--color-ink` / `--fs-body` / `--bg-*` 3 階層 |
 | 4 | **Quiet Drive** | "Our Drive" は静かな自信と引き算で表現し、派手・映えを Anti とする | L3-2 静かな自信 / L1-3 Brand Concept / L1-0 Anti / L4-A 4-6位 | `--color-drive` / `--fs-display`〜`--fs-h1` / `--shadow-1〜2` |
 | 5 | **Disciplined Craft** | 既存資産の Audit-first と Token 化規律ですべての実装を支える | L1-4 Integrity / Audit-first / v0.4 draft Section D | 命名規則 / `--radius-*` / `--bp-*` |

@@ -587,6 +587,13 @@ OKRと連動させて「DSの効果」を可視化。
 └────────────────────┘
 ```
 
+### L0 翻訳表本体
+
+> 上記の翻訳①②③の **本体実装**: [L0-translation-table.md](L0-translation-table.md) v0.1 (2026-05-19 / Session #55)
+> - DNA v0.6.3 → 5 Design Principles → 133 Tokens の対応表
+> - 原則間の優先度ルール + Token 逆引き表 10 カテゴリ × 5 原則
+> - DNA v1.0（2026-06-30）確定まで段階更新
+
 ---
 
 ## 7. 完成度ダッシュボード（spec ↔ Figma ↔ Liquid 三位一体）
