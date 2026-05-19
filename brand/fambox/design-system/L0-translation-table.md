@@ -348,6 +348,37 @@ L4 Sensorial Assets          → 4. Quiet Drive                    → --color-d
 
 ## 7. 原則間の優先度・矛盾時の解決ルール
 
+### 7-1. 矛盾時の優先順位
+
+```
+Evidence-driven > Continuity > Equal Partner > Quiet Drive
+（最上位）                                              
+
+[横断・メタ] Disciplined Craft
+```
+
+**理由**:
+- **Evidence-driven が最上位**: B2B / スポーツ栄養 / 法人購買が主軸 → 論理的・スポーツ栄養学的・実績的に根拠が最上位、信頼が重要である
+- **Continuity**: 定期便文脈の継続性（事業モデル直結）
+- **Equal Partner**: 関係性の核（共創者 / L3-5）
+- **Quiet Drive**: ビジュアル trait（Tone of Voice の視覚化）
+- **Disciplined Craft は横断的メタ原則** — 他 4 原則の適用すべてに Audit-first を上乗せ（順序判定の対象外）
+
+### 7-2. 衝突例と解決
+
+| # | 衝突 | 解決 |
+|---|---|---|
+| 1 | **Evidence-driven**（データ可視化で意味カテゴリを派手な色で目立たせたい）vs **Quiet Drive**（ネオン彩度禁止）| Evidence-driven が勝つ。ただし `--color-data-*` 6 色の範囲内で（Quiet Drive の Anti「ネオン彩度」「neon green+neon pink」は超えない）|
+| 2 | **Continuity**（モーションを連続的に重ねたい）vs **Equal Partner**（控えめに）| Equal Partner 優先。`--duration-base: 250ms` を超えるアニメ multi-stack 禁止。1 画面で同時 active な motion は 2 個まで |
+| 3 | **Disciplined Craft**（Token 化を強制）vs **Evidence-driven**（実験的データ表現で新値が欲しい）| Disciplined Craft はメタ。実験データは **新規 token として追加**し命名規則に従う（Token 化を bypass せず、`--color-data-7` のように拡張）|
+
+### 7-3. 適用範囲の注意
+
+- 優先順位は **設計判断が複数原則に分岐する場合**のみ参照（通常は複数原則を同時に満たす設計を目指す）
+- **両立可能な場合は必ず両立させる**。優先順位は「妥協が必要な時の最後の判断材料」
+- 順位が低い原則を「無視」してよい意味ではない（Quiet Drive 4 位でも `--color-drive` の派手使いは依然 Anti）
+- **Disciplined Craft はすべての設計判断で並列適用**（順位の対象外）
+
 ## 8. Token 逆引き表
 
 ## 9. 改訂履歴
