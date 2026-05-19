@@ -284,11 +284,67 @@ L4 Sensorial Assets          → 4. Quiet Drive                    → --color-d
 
 ### 6-A. DNA 由来
 
+| DNA 要素 | 引用 |
+|---|---|
+| L1-4 Core Values #6 **Integrity** (v0.6.3) | 誠実・実直・本物志向。アシックス的本質主義＝派手さよりも実用と成果で選ばれる立ち位置 |
+| operations/2026-05-12-brand-dna-v0.4-draft.md Section D | **Disciplined**：何かを作る前に必ず既存資産を確認する。Audit-first protocol は DNA の実装規律として、視覚言語と同等の重要度を持つ |
+| operations/2026-05-12-brand-dna-v0.4-draft.md Section A | Marc 流 4 層スタック（L1 Transport / L2 Skill / L3 Tokens / L4 Definitions / L5 Audit-first）|
+| L1-4 Core Values #2 Science (副) | 根拠ある判断 — 直値ではなく Token を介す規律 |
+
 ### 6-B. Principle 定義
+
+**一文**: 既存資産の **Audit-first** と **Token 化規律** によって、他 4 原則の適用すべてを支える。
+
+**位置づけ**: 他 4 原則（Evidence-driven / Continuity / Equal Partner / Quiet Drive）と **同列ではなく上乗せ**のメタ規律。優先順位の対象外（§7 で詳述）。
+
+**解説**:
+- 新規 Component 作成時、まず **既存資産の全件 audit**（spec md / Figma Set / Liquid section の三位一体）を実行
+- 直値（magic number）禁止。色 / spacing / fs / shadow / radius / bp / motion はすべて token 経由
+- Token 命名は **kebab-case + カテゴリ prefix**（`--color-*` / `--space-*` / `--fs-*` / `--bp-*`）
+- spec md ↔ Figma Component Set ↔ Liquid section の **三位一体達成**を目標（current.md §7 ダッシュボード）
+
+**Do**:
+- 既存 Token snippet (`snippets/fambox-tokens.css.liquid`) を grep してから新規追加判断
+- L4 Component を作る時、L3 Pattern / L2 Primitive の既存 spec を必ず読む
+- Token 化されていない値は **新規 Token として追加**してから使う
+- 命名は `--カテゴリ-意味-修飾` の 3 階層（例: `--color-drive-hover`）
+
+**Anti**:
+- Magic number / inline hex / inline px の直値使用
+- 既存 spec を読まずに新規 spec を書く
+- Token 名の独自命名（camelCase / snake_case 等の混在）
+- spec md と Liquid section の値が乖離（current.md §7 で N/3 が割れる状態を放置）
 
 ### 6-C. 対応 Token
 
+**命名規則**:
+- 必須 prefix: `--color-` / `--space-` / `--fs-` / `--fw-` / `--bp-` / `--radius-` / `--shadow-` / `--duration-` / `--ease-` / `--bg-` / `--border-` / `--glass-` / `--white-overlay-` / `--ink-overlay-`
+- 修飾サフィックス: `-hover` / `-light` / `-sm` / `-md` / `-lg` / `-base` / `-slow` / `-fast`
+- alias 構造: `--color-cta: var(--color-drive)` のような **意味への参照**を使う（§1-A 1-9 Semantic Alias 参照）
+
+**主要 Token（Disciplined Craft が支える基盤）**:
+
+| Token | 値 | 役割 |
+|---|---|---|
+| `--radius-xs`〜`--radius-pill` | 2/4/8/16px、50%、50px、9999px | 角丸の表現規律。直値禁止 |
+| `--bp-sp-sm`〜`--bp-pc` | 480 / 767 / 768 / 1024px | レスポンシブ規律 |
+| `--space-0-5`〜`--space-8` | 4/8/12/16/24/32/40/48/64/96/120px | spacing の規律 |
+| `--color-cta` | `var(--color-drive)` | 意味への参照（semantic alias）|
+
+**運用ルール**:
+- 新規 Token 追加時は `current.md §1` と `snippets/fambox-tokens.css.liquid` を同時更新（学び 111）
+- Tokens Studio との同期は `operations/scripts/tokens-studio-v05-complete.json` 経由
+
 ### 6-D. 実装シグナル
+
+- **新規 Component 作成時の手順**（Audit-first protocol）:
+  1. `current.md §7` 完成度ダッシュボードで既存 spec / Figma / Liquid の存在を確認
+  2. `snippets/fambox-tokens.css.liquid` を grep して既存 token を確認
+  3. SKILL `figma-component-from-spec` v0.7 の Step 0.5 Audit を実行
+  4. 既存資産で代替できない場合のみ新規作成
+- **Liquid 書式**: 全 fambox-* section は `{% render 'fambox-tokens.css' %}` を <head> 経由で参照（学び 95-96 / 22 sections 全 Token 化済）
+- **三位一体の更新**: Component spec を変更したら、Figma Set と Liquid section も同タイミングで更新（current.md §7 N/3 ラベルで track）
+- **新規 Component 設計時の Audit 質問**: 「既存 spec / Figma Set / Liquid section を全て読んだか？magic number は残っていないか？token 命名規則に従っているか？」
 
 ## 7. 原則間の優先度・矛盾時の解決ルール
 
