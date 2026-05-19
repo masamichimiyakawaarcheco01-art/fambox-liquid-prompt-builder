@@ -116,7 +116,7 @@ Evidence-driven > Continuity > Equal Partner > Quiet Drive > Disciplined Craft
 ```
 
 理由:
-- B2B / スポーツ栄養 / 法人購買が主軸 → 科学的根拠が最上位
+- B2B / スポーツ栄養 / 法人購買が主軸 → 論理的、スポーツ栄養学的、実績的に根拠が最上位、信頼が重要である
 - Continuity = 定期便文脈の継続性（事業モデル直結）
 - Equal Partner = 関係性の核（共創者）
 - Quiet Drive = ビジュアル trait
