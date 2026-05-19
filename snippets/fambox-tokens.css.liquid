@@ -252,4 +252,36 @@ spec §1-D との連携
     --duration-breathing: 0ms;
   }
 }
+
+{%- comment -%}
+============================================================
+Brand Mode Override（§5 #4 統合 DS / 学び 130）
+Session #54 ext-4 で追加。
+ROI 評価で Tokens Studio Pro themes 機能が課金必須と判明したため、
+brand mode を CSS [data-brand=] override で自前実装する選択肢 C を採用。
+
+使い方:
+  <html data-brand="fambox">  ← default
+  <html data-brand="fam">      ← FAM brand
+
+実装規律:
+  - L1 Token のうち brand 固有部分のみ override
+  - 構造（spacing / radius / motion / typography scale）は brand 共通
+  - ベース色（drive / sky / deep）と一部 alias のみ brand 別
+============================================================
+{%- endcomment -%}
+
+[data-brand="fam"] {
+  /* FAM brand override（仮値 / v0.6 で FAM brand 確定後に正式値）*/
+  /* --color-drive: #FAMBOX とは別の FAM 色; */
+  /* --color-drive-hover: ...; */
+  /* --color-drive-light: ...; */
+  /* --color-sky: ...; */
+  /* --color-deep: ...; */
+}
+
+/* 必要に応じて以下のセレクタも併用可:
+   :root[data-brand="fam"]  (html 要素直接 / 優先度高)
+   body[data-brand="fam"]   (body 要素 / theme切替が body 単位の場合)
+*/
 </style>

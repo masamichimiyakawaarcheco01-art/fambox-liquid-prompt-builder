@@ -3792,3 +3792,86 @@ Step 5: Tools → Load JSON → tokens-studio-import.json を選択
 - Session #55 で試用結果確認 → プラン A 継続 or B 切替
 
 ---
+
+## Session 2026-05-18 (#54 ext-4) — Tokens Studio ROI 評価結果: 選択肢 C ハイブリッド採用
+
+**契機**: Tokens Studio インストール後の試用で重要な事実が判明。**brand themes 機能は Pro 版必須**（月額 $15-20）。§5 #4 brand 統合戦略を Pro 版なしで実現する選択肢 C（ハイブリッド）に切替。
+
+### ROI 評価結果
+
+| # | 項目 | 結果 |
+|---|---|---|
+| 1 | インストール / 起動 | ✅ OK（公式 Community URL 経由）|
+| 2 | Figma Variables 連携 | ✅ 既存 v0.2 set が表示 |
+| 3 | JSON import | ✅ 動作（v0.5 差分 JSON 用意済）|
+| 4 | 双方向同期 | 🟡 未検証（基本機能は動作見込み）|
+| 5 | CSS export | 🟡 未検証 |
+| 6 | **brand themes 無料版** | ❌ **Pro 版必須**（Manage themes に PRO バッジ）|
+| 7 | 学習コスト | ✅ 許容範囲（v2.11.7 UI は直感的）|
+
+**判定**: 5+ ✅ で継続可能だが、**最重要 #6 が NG** → 戦略再検討
+
+### 既存 Tokens Studio v0.2 set の発見
+
+既存に **109 tokens (v0.2 / 2026-04-20 / 宮川さん作成)** の完全な FAMBOX set が存在していた:
+- $metadata.version = "v0.2"
+- $metadata.generated = "2026-04-20"
+- $metadata.owner = "宮川"
+- 23 categories (Sizing / Spacing / Color / Border Radius / Border Width / Opacity / Box Shadow / Font Family / Font Weight / Line Height / Font Size / Letter Spacing / Other)
+
+→ 私の v0.5 (133 tokens) との差分:
+- **値修正 4 件** (drive 色 / duration.base / duration.slow / space.8)
+- **新規追加 22 件**
+
+### Tokens Studio 値修正 4 件の進捗
+
+| Token | v0.2 | v0.5 | 結果 |
+|---|---|---|---|
+| color.brand.drive | #FB4C15 | #fc5214 | **#FB4C15 維持**（学び 130）|
+| motion.duration.base | 300 | 250 | ✅ 完了 |
+| motion.duration.slow | 600 | 350 | ✅ 完了 |
+| space.8 | 160 | 120 | ✅ 完了 |
+
+### 戦略: 選択肢 C ハイブリッド採用
+
+```
+Token 一元管理: Tokens Studio 無料版（109 → 131 tokens に拡張）
+brand mode:    CSS [data-brand="fam"] override で自前実装
+```
+
+**実装**: `snippets/fambox-tokens.css.liquid` 末尾に **Brand Mode Override** セクション追加:
+
+```css
+[data-brand="fam"] {
+  /* FAM brand override (仮値 / v0.6 で FAM brand 確定後に正式値) */
+  /* --color-drive: ...; */
+  /* --color-drive-hover: ...; */
+  /* --color-sky: ...; */
+  /* --color-deep: ...; */
+}
+```
+
+これで Pro 版なしで **§5 #4 統合 DS** と整合する brand mode が実現可能。
+
+### Liquid 側修正（drive 色逆方向）
+
+Session #48 で実施した `#FB4C15` → `#fc5214` の sed は**逆方向**だった。Session #54 で revert:
+- `snippets/fambox-tokens.css.liquid`: `--color-drive: #FB4C15`、`--color-drive-light: #FC825B`、glow も rgb 251 ベースに
+- `current.md §1-A / §5-1 / §5-3`: 全部 #FB4C15 / 選択肢 C 採用に更新
+- 残存 `#fc5214` は current.md §5-1 内の経緯記述 1 件のみ（履歴として残す）
+
+### 学び 130-132
+
+130. **Token は「Figma が真実の源 / 実装が追従」が原則。種別によって方向が変わる**: color (brand identity) は **Figma が源**、spacing/duration は **実装の de facto が源**。学び 106「実装 → spec」の反対方向もある。**Token 種別ごとに真実の源（source of truth）を判断**する規律。色は brand 守る、構造は実装で揉まれた値を採用、というハイブリッド。
+
+131. **「Pro 版必須機能」を CSS で代替できるなら無料運用が現実解**: Tokens Studio Pro の brand themes 機能は **CSS の `[data-brand=]` セレクタで完全代替可能**。月額 $15-20 を払う前に「**この機能は本質的に Pro 版でしか実現できないか？**」を問う。多くの場合、CSS / JS の素機能で代替可能で、Pro 課金は不要。**「Pro 機能の本質的価値」と「実装代替可能性」を見極める**。
+
+132. **戦略決定は ROI 評価の各項目を「重要度別の重み付け」で判断する**: ROI チェックリスト 7 項目を均等 5+ ✅ で判定するのではなく、**「最重要項目（#6 brand themes）が ❌ なら全体不合格」**のような閾値判定が現実的。Session #54 では「無料版で brand themes が使えるか」が単独で戦略を左右する critical item だった。**critical item の重み付け判定**を ROI 評価の標準パターンに。
+
+### Known TODOs
+
+- ユーザー手動: Tokens Studio で残 22 件の新規追加（drive-hover / disabled / spacing / font-size / line-height / letter-spacing / breakpoint / radius / shadow）
+- 22 件追加後: ROI 評価 §7 に最終結果記入
+- FAM brand 値確定後: brand mode override を実装（v0.6 候補）
+
+---

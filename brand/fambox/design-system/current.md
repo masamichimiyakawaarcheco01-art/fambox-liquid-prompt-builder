@@ -512,16 +512,25 @@ OKRと連動させて「DSの効果」を可視化。
   - 推定削減: **200+ 行の inline SVG**
 - **代替案見送り理由**: Phosphor (B) は 6 weight で表現性高だが DNA「シンプル」と過剰、自作 (C) はメンテ負荷蓄積
 
-### 5-3. Tokens Studio 等のFigma→Code同期ツールを入れるか ✅ 決定: **プラン A（Tokens Studio 導入）**
-- **採用**: Tokens Studio（Figma → JSON → CSS 自動同期）
-- **理由**: ユーザー判断で導入決定。Figma Variables との同期を**業界標準ツールで自動化**、multi-brand 対応にも有利
-- **実行計画**:
-  - Session #54 候補: プラグイン設定 + 既存 133 tokens import + 同期 workflow 確立（**初期 4-6 時間**）
-  - 並行で **generate-dashboard.py との連携**を検証（学び 102 ハイブリッド方式と整合）
-- **リスク（Change log に明示）**:
-  - 🟡 学習コスト発生（プラグイン仕様 + Figma Variables 機能との競合の懸念）
-  - 🟡 自前 script 拡張案（プラン B）と比較した ROI 検証を **Session #54 開始時に簡易試用**で確認
-  - 期待した自動化効果が得られない場合は **プラン B（generate-dashboard.py Phase 2 拡張）に切替**する余地を残す
+### 5-3. Tokens Studio 等のFigma→Code同期ツールを入れるか ✅ 決定: **選択肢 C（ハイブリッド / 無料版継続）**
+- **採用（最終 / Session #54 ext-4 確定）**: Tokens Studio 無料版 + brand mode は CSS `[data-brand=]` で自前実装
+- **経緯**:
+  - Session #53 で プラン A（Tokens Studio 導入）採用決定
+  - Session #54 ROI 評価で判明:
+    - ✅ インストール / 起動 / Token 表示 / Figma Variables 連携: 無料版 OK
+    - ❌ **brand themes 機能は Pro 版必須**（月額 $15-20）
+  - ユーザー判断: Pro 版に課金しない → **選択肢 C ハイブリッド採用**
+- **戦略**:
+  - Token 一元管理: Tokens Studio 無料版（既存 v0.2 set + 22 件追加で v0.5 化）
+  - brand mode: CSS `[data-brand="fam"]` セレクタで `--color-drive` 等を override
+    (`snippets/fambox-tokens.css.liquid` 末尾に Brand Mode Override セクション追加)
+- **メリット**: 月額 0 円 / 既存資産活用 / §5 #4 brand 統合と整合
+- **Tokens Studio 値修正完了 (Session #54)**:
+  - color.brand.drive: **#FB4C15 維持**（Token が真実の源 / 学び 130）
+  - motion.duration.base: 300 → 250 ✅
+  - motion.duration.slow: 600 → 350 ✅
+  - space.8: 160 → 120 ✅
+- **残作業**: 新規追加 22 件（drive-hover / disabled / spacing 微調整 / font-size 拡張 / line-height / letter-spacing / breakpoint / radius / shadow）
 
 ### 5-4. 命名規則の最終形 ✅ **de facto 確定済（Session #43）**
 - **採用**: kebab-case + カテゴリ prefix（BEM 風）
