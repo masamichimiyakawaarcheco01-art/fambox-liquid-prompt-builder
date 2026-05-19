@@ -109,11 +109,55 @@ L4 Sensorial Assets          → 4. Quiet Drive                    → --color-d
 
 ### 3-A. DNA 由来
 
+| DNA 要素 | 引用（v0.6.3 原文）|
+|---|---|
+| L1-4 Core Values #4 **Continuity** | 日々の積み重ねを尊ぶ |
+| L4-A 視覚言語 6 軸 (FAMBOX 2 位) | **Continuity** — 定期便・習慣化の文脈で最重要 |
+| L1-5 社会的価値観 | アスリート寿命の延伸（怪我予防・コンディション維持）|
+| L1-1 Purpose (継続的支援文脈) | アスリートのパフォーマンスと社会の wellbeing に貢献 |
+
 ### 3-B. Principle 定義
+
+**一文**: 定期便・習慣化・継続コミットの体験を、**視覚（spacing 等比）・時間（motion）・空間（hairline rhythm）**の三層で連続的に表現する。
+
+**解説**:
+- スペーシングは **等比率（1.5x / 2x）** が DS de facto（学び 95-96）。等差は使わない
+- モーション 250ms はリズムの基準。これより速い変化は「急峻」、遅い変化は「もたつき」
+- 区切り線は `--border-light` の hairline で「途切れない連続性」を担保
+- 1 画面内の視覚リズム断絶（急激な余白・色変化・モーション加速）は **Anti**
+
+**Do**:
+- 縦方向のスペーシングは `--space-1`(8px) → `--space-2`(16px) → `--space-3`(24px) → `--space-4`(32px) の等比継承
+- すべての state 遷移（hover / focus / open / close）に `--duration-base: 250ms` を採用
+- セクション境界は `--border-light: rgba(27, 29, 26, 0.08)` の hairline
+
+**Anti**:
+- スペーシング等差（10px / 18px / 25px のような根拠不明な値）
+- 0ms 即時切替 / 600ms 超のゆっくり transition
+- 強い border-base (1-2px) で section を切断する視覚断絶
+- 急峻な scale 変化（hover で `transform: scale(1.2)` のような派手な拡大）
 
 ### 3-C. 対応 Token
 
+| Token | 値 | なぜこの原則を支えるか |
+|---|---|---|
+| `--space-0-5`〜`--space-8` | 4 / 8 / 12 / 16 / 24 / 32 / 40 / 48 / 64 / 96 / 120px | 等比率スケール（1.5x / 2x）で視覚リズムを連続化 |
+| `--duration-base` | 250ms | UI 遷移の標準。Continuity 視覚リズムと時間リズムを同期 |
+| `--duration-slow` | 350ms | 大型 modal / drawer の open で「もたつかず急がず」|
+| `--duration-fast` | 150ms | ボタンの press feedback など瞬時応答 |
+| `--border-light` | `rgba(27, 29, 26, 0.08)` | hairline divider で「途切れない連続性」|
+| `--ease-out` / `--ease-in` / `--ease-in-out` | ease-out / ease-in / ease-in-out | 自然な減速曲線で視覚リズムを保つ |
+| `--duration-breathing` | 2000ms | 呼吸リズムの「ゆっくりとした連続性」の特殊用途 |
+
+**運用ルール**: 新規 Component の縦方向リズムは `--space-*` のみで構成（直値禁止）。アニメは `--duration-*` のいずれかを必ず採用、easing は `--ease-*` から選ぶ。
+
 ### 3-D. 実装シグナル
+
+- **Plan Card（subscription-plan-card）**: 月額 / 年額の **継続コミット** を視覚的に強調する（一回購入との差別化）。`--space-*` の整列で「定期感」を作る
+- **Bento Grid 縦方向**: section 間 `--space-5: 48px` を基準、子要素は `--space-2`〜`--space-3` を継承
+- **Header / Footer**: site 共通の縦リズムを `--space-3: 24px` で固定（fambox-header.liquid / fambox-footer.liquid 準拠）
+- **Modal 開閉**: `--duration-slow: 350ms` + `--ease-out` で「もたつかず急がず」
+- **新規 Component 設計時の Audit 質問**: 「縦方向のスペーシング 3 段階以上で等比性を保てているか？モーション duration が token から来ているか？」
 
 ## 4. 原則 3: Equal Partner
 
