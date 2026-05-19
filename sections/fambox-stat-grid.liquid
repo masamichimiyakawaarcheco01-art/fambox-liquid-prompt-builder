@@ -1,0 +1,454 @@
+<!-- ============================================
+     FAMBOX Stat Grid Section
+     sections/fambox-stat-grid.liquid
+     Spec: brand/fambox/design-system/components/stat-card.md (v0.2)
+     Figma Component Set: 64:49 (L3 Pattern Stat Card)
+     ============================================
+     L3 Pattern Stat Card を複数並べる L4 セクション。
+     3 sizes × 2 layouts = 6 variants（全 Stat に共通設定）。
+     Stat Card 自体は数字主役の最小 Pattern。本 section は
+     「KPI Grid」「Big Numbers」「Single Stat」等の用途を 1 file に集約。
+
+     Anti（spec §Don't 準拠）:
+       - カウントアップアニメ禁止（数字は静的提示）
+       - Unit を Label と同サイズにしない（0.4em 固定）
+       - 1 Stat に複数の数字を並列しない（block 1 個 = 数字 1 個）
+       - Value 色は Drive 固定（Sky / Deep / Ink 不可・v0.2）
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-stat-grid-' | append: section.id
+  assign size = section.settings.size | default: 'default'
+  assign layout = section.settings.layout | default: 'vertical'
+  assign cols_pc = section.settings.cols_pc | default: 3
+  assign cols_sp = section.settings.cols_sp | default: 1
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap');
+
+  /* ============================================
+     RESET
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     SECTION BASE
+     ============================================ */
+  #{{ sec_id }} {
+    position: relative;
+    width: 100%;
+    background: {{ section.settings.bg_color }};
+    font-family: var(--font-ja) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  #{{ sec_id }} .stat-grid__inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: var(--space-7) var(--space-3);
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .stat-grid__inner {
+      padding: var(--space-8) var(--space-6);
+    }
+  }
+
+  /* ============================================
+     HEADER（任意）
+     ============================================ */
+  #{{ sec_id }} .stat-grid__header {
+    margin-bottom: 56px;
+    max-width: 720px;
+  }
+  #{{ sec_id }} .stat-grid__eyebrow {
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-body-sm) !important;
+    font-weight: var(--fw-medium) !important;
+    color: var(--color-drive) !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    margin-bottom: var(--space-2) !important;
+    display: block;
+  }
+  #{{ sec_id }} .stat-grid__title {
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-h2) !important;
+    font-weight: var(--fw-semibold) !important;
+    line-height: 1.5 !important;
+    color: var(--color-ink) !important;
+    letter-spacing: normal !important;
+    margin: 0 !important;
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .stat-grid__title {
+      font-size: var(--fs-h2-large) !important;
+    }
+  }
+  #{{ sec_id }} .stat-grid__lead {
+    margin-top: var(--space-2) !important;
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-body) !important;
+    font-weight: var(--fw-regular) !important;
+    line-height: 1.75 !important;
+    color: var(--color-sub) !important;
+  }
+
+  /* ============================================
+     GRID（column 数を SP/PC で切替）
+     ============================================ */
+  #{{ sec_id }} .stat-grid {
+    display: grid;
+    grid-template-columns: repeat({{ cols_sp }}, 1fr);
+    gap: var(--space-4);
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .stat-grid {
+      grid-template-columns: repeat({{ cols_pc }}, 1fr);
+      gap: var(--space-5);
+    }
+  }
+
+  /* ============================================
+     STAT CARD（spec §CSS v0.2 準拠 / Drive 色固定）
+     ============================================ */
+  #{{ sec_id }} .stat-card {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: flex-start;
+  }
+  #{{ sec_id }} .stat-card__value {
+    font-family: var(--font-en) !important;
+    font-weight: var(--fw-bold) !important;
+    line-height: 1 !important;
+    letter-spacing: -0.01em !important;
+    color: var(--color-drive) !important;
+    margin: 0 !important;
+    text-transform: none !important;
+  }
+  #{{ sec_id }} .stat-card__unit {
+    font-size: 0.4em !important;
+    color: var(--color-sub) !important;
+    margin-left: var(--space-1);
+    font-weight: var(--fw-medium) !important;
+    letter-spacing: normal !important;
+  }
+  #{{ sec_id }} .stat-card__label {
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-body) !important;
+    font-weight: var(--fw-semibold) !important;
+    color: var(--color-ink) !important;
+    letter-spacing: normal !important;
+    line-height: 1.6 !important;
+    margin: 0 !important;
+  }
+  #{{ sec_id }} .stat-card__period {
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-caption) !important;
+    font-weight: var(--fw-medium) !important;
+    color: var(--color-caption) !important;
+    letter-spacing: 0.02em !important;
+    margin: 0 !important;
+  }
+
+  /* ============================================
+     SIZES（3 段階）
+     ============================================ */
+  #{{ sec_id }} .stat-card--compact .stat-card__value { font-size: var(--fs-h2) !important; }
+  #{{ sec_id }} .stat-card--default .stat-card__value { font-size: var(--fs-display) !important; }
+  #{{ sec_id }} .stat-card--large   .stat-card__value { font-size: var(--fs-mega) !important; }
+
+  /* SP では large を 64px に縮退（spec 準拠） */
+  @media (max-width: 767px) {
+    #{{ sec_id }} .stat-card--large .stat-card__value { font-size: var(--fs-hero) !important; }
+    #{{ sec_id }} .stat-card--default .stat-card__value { font-size: var(--fs-h1) !important; }
+  }
+
+  /* ============================================
+     LAYOUTS（2 種）
+     ============================================ */
+  #{{ sec_id }} .stat-card--vertical {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #{{ sec_id }} .stat-card--horizontal {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+  #{{ sec_id }} .stat-card--horizontal .stat-card__value {
+    flex-shrink: 0;
+  }
+  #{{ sec_id }} .stat-card--horizontal .stat-card__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-0-5);
+  }
+
+  /* SP で horizontal を vertical に倒す（密度高すぎる時の予防） */
+  @media (max-width: 480px) {
+    #{{ sec_id }} .stat-card--horizontal {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-1);
+    }
+  }
+
+  /* ============================================
+     SR（screen reader）専用 visually-hidden
+     ============================================ */
+  #{{ sec_id }} .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <div class="stat-grid__inner">
+
+    {%- if section.settings.eyebrow != blank or section.settings.title != blank or section.settings.lead != blank -%}
+      <header class="stat-grid__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="stat-grid__eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="stat-grid__title">{{ section.settings.title | newline_to_br }}</h2>
+        {%- endif -%}
+        {%- if section.settings.lead != blank -%}
+          <p class="stat-grid__lead">{{ section.settings.lead | newline_to_br }}</p>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <div class="stat-grid" role="list">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'stat_item' -%}
+          <div
+            class="stat-card stat-card--{{ size }} stat-card--{{ layout }}"
+            role="listitem"
+            {{ block.shopify_attributes }}
+          >
+            {%- comment -%} Value + Unit {%- endcomment -%}
+            <p class="stat-card__value">
+              {%- if block.settings.sr_prefix != blank -%}
+                <span class="visually-hidden">{{ block.settings.sr_prefix }}</span>
+              {%- endif -%}
+              {{ block.settings.value }}{%- if block.settings.unit != blank -%}<span class="stat-card__unit">{{ block.settings.unit }}</span>{%- endif -%}
+            </p>
+
+            {%- comment -%} Label + Period（horizontal の時は .stat-card__text にまとめる）{%- endcomment -%}
+            {%- if layout == 'horizontal' -%}
+              <div class="stat-card__text">
+                {%- if block.settings.label != blank -%}
+                  <p class="stat-card__label">{{ block.settings.label }}</p>
+                {%- endif -%}
+                {%- if block.settings.period != blank -%}
+                  <p class="stat-card__period">{{ block.settings.period }}</p>
+                {%- endif -%}
+              </div>
+            {%- else -%}
+              {%- if block.settings.label != blank -%}
+                <p class="stat-card__label">{{ block.settings.label }}</p>
+              {%- endif -%}
+              {%- if block.settings.period != blank -%}
+                <p class="stat-card__period">{{ block.settings.period }}</p>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Stat Grid セクション",
+  "tag": "section",
+  "class": "fambox-stat-grid-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "基本設定"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "var(--bg-secondary)"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "数字サイズ",
+      "options": [
+        { "value": "compact", "label": "Compact（32px / 一覧密度高）" },
+        { "value": "default", "label": "Default（56px / 標準）" },
+        { "value": "large",   "label": "Large（96px / Hero 級）" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "レイアウト",
+      "options": [
+        { "value": "vertical",   "label": "Vertical（数字→Label 縦並び）" },
+        { "value": "horizontal", "label": "Horizontal（数字＋Label 横並び・Compact 向き）" }
+      ],
+      "default": "vertical"
+    },
+    {
+      "type": "range",
+      "id": "cols_pc",
+      "label": "PC 列数",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "cols_sp",
+      "label": "SP 列数",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "── 見出し（任意）──"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow（英字小ラベル）",
+      "default": "NUMBERS"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "タイトル",
+      "default": "数字で見る FAMBOX"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "リード文（任意）"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat_item",
+      "name": "Stat 項目",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "数値（Value）",
+          "info": "例: 84 / -3.2 / 2026",
+          "default": "84"
+        },
+        {
+          "type": "text",
+          "id": "unit",
+          "label": "単位（Unit）",
+          "info": "例: % / kg / 件 / チーム",
+          "default": "%"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "ラベル（必須）",
+          "info": "Value の意味を明示（曖昧な表現は禁止）",
+          "default": "12 ヶ月継続率"
+        },
+        {
+          "type": "text",
+          "id": "period",
+          "label": "期間（任意）",
+          "info": "明確な集計期間がある場合のみ。曖昧なら空のまま"
+        },
+        {
+          "type": "text",
+          "id": "sr_prefix",
+          "label": "SR 補助テキスト（任意）",
+          "info": "例: 「マイナス」「およそ」など。記号を読み飛ばすスクリーンリーダー対策"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stat Grid — KPI（Compact / 4 列）",
+      "settings": {
+        "bg_color": "var(--bg-secondary)",
+        "size": "compact",
+        "layout": "horizontal",
+        "cols_pc": 4,
+        "cols_sp": 2,
+        "eyebrow": "KPI",
+        "title": "数字で見る FAMBOX",
+        "lead": ""
+      },
+      "blocks": [
+        { "type": "stat_item", "settings": { "value": "84",   "unit": "%",      "label": "12 ヶ月継続率",        "period": "2026 Q1" } },
+        { "type": "stat_item", "settings": { "value": "12",   "unit": "チーム", "label": "導入実績",            "period": "2026/4 時点" } },
+        { "type": "stat_item", "settings": { "value": "32",   "unit": "g",      "label": "1 食あたりタンパク質", "period": "" } },
+        { "type": "stat_item", "settings": { "value": "100",  "unit": "%",      "label": "全国配送対応",        "period": "" } }
+      ]
+    },
+    {
+      "name": "Stat Grid — Big Numbers（Large / 3 列）",
+      "settings": {
+        "bg_color": "#ffffff",
+        "size": "large",
+        "layout": "vertical",
+        "cols_pc": 3,
+        "cols_sp": 1,
+        "eyebrow": "RESULTS",
+        "title": "アスリートの結果",
+        "lead": "FAMBOX を導入した選手・チームの集計値です（自己申告含む）。"
+      },
+      "blocks": [
+        { "type": "stat_item", "settings": { "value": "-3.2", "unit": "kg",   "label": "3 ヶ月で平均減量",    "period": "2026 Q1", "sr_prefix": "マイナス" } },
+        { "type": "stat_item", "settings": { "value": "+5.4", "unit": "kg",   "label": "3 ヶ月で平均増量（筋量）", "period": "2026 Q1", "sr_prefix": "プラス" } },
+        { "type": "stat_item", "settings": { "value": "84",   "unit": "%",    "label": "継続率",              "period": "12 ヶ月" } }
+      ]
+    },
+    {
+      "name": "Stat Grid — Single Stat（Hero 級）",
+      "settings": {
+        "bg_color": "var(--color-ink)",
+        "size": "large",
+        "layout": "vertical",
+        "cols_pc": 1,
+        "cols_sp": 1,
+        "eyebrow": "",
+        "title": "",
+        "lead": ""
+      },
+      "blocks": [
+        { "type": "stat_item", "settings": { "value": "12,000", "unit": "食", "label": "累計配送実績", "period": "2024-2026 累計" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

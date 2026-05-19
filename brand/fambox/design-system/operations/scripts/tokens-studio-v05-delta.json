@@ -1,0 +1,184 @@
+{
+  "$metadata-note": "FAMBOX v0.2 → v0.5 差分のみ。既存 token は壊さず、値修正 4 件 + 新規追加 22 件のみ反映。Session #47-52 (Phase B-1〜B-6) で確定した変更点。Tokens Studio で既存 set を編集 (値修正) + 新規追加 (アイテム新設) する形で適用してください。",
+
+  "VALUE_UPDATES_4": {
+    "color.brand.drive": {
+      "from": "#FB4C15",
+      "to": "#fc5214",
+      "reason": "Liquid 22 sections で #fc5214 に統一済 (Session #48)。表記揺れ解消。視覚的に差は微小だが、Token 名と実装値を完全一致させる",
+      "value": "#fc5214",
+      "type": "color"
+    },
+    "motion.duration.base": {
+      "from": "300",
+      "to": "250",
+      "reason": "Liquid 実装は 250ms が de facto (Modal の opacity transition / Card hover lift)",
+      "value": "250",
+      "type": "other",
+      "description": "標準遷移 (ms) / Session #48 で 300→250 修正"
+    },
+    "motion.duration.slow": {
+      "from": "600",
+      "to": "350",
+      "reason": "Liquid 実装は 350ms が de facto (Sheet variant slide-up)",
+      "value": "350",
+      "type": "other",
+      "description": "ゆっくり遷移 (ms) / Session #48 で 600→350 修正"
+    },
+    "space.8": {
+      "from": "160",
+      "to": "120",
+      "reason": "Liquid section spacing PC は 120px が de facto (Session #48)",
+      "value": "120",
+      "type": "spacing",
+      "description": "PCセクション間標準 / 160→120 修正"
+    }
+  },
+
+  "NEW_TOKENS_22": {
+    "FAMBOX": {
+      "color": {
+        "brand": {
+          "drive-hover": {
+            "value": "#E14710",
+            "type": "color",
+            "description": "Drive hover 強調 (CTA button hover) / Session #48 追加"
+          }
+        },
+        "alias": {
+          "disabled": {
+            "value": "#B3B5B0",
+            "type": "color",
+            "description": "Disabled state / Session #48 追加"
+          }
+        }
+      },
+      "space": {
+        "0-5": {
+          "value": "4",
+          "type": "spacing",
+          "description": "極小スペース / icon spacing / border / Session #48 追加"
+        },
+        "1-5": {
+          "value": "12",
+          "type": "spacing",
+          "description": "中間ギャップ / Session #48 追加"
+        },
+        "4-5": {
+          "value": "40",
+          "type": "spacing",
+          "description": "Hero / large icon spacing / Session #48 追加"
+        }
+      },
+      "typography": {
+        "font-size": {
+          "caption-lg": {
+            "value": "13",
+            "type": "fontSizes",
+            "description": "キャプション大 / Session #48 追加"
+          },
+          "body-md": {
+            "value": "15",
+            "type": "fontSizes",
+            "description": "中間本文 / Session #48 追加"
+          },
+          "body-lg": {
+            "value": "18",
+            "type": "fontSizes",
+            "description": "大本文 / quote / Session #48 追加"
+          },
+          "h3-mobile": {
+            "value": "28",
+            "type": "fontSizes",
+            "description": "SP の h3 / Session #48 追加"
+          },
+          "h2-large": {
+            "value": "40",
+            "type": "fontSizes",
+            "description": "PC tall title / Session #48 追加"
+          }
+        },
+        "line-height": {
+          "tight": {
+            "value": "1.2",
+            "type": "lineHeights",
+            "description": "Heading H1/H2 / 既存 heading 1.2 と同値 (alias)"
+          },
+          "base": {
+            "value": "1.5",
+            "type": "lineHeights",
+            "description": "Caption / form field / 既存 caption と同値 (alias)"
+          },
+          "relaxed": {
+            "value": "1.8",
+            "type": "lineHeights",
+            "description": "Quote / 強調本文 / Session #48 追加"
+          }
+        },
+        "letter-spacing": {
+          "uppercase": {
+            "value": "0.12em",
+            "type": "letterSpacing",
+            "description": "Eyebrow uppercase / Session #48 追加"
+          },
+          "button": {
+            "value": "0.04em",
+            "type": "letterSpacing",
+            "description": "Button label / Session #48 追加"
+          }
+        }
+      },
+      "breakpoint": {
+        "sp-sm": {
+          "value": "480",
+          "type": "sizing",
+          "description": "SP small (Modal/Header actions 縦並び切替) / Session #48 追加"
+        }
+      },
+      "radius": {
+        "xs": {
+          "value": "2",
+          "type": "borderRadius",
+          "description": "Badge / 細部 / Session #48 追加"
+        },
+        "lg": {
+          "value": "16",
+          "type": "borderRadius",
+          "description": "Sheet modal 上端 / Session #48 追加"
+        },
+        "circle": {
+          "value": "9999",
+          "type": "borderRadius",
+          "description": "Avatar / icon button (50% 相当) / Session #48 追加"
+        }
+      },
+      "shadow": {
+        "drive-glow": {
+          "value": {
+            "x": "0",
+            "y": "8",
+            "blur": "16",
+            "spread": "0",
+            "color": "rgba(252, 82, 20, 0.24)",
+            "type": "dropShadow"
+          },
+          "type": "boxShadow",
+          "description": "CTA hover 強調影 / Session #49 追加"
+        }
+      }
+    }
+  },
+
+  "METADATA_UPDATE": {
+    "$metadata.version": {
+      "from": "v0.2",
+      "to": "v0.5",
+      "note": "Session #47-52 (Phase B-1〜B-6) で全 22 fambox-*.liquid sections に 1,182 var() refs を投入"
+    },
+    "$metadata.generated": {
+      "from": "2026-04-20",
+      "to": "2026-05-18",
+      "note": "v0.5 差分反映日"
+    }
+  }
+}

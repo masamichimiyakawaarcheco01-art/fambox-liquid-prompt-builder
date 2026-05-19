@@ -1,4 +1,19 @@
 {% comment %}
+  ╔════════════════════════════════════════════════════════════
+  ║ ⚠ LEGACY SECTION（FAMBOX DS 移行前 / 並存保持）
+  ║ ────────────────────────────────────────────────────────────
+  ║ Status:    旧 TOP 用「アスリートの声」エリア（声 / 推薦）
+  ║ DS 対応:    fambox-case-study.liquid「tile-grid」preset で代替可
+  ║              （カード一覧形式で顔写真 + 引用 + チーム名）
+  ║              または fambox-bento-grid Editorial の Image-fill tile
+  ║ 並存理由:    既存 TOP / 旧 LP で参照中、撤去前にページ調整が必要
+  ║ 移行戦略:    Week 5 QA で TOP に fambox-case-study tile-grid を配置 →
+  ║              段階的に fam-voices の出番を縮小、最終的に置換 → 撤去
+  ║ DS 完成度:   current.md §7-D（TOP 専用 sections 移行戦略表）参照
+  ║ Status タグ: legacy / pre-DS / pending-migration
+  ╚════════════════════════════════════════════════════════════
+{% endcomment %}
+{% comment %}
   Section: FAM アスリートの声
   File: sections/fam-voices.liquid
 {% endcomment %}

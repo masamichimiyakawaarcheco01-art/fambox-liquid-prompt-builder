@@ -1,0 +1,712 @@
+<!-- ============================================
+     FAMBOX Header Section
+     sections/fambox-header.liquid
+     Spec: brand/fambox/design-system/components/header.md (v0.2)
+     Figma Component Set: 59:33
+     ============================================
+     構造（spec 準拠 / 3 軸組合せ）:
+       Variants:    standard / minimal / mega
+       Heights:     compact (64) / default (80) / tall (96)
+       Sticky Mode: sticky / scroll-up / static
+
+     DNA 規律（spec §Don't 準拠）:
+       - ハンバーガー単独禁止 → SP は横スクロールメニュー
+       - Drive 色ベタ塗り禁止 → bg は white 固定
+       - Logo の Drive 背景禁止
+       - Display サイズメニュー文字禁止 → 16px 固定
+       - Primary CTA は 1 個のみ（btn-primary btn-md）
+
+     Accessibility:
+       - <nav aria-label="メインナビゲーション">
+       - aria-current="page" で active state
+       - <a> のスキップリンク（最上部 hidden）
+       - icon link に aria-label
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-header-' | append: section.id
+  assign variant = section.settings.variant | default: 'standard'
+  assign height = section.settings.height | default: 'default'
+  assign sticky_mode = section.settings.sticky_mode | default: 'sticky'
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
+
+  /* ============================================
+     RESET (header 内のみ)
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     SKIP LINK（A11y）
+     ============================================ */
+  #{{ sec_id }} .header__skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--color-ink);
+    color: var(--color-white) !important;
+    padding: var(--space-1-5) var(--space-2);
+    text-decoration: none;
+    font-size: var(--fs-body-sm);
+    z-index: 999;
+  }
+  #{{ sec_id }} .header__skip:focus {
+    left: 0;
+    outline: 2px solid var(--color-drive);
+    outline-offset: 2px;
+  }
+
+  /* ============================================
+     HEADER 基本
+     ============================================ */
+  #{{ sec_id }} .header {
+    width: 100%;
+    background: var(--color-white);
+    color: var(--color-ink);
+    border-bottom: 1px solid rgba(27, 29, 26, 0.08);
+    z-index: 100;
+    font-family: var(--font-ja) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================
+     HEIGHTS
+     ============================================ */
+  #{{ sec_id }} .header--compact { height: 64px; }
+  #{{ sec_id }} .header--default { height: 80px; }
+  #{{ sec_id }} .header--tall    { height: 96px; }
+
+  /* ============================================
+     STICKY MODES
+     ============================================ */
+  #{{ sec_id }} .header--sticky {
+    position: sticky;
+    top: 0;
+  }
+  #{{ sec_id }} .header--scroll-up {
+    position: sticky;
+    top: 0;
+    transform: translateY(0);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  #{{ sec_id }} .header--scroll-up.is-hidden {
+    transform: translateY(-100%);
+  }
+  #{{ sec_id }} .header--static {
+    position: relative;
+  }
+
+  /* ============================================
+     INNER
+     ============================================ */
+  #{{ sec_id }} .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 var(--space-3);
+    gap: var(--space-2);
+  }
+  @media (min-width: 1024px) {
+    #{{ sec_id }} .header__inner {
+      padding: 0 var(--space-5);
+      gap: var(--space-3);
+    }
+  }
+
+  /* ============================================
+     LOGO（左固定 / 高さは header の 50% 上限）
+     ============================================ */
+  #{{ sec_id }} .header__logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 50%;
+    text-decoration: none;
+    color: var(--color-ink);
+  }
+  #{{ sec_id }} .header__logo img,
+  #{{ sec_id }} .header__logo svg {
+    height: 100%;
+    width: auto;
+    display: block;
+  }
+  #{{ sec_id }} .header__logo-text {
+    font-family: var(--font-en) !important;
+    font-size: 22px !important;
+    font-weight: var(--fw-bold) !important;
+    color: var(--color-ink) !important;
+    letter-spacing: 0.02em !important;
+    line-height: 1 !important;
+  }
+
+  /* ============================================
+     MENU（中央）
+     ============================================ */
+  #{{ sec_id }} .header__menu {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    min-width: 0; /* flex shrink を許可 */
+  }
+  #{{ sec_id }} .header__menu-list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  #{{ sec_id }} .header__menu-item {
+    position: relative;
+  }
+  #{{ sec_id }} .header__menu-link {
+    display: inline-block;
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-body) !important;
+    font-weight: var(--fw-medium) !important;
+    color: var(--color-ink) !important;
+    text-decoration: none !important;
+    letter-spacing: normal !important;
+    line-height: 1.4 !important;
+    white-space: nowrap;
+    padding: 8px 0;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  #{{ sec_id }} .header__menu-link:hover,
+  #{{ sec_id }} .header__menu-link:focus-visible {
+    color: var(--color-drive) !important;
+    outline: none;
+  }
+  #{{ sec_id }} .header__menu-link.is-active,
+  #{{ sec_id }} .header__menu-link[aria-current="page"] {
+    color: var(--color-drive) !important;
+    text-decoration: underline !important;
+    text-underline-offset: 8px !important;
+    text-decoration-thickness: 2px !important;
+  }
+
+  /* ============================================
+     SP（990px 未満）: 横スクロールメニュー
+     DNA 既定 / ハンバーガー不採用
+     ============================================ */
+  @media (max-width: 989px) {
+    #{{ sec_id }} .header__menu {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      white-space: nowrap;
+      justify-content: flex-start;
+    }
+    #{{ sec_id }} .header__menu::-webkit-scrollbar {
+      display: none;
+    }
+    #{{ sec_id }} .header__menu-list {
+      gap: var(--space-2);
+      padding: 0 8px;
+    }
+    #{{ sec_id }} .header__menu-link {
+      font-size: var(--fs-body-sm) !important;
+    }
+  }
+
+  /* ============================================
+     UTILITIES（右側 / icon + CTA）
+     ============================================ */
+  #{{ sec_id }} .header__utilities {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    flex-shrink: 0;
+  }
+  #{{ sec_id }} .header__icon-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: var(--color-ink);
+    text-decoration: none;
+    border-radius: var(--radius-pill);
+    transition: background var(--duration-fast) var(--ease-out);
+  }
+  #{{ sec_id }} .header__icon-link:hover {
+    background: rgba(27, 29, 26, 0.06);
+  }
+  #{{ sec_id }} .header__icon-link:focus-visible {
+    outline: 2px solid var(--color-drive);
+    outline-offset: 2px;
+  }
+  #{{ sec_id }} .header__icon-link svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* SP では icon link を非表示にして CTA だけ残す（密度高すぎ予防） */
+  @media (max-width: 480px) {
+    #{{ sec_id }} .header__icon-link {
+      display: none;
+    }
+  }
+
+  /* ============================================
+     CTA（Primary 1 個固定・btn-primary btn-md 相当）
+     ============================================ */
+  #{{ sec_id }} .header__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 var(--space-3);
+    background: var(--color-drive);
+    color: var(--color-white) !important;
+    border: 1px solid var(--color-drive);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-body-sm) !important;
+    font-weight: var(--fw-semibold) !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    text-decoration: none !important;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+  }
+  #{{ sec_id }} .header__cta:hover {
+    background: var(--color-drive-hover);
+    border-color: var(--color-drive-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-drive-glow);
+  }
+  @media (max-width: 480px) {
+    #{{ sec_id }} .header__cta {
+      height: 40px;
+      padding: 0 var(--space-2);
+      font-size: var(--fs-caption-lg) !important;
+    }
+  }
+
+  /* ============================================
+     VARIANT: Minimal（Menu / icon 非表示）
+     ============================================ */
+  #{{ sec_id }} .header-minimal .header__menu,
+  #{{ sec_id }} .header-minimal .header__icon-link {
+    display: none !important;
+  }
+
+  /* ============================================
+     VARIANT: Mega（hover で submenu 展開）
+     ============================================ */
+  #{{ sec_id }} .header-mega .header__menu-item--has-mega {
+    position: relative;
+  }
+  #{{ sec_id }} .header-mega .header__mega-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: var(--space-1);
+    background: var(--color-white);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-4);
+    padding: var(--space-2);
+    min-width: 240px;
+    display: none;
+    z-index: 101;
+  }
+  #{{ sec_id }} .header-mega .header__menu-item--has-mega:hover .header__mega-panel,
+  #{{ sec_id }} .header-mega .header__menu-item--has-mega:focus-within .header__mega-panel {
+    display: block;
+  }
+  #{{ sec_id }} .header__mega-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  #{{ sec_id }} .header__mega-link {
+    display: block;
+    padding: 6px 0;
+    color: var(--color-ink) !important;
+    text-decoration: none !important;
+    font-size: var(--fs-body-sm) !important;
+    line-height: 1.5 !important;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  #{{ sec_id }} .header__mega-link:hover {
+    color: var(--color-drive) !important;
+  }
+  @media (max-width: 989px) {
+    /* SP では mega panel を出さない（横スクロールに統一） */
+    #{{ sec_id }} .header-mega .header__mega-panel {
+      display: none !important;
+    }
+  }
+
+  /* ============================================
+     prefers-reduced-motion
+     ============================================ */
+  @media (prefers-reduced-motion: reduce) {
+    #{{ sec_id }} .header--scroll-up,
+    #{{ sec_id }} .header__menu-link,
+    #{{ sec_id }} .header__cta,
+    #{{ sec_id }} .header__icon-link {
+      transition: none !important;
+    }
+    #{{ sec_id }} .header__cta:hover {
+      transform: none !important;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+
+  {%- comment -%} スキップリンク（A11y / spec § Accessibility）{%- endcomment -%}
+  <a class="header__skip" href="#main-content">メインコンテンツへスキップ</a>
+
+  <header class="header header-{{ variant }} header--{{ height }} header--{{ sticky_mode }}" role="banner">
+    <div class="header__inner">
+
+      {%- comment -%} ===== LOGO（左固定）===== {%- endcomment -%}
+      <a href="{{ routes.root_url | default: '/' }}" class="header__logo" aria-label="{{ shop.name | default: 'FAMBOX' }}">
+        {%- if section.settings.logo_svg != blank -%}
+          {{ section.settings.logo_svg }}
+        {%- elsif section.settings.logo != blank -%}
+          {{ section.settings.logo | image_url: width: 256 | image_tag:
+            alt: shop.name,
+            loading: 'eager',
+            width: 128,
+            height: 40
+          }}
+        {%- else -%}
+          <span class="header__logo-text">{{ section.settings.logo_text | default: 'FAMBOX' }}</span>
+        {%- endif -%}
+      </a>
+
+      {%- comment -%} ===== MENU（Standard / Mega のみ表示）===== {%- endcomment -%}
+      {%- if variant != 'minimal' -%}
+        <nav class="header__menu" aria-label="メインナビゲーション">
+          <ul class="header__menu-list">
+
+            {%- if section.settings.menu != blank -%}
+              {%- comment -%} Shopify ナビ link_list を使用 {%- endcomment -%}
+              {%- for link in section.settings.menu.links -%}
+                {%- assign has_submenu = false -%}
+                {%- if variant == 'mega' and link.links.size > 0 -%}
+                  {%- assign has_submenu = true -%}
+                {%- endif -%}
+
+                <li class="header__menu-item{% if has_submenu %} header__menu-item--has-mega{% endif %}">
+                  <a href="{{ link.url }}"
+                     class="header__menu-link{% if link.current %} is-active{% endif %}"
+                     {% if link.current %}aria-current="page"{% endif %}>
+                    {{ link.title }}
+                  </a>
+
+                  {%- if has_submenu -%}
+                    <div class="header__mega-panel" role="menu">
+                      <ul class="header__mega-list">
+                        {%- for sub in link.links -%}
+                          <li>
+                            <a href="{{ sub.url }}" class="header__mega-link" role="menuitem">{{ sub.title }}</a>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+
+            {%- else -%}
+              {%- comment -%} fallback: manual_links（"ラベル|URL" 改行区切り）{%- endcomment -%}
+              {%- assign manual_pairs = section.settings.manual_links | strip | split: '
+' -%}
+              {%- for pair in manual_pairs -%}
+                {%- assign parts = pair | split: '|' -%}
+                {%- if parts.size >= 2 -%}
+                  <li class="header__menu-item">
+                    <a href="{{ parts[1] | strip }}" class="header__menu-link">{{ parts[0] | strip }}</a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+
+          </ul>
+        </nav>
+      {%- endif -%}
+
+      {%- comment -%} ===== UTILITIES（右 / icon + CTA）===== {%- endcomment -%}
+      <div class="header__utilities">
+
+        {%- comment -%} Account icon（Standard / Mega のみ）{%- endcomment -%}
+        {%- if variant != 'minimal' and section.settings.show_account -%}
+          <a href="{{ routes.account_url | default: '/account' }}" class="header__icon-link" aria-label="アカウント">
+            {%- render 'fambox-icon', name: 'user', size: 'sm' -%}
+          </a>
+        {%- endif -%}
+
+        {%- comment -%} Cart icon（Standard / Mega のみ）{%- endcomment -%}
+        {%- if variant != 'minimal' and section.settings.show_cart -%}
+          <a href="{{ routes.cart_url | default: '/cart' }}" class="header__icon-link" aria-label="カート">
+            {%- render 'fambox-icon', name: 'cart', size: 'sm' -%}
+          </a>
+        {%- endif -%}
+
+        {%- comment -%} Primary CTA（全 variants 必須 1 個 / spec Q6）{%- endcomment -%}
+        {%- if section.settings.cta_label != blank -%}
+          <a href="{{ section.settings.cta_url | default: '/pages/contact' }}"
+             class="header__cta"
+             data-gtag-cta="header_main_cta">
+            {{ section.settings.cta_label }}
+          </a>
+        {%- endif -%}
+
+      </div>
+
+    </div>
+  </header>
+</section>
+
+<script>
+  (function () {
+    var SEC_ID = {{ sec_id | json }};
+    var STICKY_MODE = {{ sticky_mode | json }};
+    var section = document.getElementById(SEC_ID);
+    if (!section) return;
+    var header = section.querySelector('.header');
+    if (!header) return;
+
+    // ===== scroll-up モード: 下方向で hide / 上方向で show =====
+    if (STICKY_MODE === 'scroll-up') {
+      var lastY = window.scrollY;
+      var THRESHOLD = 8; // 微小スクロールでチラつかせない
+      window.addEventListener('scroll', function () {
+        var y = window.scrollY;
+        var dy = y - lastY;
+        if (Math.abs(dy) < THRESHOLD) return;
+        if (y > header.offsetHeight && dy > 0) {
+          header.classList.add('is-hidden');
+        } else {
+          header.classList.remove('is-hidden');
+        }
+        lastY = y;
+      }, { passive: true });
+    }
+
+    // ===== mega panel: Esc で閉じる =====
+    var megaItems = section.querySelectorAll('.header__menu-item--has-mega');
+    megaItems.forEach(function (item) {
+      item.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          var link = item.querySelector('.header__menu-link');
+          if (link) link.focus();
+          item.blur();
+        }
+      });
+    });
+
+    // ===== CTA: GA4 event（KR5-1 連動 / header_main_cta）=====
+    var cta = section.querySelector('[data-gtag-cta]');
+    if (cta) {
+      cta.addEventListener('click', function () {
+        if (typeof window.gtag === 'function') {
+          try {
+            window.gtag('event', 'header_cta_click', { funnel_step: 1 });
+          } catch (e) { /* noop */ }
+        }
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Header セクション",
+  "tag": "section",
+  "class": "fambox-header-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Variant / Layout"
+    },
+    {
+      "type": "select",
+      "id": "variant",
+      "label": "Variant",
+      "options": [
+        { "value": "standard", "label": "Standard（Logo + Menu + CTA + Cart/Account）" },
+        { "value": "minimal",  "label": "Minimal（Logo + CTA のみ / LP・Checkout）" },
+        { "value": "mega",     "label": "Mega（Standard + hover で展開 mega menu）" }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "options": [
+        { "value": "compact", "label": "Compact（64px / 情報密度優先）" },
+        { "value": "default", "label": "Default（80px / 標準）" },
+        { "value": "tall",    "label": "Tall（96px / TOP・主要 LP）" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "sticky_mode",
+      "label": "Sticky Mode",
+      "options": [
+        { "value": "sticky",    "label": "Sticky（常時固定 / DNA 既定）" },
+        { "value": "scroll-up", "label": "Scroll-up（下スクロールで隠れ / Blog・Long LP）" },
+        { "value": "static",    "label": "Static（sticky なし / Hero 一体演出）" }
+      ],
+      "default": "sticky"
+    },
+    {
+      "type": "header",
+      "content": "── Logo ──"
+    },
+    {
+      "type": "html",
+      "id": "logo_svg",
+      "label": "ロゴ SVG（画像より優先）"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "ロゴ画像（SVG 未設定時 / 横長 PNG 推奨）"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "ロゴテキスト（画像・SVG なし時）",
+      "default": "FAMBOX"
+    },
+    {
+      "type": "header",
+      "content": "── Menu ──"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "ナビ（Shopify メニュー）"
+    },
+    {
+      "type": "textarea",
+      "id": "manual_links",
+      "label": "ナビ（menu 未設定時 / 1 行 1 リンク・形式: ラベル|URL）",
+      "info": "例: 商品|/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "── Utilities ──"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "アカウントアイコンを表示",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "カートアイコンを表示",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "── Primary CTA（1 個固定 / 全 variants 必須）──"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA 文言",
+      "default": "話を聞いてみる",
+      "info": "spec Q6 A: 全 Variants で Primary 1 個。煽り言葉禁止。"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA 遷移先 URL",
+      "default": "/pages/contact"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header — Standard（通常ページ）",
+      "settings": {
+        "variant": "standard",
+        "height": "default",
+        "sticky_mode": "sticky",
+        "logo_text": "FAMBOX",
+        "show_account": true,
+        "show_cart": true,
+        "cta_label": "話を聞いてみる",
+        "cta_url": "/pages/contact",
+        "manual_links": "商品|/collections/all\n事例|/pages/case-studies\nブログ|/blogs/news\nFAQ|/pages/faq"
+      }
+    },
+    {
+      "name": "Header — Minimal（LP / Checkout）",
+      "settings": {
+        "variant": "minimal",
+        "height": "default",
+        "sticky_mode": "sticky",
+        "logo_text": "FAMBOX",
+        "show_account": false,
+        "show_cart": false,
+        "cta_label": "話を聞いてみる",
+        "cta_url": "/pages/contact"
+      }
+    },
+    {
+      "name": "Header — Tall（TOP / Hero と並列）",
+      "settings": {
+        "variant": "standard",
+        "height": "tall",
+        "sticky_mode": "sticky",
+        "logo_text": "FAMBOX",
+        "show_account": true,
+        "show_cart": true,
+        "cta_label": "話を聞いてみる",
+        "cta_url": "/pages/contact",
+        "manual_links": "商品|/collections/all\n事例|/pages/case-studies\n法人プラン|/pages/business\nブログ|/blogs/news\nFAQ|/pages/faq"
+      }
+    },
+    {
+      "name": "Header — Scroll-up（Blog 詳細 / Long LP）",
+      "settings": {
+        "variant": "standard",
+        "height": "compact",
+        "sticky_mode": "scroll-up",
+        "logo_text": "FAMBOX",
+        "show_account": true,
+        "show_cart": true,
+        "cta_label": "話を聞いてみる",
+        "cta_url": "/pages/contact",
+        "manual_links": "商品|/collections/all\n事例|/pages/case-studies\nブログ|/blogs/news"
+      }
+    }
+  ]
+}
+{% endschema %}

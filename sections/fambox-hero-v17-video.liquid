@@ -5,14 +5,14 @@
      SP: 390 × 650px
   ============================================================ */
 .fv17 {
---orange: #FB4C15;
---dark:   #1B1D1A;
+--orange: var(--color-drive);
+--dark:   var(--color-ink);
 position: relative;
 z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
 width: 100%;
 height: 650px;
 overflow: hidden;
-background: #FAFAFA;
+background: var(--bg-secondary);
 font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
 -webkit-font-smoothing: antialiased;
   }
@@ -56,15 +56,15 @@ object-fit: contain;
 /* ── テキストブロック（PC: left:64px / top:184px） ── */
 .fv17-text {
 position: absolute;
-left: 64px;
+left: var(--space-6);
 top: 184px;
 z-index: 10;
 pointer-events: none;
   }
 .fv17-h1 {
 font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
-font-weight: 600;
-font-size: 48px;
+font-weight: var(--fw-semibold);
+font-size: var(--fs-h1);
 line-height: 1.7;
 color: var(--dark);
 margin: 0 0 12px 0;
@@ -72,8 +72,8 @@ white-space: nowrap;
   }
 .fv17-sub {
 font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
-font-weight: 500;
-font-size: 20px;
+font-weight: var(--fw-medium);
+font-size: var(--fs-h4);
 line-height: 1.2;
 color: var(--dark);
 margin: 0;
@@ -95,13 +95,13 @@ align-items: center;
 justify-content: center;  /* テキストを左右中央に */
 width: 320px;
 height: 48px;
-border-radius: 4px;
+border-radius: var(--radius-sm);
 border: 1px solid rgba(255,255,255,0.1);
 background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95));
-color: #fff !important;
+color: var(--color-white) !important;
 font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
-font-size: 14px;
-font-weight: 700;
+font-size: var(--fs-body-sm);
+font-weight: var(--fw-bold);
 text-decoration: none !important;
 letter-spacing: 0.08em;
 overflow: hidden;
@@ -120,7 +120,7 @@ z-index: 1;
 /* アイコン: ボタン右端から16px固定 */
 .fv17-cta-arrow {
 position: absolute;
-right: 16px;
+right: var(--space-2);
 top: 50%;
 transform: translateY(-50%);
 display: inline-flex;
@@ -246,9 +246,9 @@ justify-content: center;
 overflow: hidden;
   }
 .fv17-credit {
-color: #fff;
-font-size: 14px;
-font-weight: 600;
+color: var(--color-white);
+font-size: var(--fs-body-sm);
+font-weight: var(--fw-semibold);
 letter-spacing: 0.04em;
 white-space: nowrap;
 text-align: center;
@@ -272,14 +272,14 @@ object-position: center center;
 .fv17-bg-video--right { display: none; }
 /* ── グラデーション: ::before 疑似要素で確実に表示 ──
        外部要素・z-index競合・stacking context 問題をすべて回避
-       高さ325px、#FAFAFA 100% → 透明 0%
+       高さ325px、var(--bg-secondary) 100% → 透明 0%
     ── */
 .fv17::before {
 content: '';
 position: absolute;
 top: 0; left: 0; right: 0;
 height: 325px;
-background: linear-gradient(to bottom, #FAFAFA 0%, rgba(250,250,250,0) 100%);
+background: linear-gradient(to bottom, var(--bg-secondary) 0%, rgba(250,250,250,0) 100%);
 z-index: 3;
 pointer-events: none;
     }
@@ -306,9 +306,9 @@ pointer-events: none;
 .fv17-corner--bl,
 .fv17-corner--br { display: none; }
 /* テキスト */
-.fv17-text { left: 24px; top: 46px; right: 24px; }
-.fv17-h1 { font-size: 32px; font-weight: 600; line-height: 1.7; white-space: normal; margin-bottom: 8px; }
-.fv17-sub { font-size: 14px; line-height: 1.2; }
+.fv17-text { left: var(--space-3); top: 46px; right: var(--space-3); }
+.fv17-h1 { font-size: var(--fs-h2); font-weight: var(--fw-semibold); line-height: 1.7; white-space: normal; margin-bottom: var(--space-1); }
+.fv17-sub { font-size: var(--fs-body-sm); line-height: 1.2; }
 /* PC版CTA非表示 */
 .fv17-cta-wrap { display: none; }
 /* SP専用CTA */
@@ -316,10 +316,10 @@ pointer-events: none;
 display: flex;
 justify-content: center;
 position: absolute;
-left: 16px; right: 16px;
+left: var(--space-2); right: var(--space-2);
 bottom: 72px;
     }
-.fv17-cta-sp-wrap .fv17-cta { width: 100%; max-width: 358px; font-size: 14px; }
+.fv17-cta-sp-wrap .fv17-cta { width: 100%; max-width: 358px; font-size: var(--fs-body-sm); }
 /* 皿: 280px、動画エリア（高さ590px）の上下左右中央 */
 .fv17-dish-wrap {
 top: 0;
@@ -339,7 +339,7 @@ justify-content: center;
 /* SP フッター: マーキー */
 .fv17-footer { justify-content: flex-start; overflow: hidden; }
 .fv17-credit {
-font-size: 12px;
+font-size: var(--fs-caption);
 white-space: nowrap;
 padding-left: 100%;
 animation: fv17marquee 22s linear infinite;

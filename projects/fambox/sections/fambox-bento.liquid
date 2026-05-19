@@ -1,0 +1,618 @@
+{% comment %}
+  =====================================================
+  FAMBOX Bento Grid + Bento Tile — Section v0.2 (Phase 1)
+  =====================================================
+  Spec:
+    - brand/fambox/design-system/components/bento-grid.md (L4)
+    - brand/fambox/design-system/components/bento-tile.md (L3)
+  Spec date: 2026-04-28
+  Figma:
+    - Bento Grid Component Set 91:107 (3 variants)
+    - Bento Tile Component Set 87:26 (40 variants = 4×5×2 featured)
+  Implementation date: 2026-05-12
+
+  Grid Variants (3):
+    - standard:  自由配置 (PC 12 col / Tablet 6 / SP 1)
+    - editorial: 主構図ルール強制 (対角線 + 主役 2x2 最低 1 個 / DNA 反映ページ)
+    - autofit:   auto-fit + dense (KPI ギャラリー / 商品一覧)
+
+  Tile Variants (4):
+    - standard:   Card Standard 継承 (title + body + 任意 CTA)
+    - glass:      背景画像 + Glass 1-5 opacity overlay (ヒーロー級)
+    - image-fill: 画像が全面 + テキスト下部 overlay (写真主役)
+    - stat-focus: 大型数字 56px + ラベル (KPI 訴求)
+
+  Tile Sizes (5):
+    - 1x1 (small)  / 2x1 (横長) / 1x2 (縦長)
+    - 2x2 (主役推奨) / 3x2 (メガ)
+
+  Tile Featured: false / true (Drive 2px stroke で主役識別)
+
+  Phase 1 範囲:
+    - 1 section で Grid Variant + Tile Variant×Size×Featured 全組合せ対応
+    - DNA Anti を CSS で防げる範囲で予防:
+      * Grid gap < 16px → 16px clamp
+      * 全 tile 同 size 単調並列 → Lint 警告 (HTML コメント)
+      * Drive 全タイル背景 → CSS は許容、運用で防ぐ
+    - 4-9 tile 推奨 (blocks の limit 12)
+
+  v0.3 候補:
+    - Editorial variant の主構図 Lint (主役 2x2 最低 1 個チェック)
+    - Glass の 5 階調 modifier 完備
+    - Image fill バインド (現状 image_url)
+    - Parallax (Glass tile の背景画像)
+=====================================================
+{% endcomment %}
+
+<section class="bento-section" data-gtag-section="bento_{{ section.settings.grid_variant }}">
+  <div class="bento-section__inner">
+
+    {%- if section.settings.title != blank or section.settings.intro != blank -%}
+      <header class="bento-section__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="bento-section__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="bento-section__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <p class="bento-section__intro">{{ section.settings.intro }}</p>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <div class="bento-grid bento-grid-{{ section.settings.grid_variant }} bento-gap--{{ section.settings.gap_size }}">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'tile' -%}
+          {%- liquid
+            assign tile_variant = block.settings.tile_variant
+            assign tile_size = block.settings.tile_size
+            assign tile_featured = block.settings.is_featured
+            assign tag = 'article'
+            if block.settings.tile_url != blank
+              assign tag = 'a'
+            endif
+          -%}
+
+          {%- if tag == 'a' -%}
+            <a href="{{ block.settings.tile_url }}"
+               class="bento-tile bento-{{ tile_variant }} tile-{{ tile_size }}{% if tile_featured %} is-featured{% endif %}"
+               {{ block.shopify_attributes }}
+               {% if block.settings.bg_image != blank and tile_variant == 'glass' %}style="background-image: url('{{ block.settings.bg_image | image_url: width: 1200 }}');"{% endif %}
+               data-gtag-tile="{{ block.settings.title | default: tile_variant | handleize }}">
+          {%- else -%}
+            <article class="bento-tile bento-{{ tile_variant }} tile-{{ tile_size }}{% if tile_featured %} is-featured{% endif %}"
+                     {{ block.shopify_attributes }}
+                     {% if block.settings.bg_image != blank and tile_variant == 'glass' %}style="background-image: url('{{ block.settings.bg_image | image_url: width: 1200 }}');"{% endif %}>
+          {%- endif -%}
+
+            {%- case tile_variant -%}
+
+            {%- when 'standard' -%}
+              {%- if block.settings.eyebrow != blank -%}
+                <p class="bento-tile__eyebrow">{{ block.settings.eyebrow }}</p>
+              {%- endif -%}
+              {%- if block.settings.title != blank -%}
+                <h3 class="bento-tile__title">{{ block.settings.title }}</h3>
+              {%- endif -%}
+              {%- if block.settings.body != blank -%}
+                <p class="bento-tile__text">{{ block.settings.body }}</p>
+              {%- endif -%}
+
+            {%- when 'glass' -%}
+              {%- comment -%} 背景画像は style 属性で指定済、overlay は ::before で {%- endcomment -%}
+              {%- if block.settings.eyebrow != blank -%}
+                <p class="bento-tile__eyebrow">{{ block.settings.eyebrow }}</p>
+              {%- endif -%}
+              {%- if block.settings.title != blank -%}
+                <h3 class="bento-tile__title">{{ block.settings.title }}</h3>
+              {%- endif -%}
+              {%- if block.settings.body != blank -%}
+                <p class="bento-tile__text">{{ block.settings.body }}</p>
+              {%- endif -%}
+
+            {%- when 'image-fill' -%}
+              {%- if block.settings.bg_image != blank -%}
+                <img src="{{ block.settings.bg_image | image_url: width: 1800 }}"
+                     alt="{{ block.settings.bg_image_alt | default: block.settings.title | escape }}"
+                     class="bento-tile__media"
+                     loading="lazy"
+                     width="1800" height="1200">
+              {%- endif -%}
+              <div class="bento-tile__overlay">
+                {%- if block.settings.title != blank -%}
+                  <h3 class="bento-tile__title">{{ block.settings.title }}</h3>
+                {%- endif -%}
+                {%- if block.settings.body != blank -%}
+                  <p class="bento-tile__text">{{ block.settings.body }}</p>
+                {%- endif -%}
+              </div>
+
+            {%- when 'stat-focus' -%}
+              <p class="bento-stat-focus__value">
+                {{ block.settings.stat_value }}{%- if block.settings.stat_unit != blank -%}<span class="bento-stat-focus__unit">{{ block.settings.stat_unit }}</span>{%- endif -%}
+              </p>
+              {%- if block.settings.title != blank -%}
+                <p class="bento-stat-focus__label">{{ block.settings.title }}</p>
+              {%- endif -%}
+
+            {%- endcase -%}
+
+          {%- if tag == 'a' -%}
+            </a>
+          {%- else -%}
+            </article>
+          {%- endif -%}
+
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* === Section base === */
+  .bento-section {
+    width: 100%;
+    padding-block: var(--space-7, 64px);
+  }
+  .bento-section__inner {
+    max-width: var(--container-max, 1440px);
+    margin-inline: auto;
+    padding-inline: var(--space-3, 24px);
+  }
+
+  /* === Header === */
+  .bento-section__header {
+    margin-bottom: var(--space-6, 48px);
+    max-width: 720px;
+  }
+  .bento-section__eyebrow {
+    font-family: var(--font-en, 'Poppins', sans-serif);
+    font-size: var(--fs-caption, 12px);
+    font-weight: var(--fw-semibold, 600);
+    color: var(--color-drive, #fb4c15);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin: 0 0 var(--space-1, 8px);
+  }
+  .bento-section__title {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-h2, 32px);
+    font-weight: var(--fw-bold, 700);
+    color: var(--color-ink, #1b1d1a);
+    line-height: 1.4;
+    margin: 0 0 var(--space-2, 16px);
+  }
+  .bento-section__intro {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-body, 16px);
+    color: var(--color-sub, #545655);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* === Bento Grid 基本 (spec v0.2 準拠) === */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(160px, auto);
+    gap: var(--space-4, 32px);
+  }
+  @media (max-width: 1023px) {
+    .bento-grid {
+      grid-template-columns: repeat(6, 1fr);
+      gap: var(--space-3, 24px);
+    }
+  }
+  @media (max-width: 767px) {
+    .bento-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-2, 16px);
+    }
+  }
+
+  /* Gap modifiers (DNA Anti 「< 16px」を clamp で防御) */
+  .bento-gap--sm { gap: var(--space-2, 16px); }
+  .bento-gap--md { gap: var(--space-3, 24px); }
+  .bento-gap--lg { gap: var(--space-4, 32px); }
+
+  /* Grid variants */
+  .bento-grid-editorial { gap: var(--space-4, 32px); }
+  @media (max-width: 1023px) { .bento-grid-editorial { gap: var(--space-3, 24px); } }
+  .bento-grid-autofit {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-auto-flow: dense;
+  }
+  @media (min-width: 1024px) {
+    .bento-grid-autofit { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  }
+
+  /* === Bento Tile 基本 === */
+  .bento-tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2, 16px);
+    background: var(--bg-primary, #ffffff);
+    border: 1px solid var(--border-light, #ececec);
+    border-radius: var(--radius-md, 8px);
+    padding: var(--space-3, 24px);
+    box-shadow: var(--shadow-1, 0 1px 2px rgba(0,0,0,0.04));
+    overflow: hidden;
+    transition: box-shadow var(--duration-base, 0.3s) var(--ease-out),
+                transform var(--duration-base, 0.3s) var(--ease-out);
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+  .bento-tile:hover {
+    box-shadow: var(--shadow-3, 0 4px 16px rgba(0,0,0,0.08));
+    transform: translateY(-2px);
+  }
+  .bento-tile:focus-visible {
+    outline: 2px solid var(--color-focus-ring, #fb4c15);
+    outline-offset: 2px;
+  }
+  .bento-tile.is-featured {
+    border: 2px solid var(--color-drive, #fb4c15);
+    padding: calc(var(--space-3, 24px) - 1px);
+  }
+
+  /* === Tile sizes (PC) === */
+  .tile-1x1 { grid-column: span 1; grid-row: span 1; }
+  .tile-2x1 { grid-column: span 2; grid-row: span 1; }
+  .tile-1x2 { grid-column: span 1; grid-row: span 2; }
+  .tile-2x2 { grid-column: span 2; grid-row: span 2; }
+  .tile-3x2 { grid-column: span 3; grid-row: span 2; }
+
+  /* SP / Tablet 縮退 */
+  @media (max-width: 767px) {
+    .tile-2x1, .tile-2x2, .tile-3x2 { grid-column: span 1; }
+    .tile-1x2, .tile-2x2 { grid-row: span 1; }
+  }
+
+  /* === 共通 内部要素 === */
+  .bento-tile__eyebrow {
+    font-family: var(--font-en, 'Poppins', sans-serif);
+    font-size: var(--fs-caption, 12px);
+    font-weight: var(--fw-semibold, 600);
+    color: var(--color-drive, #fb4c15);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .bento-tile__title {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-h3, 24px);
+    font-weight: var(--fw-bold, 700);
+    color: var(--color-ink, #1b1d1a);
+    line-height: 1.4;
+    margin: 0;
+  }
+  .bento-tile__text {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-body, 16px);
+    color: var(--color-sub, #545655);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* === Variant: Glass === */
+  .bento-glass {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    border: none;
+    isolation: isolate;
+    color: var(--color-white, #ffffff);
+  }
+  .bento-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 0;
+  }
+  .bento-glass > * {
+    position: relative;
+    z-index: 1;
+  }
+  .bento-glass .bento-tile__title,
+  .bento-glass .bento-tile__text { color: var(--color-white, #ffffff); }
+
+  /* === Variant: Image-fill === */
+  .bento-image-fill {
+    position: relative;
+    padding: 0;
+    border: none;
+  }
+  .bento-image-fill .bento-tile__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    display: block;
+  }
+  .bento-image-fill .bento-tile__overlay {
+    position: relative;
+    margin-top: auto;
+    padding: var(--space-3, 24px);
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.7) 100%);
+    z-index: 1;
+    color: var(--color-white, #ffffff);
+  }
+  .bento-image-fill .bento-tile__title,
+  .bento-image-fill .bento-tile__text { color: var(--color-white, #ffffff); }
+
+  /* === Variant: Stat-focus === */
+  .bento-stat-focus {
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .bento-stat-focus__value {
+    font-family: var(--font-en, 'Poppins', sans-serif);
+    font-size: var(--fs-display, 56px);
+    font-weight: var(--fw-bold, 700);
+    line-height: 1;
+    color: var(--color-drive, #fb4c15);
+    margin: 0;
+  }
+  .bento-stat-focus__unit {
+    font-size: 0.4em;
+    color: var(--color-sub, #545655);
+    margin-left: var(--space-1, 8px);
+    font-weight: var(--fw-regular, 400);
+  }
+  .bento-stat-focus__label {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-body, 16px);
+    color: var(--color-sub, #545655);
+    margin: var(--space-1, 8px) 0 0;
+  }
+
+  /* === reduced motion === */
+  @media (prefers-reduced-motion: reduce) {
+    .bento-tile { transition: none; }
+    .bento-tile:hover { transform: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "FAMBOX Bento",
+  "tag": "section",
+  "class": "section-bento",
+  "settings": [
+    {
+      "type": "header",
+      "content": "セクション見出し"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (英大文字、Drive 強調)"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "見出し (h2)"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "リード文"
+    },
+    {
+      "type": "header",
+      "content": "Grid Variant / Gap"
+    },
+    {
+      "type": "select",
+      "id": "grid_variant",
+      "label": "Grid Variant",
+      "default": "standard",
+      "options": [
+        { "value": "standard",  "label": "Standard (自由配置) ★既定" },
+        { "value": "editorial", "label": "Editorial (主構図ルール強制 / 対角線 / 主役 2x2 必須)" },
+        { "value": "autofit",   "label": "Autofit (KPI ギャラリー / 商品一覧)" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "gap_size",
+      "label": "Gap (タイル間隔)",
+      "default": "md",
+      "options": [
+        { "value": "sm", "label": "Small (16px) — 情報密度高" },
+        { "value": "md", "label": "Medium (24px) ★既定" },
+        { "value": "lg", "label": "Large (32px) — 余白重視" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Bento Tile",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Tile 種類 / サイズ"
+        },
+        {
+          "type": "select",
+          "id": "tile_variant",
+          "label": "Tile Variant",
+          "default": "standard",
+          "options": [
+            { "value": "standard",   "label": "Standard (title + body + 任意 CTA)" },
+            { "value": "glass",      "label": "Glass (背景画像 + 半透明 overlay)" },
+            { "value": "image-fill", "label": "Image-fill (画像全面 + テキスト下部 overlay)" },
+            { "value": "stat-focus", "label": "Stat-focus (大型数字 + ラベル)" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "tile_size",
+          "label": "Tile Size",
+          "default": "1x1",
+          "options": [
+            { "value": "1x1", "label": "1×1 — 小タイル / Icon / Quote" },
+            { "value": "2x1", "label": "2×1 — 横長 / Stat 横並び" },
+            { "value": "1x2", "label": "1×2 — 縦長 / 動画" },
+            { "value": "2x2", "label": "2×2 — 主役 (Bento 1 個推奨)" },
+            { "value": "3x2", "label": "3×2 — メガ / Editorial 級" }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "is_featured",
+          "label": "Featured (Drive 2px 枠で主役識別)",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "コンテンツ"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow (Standard / Glass のみ、英大文字 Drive)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title (Stat-focus では label として使用)"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body (Standard / Glass / Image-fill)"
+        },
+        {
+          "type": "header",
+          "content": "画像 (Glass / Image-fill)"
+        },
+        {
+          "type": "image_picker",
+          "id": "bg_image",
+          "label": "背景画像"
+        },
+        {
+          "type": "text",
+          "id": "bg_image_alt",
+          "label": "画像 alt (Image-fill のみ)"
+        },
+        {
+          "type": "header",
+          "content": "Stat-focus 専用"
+        },
+        {
+          "type": "text",
+          "id": "stat_value",
+          "label": "数字 (例: -3.2)",
+          "info": "Stat-focus variant の大型数字"
+        },
+        {
+          "type": "text",
+          "id": "stat_unit",
+          "label": "単位 (例: kg)",
+          "info": "数字の右に小さく表示"
+        },
+        {
+          "type": "header",
+          "content": "リンク"
+        },
+        {
+          "type": "url",
+          "id": "tile_url",
+          "label": "Tile クリック先 (任意。設定すると Tile 全体がリンク化)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAMBOX Bento Editorial",
+      "category": "Bento",
+      "settings": { "grid_variant": "editorial", "gap_size": "lg", "title": "主役エリア" },
+      "blocks": [
+        { "type": "tile", "settings": { "tile_size": "2x2", "tile_variant": "glass", "is_featured": true, "eyebrow": "CASE", "title": "主役タイル", "body": "対角線パターンの主役" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "-3.2", "stat_unit": "kg", "title": "3ヶ月で平均減量" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "title": "標準タイル", "body": "1×1 small" } },
+        { "type": "tile", "settings": { "tile_size": "2x1", "tile_variant": "image-fill", "title": "画像主役", "body": "横長 image-fill" } },
+        { "type": "tile", "settings": { "tile_size": "3x2", "tile_variant": "glass", "is_featured": true, "eyebrow": "FEATURE", "title": "メガタイル", "body": "Editorial 級" } }
+      ]
+    },
+    {
+      "name": "FAMBOX Bento KPI (Autofit)",
+      "category": "Bento",
+      "settings": { "grid_variant": "autofit", "gap_size": "sm", "title": "実績ハイライト" },
+      "blocks": [
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "+15", "stat_unit": "%", "title": "コンディション向上" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "-3.2", "stat_unit": "kg", "title": "平均減量" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "98", "stat_unit": "%", "title": "継続率" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "120", "stat_unit": "名", "title": "監修アスリート" } }
+      ]
+    },
+    {
+      "name": "FAMBOX Value Proposition",
+      "category": "Bento",
+      "settings": {
+        "grid_variant": "standard",
+        "gap_size": "lg",
+        "eyebrow": "WHY FAMBOX",
+        "title": "選ばれる理由",
+        "intro": "アスリートと共に走る、栄養戦略のチーム。"
+      },
+      "blocks": [
+        { "type": "tile", "settings": { "tile_size": "2x2", "tile_variant": "standard", "is_featured": true, "eyebrow": "EXPERTISE", "title": "スポーツ栄養 15 年", "body": "プロ野球・実業団・大学体育会まで、競技特性に応じた食事設計を 15 年以上提供。" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "120", "stat_unit": "名+", "title": "監修アスリート" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "stat-focus", "stat_value": "98", "stat_unit": "%", "title": "継続率" } },
+        { "type": "tile", "settings": { "tile_size": "2x1", "tile_variant": "standard", "title": "全国配送 / 冷凍便", "body": "全国どこでも、冷凍便で安全にお届け。" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "title": "個別カスタマイズ", "body": "選手ごとの体質・目標に応じて調整。" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "title": "月次相談", "body": "管理栄養士による月 1 回の個別相談。" } }
+      ]
+    },
+    {
+      "name": "FAMBOX Plan Features",
+      "category": "Bento",
+      "settings": {
+        "grid_variant": "autofit",
+        "gap_size": "md",
+        "title": "FAMBOX の特長",
+        "intro": "プランに含まれるサポート内容を一覧で確認"
+      },
+      "blocks": [
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "01", "title": "個別栄養設計", "body": "競技・体重・目標に応じた個別メニュー" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "02", "title": "月次栄養相談", "body": "管理栄養士による定期的な個別アドバイス" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "03", "title": "体調ヒアリング", "body": "配送ごとに体調・食欲を確認、次回に反映" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "04", "title": "Drive 体制", "body": "コーチ・専属栄養士とも連携可能" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "05", "title": "全国配送", "body": "冷凍便で安全にお届け" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "06", "title": "アレルゲン対応", "body": "個別相談で柔軟に調整" } }
+      ]
+    },
+    {
+      "name": "FAMBOX Spirit (Editorial)",
+      "category": "Bento",
+      "settings": {
+        "grid_variant": "editorial",
+        "gap_size": "lg",
+        "eyebrow": "SPIRIT",
+        "title": "FAMBOX の哲学",
+        "intro": "アスリートと共に走る、栄養戦略のチーム。私たちが大切にしている 5 つの価値観。"
+      },
+      "blocks": [
+        { "type": "tile", "settings": { "tile_size": "2x2", "tile_variant": "glass", "is_featured": true, "eyebrow": "INTEGRITY", "title": "誠実な提案", "body": "結果を保証しない。価値で選ばれる立場を貫く。" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "CO-DRIVEN", "title": "対等な共創", "body": "「お客様」ではなく共創パートナー。" } },
+        { "type": "tile", "settings": { "tile_size": "1x1", "tile_variant": "standard", "eyebrow": "DRIVE", "title": "推進力", "body": "栄養戦略を主導する。" } },
+        { "type": "tile", "settings": { "tile_size": "2x1", "tile_variant": "standard", "eyebrow": "EDITORIAL", "title": "読み物的な情報設計", "body": "煽らず、本質的な情報を Editorial に。" } },
+        { "type": "tile", "settings": { "tile_size": "3x2", "tile_variant": "glass", "is_featured": true, "eyebrow": "LAB", "title": "栄養科学の研究室として", "body": "現場 + 科学のループで、選手ごとの最適解を継続的に更新。" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

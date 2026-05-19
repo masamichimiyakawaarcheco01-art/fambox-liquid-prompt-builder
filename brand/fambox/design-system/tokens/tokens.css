@@ -1,0 +1,249 @@
+/* ================================================================
+ * FAMBOX Design Tokens v0.2 Seed
+ * Source: FAM Brand DNA v0.5（継承）+ FAMBOX独自拡張（v0.2以降）
+ * Generated: 2026-04-20
+ * Status: Seed（DNA v1.0確定後に Phase B で正式版へ）
+ *
+ * 使用方法:
+ *   Shopify theme snippet として読み込み:
+ *     {% raw %}{{ 'tokens.css' | asset_url | stylesheet_tag }}{% endraw %}
+ *   または theme.liquid <head> に直接 <link rel="stylesheet">
+ * ================================================================ */
+
+:root {
+  /* ============================================================
+   * COLOR — Brand Primary
+   * ============================================================ */
+  --color-drive: #FB4C15;                     /* Primary CTA / 推進 / Drive */
+  --color-drive-light: #FC825B;               /* Drive ライト（ホバー・ハイライト）*/
+  --color-drive-glow: rgba(251, 76, 21, 0.2); /* Drive グロー（フォーカスリング等）*/
+
+  /* ============================================================
+   * COLOR — Brand Secondary
+   * ============================================================ */
+  --color-sky: #3DB8E8;                       /* Sky Blue / データ可視化・情報カテゴリ */
+  --color-deep: #0F2A5C;                      /* Deep Blue / ヒーロー深部・信頼領域 */
+
+  /* ============================================================
+   * COLOR — Text Grayscale 5段階
+   * ============================================================ */
+  --color-ink: #1B1D1A;                       /* 本文・見出し */
+  --color-sub: #545655;                       /* サブテキスト */
+  --color-caption: #888888;                   /* キャプション */
+  --color-placeholder: #D0D0D0;               /* プレースホルダ */
+  --color-white: #FFFFFF;                     /* 白 */
+
+  /* ============================================================
+   * COLOR — Background 3階層
+   * ============================================================ */
+  --bg-primary: #FFFFFF;                      /* 主要背景 */
+  --bg-secondary: #FAFAFA;                    /* セカンダリ背景 */
+  --bg-tertiary: #F3F3F3;                     /* ターシャリ背景（カード下敷き等）*/
+
+  /* ============================================================
+   * COLOR — Border
+   * ============================================================ */
+  --border-light: #ECECEC;                    /* 薄いボーダー */
+  --border-base: #D0D0D0;                     /* 標準ボーダー */
+  --border-subtle: #D0D1DB;                   /* 微妙なトーンのボーダー */
+
+  /* ============================================================
+   * COLOR — Semantic（状態）
+   * ============================================================ */
+  --color-success: #10B981;                   /* Sky Blue調和 / 純緑より洗練 */
+  --color-warning: #F59E0B;                   /* Drive Orangeと色相距離を確保 */
+  --color-error: #DC2626;                     /* 深赤で識別性 */
+  --color-info: #3DB8E8;                      /* Sky Blue兼用 */
+
+  /* ============================================================
+   * COLOR — Data Visualization
+   * ============================================================ */
+  --data-primary: #FB4C15;                    /* 主要データ系列 */
+  --data-secondary: #0F2A5C;                  /* 副データ系列 */
+  --data-tertiary: #3DB8E8;                   /* 第3データ系列 */
+  --data-zone-good: #10B981;                  /* ゾーン良好 */
+  --data-zone-caution: #F59E0B;               /* ゾーン注意 */
+  --data-zone-danger: #DC2626;                /* ゾーン危険 */
+
+  /* ============================================================
+   * COLOR — Semantic Alias（意味参照）★ FAMBOX独自
+   * Worksheet §2 で確定（2026-04-20）
+   * 原則: 背景色に依存してテキスト/リンク色を切り替える。
+   *       Deep Blue はリンクに使用しない。
+   * ============================================================ */
+  --color-cta: var(--color-drive);            /* CTA全般 */
+  --color-focus-ring: var(--color-drive);     /* フォーカスリング */
+
+  /* リンク: 背景色文脈で使い分け（colors.md 参照）
+   *   - 背景 Ink/FAFAFA系 → text: drive (ボタン時は白)
+   *   - 背景 Drive        → text: white / ボタンテキスト: ink系
+   *   - 背景 薄グレー     → text: drive または ink
+   * Deep Blue は使用しない。
+   */
+  --color-link-on-light: var(--color-drive);             /* 明るい背景上のリンク */
+  --color-link-on-dark: var(--color-white);              /* 暗い背景上のリンク */
+  --color-link-on-drive: var(--color-ink);               /* Drive背景上のリンク（ボタン内テキスト等） */
+  --color-link-hover: var(--color-drive-light);
+
+  /* 価格表示: 背景依存 + 目立たせ度合いで切替
+   * 目立たせる場合 = drive、控えめ = ink/white（背景依存）
+   */
+  --color-price-accent: var(--color-drive);              /* 目立たせる場合 */
+  --color-price-default-on-light: var(--color-ink);      /* 明るい背景の通常価格 */
+  --color-price-default-on-dark: var(--color-white);     /* 暗い背景の通常価格 */
+
+  /* エラーテキスト専用（Worksheet §2 Q2 で確定）*/
+  --color-error-text: #F91A02;                /* 赤系（UIアイコン用エラーとは別）*/
+
+  /* ============================================================
+   * OPACITY — Glass（透明度階調）
+   * ============================================================ */
+  --glass-1: 0.05;                            /* 超薄オーバーレイ */
+  --glass-2: 0.1;                             /* ガラスタイル薄 */
+  --glass-3: 0.3;                             /* ガラス中 */
+  --glass-4: 0.6;                             /* モーダル暗化 */
+  --glass-5: 0.8;                             /* 強オーバーレイ */
+
+  /* ============================================================
+   * TYPOGRAPHY — Font Family
+   * ============================================================ */
+  --font-en: 'Poppins', sans-serif;
+  --font-ja: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+
+  /* ============================================================
+   * TYPOGRAPHY — Font Size Scale（ジャンプ率中〜高）
+   * Worksheet §3 で調整（2026-04-20）
+   * 原則: 基本8の倍数。16以下は4の倍数を推奨。
+   *   body-sm 14px は FAM v0.5 継承の例外（要再検討候補）。
+   * ============================================================ */
+  --fs-caption: 12px;                         /* 4倍数 */
+  --fs-body-sm: 14px;                         /* ⚠️ 例外: FAM v0.5継承。12 or 16への移行を v0.3 で検討 */
+  --fs-body: 16px;                            /* 8倍数 */
+  --fs-lg: 20px;                              /* 4倍数 */
+  --fs-h3: 24px;                              /* 8倍数 */
+  --fs-h2: 32px;                              /* 8倍数 */
+  --fs-h1: 48px;                              /* 8倍数 */
+  --fs-display: 56px;                         /* 8倍数（v0.2 で 64→56）*/
+  --fs-hero: 64px;                            /* 8倍数（v0.2 で 96→64）*/
+  --fs-mega: 96px;                            /* 8倍数（v0.2 で 128→96）*/
+
+  /* ============================================================
+   * TYPOGRAPHY — Weight
+   * ============================================================ */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* ============================================================
+   * TYPOGRAPHY — Line Height
+   * ============================================================ */
+  --lh-heading: 1.2;
+  --lh-body: 1.75;
+  --lh-caption: 1.5;
+
+  /* ============================================================
+   * TYPOGRAPHY — Letter Spacing
+   * ============================================================ */
+  --ls-en: -0.02em;                           /* 英字は詰める */
+  --ls-ja: 0.02em;                            /* 日本語は開ける */
+
+  /* ============================================================
+   * SPACING — 8px baseline
+   * ============================================================ */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 48px;
+  --space-6: 64px;
+  --space-7: 96px;                            /* セクション間隔 SP */
+  --space-8: 160px;                           /* セクション間隔 PC */
+
+  /* ============================================================
+   * LAYOUT — Grid & Breakpoint
+   * ============================================================ */
+  --grid-columns: 12;
+  --grid-gutter: 24px;
+  --grid-baseline: 8px;
+  --container-max: 1440px;                    /* 標準 */
+  --container-narrow: 1200px;                 /* 狭 */
+
+  --bp-sp: 767px;                             /* スマホ上限 */
+  --bp-tablet: 1023px;                        /* タブレット上限 */
+  --bp-pc: 1024px;                            /* PC下限 */
+
+  /* ============================================================
+   * SHADOW — 5段階
+   * ============================================================ */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-2: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-3: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-4: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-5: 0 16px 64px rgba(0, 0, 0, 0.16);
+
+  /* ============================================================
+   * RADIUS
+   * ============================================================ */
+  --radius-none: 0;
+  --radius-sm: 4px;                           /* 小要素 */
+  --radius-md: 8px;                           /* カード */
+  --radius-pill-cta: 50px;                    /* CTA Pill型（既存corp-btn踏襲）*/
+  --radius-pill: 9999px;                      /* バッジ用 */
+
+  /* ============================================================
+   * BORDER WIDTH
+   * ============================================================ */
+  --bw-thin: 1px;
+  --bw-thick: 2px;
+
+  /* ============================================================
+   * MOTION — Duration
+   * ============================================================ */
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 600ms;
+  --duration-breath: 2000ms;                  /* 呼吸アニメ（軸3 Pulsing）*/
+
+  /* ============================================================
+   * MOTION — Easing
+   * ============================================================ */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);      /* 主：加速 */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);     /* 到達時のみ */
+  --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ============================================================
+   * Z-INDEX — Layer Stack 方式（ZOZO準拠・v0.3 で確定）
+   * 参考: https://zenn.dev/zozotech/articles/7609d2c7af30df
+   *
+   * 原則:
+   *   1. 直書き z-index は禁止。必ず --layer-* を使う
+   *   2. セクションルート（<section>）には isolation: isolate を必ず付ける
+   *   3. セクション内部の相対的重なりは z-index:1-2 で十分（isolation で隔離される）
+   *   4. グローバルな階層（ヘッダー・モーダル等）でのみ --layer-3 以上を使う
+   *
+   * ヘッダーは Sticky CTA より上（Layer 4 > Layer 3）。宮川さん指示 2026-04-20
+   * ============================================================ */
+  --layer-base: 0;
+  --layer-1: 1;                               /* バッジ・カード浮上 */
+  --layer-2: 2;                               /* Tooltip / Popover / Accordion展開 */
+  --layer-3: 3;                               /* Sticky CTA / Announcement Bar / Chat Widget */
+  --layer-4: 4;                               /* Sticky Header / Drawer */
+  --layer-5: 5;                               /* Modal / Overlay */
+  --layer-6: 6;                               /* Toast / Critical Alert */
+
+  /* Legacy 互換枠（v0.5 で廃止予定・新規使用禁止）*/
+  --z-legacy-sticky-cta: 9990;                /* 既存 fam-sticky-cta のみ。Layer 3 へ順次刷新 */
+}
+
+/* ============================================================
+ * ACCESSIBILITY — prefers-reduced-motion 対応
+ * ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+    --duration-breath: 0ms;
+  }
+}

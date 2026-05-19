@@ -1,0 +1,292 @@
+{% comment %}
+  =====================================================
+  FAMBOX FAQ Carousel — Section v0.2 (Phase 1)
+  =====================================================
+  Spec: brand/fambox/design-system/components/faq.md
+  Spec date: 2026-05-12
+  Figma: Component Set 93:90 (carousel variant)
+  Implementation date: 2026-05-12
+  既存: preview-faq.html を一次資料に L4 Component 化
+
+  Variant: carousel (★ Default、Accordion は v0.3 で /pages/faq 専用)
+
+  Phase 1 範囲:
+    - 1 section で複数 FAQ card を horizontal scroll で表示
+    - 各 card: Avatar 40 / Question N (Poppins SemiBold 24) /
+      質問文 (Bold 18) / 黒線 32×2 / 回答文 (Regular 18 Drive) / FAMBOX ロゴ
+    - SP: scroll-snap で 1 枚送り
+    - DNA: Editorial × Scroll-driven × Co-driven
+
+  v0.3 候補:
+    - Accordion variant (/pages/faq 専用、details/summary)
+    - Avatar の質問者個別表示 (block.settings.avatar_image)
+=====================================================
+{% endcomment %}
+
+<section class="faq faq-carousel" data-gtag-section="faq">
+  <div class="faq__inner">
+
+    <div class="faq__title-area">
+      <h2 class="faq__title">{{ section.settings.title | default: 'よくあるご質問' }}</h2>
+    </div>
+
+    <div class="faq__scroll-area" tabindex="0" aria-label="FAQ カード一覧（横スクロール）">
+      <div class="faq__scroll-track">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'faq_item' -%}
+            <article class="faq__card" {{ block.shopify_attributes }}>
+              <div class="faq__avatar" aria-hidden="true">
+                {%- if block.settings.avatar_image != blank -%}
+                  <img src="{{ block.settings.avatar_image | image_url: width: 80 }}"
+                       width="40" height="40" alt="" loading="lazy"
+                       class="faq__avatar-image">
+                {%- endif -%}
+              </div>
+              <p class="faq__q-number">Question {{ forloop.index }}</p>
+              <p class="faq__question">{{ block.settings.question }}</p>
+              <hr class="faq__line" aria-hidden="true" />
+              <p class="faq__answer">{{ block.settings.answer }}</p>
+              {%- if section.settings.show_logo -%}
+                <div class="faq__logo" aria-label="FAMBOX">
+                  {%- if section.settings.logo != blank -%}
+                    <img src="{{ section.settings.logo | image_url: width: 160 }}"
+                         width="80" height="32" alt="FAMBOX" loading="lazy">
+                  {%- else -%}
+                    <span class="faq__logo-text">FAMBOX</span>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </article>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* === Section === */
+  .faq {
+    width: 100%;
+    background: var(--bg-secondary, #fafafa);
+    position: relative;
+  }
+  .faq__inner {
+    padding-block: var(--space-7, 64px);
+  }
+
+  /* === Title === */
+  .faq__title-area {
+    max-width: var(--container-max, 1440px);
+    margin-inline: auto;
+    padding-inline: var(--space-7, 64px);
+  }
+  .faq__title {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-weight: var(--fw-semibold, 600);
+    font-size: var(--fs-h2, 32px);
+    line-height: 1.8;
+    color: var(--color-ink, #1b1d1a);
+    margin: 0;
+  }
+
+  /* === Scroll area === */
+  .faq__scroll-area {
+    width: 100%;
+    margin-top: var(--space-6, 56px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .faq__scroll-area::-webkit-scrollbar { display: none; }
+  .faq__scroll-area:focus-visible {
+    outline: 2px solid var(--color-focus-ring, #fb4c15);
+    outline-offset: -2px;
+  }
+
+  .faq__scroll-track {
+    display: flex;
+    gap: var(--space-5, 32px);
+    padding-left: max(var(--space-7, 64px), calc((100% - var(--container-max, 1440px)) / 2 + var(--space-7, 64px)));
+    padding-right: max(0px, calc((100% - var(--container-max, 1440px)) / 2));
+  }
+
+  /* === Card === */
+  .faq__card {
+    flex: 0 0 320px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .faq__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-pill, 9999px);
+    background: var(--bg-tertiary, #f3f3f3);
+    overflow: hidden;
+  }
+  .faq__avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+  }
+
+  .faq__q-number {
+    font-family: var(--font-en, 'Poppins', sans-serif);
+    font-weight: var(--fw-semibold, 600);
+    font-size: var(--fs-h3, 24px);
+    color: var(--color-ink, #1b1d1a);
+    margin: var(--space-2, 16px) 0 0;
+  }
+
+  .faq__question {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-weight: var(--fw-semibold, 600);
+    font-size: var(--fs-lg, 18px);
+    line-height: 1.7;
+    color: var(--color-ink, #1b1d1a);
+    margin: var(--space-3, 24px) 0 0;
+  }
+
+  .faq__line {
+    width: 32px;
+    height: 2px;
+    background: var(--color-ink, #1b1d1a);
+    border: 0;
+    margin: var(--space-3, 24px) 0 0;
+  }
+
+  .faq__answer {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-weight: var(--fw-medium, 500);
+    font-size: var(--fs-lg, 18px);
+    line-height: 1.7;
+    color: var(--color-drive, #fb4c15);
+    margin: var(--space-3, 24px) 0 0;
+  }
+
+  .faq__logo {
+    margin: var(--space-5, 32px) 0 0;
+    height: 32px;
+    display: flex;
+    align-items: center;
+  }
+  .faq__logo-text {
+    font-family: var(--font-en, 'Poppins', sans-serif);
+    font-weight: var(--fw-semibold, 600);
+    font-size: var(--fs-caption, 12px);
+    color: var(--color-sub, #545655);
+    padding: 0 var(--space-2, 12px);
+    background: var(--bg-tertiary, #f3f3f3);
+    border-radius: 4px;
+    line-height: 32px;
+    display: inline-block;
+  }
+
+  /* === SP === */
+  @media (max-width: 767px) {
+    .faq__title-area { padding-inline: var(--space-3, 16px); }
+    .faq__title { font-size: var(--fs-h3, 24px); }
+
+    .faq__scroll-area {
+      scroll-snap-type: x mandatory;
+      scroll-padding-left: var(--space-3, 16px);
+    }
+    .faq__scroll-track {
+      padding-left: var(--space-3, 16px);
+      padding-right: var(--space-3, 16px);
+    }
+    .faq__card {
+      flex: 0 0 calc(100vw - 80px);
+      width: calc(100vw - 80px);
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+    .faq__question,
+    .faq__answer { font-size: var(--fs-body, 16px); }
+  }
+
+  /* === reduced motion === */
+  @media (prefers-reduced-motion: reduce) {
+    .faq__scroll-area { scroll-behavior: auto; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "FAMBOX FAQ",
+  "tag": "section",
+  "class": "section-faq",
+  "settings": [
+    {
+      "type": "header",
+      "content": "セクション設定"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "見出し",
+      "default": "よくあるご質問"
+    },
+    {
+      "type": "header",
+      "content": "ロゴ (各カード末尾)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_logo",
+      "label": "FAMBOX ロゴを各カードに表示",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "FAMBOX ロゴ画像 (未設定なら text fallback)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ 項目",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "avatar_image",
+          "label": "質問者アバター (任意)",
+          "info": "DNA: Co-driven の対等表示。空なら gray placeholder"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "質問",
+          "default": "FAMBOX はどのような食事ですか？"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "回答 (簡潔に。Drive 色で表示される)",
+          "default": "FAMBOX はスポーツ栄養学に基づいた冷凍宅配食です。アスリートの目標に合わせた栄養バランスで設計されています。"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAMBOX FAQ",
+      "category": "FAQ",
+      "blocks": [
+        { "type": "faq_item", "settings": { "question": "FAMBOX はどのような食事ですか？", "answer": "スポーツ栄養学に基づいた冷凍宅配食です。アスリートの目標に合わせた栄養バランスで設計されています。" } },
+        { "type": "faq_item", "settings": { "question": "最低注文数はありますか？", "answer": "法人プランの場合、最低 10 食からご注文いただけます。チーム規模に応じた柔軟なプランをご用意しています。" } },
+        { "type": "faq_item", "settings": { "question": "アレルギー対応はしていますか？", "answer": "主要なアレルゲンについてはメニューごとに表示しています。個別のご相談も承っております。" } },
+        { "type": "faq_item", "settings": { "question": "配送エリアに制限はありますか？", "answer": "全国配送に対応しています。冷凍便でお届けするため、届いたらそのまま冷凍庫で保管いただけます。" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

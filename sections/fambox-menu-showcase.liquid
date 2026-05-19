@@ -16,8 +16,8 @@
   position: relative;
   z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
   width: 100% !important;
-  background: #fafafa !important;
-  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  background: var(--bg-secondary) !important;
+  font-family: var(--font-ja);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: visible !important;
@@ -39,7 +39,7 @@
   margin: 0 auto;
   position: relative;
   overflow: visible !important;
-  padding-top: 120px !important;
+  padding-top: var(--space-8) !important;
   padding-bottom: 0 !important;
 }
 
@@ -52,7 +52,7 @@
   overflow: hidden !important;
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  margin-bottom: 64px !important;
+  margin-bottom: var(--space-6) !important;
 }
 
 /* ============================================
@@ -61,7 +61,7 @@
    ============================================ */
 #{{ sec_id }} .menu-showcase__track {
   display: flex;
-  gap: 48px;
+  gap: var(--space-5);
   align-items: flex-start;
   animation: menuShowcaseScroll-{{ section.id }} 60s linear infinite;
   width: max-content;
@@ -88,7 +88,7 @@
 #{{ sec_id }} .menu-showcase__img {
   width: 132px;
   height: 132px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -106,29 +106,29 @@
 
 /* 名称テキスト（画像との余白24pxはmargin-topで確保） */
 #{{ sec_id }} .menu-showcase__name {
-  margin-top: 24px !important;
+  margin-top: var(--space-3) !important;
   width: 132px;
-  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
-  font-weight: 500 !important;
-  font-size: 12px !important;
+  font-family: var(--font-ja) !important;
+  font-weight: var(--fw-medium) !important;
+  font-size: var(--fs-caption) !important;
   line-height: 170% !important;
-  color: #1B1D1A !important;
+  color: var(--color-ink) !important;
   text-align: center !important;
 }
 
 /* Proteinテキスト */
 #{{ sec_id }} .menu-showcase__protein {
   width: 132px;
-  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
-  font-weight: 500 !important;
-  font-size: 12px !important;
+  font-family: var(--font-ja) !important;
+  font-weight: var(--fw-medium) !important;
+  font-size: var(--fs-caption) !important;
   line-height: 170% !important;
-  color: #92939C !important;
+  color: var(--color-caption) !important;
   text-align: center !important;
 }
 
 /* ============================================
-   区切り線: 2px #D0D1DB
+   区切り線: 2px var(--border-soft)
    PC: 1312px (1440 - 64*2), 中央揃え
    疑似要素で描画（div:empty対策）
    ============================================ */
@@ -136,7 +136,7 @@
   content: "" !important;
   display: block !important;
   height: 2px !important;
-  background: #D0D1DB !important;
+  background: var(--border-soft) !important;
   max-width: 1312px;
   margin: 0 auto;
 }
@@ -147,10 +147,10 @@
 @media (max-width: 767px) {
   #{{ sec_id }} .menu-showcase__inner {
     padding-top: 80px !important;
-    padding-bottom: 32px !important;
+    padding-bottom: var(--space-4) !important;
   }
   #{{ sec_id }} .menu-showcase__area {
-    margin-bottom: 32px !important;
+    margin-bottom: var(--space-4) !important;
   }
   #{{ sec_id }} .menu-showcase__inner::after {
     max-width: none;
@@ -174,7 +174,7 @@
                 {{ block.settings.image | image_url: width: 264 | image_tag: alt: block.settings.name, loading: 'lazy' }}
               {%- else -%}
                 <svg viewBox="0 0 132 132" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="132" height="132" rx="8" fill="#ddd"/>
+                  <rect width="132" height="132" rx="8" fill="var(--color-placeholder)"/>
                 </svg>
               {%- endif -%}
             </div>
@@ -192,7 +192,7 @@
                 {{ block.settings.image | image_url: width: 264 | image_tag: alt: block.settings.name, loading: 'lazy' }}
               {%- else -%}
                 <svg viewBox="0 0 132 132" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="132" height="132" rx="8" fill="#ddd"/>
+                  <rect width="132" height="132" rx="8" fill="var(--color-placeholder)"/>
                 </svg>
               {%- endif -%}
             </div>

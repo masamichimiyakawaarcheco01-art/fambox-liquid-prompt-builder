@@ -1,0 +1,655 @@
+<!-- ============================================
+     FAMBOX Footer Section
+     sections/fambox-footer.liquid
+     Spec: brand/fambox/design-system/components/footer.md (v0.2)
+     Figma Component Set: 60:95
+     ============================================
+     3 Variants（spec §Variants 準拠）:
+       - Standard: Brand + Nav columns (3) + Social + Bottom row
+       - Minimal:  Brand + Bottom row のみ（LP / Checkout 向け）
+       - Sitemap:  Brand + Nav columns (4) + Social + Bottom row
+     共通規律:
+       - 背景: Ink (var(--color-ink)) 単色固定（Drive ベタ塗り禁止）
+       - SNS: 40×40px 上限（Display サイズ禁止）
+       - Bottom: Copyright + Legal links（Privacy / Terms / 特商法）のみ
+       - CTA / メルマガ / Payment methods 禁止（v0.3 以降）
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-footer-' | append: section.id
+  assign variant = section.settings.variant | default: 'standard'
+
+  assign has_sns = false
+  if section.settings.sns_instagram != blank or section.settings.sns_youtube != blank or section.settings.sns_note != blank or section.settings.sns_x != blank or section.settings.sns_tiktok != blank
+    assign has_sns = true
+  endif
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+  /* ============================================
+     RESET
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     FOOTER 基本（全 Variants 共通）
+     Ink (var(--color-ink)) 単色固定
+     ============================================ */
+  #{{ sec_id }} .footer {
+    background: var(--color-ink) !important;
+    color: var(--color-white);
+    isolation: isolate;
+    font-family: var(--font-ja) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================
+     MAIN（SP 96px / PC 160px padding）
+     ============================================ */
+  #{{ sec_id }} .footer__main {
+    padding: 96px 0;
+  }
+  @media (min-width: 1024px) {
+    #{{ sec_id }} .footer__main {
+      padding: 160px 0;
+    }
+  }
+
+  /* ============================================
+     INNER（PC: row / SP: column）
+     ============================================ */
+  #{{ sec_id }} .footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 var(--space-3);
+  }
+  @media (min-width: 1024px) {
+    #{{ sec_id }} .footer__inner {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-6);
+      padding: 0 var(--space-6);
+    }
+  }
+
+  /* ============================================
+     BRAND AREA
+     ============================================ */
+  #{{ sec_id }} .footer__brand {
+    flex: 0 0 auto;
+    max-width: 320px;
+  }
+  #{{ sec_id }} .footer__logo {
+    height: 40px;
+    width: auto;
+    display: block;
+  }
+  #{{ sec_id }} .footer__logo svg,
+  #{{ sec_id }} .footer__logo img {
+    height: 40px;
+    width: auto;
+    display: block;
+  }
+  #{{ sec_id }} .footer__tagline {
+    margin-top: var(--space-2) !important;
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-body-sm) !important;
+    font-weight: var(--fw-regular) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    line-height: 1.75 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+  }
+
+  /* ============================================
+     NAV（Standard 3 列 / Sitemap 4 列 / SP 1 列）
+     ============================================ */
+  #{{ sec_id }} .footer__nav {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    list-style: none;
+  }
+  @media (max-width: 1023px) {
+    #{{ sec_id }} .footer__nav {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    #{{ sec_id }} .footer__nav {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+  }
+  #{{ sec_id }} .footer__nav-heading {
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-body) !important;
+    font-weight: var(--fw-semibold) !important;
+    color: var(--color-white) !important;
+    letter-spacing: 0.02em !important;
+    margin-bottom: var(--space-2) !important;
+    line-height: 1.4 !important;
+    text-transform: none !important;
+  }
+  #{{ sec_id }} .footer__nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  #{{ sec_id }} .footer__link {
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-body-sm) !important;
+    font-weight: var(--fw-regular) !important;
+    color: var(--color-white) !important;
+    text-decoration: none !important;
+    letter-spacing: normal !important;
+    line-height: 1.7 !important;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  #{{ sec_id }} .footer__link:hover {
+    color: var(--color-drive) !important;
+  }
+  #{{ sec_id }} .footer__link:focus-visible {
+    outline: 2px solid var(--color-drive);
+    outline-offset: 2px;
+  }
+
+  /* ============================================
+     SOCIAL（40×40 上限 / Display サイズ禁止）
+     ============================================ */
+  #{{ sec_id }} .footer__social {
+    flex: 0 0 auto;
+  }
+  #{{ sec_id }} .footer__social-heading {
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-body) !important;
+    font-weight: var(--fw-semibold) !important;
+    color: var(--color-white) !important;
+    letter-spacing: 0.02em !important;
+    margin-bottom: var(--space-2) !important;
+    line-height: 1.4 !important;
+  }
+  #{{ sec_id }} .footer__social-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  #{{ sec_id }} .footer__social-list a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
+    transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+    text-decoration: none;
+  }
+  #{{ sec_id }} .footer__social-list a:hover {
+    background: var(--color-drive);
+  }
+  #{{ sec_id }} .footer__social-list a:focus-visible {
+    outline: 2px solid var(--color-drive);
+    outline-offset: 2px;
+  }
+  #{{ sec_id }} .footer__social-list svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+    fill: currentColor;
+  }
+
+  /* ============================================
+     BOTTOM ROW（Copyright + Legal）
+     ============================================ */
+  #{{ sec_id }} .footer__bottom {
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 24px 0;
+  }
+  #{{ sec_id }} .footer__bottom-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 var(--space-3);
+    font-size: var(--fs-caption);
+    color: rgba(255, 255, 255, 0.6);
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .footer__bottom-inner {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 var(--space-6);
+    }
+  }
+  #{{ sec_id }} .footer__copyright {
+    margin: 0 !important;
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-caption) !important;
+    font-weight: var(--fw-regular) !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    letter-spacing: normal !important;
+    line-height: 1.5 !important;
+  }
+  #{{ sec_id }} .footer__legal {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+  #{{ sec_id }} .footer__legal a {
+    color: rgba(255, 255, 255, 0.6) !important;
+    text-decoration: none !important;
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-caption) !important;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+  #{{ sec_id }} .footer__legal a:hover {
+    color: var(--color-white) !important;
+  }
+
+  /* ============================================
+     VARIANT: Minimal（Nav / Social を非表示）
+     ============================================ */
+  #{{ sec_id }} .footer-minimal .footer__nav,
+  #{{ sec_id }} .footer-minimal .footer__social {
+    display: none !important;
+  }
+
+  /* ============================================
+     VARIANT: Sitemap（Nav 4 列）
+     ============================================ */
+  #{{ sec_id }} .footer-sitemap .footer__nav {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (max-width: 1023px) {
+    #{{ sec_id }} .footer-sitemap .footer__nav {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    #{{ sec_id }} .footer-sitemap .footer__nav {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ============================================
+     prefers-reduced-motion
+     ============================================ */
+  @media (prefers-reduced-motion: reduce) {
+    #{{ sec_id }} .footer__link,
+    #{{ sec_id }} .footer__legal a,
+    #{{ sec_id }} .footer__social-list a {
+      transition: none !important;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <footer class="footer footer-{{ variant }}" role="contentinfo">
+
+    {%- comment -%} ===== MAIN（Brand + Nav + Social）===== {%- endcomment -%}
+    <div class="footer__main">
+      <div class="footer__inner">
+
+        {%- comment -%} ----- Brand Area ----- {%- endcomment -%}
+        <div class="footer__brand">
+          {%- if section.settings.footer_logo_svg != blank -%}
+            <div class="footer__logo">{{ section.settings.footer_logo_svg }}</div>
+          {%- elsif section.settings.footer_logo != blank -%}
+            <div class="footer__logo">
+              {{ section.settings.footer_logo | image_url: width: 256 | image_tag:
+                alt: shop.name,
+                width: 120,
+                height: 40,
+                loading: 'lazy',
+                class: 'footer__logo-img'
+              }}
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.footer_tagline != blank -%}
+            <p class="footer__tagline">{{ section.settings.footer_tagline | newline_to_br }}</p>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} ----- Nav Columns（Standard / Sitemap のみ表示）----- {%- endcomment -%}
+        {%- if variant != 'minimal' -%}
+          <nav class="footer__nav" aria-label="{%- if variant == 'sitemap' -%}サイトマップ{%- else -%}フッターナビゲーション{%- endif -%}">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'nav_column' -%}
+                <div class="footer__nav-col" {{ block.shopify_attributes }}>
+                  {%- if block.settings.heading != blank -%}
+                    <h3 class="footer__nav-heading">{{ block.settings.heading }}</h3>
+                  {%- endif -%}
+                  <ul class="footer__nav-list">
+                    {%- if block.settings.menu != blank -%}
+                      {%- for link in block.settings.menu.links -%}
+                        <li><a href="{{ link.url }}" class="footer__link">{{ link.title }}</a></li>
+                      {%- endfor -%}
+                    {%- else -%}
+                      {%- comment -%} menu 未設定時は manual_links (改行区切り "ラベル|URL") を表示 {%- endcomment -%}
+                      {%- assign manual_pairs = block.settings.manual_links | strip | split: '
+' -%}
+                      {%- for pair in manual_pairs -%}
+                        {%- assign parts = pair | split: '|' -%}
+                        {%- if parts.size >= 2 -%}
+                          <li><a href="{{ parts[1] | strip }}" class="footer__link">{{ parts[0] | strip }}</a></li>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    {%- endif -%}
+                  </ul>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </nav>
+        {%- endif -%}
+
+        {%- comment -%} ----- Social（Standard / Sitemap で SNS 設定があれば表示）----- {%- endcomment -%}
+        {%- if variant != 'minimal' and has_sns -%}
+          <div class="footer__social">
+            {%- if section.settings.social_heading != blank -%}
+              <h3 class="footer__social-heading">{{ section.settings.social_heading }}</h3>
+            {%- endif -%}
+            <ul class="footer__social-list">
+              {%- if section.settings.sns_instagram != blank -%}
+                <li><a href="{{ section.settings.sns_instagram }}" target="_blank" rel="noopener" aria-label="Instagram">
+                  {%- render 'fambox-icon', name: 'instagram', size: 'sm' -%}
+                </a></li>
+              {%- endif -%}
+              {%- if section.settings.sns_youtube != blank -%}
+                <li><a href="{{ section.settings.sns_youtube }}" target="_blank" rel="noopener" aria-label="YouTube">
+                  {%- render 'fambox-icon', name: 'youtube', size: 'sm' -%}
+                </a></li>
+              {%- endif -%}
+              {%- if section.settings.sns_note != blank -%}
+                <li><a href="{{ section.settings.sns_note }}" target="_blank" rel="noopener" aria-label="note">
+                  {%- render 'fambox-icon', name: 'note', size: 'sm' -%}
+                </a></li>
+              {%- endif -%}
+              {%- if section.settings.sns_x != blank -%}
+                <li><a href="{{ section.settings.sns_x }}" target="_blank" rel="noopener" aria-label="X (Twitter)">
+                  {%- render 'fambox-icon', name: 'x-social', size: 'sm' -%}
+                </a></li>
+              {%- endif -%}
+              {%- if section.settings.sns_tiktok != blank -%}
+                <li><a href="{{ section.settings.sns_tiktok }}" target="_blank" rel="noopener" aria-label="TikTok">
+                  {%- render 'fambox-icon', name: 'tiktok', size: 'sm' -%}
+                </a></li>
+              {%- endif -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+      </div>
+    </div>
+
+    {%- comment -%} ===== BOTTOM ROW ===== {%- endcomment -%}
+    <div class="footer__bottom">
+      <div class="footer__bottom-inner">
+        <p class="footer__copyright">
+          © {{ 'now' | date: '%Y' }} {{ section.settings.copyright_name | default: shop.name }}. All rights reserved.
+        </p>
+        <ul class="footer__legal">
+          {%- if section.settings.privacy_url != blank -%}
+            <li><a href="{{ section.settings.privacy_url }}">Privacy</a></li>
+          {%- endif -%}
+          {%- if section.settings.terms_url != blank -%}
+            <li><a href="{{ section.settings.terms_url }}">Terms</a></li>
+          {%- endif -%}
+          {%- if section.settings.legal_notice_url != blank -%}
+            <li><a href="{{ section.settings.legal_notice_url }}">特商法に基づく表記</a></li>
+          {%- endif -%}
+        </ul>
+      </div>
+    </div>
+
+  </footer>
+</section>
+
+{% schema %}
+{
+  "name": "Footer セクション",
+  "tag": "section",
+  "class": "fambox-footer-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Variant"
+    },
+    {
+      "type": "select",
+      "id": "variant",
+      "label": "Variant",
+      "options": [
+        { "value": "standard", "label": "Standard（Brand + Nav + Social + Bottom）" },
+        { "value": "minimal",  "label": "Minimal（Brand + Bottom のみ / LP・Checkout）" },
+        { "value": "sitemap",  "label": "Sitemap（Nav 4 列・大規模サイト用）" }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "header",
+      "content": "── Brand Area ──"
+    },
+    {
+      "type": "html",
+      "id": "footer_logo_svg",
+      "label": "ロゴ SVG（画像より優先 / White 推奨）"
+    },
+    {
+      "type": "image_picker",
+      "id": "footer_logo",
+      "label": "ロゴ画像（SVG 未設定時 / White 透過 PNG 推奨）"
+    },
+    {
+      "type": "textarea",
+      "id": "footer_tagline",
+      "label": "タグライン（改行可）",
+      "default": "アスリートの食を、もっと自由に。"
+    },
+    {
+      "type": "header",
+      "content": "── Social ──"
+    },
+    {
+      "type": "text",
+      "id": "social_heading",
+      "label": "Social 見出し",
+      "default": "FOLLOW"
+    },
+    {
+      "type": "url",
+      "id": "sns_instagram",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "sns_youtube",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "url",
+      "id": "sns_note",
+      "label": "note URL"
+    },
+    {
+      "type": "url",
+      "id": "sns_x",
+      "label": "X (Twitter) URL"
+    },
+    {
+      "type": "url",
+      "id": "sns_tiktok",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "header",
+      "content": "── Bottom Row ──"
+    },
+    {
+      "type": "text",
+      "id": "copyright_name",
+      "label": "Copyright 表記名",
+      "default": "FAMBOX"
+    },
+    {
+      "type": "url",
+      "id": "privacy_url",
+      "label": "Privacy Policy URL"
+    },
+    {
+      "type": "url",
+      "id": "terms_url",
+      "label": "Terms of Service URL"
+    },
+    {
+      "type": "url",
+      "id": "legal_notice_url",
+      "label": "特商法に基づく表記 URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "nav_column",
+      "name": "Nav カラム",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "見出し（英語推奨 / Poppins）",
+          "default": "ABOUT"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "メニュー（Shopify ナビ）"
+        },
+        {
+          "type": "textarea",
+          "id": "manual_links",
+          "label": "リンク（menu 未設定時 / 1 行 1 リンク・形式: ラベル|URL）",
+          "info": "例: 私たちについて|/pages/about"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer — Standard",
+      "settings": {
+        "variant": "standard",
+        "footer_tagline": "アスリートの食を、もっと自由に。",
+        "social_heading": "FOLLOW",
+        "copyright_name": "FAMBOX",
+        "privacy_url": "/policies/privacy-policy",
+        "terms_url": "/policies/terms-of-service",
+        "legal_notice_url": "/policies/legal-notice"
+      },
+      "blocks": [
+        {
+          "type": "nav_column",
+          "settings": {
+            "heading": "ABOUT",
+            "manual_links": "FAMBOX について|/pages/about\nブランドストーリー|/pages/story\nニュース|/blogs/news"
+          }
+        },
+        {
+          "type": "nav_column",
+          "settings": {
+            "heading": "PRODUCTS",
+            "manual_links": "プラン一覧|/collections/all\n食事メニュー|/pages/menu\n導入事例|/pages/case-studies"
+          }
+        },
+        {
+          "type": "nav_column",
+          "settings": {
+            "heading": "SUPPORT",
+            "manual_links": "よくある質問|/pages/faq\nお問い合わせ|/pages/contact\n配送について|/pages/shipping"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Footer — Minimal（LP / Checkout）",
+      "settings": {
+        "variant": "minimal",
+        "footer_tagline": "",
+        "copyright_name": "FAMBOX",
+        "privacy_url": "/policies/privacy-policy",
+        "terms_url": "/policies/terms-of-service",
+        "legal_notice_url": "/policies/legal-notice"
+      }
+    },
+    {
+      "name": "Footer — Sitemap（4 列・大規模）",
+      "settings": {
+        "variant": "sitemap",
+        "footer_tagline": "アスリートの食を、もっと自由に。",
+        "social_heading": "FOLLOW",
+        "copyright_name": "FAMBOX",
+        "privacy_url": "/policies/privacy-policy",
+        "terms_url": "/policies/terms-of-service",
+        "legal_notice_url": "/policies/legal-notice"
+      },
+      "blocks": [
+        {
+          "type": "nav_column",
+          "settings": {
+            "heading": "ABOUT",
+            "manual_links": "FAMBOX について|/pages/about\nブランドストーリー|/pages/story\nチーム|/pages/team\nニュース|/blogs/news"
+          }
+        },
+        {
+          "type": "nav_column",
+          "settings": {
+            "heading": "PRODUCTS",
+            "manual_links": "プラン一覧|/collections/all\n食事メニュー|/pages/menu\n単品購入|/collections/single\nギフト|/collections/gift"
+          }
+        },
+        {
+          "type": "nav_column",
+          "settings": {
+            "heading": "SUPPORT",
+            "manual_links": "よくある質問|/pages/faq\nお問い合わせ|/pages/contact\n配送について|/pages/shipping\n返品・キャンセル|/pages/returns"
+          }
+        },
+        {
+          "type": "nav_column",
+          "settings": {
+            "heading": "BUSINESS",
+            "manual_links": "法人向けプラン|/pages/business\n導入事例|/pages/case-studies\nパートナー|/pages/partners\n採用情報|/pages/careers"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

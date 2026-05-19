@@ -1,0 +1,155 @@
+{%- comment -%}
+============================================================
+FAMBOX Icon Snippet — v0.5 / Session #54 (2026-05-18)
+snippets/fambox-icon.liquid
+============================================================
+共通 UI アイコンを 1 snippet に集約。
+spec §1-I 1-29「stroke 1.5px」に準拠（Lucide 標準値と一致）。
+
+使い方:
+  {% render 'fambox-icon', name: 'cart', size: 'md' %}
+  {% render 'fambox-icon', name: 'instagram', size: 'sm' %}
+  {% render 'fambox-icon', name: 'close', size: 'md', color: '#FB4C15' %}
+
+パラメータ:
+  name (必須): cart / user / close / chevron-left / chevron-right /
+              check / menu / search / instagram / youtube / note /
+              x-social / tiktok
+  size (任意): xs (16) / sm (20) / md (24) / lg (32) / xl (48) — 既定 md
+  color (任意): 直接色指定（既定 currentColor）
+
+サイズ Token 連携:
+  --icon-xs/sm/md/lg/xl が L1 Tokens (snippets/fambox-tokens.css.liquid) で定義
+
+由来:
+  論点 #2「アイコンセット選定」決定（Session #53）→ Lucide 採用
+  既存 inline SVG (footer SNS 5 / header user-cart 2 / modal close 1 /
+  blog-carousel chevron 2 = 10 個) を本 snippet に集約
+
+更新規律:
+  - 新アイコン追加時は size variants と aria-hidden を必ず含める
+  - Lucide オリジナルが提供されている場合は Lucide の SVG (stroke-based) を採用
+  - brand 固有ロゴ (Instagram / YouTube / TikTok 等) は filled path で保持
+============================================================
+{%- endcomment -%}
+
+{%- liquid
+  assign icon_name = name | default: 'circle'
+  assign icon_size = size | default: 'md'
+  assign icon_color = color | default: 'currentColor'
+
+  # size_px の解決（CSS 変数を inline では使えないため px に展開）
+  case icon_size
+    when 'xs'
+      assign icon_px = 16
+    when 'sm'
+      assign icon_px = 20
+    when 'md'
+      assign icon_px = 24
+    when 'lg'
+      assign icon_px = 32
+    when 'xl'
+      assign icon_px = 48
+    else
+      assign icon_px = 24
+  endcase
+-%}
+
+{%- case icon_name -%}
+
+  {%- comment -%} ===== Lucide 系 UI アイコン（stroke-based）===== {%- endcomment -%}
+
+  {%- when 'cart' or 'shopping-cart' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="none" stroke="{{ icon_color }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="20" cy="21" r="1"></circle>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+    </svg>
+
+  {%- when 'user' or 'account' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="none" stroke="{{ icon_color }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+
+  {%- when 'close' or 'x' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="none" stroke="{{ icon_color }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+
+  {%- when 'chevron-left' or 'prev' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="none" stroke="{{ icon_color }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+
+  {%- when 'chevron-right' or 'next' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="none" stroke="{{ icon_color }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="9 6 15 12 9 18"></polyline>
+    </svg>
+
+  {%- when 'chevron-down' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="none" stroke="{{ icon_color }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+
+  {%- when 'check' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="none" stroke="{{ icon_color }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+
+  {%- when 'menu' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="none" stroke="{{ icon_color }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+
+  {%- when 'search' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="none" stroke="{{ icon_color }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+
+  {%- when 'arrow-right' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="none" stroke="{{ icon_color }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+    </svg>
+
+  {%- comment -%} ===== SNS Brand Logo（filled path / brand 公式色は CSS 側で）===== {%- endcomment -%}
+
+  {%- when 'instagram' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="{{ icon_color }}" aria-hidden="true">
+      <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.71 3.71 0 01-1.38-.9 3.71 3.71 0 01-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zM12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63a5.87 5.87 0 00-2.13 1.38A5.87 5.87 0 00.63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.79.73 1.46 1.38 2.13.67.66 1.34 1.07 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.13-1.38.66-.67 1.07-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.87 5.87 0 00-1.38-2.13A5.87 5.87 0 0019.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 0012 18.16 6.16 6.16 0 0012 5.84zm0 10.16A4 4 0 1112 8a4 4 0 010 8zm6.41-11.85a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/>
+    </svg>
+
+  {%- when 'youtube' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="{{ icon_color }}" aria-hidden="true">
+      <path d="M23.5 6.2a3 3 0 00-2.12-2.12C19.5 3.56 12 3.56 12 3.56s-7.5 0-9.38.52A3 3 0 00.5 6.2C0 8.08 0 12 0 12s0 3.92.5 5.8a3 3 0 002.12 2.12c1.88.52 9.38.52 9.38.52s7.5 0 9.38-.52a3 3 0 002.12-2.12c.5-1.88.5-5.8.5-5.8s0-3.92-.5-5.8zM9.6 15.6V8.4l6.24 3.6-6.24 3.6z"/>
+    </svg>
+
+  {%- when 'note' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="{{ icon_color }}" aria-hidden="true">
+      <path d="M5.42 2.5h13.16c1.62 0 2.92 1.3 2.92 2.92v13.16c0 1.62-1.3 2.92-2.92 2.92H5.42a2.92 2.92 0 01-2.92-2.92V5.42c0-1.62 1.3-2.92 2.92-2.92zm2.1 5.27v8.48h1.78v-5.18l3.92 5.18h1.78V7.77h-1.78v5.18L9.3 7.77H7.52z"/>
+    </svg>
+
+  {%- when 'x-social' or 'twitter' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="{{ icon_color }}" aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z"/>
+    </svg>
+
+  {%- when 'tiktok' -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="{{ icon_color }}" aria-hidden="true">
+      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005.8 20.1a6.34 6.34 0 0010.86-4.43V8.69a8.16 8.16 0 004.77 1.52V6.69h-1.84z"/>
+    </svg>
+
+  {%- comment -%} ===== Fallback ===== {%- endcomment -%}
+  {%- else -%}
+    <svg xmlns="http://www.w3.org/2000/svg" width="{{ icon_px }}" height="{{ icon_px }}" viewBox="0 0 24 24" fill="none" stroke="{{ icon_color }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-fambox-icon-unknown="{{ icon_name }}">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+
+{%- endcase -%}

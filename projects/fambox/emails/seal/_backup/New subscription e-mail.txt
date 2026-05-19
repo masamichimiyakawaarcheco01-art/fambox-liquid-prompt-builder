@@ -1,0 +1,62 @@
+<div style='font-size:16px;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif'>
+	<div style='max-width:560px;margin:0 auto;padding:2em 0;color:rgb(119,119,119);'>
+		
+		<table style='color:rgb(85,85,85);width:100%;margin: 1em 0;'>
+			<tr>
+				<td style='font-weight: normal;font-size:1.5em;margin: 0 0 1em 0;color:black;'>
+					定期購買のご注文を受付けました。
+				</td>
+				<td style='color:rgb(153,153,153);text-align:right;'>
+					定期購買 #{{ subscription.id }}
+				</td>
+			</tr>
+		</table>
+
+		FAMアスリート食トレでの定期購買をご利用いただき、ありがとうございます。
+ストアのアカウントにログインするか、以下のリンクをクリックすることで、定期購買の確認・編集・キャンセルが可能です。
+		<br />
+		<div style='padding:1em 0;'>
+			<a style='text-decoration: none;display: inline-block;border-radius:4px;color: rgb(255,255,255);padding: 20.0px 25.0px;background:#1990C6;' href='{{subscription.url}}'>
+				定期購買の管理
+			</a>
+		</div>
+		
+	</div>
+		
+	<div style='border-top:1px solid rgb(229,229,229);padding:2em 0;'>
+		<div style='max-width:560px;margin:0 auto;color:rgb(85,85,85);'>
+
+			<div style='font-weight: normal;font-size:1.2em;color:black;margin: 0 0 0.5em 0;'>
+				ご注文商品
+			</div>
+		
+			<table style='color:rgb(85,85,85);width:100%;'>
+				{% for item in subscription.items %}
+				
+					<tr>
+						<td style='font-weight:700;padding:1em 0.25em;'>
+							{{ item.title }} x {{ item.quantity }}
+						</td>
+						<td style='text-align:right;;padding:1em 0.25em;'>
+							{{ item.total_price }} 
+						</td>
+					</tr>
+					
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+	
+	<div style='border-top:1px solid rgb(229,229,229);padding:2em 0;'>
+		<div style='max-width:560px;margin:0 auto;color:rgb(119,119,119);'>
+			ご不明な点がございましたら、いつでも<a href="mailto:fam.athletefood.frozen@gmail.com">fam.athletefood.frozen@gmail.com</a>までお問い合わせください。</a>.
+		</div>
+		<br />
+		<div style='max-width:560px;margin:0 auto;color:rgb(119,119,119);font-size:0.8em'>
+			This e-mail was sent to you to confirm your subscription at {{ shop.name }}.
+			You can view, edit and cancel your subscription <a href='{{ subscription.url }}' style='color:inherit;text-decoration:underline;'>here</a>.
+			<br />
+			<br />
+		</div>
+	</div>
+</div>

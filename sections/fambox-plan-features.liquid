@@ -16,7 +16,7 @@
     z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
     width: 100%;
     background: {{ section.settings.bg_color }};
-    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    font-family: var(--font-ja);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -57,16 +57,16 @@
   #{{ sec_id }} .plan-features__box--left .plan-features__padding {
     position: absolute;
     top: 56px;
-    left: 64px;
-    right: 32px;
+    left: var(--space-6);
+    right: var(--space-4);
     bottom: 56px;
   }
 
   #{{ sec_id }} .plan-features__box--right .plan-features__padding {
     position: absolute;
     top: 56px;
-    left: 32px;
-    right: 64px;
+    left: var(--space-4);
+    right: var(--space-6);
     bottom: 56px;
   }
 
@@ -89,9 +89,9 @@
      LABEL
      ============================================ */
   #{{ sec_id }} .plan-features__label {
-    font-size: 16px;
-    font-weight: 500;
-    color: #fff;
+    font-size: var(--fs-body);
+    font-weight: var(--fw-medium);
+    color: var(--color-white);
     line-height: 1;
   }
 
@@ -101,31 +101,31 @@
   #{{ sec_id }} .plan-features__value-row {
     display: flex;
     align-items: baseline;
-    margin-top: 32px;
+    margin-top: var(--space-4);
   }
 
   #{{ sec_id }} .plan-features__number {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    font-size: 96px;
-    color: #fff;
+    font-family: var(--font-en);
+    font-weight: var(--fw-medium);
+    font-size: var(--fs-mega);
+    color: var(--color-white);
     line-height: 1;
     letter-spacing: -0.02em;
   }
 
   #{{ sec_id }} .plan-features__unit {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    font-size: 32px;
-    color: #fff;
+    font-family: var(--font-en);
+    font-weight: var(--fw-semibold);
+    font-size: var(--fs-h2);
+    color: var(--color-white);
     line-height: 1;
   }
 
   #{{ sec_id }} .plan-features__unit--ja {
-    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
-    font-weight: 600;
-    font-size: 28px;
-    color: #fff;
+    font-family: var(--font-ja);
+    font-weight: var(--fw-semibold);
+    font-size: var(--fs-h3-mobile);
+    color: var(--color-white);
     line-height: 1;
   }
 
@@ -168,7 +168,7 @@
      ============================================ */
   @media (max-width: 767px) {
     #{{ sec_id }} {
-      padding: 0 16px;
+      padding: 0 var(--space-2);
     }
 
     #{{ sec_id }} .plan-features__inner {
@@ -187,26 +187,26 @@
 
     #{{ sec_id }} .plan-features__box--left .plan-features__padding,
     #{{ sec_id }} .plan-features__box--right .plan-features__padding {
-      top: 32px;
+      top: var(--space-4);
       left: 0;
       right: 0;
-      bottom: 32px;
+      bottom: var(--space-4);
     }
 
     #{{ sec_id }} .plan-features__label {
-      font-size: 12px;
+      font-size: var(--fs-caption);
     }
 
     #{{ sec_id }} .plan-features__number {
-      font-size: 48px;
+      font-size: var(--fs-h1);
     }
 
     #{{ sec_id }} .plan-features__unit {
-      font-size: 20px;
+      font-size: var(--fs-h4);
     }
 
     #{{ sec_id }} .plan-features__unit--ja {
-      font-size: 18px;
+      font-size: var(--fs-body-lg);
     }
 
     #{{ sec_id }} .plan-features__icon {
@@ -215,11 +215,11 @@
     }
 
     #{{ sec_id }} .plan-features__content {
-      padding: 0 16px;
+      padding: 0 var(--space-2);
     }
 
     #{{ sec_id }} .plan-features__value-row {
-      margin-top: 12px;
+      margin-top: var(--space-1-5);
     }
   }
 </style>
@@ -288,7 +288,7 @@
           {{ section.settings.triangle_svg }}
         {%- else -%}
           <svg viewBox="0 0 64 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="0,0 64,0 32,32" fill="#fff"/>
+            <polygon points="0,0 64,0 32,32" fill="var(--color-white)"/>
           </svg>
         {%- endif -%}
       </div>
@@ -311,7 +311,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "背景色",
-      "default": "#FB4C15"
+      "default": "var(--color-drive)"
     },
     {
       "type": "header",

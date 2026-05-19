@@ -1,0 +1,529 @@
+{% comment %}
+  =====================================================
+  FAMBOX Subscription Plan Card — Section v0.2 (Phase 1)
+  =====================================================
+  Spec: brand/fambox/design-system/components/subscription-plan-card.md
+  Spec date: 2026-04-27 (§13 v0.3 で 10→8 項目縮小)
+  Figma: Component Set 65:110 (standard / featured 2 variants)
+  既存実装: fambox-subscription-plan.liquid (506 行、v0.1 系) と並行配置
+  Implementation date: 2026-05-12
+
+  Card Pattern 継承:
+    - card-standard (通常プラン)
+    - card-featured (推奨プラン、Drive 2px 枠 + 「おすすめ」バッジ)
+
+  8 項目構成 (spec §13 v0.3):
+    1. プラン名 (h3)
+    2. 価格 (h2 32px Ink、Drive 色は煽り違反のため不使用)
+    3. 提供頻度 (価格隣、月1回 / 週2回 等)
+    4. 1回あたりの食数 (例: 7食 × 4回 = 28食/月)
+    5. カスタマイズ可否 (○ △ ×)
+    6. 推奨対象 (ジュニア / 大学生 / プロ)
+    7. 特典・サポート (✓ チェックリスト)
+    8. CTA × 2 (Primary + Ghost)
+
+  Anti (Spec §13 で確定):
+    - 最低契約期間 → FAQ / 規約 / 問合せで扱う、カード内非表示
+    - 初月特典 → キャンペーン施策側で扱う
+    - 価格 Drive 64px → 煽り Anti
+    - 全プランに「おすすめ」バッジ → 強調消失 Anti
+
+  Phase 1 範囲:
+    - 1 section で複数プラン (blocks) 並列表示
+    - 各 block: variant (standard / featured) + 8 項目
+    - Featured は section 全体で 1 個まで (人間運用、Lint 未実装)
+    - CTA 2 個構成 (Primary + Ghost)
+    - Responsive: PC 3 列 / Tablet 2 列 / SP 1 列
+
+  v0.3 候補:
+    - Featured が 2 個以上配置された場合の Lint 警告
+    - 価格比較ボタン (複数プラン横並びでの差分ハイライト)
+    - 推奨対象に応じた条件分岐表示
+=====================================================
+{% endcomment %}
+
+<section class="plans plans-{{ section.settings.layout }}" data-gtag-section="subscription_plans">
+  <div class="plans__inner">
+
+    {%- if section.settings.title != blank or section.settings.intro != blank -%}
+      <header class="plans__header">
+        {%- if section.settings.title != blank -%}
+          <h2 class="plans__title">{{ section.settings.title }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <p class="plans__intro">{{ section.settings.intro }}</p>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <div class="plans__grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'plan' -%}
+          {%- liquid
+            assign variant_class = 'card-standard'
+            if block.settings.is_featured
+              assign variant_class = 'card-featured'
+            endif
+          -%}
+
+          <article class="card {{ variant_class }} plan-card"
+                   {{ block.shopify_attributes }}
+                   {% if block.settings.is_featured %}aria-label="おすすめプラン"{% endif %}>
+
+            {%- if block.settings.is_featured -%}
+              <span class="plan-card__badge">おすすめ</span>
+            {%- endif -%}
+
+            {%- comment -%} 1. プラン名 {%- endcomment -%}
+            <h3 class="plan-card__name">{{ block.settings.plan_name }}</h3>
+
+            {%- comment -%} 2-3. 価格 + 頻度 {%- endcomment -%}
+            <div class="plan-card__price-row">
+              <span class="plan-card__price">{{ block.settings.price }}</span>
+              {%- if block.settings.frequency != blank -%}
+                <span class="plan-card__price-unit">{{ block.settings.frequency }}</span>
+              {%- endif -%}
+            </div>
+
+            <hr class="plan-card__divider" aria-hidden="true">
+
+            {%- comment -%} 4-6. メタ情報 (食数 / カスタマイズ / 推奨対象) {%- endcomment -%}
+            <dl class="plan-card__meta">
+              {%- if block.settings.meals != blank -%}
+                <div class="plan-card__meta-row">
+                  <dt>食数</dt>
+                  <dd>{{ block.settings.meals }}</dd>
+                </div>
+              {%- endif -%}
+              {%- if block.settings.customizable != blank -%}
+                <div class="plan-card__meta-row">
+                  <dt>カスタマイズ</dt>
+                  <dd>{{ block.settings.customizable }}</dd>
+                </div>
+              {%- endif -%}
+              {%- if block.settings.target != blank -%}
+                <div class="plan-card__meta-row">
+                  <dt>推奨対象</dt>
+                  <dd>{{ block.settings.target }}</dd>
+                </div>
+              {%- endif -%}
+            </dl>
+
+            <hr class="plan-card__divider" aria-hidden="true">
+
+            {%- comment -%} 7. 特典・サポート {%- endcomment -%}
+            {%- if block.settings.features != blank -%}
+              <div class="plan-card__features-area">
+                {%- if block.settings.features_heading != blank -%}
+                  <p class="plan-card__features-heading">{{ block.settings.features_heading }}</p>
+                {%- endif -%}
+                <ul class="plan-card__features" role="list">
+                  {%- assign features_lines = block.settings.features | newline_to_br | split: '<br />' -%}
+                  {%- for line in features_lines -%}
+                    {%- assign trimmed = line | strip -%}
+                    {%- if trimmed != blank -%}
+                      <li class="plan-card__feature">
+                        <span class="plan-card__feature-check" aria-hidden="true">✓</span>
+                        <span>{{ trimmed }}</span>
+                      </li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} 8. CTA × 2 {%- endcomment -%}
+            <div class="plan-card__actions">
+              {%- if block.settings.cta_primary_label != blank -%}
+                <a href="{{ block.settings.cta_primary_url }}"
+                   class="btn btn-primary btn-lg"
+                   data-gtag-cta="plan_primary_{{ block.settings.plan_name | handleize }}">
+                  {{ block.settings.cta_primary_label }}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.cta_secondary_label != blank -%}
+                <a href="{{ block.settings.cta_secondary_url }}"
+                   class="btn btn-ghost"
+                   data-gtag-cta="plan_secondary_{{ block.settings.plan_name | handleize }}">
+                  {{ block.settings.cta_secondary_label }}
+                </a>
+              {%- endif -%}
+            </div>
+
+          </article>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.disclaimer != blank -%}
+      <p class="plans__disclaimer">{{ section.settings.disclaimer }}</p>
+    {%- endif -%}
+
+  </div>
+</section>
+
+<style>
+  /* === Section base === */
+  .plans {
+    width: 100%;
+    padding-block: var(--space-7, 64px);
+    background: var(--bg-secondary, #fafafa);
+  }
+  .plans__inner {
+    max-width: var(--container-max, 1440px);
+    margin-inline: auto;
+    padding-inline: var(--space-3, 24px);
+  }
+
+  /* === Header === */
+  .plans__header {
+    text-align: center;
+    margin-bottom: var(--space-6, 48px);
+  }
+  .plans__title {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-h2, 32px);
+    font-weight: var(--fw-bold, 700);
+    color: var(--color-ink, #1b1d1a);
+    line-height: 1.4;
+    margin: 0 0 var(--space-2, 16px);
+  }
+  .plans__intro {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-body, 16px);
+    color: var(--color-sub, #545655);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* === Grid: PC 3 列 / Tablet 2 列 / SP 1 列 === */
+  .plans__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4, 32px);
+    align-items: stretch;
+  }
+  @media (max-width: 1023px) {
+    .plans__grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3, 24px); }
+  }
+  @media (max-width: 767px) {
+    .plans__grid { grid-template-columns: 1fr; gap: var(--space-3, 24px); }
+  }
+
+  /* === Card Pattern 継承 (card.md v0.2 準拠) === */
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2, 16px);
+    background: var(--bg-primary, #ffffff);
+    border: 1px solid var(--border-light, #ececec);
+    border-radius: var(--radius-md, 8px);
+    padding: var(--space-3, 24px);
+    box-shadow: var(--shadow-1, 0 1px 2px rgba(0,0,0,0.04));
+    transition: box-shadow var(--duration-base, 0.3s) var(--ease-out),
+                transform var(--duration-base, 0.3s) var(--ease-out);
+  }
+  .card:hover {
+    box-shadow: var(--shadow-3, 0 4px 16px rgba(0,0,0,0.08));
+    transform: translateY(-2px);
+  }
+  .card-featured {
+    border: 2px solid var(--color-drive, #fb4c15);
+    padding: calc(var(--space-3, 24px) - 1px);
+  }
+
+  /* === Plan-specific === */
+  .plan-card__badge {
+    position: absolute;
+    top: -12px;
+    right: var(--space-3, 24px);
+    padding: var(--space-1, 8px) var(--space-2, 16px);
+    background: var(--color-drive, #fb4c15);
+    color: var(--color-white, #ffffff);
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-caption, 12px);
+    font-weight: var(--fw-semibold, 600);
+    border-radius: var(--radius-pill, 9999px);
+    letter-spacing: 0.05em;
+  }
+  .plan-card__name {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-h3, 24px);
+    font-weight: var(--fw-bold, 700);
+    color: var(--color-ink, #1b1d1a);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* 価格行: Spec §13 Q2 確定 — 32px Ink, Drive 不使用 */
+  .plan-card__price-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1, 8px);
+    flex-wrap: wrap;
+  }
+  .plan-card__price {
+    font-family: var(--font-en, 'Poppins', sans-serif);
+    font-size: var(--fs-h2, 32px);
+    font-weight: var(--fw-bold, 700);
+    color: var(--color-ink, #1b1d1a);
+    line-height: 1;
+    letter-spacing: var(--ls-en, 0);
+  }
+  .plan-card__price-unit {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-body, 16px);
+    font-weight: var(--fw-regular, 400);
+    color: var(--color-sub, #545655);
+  }
+
+  .plan-card__divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border-light, #ececec);
+    border: 0;
+    margin: var(--space-2, 16px) 0;
+  }
+
+  /* メタ情報 (definition list) */
+  .plan-card__meta {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1, 8px);
+  }
+  .plan-card__meta-row {
+    display: grid;
+    grid-template-columns: 6em 1fr;
+    gap: var(--space-2, 16px);
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-body-sm, 14px);
+    line-height: 1.6;
+  }
+  .plan-card__meta-row dt {
+    color: var(--color-sub, #545655);
+    font-weight: var(--fw-medium, 500);
+  }
+  .plan-card__meta-row dd {
+    color: var(--color-ink, #1b1d1a);
+    margin: 0;
+  }
+
+  /* Features (✓ チェックリスト) */
+  .plan-card__features-area {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2, 16px);
+  }
+  .plan-card__features-heading {
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-body-sm, 14px);
+    font-weight: var(--fw-semibold, 600);
+    color: var(--color-ink, #1b1d1a);
+    margin: 0;
+  }
+  .plan-card__features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1, 8px);
+  }
+  .plan-card__feature {
+    display: flex;
+    gap: var(--space-1, 8px);
+    align-items: flex-start;
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-body-sm, 14px);
+    color: var(--color-ink, #1b1d1a);
+    line-height: 1.6;
+  }
+  .plan-card__feature-check {
+    flex-shrink: 0;
+    color: var(--color-drive, #fb4c15);
+    font-weight: var(--fw-bold, 700);
+  }
+
+  /* Actions: Spec §13 Q3 確定 — Primary + Ghost 縦並び */
+  .plan-card__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2, 16px);
+    margin-top: auto;
+    padding-top: var(--space-3, 24px);
+  }
+  .plan-card__actions .btn { width: 100%; text-align: center; justify-content: center; }
+
+  /* Disclaimer */
+  .plans__disclaimer {
+    margin-top: var(--space-5, 32px);
+    text-align: center;
+    font-family: var(--font-ja, 'Hiragino Sans', sans-serif);
+    font-size: var(--fs-caption, 12px);
+    color: var(--color-caption, #888888);
+    line-height: 1.6;
+  }
+
+  /* === reduced motion === */
+  @media (prefers-reduced-motion: reduce) {
+    .card { transition: none; }
+    .card:hover { transform: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "FAMBOX Subscription Plans",
+  "tag": "section",
+  "class": "section-plans",
+  "settings": [
+    {
+      "type": "header",
+      "content": "セクション全体"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "レイアウト",
+      "default": "standard",
+      "options": [
+        { "value": "standard", "label": "Standard (3 列 / Tablet 2 / SP 1) ★既定" },
+        { "value": "compact",  "label": "Compact (2 列固定)" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "見出し",
+      "default": "あなたのチームに合うプランを"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "リード文"
+    },
+    {
+      "type": "textarea",
+      "id": "disclaimer",
+      "label": "注釈 (税表記等)",
+      "default": "※価格はすべて税込です。最低契約期間・キャンペーン特典については [FAQ](/pages/faq) をご覧ください。"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "plan",
+      "name": "プラン",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "is_featured",
+          "label": "おすすめプラン (Featured)",
+          "default": false,
+          "info": "DNA: section 内で 1 プランのみ true にする"
+        },
+        {
+          "type": "header",
+          "content": "1-3. プラン名 / 価格 / 頻度"
+        },
+        {
+          "type": "text",
+          "id": "plan_name",
+          "label": "プラン名",
+          "default": "Pro Athlete Plan"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "価格 (税込)",
+          "default": "¥48,000"
+        },
+        {
+          "type": "text",
+          "id": "frequency",
+          "label": "提供頻度 (例: 「/ 月」「月1回」)",
+          "default": "/ 月"
+        },
+        {
+          "type": "header",
+          "content": "4-6. メタ情報"
+        },
+        {
+          "type": "text",
+          "id": "meals",
+          "label": "食数",
+          "default": "7食 × 4回 = 28食/月"
+        },
+        {
+          "type": "text",
+          "id": "customizable",
+          "label": "カスタマイズ可否",
+          "default": "○ 個別対応可"
+        },
+        {
+          "type": "text",
+          "id": "target",
+          "label": "推奨対象",
+          "default": "プロ・実業団"
+        },
+        {
+          "type": "header",
+          "content": "7. 特典・サポート"
+        },
+        {
+          "type": "text",
+          "id": "features_heading",
+          "label": "リスト見出し",
+          "default": "含まれるもの"
+        },
+        {
+          "type": "textarea",
+          "id": "features",
+          "label": "特典 (1 行 1 項目)",
+          "default": "個別栄養設計\n月1回の栄養相談\n配送時の体調ヒアリング"
+        },
+        {
+          "type": "header",
+          "content": "8. CTA × 2"
+        },
+        {
+          "type": "text",
+          "id": "cta_primary_label",
+          "label": "Primary CTA ラベル",
+          "default": "このプランで始めてみる"
+        },
+        {
+          "type": "url",
+          "id": "cta_primary_url",
+          "label": "Primary CTA リンク先"
+        },
+        {
+          "type": "text",
+          "id": "cta_secondary_label",
+          "label": "Secondary CTA ラベル",
+          "default": "話を聞いてみる"
+        },
+        {
+          "type": "url",
+          "id": "cta_secondary_url",
+          "label": "Secondary CTA リンク先",
+          "default": "/contact"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAMBOX Subscription Plans",
+      "category": "Plans",
+      "blocks": [
+        { "type": "plan" },
+        { "type": "plan", "settings": { "is_featured": true, "plan_name": "Pro Athlete Plan" } },
+        { "type": "plan" }
+      ]
+    }
+  ]
+}
+{% endschema %}

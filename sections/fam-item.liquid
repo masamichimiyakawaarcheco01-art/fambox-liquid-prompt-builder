@@ -1,6 +1,21 @@
 {% comment %}
+  ╔════════════════════════════════════════════════════════════
+  ║ ⚠ LEGACY SECTION（FAMBOX DS 移行前 / 並存保持）
+  ║ ────────────────────────────────────────────────────────────
+  ║ Status:    旧 TOP 用「商品タイトル（勝負メシ）」エリア
+  ║              ※ CSS class prefix `fsol__*` / id `fsol-` は旧名「fam-solution」
+  ║              の名残（class 名変更は視覚崩壊リスクあり、撤去まで保持）
+  ║ DS 対応:    fambox-bento-grid.liquid Editorial / Standard preset で代替可
+  ║              商品訴求は Image-fill / Glass variant の主役 2x2 で表現
+  ║ 並存理由:    既存 TOP / 旧 LP で参照中、撤去前にページ調整が必要
+  ║ 移行戦略:    Week 5 QA で TOP に fambox-bento-grid を配置 → 段階的縮小
+  ║ DS 完成度:   current.md §7-D（TOP 専用 sections 移行戦略表）参照
+  ║ Status タグ: legacy / pre-DS / pending-migration / class-prefix-legacy
+  ╚════════════════════════════════════════════════════════════
+{% endcomment %}
+{% comment %}
   Section: FAM 商品タイトル（勝負メシ）
-  File: sections/fam-solution.liquid
+  File: sections/fam-item.liquid
 {% endcomment %}
 <div class="fsol" id="fsol-{{ section.id }}">
 <!-- 背景楕円 PC -->

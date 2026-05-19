@@ -1,0 +1,1102 @@
+<!-- ============================================
+     FAMBOX Case Study Section
+     sections/fambox-case-study.liquid
+     Spec: brand/fambox/design-system/components/case-study.md (v0.2)
+     Figma Component Set: 66:91
+     ============================================
+     3 Patterns（spec §レイアウトパターン 準拠 / 1 file に統合）:
+       - tile-grid: カード一覧（一覧ページ / 関連事例）
+       - story:     1 case 詳細（ストーリー形式・縦長記事）
+       - logo-list: ロゴリスト（社会的証明）
+     Figma は 2 variants (tile / story) のみだが、本 Liquid では
+     ロゴリストも追加し spec §レイアウト 3 patterns に完全準拠。
+
+     既存 fam-case-study.liquid との関係:
+       - 旧: ブログ記事テンプレート用の単体 story（hero + 区切り + before/after 等）
+       - 新: tile-grid / logo-list の追加と DS 標準準拠の story を 1 file 内包
+       - 並存方式（Footer と同じ判断）
+
+     トーン規律（spec §トーン規律 準拠）:
+       - ✕「劇的に」「絶対」「保証」「優勝」等の煽り言葉禁止
+       - ✕ 因果断定（「FAMBOX で優勝」）禁止
+       - ✅ 「12 ヶ月の継続で安定」「目に見える変化まで 3 ヶ月」等の事実ベース
+     ============================================ -->
+{%- liquid
+  assign sec_id = 'fambox-case-study-' | append: section.id
+  assign pattern = section.settings.pattern | default: 'tile-grid'
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap');
+
+  /* ============================================
+     RESET
+     ============================================ */
+  #{{ sec_id }},
+  #{{ sec_id }} *,
+  #{{ sec_id }} *::before,
+  #{{ sec_id }} *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ============================================
+     SECTION BASE
+     ============================================ */
+  #{{ sec_id }} {
+    width: 100%;
+    background: {{ section.settings.bg_color }};
+    font-family: var(--font-ja) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  #{{ sec_id }} .cs__inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: var(--space-7) var(--space-3);
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .cs__inner {
+      padding: var(--space-8) var(--space-6);
+    }
+  }
+
+  /* ============================================
+     HEADER（任意・全 pattern 共通）
+     ============================================ */
+  #{{ sec_id }} .cs__header {
+    margin-bottom: 56px;
+    max-width: 720px;
+  }
+  #{{ sec_id }} .cs__eyebrow {
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-body-sm) !important;
+    font-weight: var(--fw-medium) !important;
+    color: var(--color-drive) !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    margin-bottom: var(--space-2) !important;
+    display: block;
+  }
+  #{{ sec_id }} .cs__title {
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-h2) !important;
+    font-weight: var(--fw-semibold) !important;
+    line-height: 1.5 !important;
+    color: var(--color-ink) !important;
+    letter-spacing: normal !important;
+    margin: 0 !important;
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .cs__title {
+      font-size: var(--fs-h2-large) !important;
+    }
+  }
+  #{{ sec_id }} .cs__lead {
+    margin-top: var(--space-2) !important;
+    font-size: var(--fs-body) !important;
+    line-height: 1.75 !important;
+    color: var(--color-sub) !important;
+  }
+
+  /* ============================================
+     PATTERN 1: TILE GRID（カード一覧）
+     ============================================ */
+  #{{ sec_id }} .cs-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .cs-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+    }
+  }
+  @media (min-width: 1024px) {
+    #{{ sec_id }} .cs-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  #{{ sec_id }} .cs-card {
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-1);
+    transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+  #{{ sec_id }} .cs-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-4);
+  }
+  #{{ sec_id }} .cs-card__image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-tertiary);
+    object-fit: cover;
+    display: block;
+  }
+  #{{ sec_id }} .cs-card__image-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, var(--bg-tertiary), var(--border-base));
+    display: block;
+  }
+  #{{ sec_id }} .cs-card__body {
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1-5);
+    flex: 1;
+  }
+  #{{ sec_id }} .cs-card__meta {
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-caption) !important;
+    color: var(--color-caption) !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+  }
+  #{{ sec_id }} .cs-card__name {
+    font-family: var(--font-ja) !important;
+    font-size: var(--fs-body-lg) !important;
+    font-weight: var(--fw-semibold) !important;
+    line-height: 1.5 !important;
+    color: var(--color-ink) !important;
+    margin: 0 !important;
+    letter-spacing: normal !important;
+  }
+  #{{ sec_id }} .cs-card__summary {
+    font-size: var(--fs-body-sm) !important;
+    line-height: 1.7 !important;
+    color: var(--color-sub) !important;
+    margin: 0 !important;
+    /* 3 行で省略（任意） */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+
+  /* Big Stat（カード内 / spec §BigStat） */
+  #{{ sec_id }} .cs-card__stat {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    margin-top: auto;
+    padding-top: var(--space-1-5);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  #{{ sec_id }} .cs-card__stat-value {
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-h2) !important;
+    font-weight: var(--fw-bold) !important;
+    line-height: 1 !important;
+    color: var(--color-drive) !important;
+    letter-spacing: -0.01em !important;
+  }
+  #{{ sec_id }} .cs-card__stat-unit {
+    font-size: var(--fs-body-sm) !important;
+    color: var(--color-sub) !important;
+    font-weight: var(--fw-medium) !important;
+  }
+  #{{ sec_id }} .cs-card__stat-label {
+    font-size: var(--fs-caption) !important;
+    color: var(--color-sub) !important;
+    margin-left: auto;
+  }
+
+  /* ============================================
+     PATTERN 2: STORY（1 case 詳細）
+     ============================================ */
+  #{{ sec_id }} .cs-story {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  #{{ sec_id }} .cs-story__hero {
+    position: relative;
+    margin-bottom: var(--space-5);
+  }
+  #{{ sec_id }} .cs-story__hero-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    display: block;
+    background: var(--bg-tertiary);
+  }
+  #{{ sec_id }} .cs-story__hero-text {
+    margin-top: var(--space-4);
+  }
+  #{{ sec_id }} .cs-story__hero-meta {
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-caption) !important;
+    color: var(--color-drive) !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    margin-bottom: var(--space-1-5) !important;
+    display: block;
+  }
+  #{{ sec_id }} .cs-story__hero-title {
+    font-size: var(--fs-h2) !important;
+    font-weight: var(--fw-semibold) !important;
+    line-height: 1.4 !important;
+    color: var(--color-ink) !important;
+    margin: 0 !important;
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .cs-story__hero-title {
+      font-size: var(--fs-h1) !important;
+    }
+  }
+  #{{ sec_id }} .cs-story__hero-subtitle {
+    margin-top: var(--space-2) !important;
+    font-size: var(--fs-body-lg) !important;
+    line-height: 1.75 !important;
+    color: var(--color-sub) !important;
+  }
+
+  /* Before / After */
+  #{{ sec_id }} .cs-story__ba {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    padding: var(--space-4);
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .cs-story__ba {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-5);
+      padding: var(--space-5);
+    }
+  }
+  #{{ sec_id }} .cs-story__ba-heading {
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-body-sm) !important;
+    font-weight: var(--fw-semibold) !important;
+    color: var(--color-drive) !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    margin-bottom: var(--space-1-5) !important;
+    display: block;
+  }
+  #{{ sec_id }} .cs-story__ba-title {
+    font-size: var(--fs-h4) !important;
+    font-weight: var(--fw-semibold) !important;
+    line-height: 1.5 !important;
+    color: var(--color-ink) !important;
+    margin: 0 0 16px 0 !important;
+  }
+  #{{ sec_id }} .cs-story__ba-text {
+    font-size: var(--fs-body-md) !important;
+    line-height: 1.85 !important;
+    color: var(--color-ink) !important;
+    margin: 0 !important;
+  }
+
+  /* Stat row（BigStat 配置） */
+  #{{ sec_id }} .cs-story__stat {
+    text-align: center;
+    margin: 48px 0;
+    padding: var(--space-5) var(--space-3);
+    background: var(--color-ink);
+    border-radius: var(--radius-md);
+    color: var(--color-white);
+  }
+  #{{ sec_id }} .cs-story__stat-value {
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-hero) !important;
+    font-weight: var(--fw-bold) !important;
+    line-height: 1 !important;
+    color: var(--color-drive) !important;
+    letter-spacing: -0.01em !important;
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .cs-story__stat-value {
+      font-size: var(--fs-mega) !important;
+    }
+  }
+  #{{ sec_id }} .cs-story__stat-unit {
+    font-size: 0.4em !important;
+    font-weight: var(--fw-medium) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+  #{{ sec_id }} .cs-story__stat-label {
+    margin-top: var(--space-2) !important;
+    font-size: var(--fs-body) !important;
+    line-height: 1.6 !important;
+    color: var(--color-white) !important;
+  }
+  #{{ sec_id }} .cs-story__stat-period {
+    margin-top: var(--space-1) !important;
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-caption) !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    letter-spacing: 0.04em !important;
+  }
+
+  /* Strategy（食事戦略のポイント） */
+  #{{ sec_id }} .cs-story__strategy {
+    margin-bottom: var(--space-5);
+  }
+  #{{ sec_id }} .cs-story__section-heading {
+    font-size: var(--fs-h3) !important;
+    font-weight: var(--fw-semibold) !important;
+    line-height: 1.5 !important;
+    color: var(--color-ink) !important;
+    margin: 0 0 24px 0 !important;
+  }
+  #{{ sec_id }} .cs-story__strategy-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  #{{ sec_id }} .cs-story__strategy-item {
+    padding-left: var(--space-3);
+    position: relative;
+    font-size: var(--fs-body-md) !important;
+    line-height: 1.85 !important;
+    color: var(--color-ink) !important;
+  }
+  #{{ sec_id }} .cs-story__strategy-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 12px;
+    height: 2px;
+    background: var(--color-drive);
+  }
+
+  /* Quote（推薦コメント） */
+  #{{ sec_id }} .cs-story__quote {
+    margin: 48px 0;
+    padding: var(--space-4-5);
+    background: var(--color-white);
+    border-left: 4px solid var(--color-drive);
+    border-radius: 0 8px 8px 0;
+  }
+  #{{ sec_id }} .cs-story__quote-text {
+    font-size: var(--fs-body-lg) !important;
+    line-height: 1.85 !important;
+    color: var(--color-ink) !important;
+    margin: 0 0 24px 0 !important;
+    quotes: '「' '」';
+  }
+  #{{ sec_id }} .cs-story__quote-text::before { content: open-quote; }
+  #{{ sec_id }} .cs-story__quote-text::after { content: close-quote; }
+  #{{ sec_id }} .cs-story__quote-cite {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    font-style: normal;
+    font-size: var(--fs-body-sm) !important;
+    color: var(--color-sub) !important;
+  }
+  #{{ sec_id }} .cs-story__quote-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-placeholder);
+    flex-shrink: 0;
+    object-fit: cover;
+    overflow: hidden;
+  }
+  #{{ sec_id }} .cs-story__quote-name {
+    font-weight: var(--fw-semibold) !important;
+    color: var(--color-ink) !important;
+  }
+
+  /* CTA */
+  #{{ sec_id }} .cs-story__cta {
+    margin-top: var(--space-5);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: center;
+  }
+  #{{ sec_id }} .cs-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-sm);
+    font-weight: var(--fw-semibold) !important;
+    font-size: var(--fs-body-md) !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+    cursor: pointer;
+  }
+  #{{ sec_id }} .cs-btn--primary {
+    background: var(--color-drive);
+    color: var(--color-white) !important;
+    border: 1px solid var(--color-drive);
+  }
+  #{{ sec_id }} .cs-btn--primary:hover {
+    background: var(--color-drive-hover);
+    border-color: var(--color-drive-hover);
+  }
+  #{{ sec_id }} .cs-btn--ghost {
+    background: transparent;
+    color: var(--color-ink) !important;
+    border: 1px solid rgba(27, 29, 26, 0.2);
+  }
+  #{{ sec_id }} .cs-btn--ghost:hover {
+    border-color: var(--color-ink);
+    background: rgba(27, 29, 26, 0.04);
+  }
+
+  /* ============================================
+     PATTERN 3: LOGO LIST（社会的証明）
+     ============================================ */
+  #{{ sec_id }} .cs-logos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 24px;
+    align-items: center;
+    justify-items: center;
+  }
+  @media (min-width: 768px) {
+    #{{ sec_id }} .cs-logos {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 48px 32px;
+    }
+  }
+  @media (min-width: 1024px) {
+    #{{ sec_id }} .cs-logos {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  #{{ sec_id }} .cs-logos__item {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: opacity var(--duration-base) var(--ease-out);
+    filter: grayscale(100%);
+  }
+  #{{ sec_id }} .cs-logos__item:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+  }
+  #{{ sec_id }} .cs-logos__item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  #{{ sec_id }} .cs-logos__item-placeholder {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-en) !important;
+    font-size: var(--fs-caption) !important;
+    color: var(--color-caption) !important;
+    letter-spacing: 0.04em !important;
+  }
+
+  /* ============================================
+     prefers-reduced-motion
+     ============================================ */
+  @media (prefers-reduced-motion: reduce) {
+    #{{ sec_id }} .cs-card,
+    #{{ sec_id }} .cs-logos__item,
+    #{{ sec_id }} .cs-btn {
+      transition: none !important;
+    }
+    #{{ sec_id }} .cs-card:hover {
+      transform: none !important;
+    }
+  }
+</style>
+
+<section id="{{ sec_id }}">
+  <div class="cs__inner">
+
+    {%- comment -%} ===== 共通ヘッダー ===== {%- endcomment -%}
+    {%- if section.settings.eyebrow != blank or section.settings.title != blank or section.settings.lead != blank -%}
+      {%- if pattern != 'story' -%}
+        <header class="cs__header">
+          {%- if section.settings.eyebrow != blank -%}
+            <span class="cs__eyebrow">{{ section.settings.eyebrow }}</span>
+          {%- endif -%}
+          {%- if section.settings.title != blank -%}
+            <h2 class="cs__title">{{ section.settings.title | newline_to_br }}</h2>
+          {%- endif -%}
+          {%- if section.settings.lead != blank -%}
+            <p class="cs__lead">{{ section.settings.lead | newline_to_br }}</p>
+          {%- endif -%}
+        </header>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- comment -%} =========================================
+                    PATTERN 1: TILE GRID
+                    ========================================= {%- endcomment -%}
+    {%- if pattern == 'tile-grid' -%}
+      <div class="cs-grid" role="list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'case_card' -%}
+            {%- assign card_tag = 'div' -%}
+            {%- if block.settings.link_url != blank -%}
+              {%- assign card_tag = 'a' -%}
+            {%- endif -%}
+
+            <{{ card_tag }}
+              class="cs-card"
+              role="listitem"
+              {%- if card_tag == 'a' %} href="{{ block.settings.link_url }}"{% endif -%}
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 800 | image_tag:
+                  alt: block.settings.image_alt | default: block.settings.team_name,
+                  loading: 'lazy',
+                  width: 800,
+                  height: 450,
+                  class: 'cs-card__image'
+                }}
+              {%- else -%}
+                <span class="cs-card__image-placeholder">{%- comment -%}not empty{%- endcomment -%}</span>
+              {%- endif -%}
+
+              <div class="cs-card__body">
+                {%- if block.settings.meta != blank -%}
+                  <span class="cs-card__meta">{{ block.settings.meta }}</span>
+                {%- endif -%}
+                {%- if block.settings.team_name != blank -%}
+                  <h3 class="cs-card__name">{{ block.settings.team_name }}</h3>
+                {%- endif -%}
+                {%- if block.settings.summary != blank -%}
+                  <p class="cs-card__summary">{{ block.settings.summary }}</p>
+                {%- endif -%}
+
+                {%- if block.settings.stat_value != blank -%}
+                  <div class="cs-card__stat">
+                    <span class="cs-card__stat-value">{{ block.settings.stat_value }}</span>
+                    {%- if block.settings.stat_unit != blank -%}
+                      <span class="cs-card__stat-unit">{{ block.settings.stat_unit }}</span>
+                    {%- endif -%}
+                    {%- if block.settings.stat_label != blank -%}
+                      <span class="cs-card__stat-label">{{ block.settings.stat_label }}</span>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            </{{ card_tag }}>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+    {%- comment -%} =========================================
+                    PATTERN 2: STORY
+                    ========================================= {%- endcomment -%}
+    {%- elsif pattern == 'story' -%}
+      <article class="cs-story">
+
+        {%- comment -%} Hero {%- endcomment -%}
+        <header class="cs-story__hero">
+          {%- if section.settings.story_hero_image != blank -%}
+            {{ section.settings.story_hero_image | image_url: width: 1600 | image_tag:
+              alt: section.settings.story_image_alt | default: section.settings.story_title,
+              loading: 'eager',
+              width: 1600,
+              height: 900,
+              class: 'cs-story__hero-image'
+            }}
+          {%- endif -%}
+          <div class="cs-story__hero-text">
+            {%- if section.settings.story_meta != blank -%}
+              <span class="cs-story__hero-meta">{{ section.settings.story_meta }}</span>
+            {%- endif -%}
+            {%- if section.settings.story_title != blank -%}
+              <h2 class="cs-story__hero-title">{{ section.settings.story_title | newline_to_br }}</h2>
+            {%- endif -%}
+            {%- if section.settings.story_subtitle != blank -%}
+              <p class="cs-story__hero-subtitle">{{ section.settings.story_subtitle | newline_to_br }}</p>
+            {%- endif -%}
+          </div>
+        </header>
+
+        {%- comment -%} Before / After {%- endcomment -%}
+        {%- if section.settings.before_text != blank or section.settings.after_text != blank -%}
+          <section class="cs-story__ba">
+            {%- if section.settings.before_text != blank -%}
+              <div>
+                <span class="cs-story__ba-heading">BEFORE</span>
+                <h3 class="cs-story__ba-title">{{ section.settings.before_title | default: '導入前の課題' }}</h3>
+                <p class="cs-story__ba-text">{{ section.settings.before_text | newline_to_br }}</p>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.after_text != blank -%}
+              <div>
+                <span class="cs-story__ba-heading">AFTER</span>
+                <h3 class="cs-story__ba-title">{{ section.settings.after_title | default: '導入後の変化' }}</h3>
+                <p class="cs-story__ba-text">{{ section.settings.after_text | newline_to_br }}</p>
+              </div>
+            {%- endif -%}
+          </section>
+        {%- endif -%}
+
+        {%- comment -%} Big Stat {%- endcomment -%}
+        {%- if section.settings.stat_value != blank -%}
+          <div class="cs-story__stat">
+            <span class="cs-story__stat-value">
+              {{ section.settings.stat_value }}{%- if section.settings.stat_unit != blank -%}<span class="cs-story__stat-unit">{{ section.settings.stat_unit }}</span>{%- endif -%}
+            </span>
+            {%- if section.settings.stat_label != blank -%}
+              <p class="cs-story__stat-label">{{ section.settings.stat_label }}</p>
+            {%- endif -%}
+            {%- if section.settings.stat_period != blank -%}
+              <p class="cs-story__stat-period">{{ section.settings.stat_period }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Strategy（戦略ポイント、blocks=strategy_point）{%- endcomment -%}
+        {%- assign strategy_count = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'strategy_point' -%}
+            {%- assign strategy_count = strategy_count | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if strategy_count > 0 -%}
+          <section class="cs-story__strategy">
+            <h3 class="cs-story__section-heading">{{ section.settings.strategy_heading | default: '食事戦略のポイント' }}</h3>
+            <ul class="cs-story__strategy-list">
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'strategy_point' -%}
+                  <li class="cs-story__strategy-item" {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </section>
+        {%- endif -%}
+
+        {%- comment -%} Quote（推薦コメント）{%- endcomment -%}
+        {%- if section.settings.quote_text != blank -%}
+          <blockquote class="cs-story__quote">
+            <p class="cs-story__quote-text">{{ section.settings.quote_text | newline_to_br }}</p>
+            <cite class="cs-story__quote-cite">
+              {%- if section.settings.quote_avatar != blank -%}
+                {{ section.settings.quote_avatar | image_url: width: 160 | image_tag:
+                  alt: section.settings.quote_name,
+                  width: 40,
+                  height: 40,
+                  loading: 'lazy',
+                  class: 'cs-story__quote-avatar'
+                }}
+              {%- else -%}
+                <span class="cs-story__quote-avatar">{%- comment -%}not empty{%- endcomment -%}</span>
+              {%- endif -%}
+              <span>
+                <span class="cs-story__quote-name">{{ section.settings.quote_name }}</span>
+                {%- if section.settings.quote_role != blank %} <span>（{{ section.settings.quote_role }}）</span>{% endif -%}
+              </span>
+            </cite>
+          </blockquote>
+        {%- endif -%}
+
+        {%- comment -%} CTA {%- endcomment -%}
+        {%- if section.settings.cta_primary_label != blank or section.settings.cta_secondary_label != blank -%}
+          <div class="cs-story__cta">
+            {%- if section.settings.cta_primary_label != blank -%}
+              <a href="{{ section.settings.cta_primary_url | default: '#' }}" class="cs-btn cs-btn--primary">{{ section.settings.cta_primary_label }}</a>
+            {%- endif -%}
+            {%- if section.settings.cta_secondary_label != blank -%}
+              <a href="{{ section.settings.cta_secondary_url | default: '#' }}" class="cs-btn cs-btn--ghost">{{ section.settings.cta_secondary_label }}</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+      </article>
+
+    {%- comment -%} =========================================
+                    PATTERN 3: LOGO LIST
+                    ========================================= {%- endcomment -%}
+    {%- elsif pattern == 'logo-list' -%}
+      <ul class="cs-logos">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'logo_item' -%}
+            <li class="cs-logos__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.logo != blank -%}
+                {{ block.settings.logo | image_url: width: 400 | image_tag:
+                  alt: block.settings.team_name,
+                  loading: 'lazy',
+                  width: 200,
+                  height: 80
+                }}
+              {%- else -%}
+                <span class="cs-logos__item-placeholder">{{ block.settings.team_name }}</span>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Case Study セクション",
+  "tag": "section",
+  "class": "fambox-case-study-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Pattern"
+    },
+    {
+      "type": "select",
+      "id": "pattern",
+      "label": "レイアウトパターン",
+      "options": [
+        { "value": "tile-grid", "label": "Tile Grid（カード一覧・関連事例）" },
+        { "value": "story",     "label": "Story（1 case 詳細・縦長記事）" },
+        { "value": "logo-list", "label": "Logo List（社会的証明）" }
+      ],
+      "default": "tile-grid"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景色",
+      "default": "var(--bg-secondary)"
+    },
+    {
+      "type": "header",
+      "content": "── 共通ヘッダー（Tile Grid / Logo List）──"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "CASE STUDY"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "タイトル",
+      "default": "導入チームの取り組み"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "リード文（任意）",
+      "info": "煽り表現「劇的」「絶対」「保証」は禁止（spec §トーン規律）"
+    },
+    {
+      "type": "header",
+      "content": "── Story（1 case 詳細）──"
+    },
+    {
+      "type": "image_picker",
+      "id": "story_hero_image",
+      "label": "Hero 画像（16:9 推奨）"
+    },
+    {
+      "type": "text",
+      "id": "story_image_alt",
+      "label": "Hero 画像 alt（具体的に）",
+      "default": "練習後の食事を取る選手たち"
+    },
+    {
+      "type": "text",
+      "id": "story_meta",
+      "label": "Story メタ（CASE STUDY 等）",
+      "default": "CASE STUDY"
+    },
+    {
+      "type": "textarea",
+      "id": "story_title",
+      "label": "Story タイトル",
+      "default": "12 ヶ月の食事改革"
+    },
+    {
+      "type": "textarea",
+      "id": "story_subtitle",
+      "label": "サブタイトル",
+      "default": "○○高校サッカー部"
+    },
+    {
+      "type": "header",
+      "content": "── Before / After ──"
+    },
+    {
+      "type": "text",
+      "id": "before_title",
+      "label": "Before 見出し",
+      "default": "導入前の課題"
+    },
+    {
+      "type": "textarea",
+      "id": "before_text",
+      "label": "Before 本文",
+      "default": "シーズン終盤に集中力が落ち、練習後の回復が遅れる選手が増えていた。"
+    },
+    {
+      "type": "text",
+      "id": "after_title",
+      "label": "After 見出し",
+      "default": "導入後の変化"
+    },
+    {
+      "type": "textarea",
+      "id": "after_text",
+      "label": "After 本文",
+      "default": "12 ヶ月の継続でコンディションが安定し、シーズン後半でも練習強度を維持できるようになった。"
+    },
+    {
+      "type": "header",
+      "content": "── Big Stat（Story 内 / 任意）──"
+    },
+    {
+      "type": "text",
+      "id": "stat_value",
+      "label": "数値",
+      "default": "-3.2"
+    },
+    {
+      "type": "text",
+      "id": "stat_unit",
+      "label": "単位",
+      "default": "kg"
+    },
+    {
+      "type": "text",
+      "id": "stat_label",
+      "label": "ラベル",
+      "default": "3 ヶ月で平均減量"
+    },
+    {
+      "type": "text",
+      "id": "stat_period",
+      "label": "期間",
+      "default": "2026 Q1"
+    },
+    {
+      "type": "header",
+      "content": "── 食事戦略のポイント ──"
+    },
+    {
+      "type": "text",
+      "id": "strategy_heading",
+      "label": "見出し",
+      "default": "食事戦略のポイント"
+    },
+    {
+      "type": "header",
+      "content": "── 推薦コメント（任意）──"
+    },
+    {
+      "type": "textarea",
+      "id": "quote_text",
+      "label": "コメント本文",
+      "default": "FAMBOX を導入してから、チーム全体の食事が一定の質で揃うようになった。"
+    },
+    {
+      "type": "image_picker",
+      "id": "quote_avatar",
+      "label": "話者の Avatar（任意）"
+    },
+    {
+      "type": "text",
+      "id": "quote_name",
+      "label": "話者名",
+      "default": "○○ 監督"
+    },
+    {
+      "type": "text",
+      "id": "quote_role",
+      "label": "話者の役職・所属",
+      "default": "○○高校サッカー部"
+    },
+    {
+      "type": "header",
+      "content": "── CTA（Story 用 / 任意）──"
+    },
+    {
+      "type": "text",
+      "id": "cta_primary_label",
+      "label": "Primary ボタン文言",
+      "default": "話を聞いてみる"
+    },
+    {
+      "type": "url",
+      "id": "cta_primary_url",
+      "label": "Primary ボタン URL"
+    },
+    {
+      "type": "text",
+      "id": "cta_secondary_label",
+      "label": "Secondary ボタン文言",
+      "default": "他の事例を見る"
+    },
+    {
+      "type": "url",
+      "id": "cta_secondary_url",
+      "label": "Secondary ボタン URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "case_card",
+      "name": "Case カード（Tile Grid 用）",
+      "limit": 12,
+      "settings": [
+        { "type": "image_picker", "id": "image",      "label": "カード画像（16:9）" },
+        { "type": "text",         "id": "image_alt",  "label": "画像 alt（具体的に）", "default": "練習後の食事を取る選手たち" },
+        { "type": "text",         "id": "meta",       "label": "メタ（例: SOCCER / 12 MONTHS）", "default": "SOCCER · 12 MONTHS" },
+        { "type": "text",         "id": "team_name",  "label": "チーム名", "default": "○○高校サッカー部" },
+        { "type": "textarea",     "id": "summary",    "label": "サマリ（3 行で省略）", "default": "12 ヶ月の継続でシーズン後半でも練習強度を維持できるようになった事例。" },
+        { "type": "text",         "id": "stat_value", "label": "Stat 数値", "default": "-3.2" },
+        { "type": "text",         "id": "stat_unit",  "label": "Stat 単位", "default": "kg" },
+        { "type": "text",         "id": "stat_label", "label": "Stat ラベル", "default": "3 ヶ月平均" },
+        { "type": "url",          "id": "link_url",   "label": "詳細ページ URL（カード全体がリンクに）" }
+      ]
+    },
+    {
+      "type": "strategy_point",
+      "name": "戦略ポイント（Story 用）",
+      "limit": 10,
+      "settings": [
+        { "type": "text", "id": "text", "label": "ポイント本文", "default": "練習日のタンパク質を体重 × 1.6g/kg まで増やした" }
+      ]
+    },
+    {
+      "type": "logo_item",
+      "name": "ロゴ（Logo List 用）",
+      "limit": 30,
+      "settings": [
+        { "type": "image_picker", "id": "logo",      "label": "ロゴ画像（透過 PNG / SVG 推奨）" },
+        { "type": "text",         "id": "team_name", "label": "チーム名（alt / placeholder）", "default": "Team Name" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Case Study — Tile Grid（カード一覧）",
+      "settings": {
+        "pattern": "tile-grid",
+        "bg_color": "var(--bg-secondary)",
+        "eyebrow": "CASE STUDIES",
+        "title": "導入チームの取り組み",
+        "lead": "競技も規模も違うチームでも、共通するのは「継続」と「データ」。それぞれの取り組みを紹介します。"
+      },
+      "blocks": [
+        {
+          "type": "case_card",
+          "settings": {
+            "meta": "SOCCER · 12 MONTHS",
+            "team_name": "○○高校サッカー部",
+            "summary": "シーズン終盤の集中力低下を課題に、12 ヶ月かけて食事を整え、後半戦の練習強度を維持できるようになった。",
+            "stat_value": "-3.2",
+            "stat_unit": "kg",
+            "stat_label": "3 ヶ月平均"
+          }
+        },
+        {
+          "type": "case_card",
+          "settings": {
+            "meta": "RUGBY · 8 MONTHS",
+            "team_name": "△△大学ラグビー部",
+            "summary": "増量シーズンに合わせ、タンパク質と糖質のバランスを再設計。筋量増加と疲労回復の両立を目指した取り組み。",
+            "stat_value": "+5.4",
+            "stat_unit": "kg",
+            "stat_label": "3 ヶ月平均（筋量）"
+          }
+        },
+        {
+          "type": "case_card",
+          "settings": {
+            "meta": "BASKETBALL · 6 MONTHS",
+            "team_name": "□□中学バスケットボール部",
+            "summary": "成長期の選手向けに、保護者と協力したメニュー設計。家庭での食事と試合期の補食を整理した。",
+            "stat_value": "84",
+            "stat_unit": "%",
+            "stat_label": "継続率"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Case Study — Story（1 case 詳細）",
+      "settings": {
+        "pattern": "story",
+        "bg_color": "var(--bg-secondary)",
+        "story_meta": "CASE STUDY",
+        "story_title": "12 ヶ月の食事改革",
+        "story_subtitle": "○○高校サッカー部",
+        "before_title": "導入前の課題",
+        "before_text": "シーズン終盤に集中力が落ち、練習後の回復が遅れる選手が増えていた。栄養士の不在で、家庭まかせの食事内容にばらつきがあった。",
+        "after_title": "導入後の変化",
+        "after_text": "12 ヶ月の継続でコンディションが安定し、シーズン後半でも練習強度を維持できるようになった。選手の自発的な食事意識も育った。",
+        "stat_value": "-3.2",
+        "stat_unit": "kg",
+        "stat_label": "3 ヶ月で平均減量（体脂肪）",
+        "stat_period": "2026 Q1",
+        "strategy_heading": "食事戦略のポイント",
+        "quote_text": "FAMBOX を導入してから、チーム全体の食事が一定の質で揃うようになった。何を食べさせるかを毎日悩む必要がなくなったのが大きい。",
+        "quote_name": "○○ 監督",
+        "quote_role": "○○高校サッカー部",
+        "cta_primary_label": "話を聞いてみる",
+        "cta_primary_url": "/pages/contact",
+        "cta_secondary_label": "他の事例を見る",
+        "cta_secondary_url": "/pages/case-studies"
+      },
+      "blocks": [
+        { "type": "strategy_point", "settings": { "text": "練習日のタンパク質を体重 × 1.6g/kg まで増やした" } },
+        { "type": "strategy_point", "settings": { "text": "試合前 24 時間は糖質中心に切り替え、消化負荷を最小化" } },
+        { "type": "strategy_point", "settings": { "text": "練習後 30 分以内の補食を全選手で習慣化" } }
+      ]
+    },
+    {
+      "name": "Case Study — Logo List（社会的証明）",
+      "settings": {
+        "pattern": "logo-list",
+        "bg_color": "#ffffff",
+        "eyebrow": "TRUSTED BY",
+        "title": "導入チーム",
+        "lead": ""
+      },
+      "blocks": [
+        { "type": "logo_item", "settings": { "team_name": "Soccer Club A" } },
+        { "type": "logo_item", "settings": { "team_name": "Rugby Club B" } },
+        { "type": "logo_item", "settings": { "team_name": "Basketball Team C" } },
+        { "type": "logo_item", "settings": { "team_name": "Athletic Club D" } },
+        { "type": "logo_item", "settings": { "team_name": "Cycling Team E" } },
+        { "type": "logo_item", "settings": { "team_name": "Triathlon Club F" } },
+        { "type": "logo_item", "settings": { "team_name": "Swimming Club G" } },
+        { "type": "logo_item", "settings": { "team_name": "Track & Field H" } },
+        { "type": "logo_item", "settings": { "team_name": "Volleyball Club I" } },
+        { "type": "logo_item", "settings": { "team_name": "Tennis Club J" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
