@@ -27,7 +27,7 @@
      ============================================ */
   #{{ sec_id }} {
     position: relative;
-    z-index: 1;
+    z-index: 1; /* layer */
     width: 100%;
     background: {{ section.settings.bg_color }} !important;
     overflow: visible;
@@ -41,7 +41,7 @@
   #{{ sec_id }} .ap__particles {
     position: absolute;
     inset: 0;
-    z-index: 0;
+    z-index: 0; /* layer */
     pointer-events: none;
     overflow: hidden;
   }
@@ -67,7 +67,7 @@
     margin: 0 auto;
     padding: 120px 64px;
     position: relative;
-    z-index: 2;
+    z-index: 2; /* layer */
   }
 
   /* ============================================
@@ -343,7 +343,7 @@
   }
   #{{ sec_id }} .ap__card-cta-text {
     position: relative;
-    z-index: 1;
+    z-index: 1; /* layer */
   }
   #{{ sec_id }} .ap__card-cta-arrow {
     position: absolute;
@@ -485,7 +485,7 @@
           <button class="ap__tab{% if forloop.first %} ap__tab--active{% endif %}" data-tab="{{ block.settings.tab_key }}" {{ block.shopify_attributes }}>
             <div class="ap__tab-avatar">
               {%- if block.settings.tab_image != blank -%}
-                {{ block.settings.tab_image | image_url: width: 96 | image_tag: alt: block.settings.tab_main }}
+                {{ block.settings.tab_image | image_url: width: 1200 | image_tag: alt: block.settings.tab_main }}
               {%- else -%}
                 <div style="width:100%;height:100%;border-radius:50%;background:{% if forloop.first %}#FB4C15{% else %}rgba(255,255,255,0.3){% endif %};display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;">{%- comment -%}not empty{%- endcomment -%}</div>
               {%- endif -%}
@@ -519,7 +519,7 @@
                     <div class="ap__card" {{ card_block.shopify_attributes }}>
                       <div class="ap__card-img">
                         {%- if card_block.settings.card_image != blank -%}
-                          {{ card_block.settings.card_image | image_url: width: 608 | image_tag: alt: card_block.settings.plan_name }}
+                          {{ card_block.settings.card_image | image_url: width: 1200 | image_tag: alt: card_block.settings.plan_name }}
                         {%- else -%}
                           <div class="ap__card-img-placeholder">320 × 320</div>
                         {%- endif -%}

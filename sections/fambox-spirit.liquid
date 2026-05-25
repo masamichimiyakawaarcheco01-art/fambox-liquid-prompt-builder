@@ -26,7 +26,7 @@
   #{{ sec_id }} .spirit-bg {
     position: absolute;
     inset: 0;
-    z-index: 0;
+    z-index: 0; /* layer */
     pointer-events: none;
   }
   #{{ sec_id }} .spirit-bg::before {
@@ -48,7 +48,7 @@
     transform: translate(-50%, -50%);
     width: 0;
     height: 0;
-    z-index: 3;
+    z-index: 3; /* layer */
     pointer-events: none;
   }
   #{{ sec_id }} .spirit-heartbeat__core {
@@ -137,7 +137,7 @@
      ============================================= */
   #{{ sec_id }} .spirit-section-title {
     position: relative;
-    z-index: 5;
+    z-index: 5; /* layer */
     max-width: 1440px;
     width: 100%;
     margin: 0 auto;
@@ -160,7 +160,7 @@
      ============================================= */
   #{{ sec_id }} .spirit-header {
     position: relative;
-    z-index: 5;
+    z-index: 5; /* layer */
     text-align: center;
     margin-bottom: 56px;
   }
@@ -189,7 +189,7 @@
      ============================================= */
   #{{ sec_id }} .spirit-carousel {
     position: relative;
-    z-index: 5;
+    z-index: 5; /* layer */
     width: 100%;
     height: 520px;
     perspective: 1200px;
@@ -258,7 +258,7 @@
 
   /* CENTER card */
   #{{ sec_id }} .spirit-card[data-pos="0"] {
-    z-index: 10;
+    z-index: 10; /* layer */
     opacity: 1;
     filter: blur(0);
     box-shadow: 0 40px 80px -20px rgba(0,0,0,0.4);
@@ -268,7 +268,7 @@
   /* +/-1 */
   #{{ sec_id }} .spirit-card[data-pos="1"],
   #{{ sec_id }} .spirit-card[data-pos="-1"] {
-    z-index: 8;
+    z-index: 8; /* layer */
     opacity: 0.5;
     filter: blur(0);
     box-shadow: none;
@@ -278,7 +278,7 @@
   /* +/-2 */
   #{{ sec_id }} .spirit-card[data-pos="2"],
   #{{ sec_id }} .spirit-card[data-pos="-2"] {
-    z-index: 6;
+    z-index: 6; /* layer */
     opacity: 0.2;
     filter: blur(0);
     box-shadow: none;
@@ -288,7 +288,7 @@
   /* +/-3: fade out */
   #{{ sec_id }} .spirit-card[data-pos="3"],
   #{{ sec_id }} .spirit-card[data-pos="-3"] {
-    z-index: 4;
+    z-index: 4; /* layer */
     opacity: 0;
     filter: blur(0);
     box-shadow: none;
@@ -301,7 +301,7 @@
      ============================================= */
   #{{ sec_id }} .spirit-card__content {
     position: relative;
-    z-index: 2;
+    z-index: 2; /* layer */
     padding: 36px 32px;
   }
   #{{ sec_id }} .spirit-card__index {
@@ -352,7 +352,7 @@
      ============================================= */
   #{{ sec_id }} .spirit-dots {
     position: relative;
-    z-index: 5;
+    z-index: 5; /* layer */
     display: flex !important;
     gap: 10px;
     margin-top: 24px;
@@ -465,7 +465,7 @@
             </div>
             <div class="spirit-card__image">
               {%- if block.settings.card_image != blank -%}
-                {{ block.settings.card_image | image_url: width: 680 | image_tag }}
+                {{ block.settings.card_image | image_url: width: 1200 | image_tag }}
               {%- else -%}
                 <div class="spirit-card__image-placeholder">IMAGE</div>
               {%- endif -%}

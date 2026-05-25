@@ -244,7 +244,7 @@
             {%- if section.settings.left_icon_svg != blank -%}
               {{ section.settings.left_icon_svg }}
             {%- elsif section.settings.left_icon != blank -%}
-              {{ section.settings.left_icon | image_url: width: 224 | image_tag: alt: section.settings.left_label }}
+              {{ section.settings.left_icon | image_url: width: 1200 | image_tag: alt: section.settings.left_label }}
             {%- else -%}
               <svg viewBox="0 0 112 112" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="112" height="112" rx="8" fill="#ccc"/>
@@ -272,7 +272,7 @@
             {%- if section.settings.right_icon_svg != blank -%}
               {{ section.settings.right_icon_svg }}
             {%- elsif section.settings.right_icon != blank -%}
-              {{ section.settings.right_icon | image_url: width: 224 | image_tag: alt: section.settings.right_label }}
+              {{ section.settings.right_icon | image_url: width: 1200 | image_tag: alt: section.settings.right_label }}
             {%- else -%}
               <svg viewBox="0 0 112 112" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="112" height="112" rx="8" fill="#ccc"/>

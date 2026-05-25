@@ -81,14 +81,20 @@
 
   /* ============================================
      SCROLL TRACK: flex row
-     1440px時: 左64px + 320×4 + 32×3 = 1440px（右余白0px）
-     1440px以上: 左余白を中央寄せ+64pxで調整
+     padding-leftは左余白／右余白は ::after で確保
+     （Chrome/Safariは overflow-x flexの padding-right をスクロールに含めない既知挙動）
      ============================================ */
   #{{ sec_id }} .faq__scroll-track {
     display: flex;
     gap: 32px;
     padding-left: max(64px, calc((100% - 1440px) / 2 + 64px));
-    padding-right: max(0px, calc((100% - 1440px) / 2));
+  }
+  /* 右側スペーサー: スクロール終端にも左と同等の余白 */
+  #{{ sec_id }} .faq__scroll-track::after {
+    content: '';
+    flex: 0 0 max(64px, calc((100% - 1440px) / 2 + 64px));
+    height: 1px;
+    align-self: stretch;
   }
 
   /* ============================================
@@ -212,14 +218,14 @@
     }
     #{{ sec_id }} .faq__scroll-track {
       padding-left: 24px;
-      padding-right: 0;
+      padding-right: 24px;
     }
     /* 最後のカードが左寄せスナップできるよう右側にダミースペース */
     #{{ sec_id }} .faq__scroll-track::after {
       content: '';
       flex: 0 0 1px;
       width: 1px;
-      padding-right: calc(100vw - (100vw - 96px) - 32px - 1px);
+      padding-right: calc(100vw - (100vw - 96px) - 32px - 24px - 1px);
     }
 
     /* カード: スナップ＋チラ見え */
@@ -263,7 +269,7 @@
               <!-- ユーザ画像 40×40 -->
               <div class="faq__avatar">
                 {%- if block.settings.avatar != blank -%}
-                  {{ block.settings.avatar | image_url: width: 160 | image_tag:
+                  {{ block.settings.avatar | image_url: width: 1200 | image_tag:
                     alt: '',
                     width: 40,
                     height: 40,
@@ -291,7 +297,7 @@
                 {%- if section.settings.logo_svg != blank -%}
                   {{ section.settings.logo_svg }}
                 {%- elsif section.settings.logo_image != blank -%}
-                  {{ section.settings.logo_image | image_url: width: 200 | image_tag:
+                  {{ section.settings.logo_image | image_url: width: 1200 | image_tag:
                     alt: 'FAMBOX',
                     loading: 'lazy'
                   }}
@@ -400,6 +406,14 @@
           "type": "faq_item",
           "settings": {
             "q_number": "Question 3",
+            "question": "定期便の解約方法について教えてください。",
+            "answer": "定期便購入後にお届けするメールから「定期便の管理はこちら」をクリックし、ページ下部の「定期購入を解約」を押すと解約が完了します。"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "q_number": "Question 4",
             "question": "アレルギー対応はしていますか？",
             "answer": "主要なアレルゲンについてはメニューごとに表示しています。個別のご相談も承っておりますのでお気軽にお問い合わせください。"
           }
@@ -407,7 +421,7 @@
         {
           "type": "faq_item",
           "settings": {
-            "q_number": "Question 4",
+            "q_number": "Question 5",
             "question": "配送エリアに制限はありますか？",
             "answer": "全国配送に対応しています。冷凍便でお届けするため、届いたらそのまま冷凍庫で保管いただけます。"
           }

@@ -54,7 +54,7 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
-    z-index: 2;
+    z-index: 2; /* layer */
   }
 
   /* ============================================
@@ -95,7 +95,7 @@
     transform: translate(-50%, -50%);
     width: 320px;
     height: 320px;
-    z-index: 5;
+    z-index: 5; /* layer */
     pointer-events: none;
   }
   #{{ sec_id }} .sub__center-img img {
@@ -215,7 +215,7 @@
   }
   #{{ sec_id }} .sub__cta-text {
     position: relative;
-    z-index: 1;
+    z-index: 1; /* layer */
   }
   #{{ sec_id }} .sub__cta-arrow {
     position: absolute;
@@ -372,7 +372,7 @@
        ======================================== -->
   {%- if section.settings.center_image != blank -%}
     <div class="sub__center-img">
-      {{ section.settings.center_image | image_url: width: 640 | image_tag:
+      {{ section.settings.center_image | image_url: width: 1200 | image_tag:
         alt: '',
         width: 320,
         height: 320,

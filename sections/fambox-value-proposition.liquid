@@ -91,6 +91,8 @@
 
   /* ============================================
      SCROLL TRACK: flex row
+     padding-leftは左余白／右余白は ::after で確保
+     （Chrome/Safariは overflow-x flexの padding-right をスクロールに含めない既知挙動）
      ============================================ */
   #{{ sec_id }} .vp__scroll-track {
     display: flex;
@@ -98,7 +100,12 @@
     height: 458px;
     /* 左余白: 1440px以上でもタイトルと揃う */
     padding-left: max(64px, calc((100% - 1440px) / 2 + 64px));
-    padding-right: 64px;
+  }
+  /* 右側スペーサー: スクロール終端にも左と同等の余白 */
+  #{{ sec_id }} .vp__scroll-track::after {
+    content: '';
+    flex: 0 0 max(64px, calc((100% - 1440px) / 2 + 64px));
+    height: 458px;
   }
 
   /* ============================================
@@ -234,7 +241,7 @@
 
   #{{ sec_id }} .vp__card-btn-text {
     position: relative;
-    z-index: 1;
+    z-index: 1; /* layer */
   }
 
   #{{ sec_id }} .vp__card-btn-arrow {
@@ -336,7 +343,7 @@
             <!-- 画像 216×216 -->
             <div class="vp__card-image">
               {%- if block.settings.image != blank -%}
-                {{ block.settings.image | image_url: width: 432 | image_tag:
+                {{ block.settings.image | image_url: width: 1200 | image_tag:
                   alt: block.settings.card_title,
                   width: 216,
                   height: 216,
