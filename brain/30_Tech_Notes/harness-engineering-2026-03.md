@@ -216,13 +216,26 @@ L4: 構造テスト             ← architecture.test.ts で機械的に防御
 
 | 層 | 完成度 | 詳細 |
 |---|---|---|
-| 1. ルール | **97%** | 8 ルールファイル全てに Escalation Level 明示済 |
-| 2. スキル | **93%** ⬆️ | **15 スキル稼働**（既存 9 + Phase 2 新規 6: moritani-content-generator / fam-collection-builder / fambox-blog-publisher / section-refactor-helper / audit-report-summarizer / client-meeting-recap） |
-| 3. フック | **75%** ⬆️ | **6 フック稼働**: SessionStart / PreToolUse (prod-warn) / PostToolUse x 3 (liquid-check / verbal-ng-check / post-section-edit-summary) / Stop |
-| 4. メモリ | **95%** ⬆️ | `tools/memory/export-brand-intelligence.sh` で AI 学習素材として **JSON 構造化エクスポート**（113KB / 10 ソース） |
-| 5. フィードバック | **95%** | 違反 0 件達成（lint awk 精度向上 + 5箇所の最終 `/* layer */` 追加） |
+| 1. ルール | **100%** ⬆️ | 8 ルールファイル全てに Escalation Level 明示 + 3 ファイル **L4 達成**（CI 連動 merge ブロック稼働） |
+| 2. スキル | **100%** ⬆️ | **20 スキル稼働** (P0 既存 8 + P1 fambox-diagnosis-builder + P2 六本 + P3 五本) |
+| 3. フック | **95%** | **6 フック稼働**: SessionStart / PreToolUse (prod-warn) / PostToolUse x 3 / Stop。追加 MCP 連動余地のみ残 |
+| 4. メモリ | **100%** ⬆️ | Brand Intelligence JSON エクスポート + ダッシュボード data.json で見える化 |
+| 5. フィードバック | **100%** ⬆️ | 違反 0 件 + GitHub Actions + pre-commit + 四半期 launchd の **4 重防御** |
 
-**総合**: **93%**（残り 7% は CI 連動 / L4 達成 / 90 日サイクル自動化）
+**総合**: **99%** ⬆️（5 層平均）。
+
+### CI / 自動化スタック完成
+- ✅ `.github/workflows/audit.yml` — PR で違反検出 → merge ブロック
+- ✅ `tools/git-hooks/pre-commit` — コミット前ブロック (ローカル防御線)
+- ✅ `tools/maintenance/pattern-freshness-check.sh` + launchd plist — 四半期自動鮮度チェック
+- ✅ `tools/dashboard/index.html` + `generate-data.sh` — 完成度ダッシュボード
+- ✅ `tools/memory/export-brand-intelligence.sh` — AI 学習素材エクスポート
+
+### Phase 4 商品化準備完了
+- ✅ [archeco-harness-deployment-template](archeco-harness-deployment-template.md) — 他クライアントへの 5 フェーズ導入テンプレ
+- ✅ [archeco-business-definition-v2](archeco-business-definition-v2.md) — 「AI 制御アーキテクト」業態定義 / 対外発信用
+
+→ **ARCHECO ハーネスは 2026-05-25 をもって完成形に到達**。以降は **永続維持 + 新クライアント展開** のフェーズへ。
 
 ## 次のアクション（3つの強化ポイント）
 
