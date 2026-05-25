@@ -5,7 +5,7 @@ brand: fambox
 version: 0.2
 status: current
 alias_of: fambox/design-system/drafts/v0.1.md
-last_updated: 2026-04-27
+last_updated: 2026-05-12
 owner: 宮川
 milestone:
   - 2026-04-20: v0.1 構造定義（10層フレームワーク・111要素マップ）
@@ -16,6 +16,7 @@ milestone:
   - 2026-04-28: v0.2 拡張（§19 Footer L4 Component 確定 / L4 Components 5件 → 6件・全画面共通 Component / Ink 背景固定 + Legal 必須 + CTA なしの誠実設計）
   - 2026-04-28: v0.2 拡張（§20-§21 Bento Tile L3 + Bento Grid L4 確定 / L3 Patterns 2件→3件・L4 Components 6件→7件 / DNA Bento 仕様体系化・5/29 TOPページ主役エリアの Spec 完成）
   - 2026-04-28: v0.2 完成基準到達（§22 Modal L4 + §23 Stat Card L3 確定 / TOPページ実装計画策定 / L7 Naming Convention & Governance v0.2 整備 / L3 Patterns 4件・L4 Components 8件・L7 運用ルール 1件 = v0.2 全要素確定）
+  - 2026-05-12: v0.2 拡張（L7 Operations 2 ルール追加 — audit-first-protocol.md + promotion-rule.md / Marc-Antoine Archeco kit v7.0 知見統合 / L7 運用ルール 1件 → 3件・Contribution Process の Step 0 と Versioning の前段メタルールが揃う）
 ---
 
 # FAMBOX デザインシステム v0.1 — 構築に必要な要素の洗い出し

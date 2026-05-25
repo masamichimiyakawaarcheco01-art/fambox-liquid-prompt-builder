@@ -1,4 +1,4 @@
-# Liquid Prompt Builder v4
+# Liquid Prompt Builder v4.1
 
 ## プロジェクト概要
 
@@ -6,6 +6,8 @@ Shopify Liquidセクションファイルを効率的に生成するためのプ
 FigmaデザインからShopify Liquidコードへの変換作業において、Claudeへの指示プロンプトを構造化・標準化することで、品質の高いLiquidコードを一貫して生成できるようにする。
 
 v4ではFigma MCPからのデザインコンテキスト自動取り込みと、PDCA検証システムを統合。手動入力では捉えきれなかったデザイン詳細（不透明度、グラデーション、ブラー、要素階層）をプロンプトに含めることで、デザイン再現精度を37%→84%に向上させた。
+
+**v4.1（2026-05-21）**: ストリーム A〜C の本日成果を出力プロンプトに統合。`brand/fambox/design-system/bugs.md` 28 エントリ（BUG 13 / DOCTRINE 5 / PROC 10 + PROC-005-A）の規律を `generatePrompt()` STANDARD FOOTER に自動注入。すべての LPB 出力が FAMBOX ブランド規律（Typography 固定・Anti-pattern・Specificity 3 層・Schema 型ガイド・既知の罠回避・Token 実機検証・アセット参照ルール）を自動的に含むようになった。Iconify / LottieFiles MCP + Simple Icons CDN の採用アセットも参照ルールに反映。
 
 ## 対象ユーザー
 

@@ -4,6 +4,191 @@ FAM / FAMBOX ブランドDNA・デザインシステムの全体変更履歴。�
 
 ---
 
+## 2026-05-21（LPB v4 → v4.1 アップデート — bugs.md 規律を出力プロンプトに自動注入）
+
+### 背景
+- 本日完了したストリーム A（bugs.md 統合）/ C（MCP 採用）の成果を Liquid Prompt Builder v4 に統合
+- LPB v4 は Shopify Liquid 生成プロンプトを構造化する主要ツール → bugs.md の規律を STANDARD FOOTER に注入すれば「すべての LPB 出力が自動的に FAMBOX ブランド規律を含む」状態を実現
+- bugs.md PROC-005-A 強化（CLI/MCP コマンド事前検証）も同セッションで実施
+
+### 追加・変更
+- `index.html`（v4 → v4.1 / +3.7 KB / 161 KB）
+  - `<title>`: `Liquid Prompt Builder v4.1 - Figma-Driven PDCA + FAMBOX Discipline` に bump
+  - `generatePrompt()` STANDARD FOOTER（行 1666〜）に **FAMBOX ブランド規律ブロック**を追加
+  - 注入内容:
+    - DOCTRINE-001 Typography 固定（Poppins + Hiragino / Archivo 系禁止）
+    - DOCTRINE-002 ビジュアル Anti-pattern（輪郭歪み・noise-bloom 等）
+    - DOCTRINE-004 CSS Specificity 3 層戦略（inline / `<style>` / 外部 CSS）
+    - DOCTRINE-005 Schema 型選択ガイド（richtext は `<div>` ラップ必須）
+    - BUG-001〜004 既知の罠（inline 優先 / `<p>` ネスト / CDN キャッシュ / テーマ取り違え）
+    - PROC-006 Token 名 grep 実在検証
+    - PROC-009 WF→Liquid サイクル
+    - PROC-010 検証 3 段階（local/curl/DevTools）
+    - アセット参照ルール（Iconify MCP / LottieFiles MCP / Simple Icons CDN / 不採用 5 件）
+  - 詳細参照リンク: `brand/fambox/design-system/bugs.md`
+- `CLAUDE.md`（プロジェクト）: バージョン記述を v4 → v4.1 に bump + v4.1 アップデート要約を追加
+- `brand/INDEX.md` Quick Links に LPB v4.1 行追加
+
+### bugs.md 強化（同日・別事項）
+- `brand/fambox/design-system/bugs.md`（v0.1 → v0.2 / 515 行 → 548 行）
+  - **BUG-013 追加**: CLI / MCP / API コマンド構文の推測 → 存在しないサブコマンドを提示してユーザー時間浪費（`claude mcp reauth` 推測ミスから派生）
+  - **PROC-005-A サブルール追加**: CLI / MCP / API コマンド構文の事前検証必須（`--help` / WebFetch で公式 doc 確認）
+  - 件数: 27 → **28 エントリ**（BUG 13 / DOCTRINE 5 / PROC 10 + PROC-005-A）
+  - **構造的進化**: bugs.md が「ユーザー罠の蓄積」だけでなく「Claude 自身の運用規律」も含むようになった
+
+### 効果
+- **LPB 出力品質の底上げ**: コピペするだけで FAMBOX 規律が自動適用される
+- **個別 LPB 入力負担の軽減**: 各タブで規律を意識して入力する必要が減る（FOOTER が網羅）
+- **Claude 自身の規律強化**: PROC-005-A で CLI コマンド推測ミス再発防止
+
+### 関連
+- 元ファイル: `~/.claude/projects/-Users-archecoinc--Desktop-Claude-1/memory/project_brand_output_expansion.md` ストリーム A・C の派生
+- 連動: `scripts/fambox-new-section`（同日作成）も bugs.md 規律をテンプレ内蔵 → LPB v4.1 と運用方針が一致
+
+---
+
+## 2026-05-21（ストリーム B-1 + C 完了 — fambox-new-section script / MCP 採用 2 件追加）
+
+### 背景
+- `project_brand_output_expansion.md` の 5 ストリームのうち **B-1（fambox-new-section script）と C（MCP 選別 + 採用）の本日分**を完遂
+- A → B-1 → C の 3 ストリーム連続実行で、Marc-Antoine kit v7.14 から得た知見の体系化を加速
+
+### 追加ファイル
+- `scripts/fambox-new-section`（実行可能 / 376 行 / 14 KB）
+  - 引数: `<name> --tier <1|2|3|4> --type <type> [--dry-run]`
+  - audit-first §3 の 5 ステップ自動発火（キーワード抽出 → Spec/Liquid grep → 衝突チェック → A/B/C/D 判定）
+  - 生成物: `brand/fambox/design-system/components/<name>.md` + `projects/fambox/sections/<name>.liquid`
+  - Post-check: PROC-006 Token 名実機 grep 実在検証（`projects/fambox/snippets/fambox-tokens.css.liquid` 参照）
+  - bugs.md DOCTRINE-004 / DOCTRINE-005 / PROC-009 をテンプレに内蔵
+- `scripts/templates/component.md.tmpl`（183 行）— component spec 雛形（WF ゲート / brand_alignment / Token 引用 / Schema 型 / Specificity 戦略 / 検証チェックリスト）
+- `scripts/templates/section.liquid.tmpl`（125 行）— Liquid section 雛形（Specificity 3 層 / richtext は `<div>` ラップ / `#{{ sec_id }}` スコープ）
+- `docs/mcp/adoption-plan.md`（v0.3 / 216+ 行）— MCP 採用 4 / 不採用 5 の判定理由 + 追加コマンド手順 + 進捗ステータス
+
+### 動作確認済
+- スクリプト 3 ケーステスト: A. 流用（既存 card 検出）/ B. 拡張 / C. 新規
+- Token 実在検証: 10/10 トークン実在確認（`--bg-primary` / `--color-ink` / `--font-en` / `--space-2`〜5 等）
+- テストファイル `fambox-test-xyz.{md,liquid}` クリーンアップ完了
+
+### MCP 採用実行（C ストリーム）
+- ✅ **Iconify** (`imjac0b/iconify-mcp-server`): `claude mcp add -s user iconify -- npx -y iconify-mcp-server@latest` → **Connected**
+- ✅ **LottieFiles** (`junmer/mcp-server-lottiefiles`): `claude mcp add -s user lottie -- npx -y mcp-server-lottiefiles` → **Connected**
+- ✅ **Simple Icons**: 専用 MCP 不在のため **CDN 直接利用に変更**（`https://cdn.simpleicons.org/{name}/{hex}` / CC0 1.0 ライセンス）
+- ❌ **不採用 5 件**: Unsplash / Pexels / Brandfetch / Storyset / Mapbox（References discipline 違反 / DNA 汚染リスク）
+
+### 既存接続メンテナンス（残作業）
+- ⚠️ slack / figma / Notion: `claude mcp reauth <name>` で再認証必要
+- ❌ github: `claude mcp remove github && claude mcp add ...` で再追加必要
+
+### 効果
+- **新セクション 1 件あたり 30 分節約**: WF ゲート / audit-first / Token 検証 / Specificity 戦略をスクリプト内蔵
+- **重複生成防止**: audit-first §3 が強制発火 → A. 流用 / B. 拡張判定で既存資産活用
+- **DNA 汚染防止**: MCP 採用 4 件はすべて Brand 汚染リスク低（アイコン形状 / 他社ロゴ / 公式アニメ / 自作素材）
+
+### 次フェーズ
+- 来週: B-2（`fambox-sync-claude-ai` script・1 日）+ ローカル画像参照 MCP 自作着手
+- 6 月: ストリーム E（多出力アーキテクチャ）の `output-adapters/` 雛形作成
+- Q3: ストリーム D（LPB v5 shrink）+ E（adapter 本実装）
+
+### 関連
+- `scripts/fambox-new-section --help` で使用方法表示
+- `docs/mcp/adoption-plan.md` で MCP 運用ルール参照
+- `brand/fambox/design-system/bugs.md` の DOCTRINE / PROC が新規セクション生成時に自動適用される
+
+---
+
+## 2026-05-21（ストリーム A 完了 — bugs.md 統合 / 散在 feedback memory 13 件を構造化）
+
+### 背景
+- `project_brand_output_expansion.md`（2026-05-21 着手）で計画した 5 ストリームのうち、最優先の **ストリーム A：bugs.md 統合** を実行
+- 散在する 13 個の feedback memory（`~/.claude/projects/-Users-archecoinc--Desktop-Claude-1/memory/feedback_*.md`）は次回 Claude が同じ罠を踏まないための知識だが、memory 配下では新セッションで参照されにくいという課題があった
+- design-system 配下に集約することで、session start の Brand sources 宣言（audit-first-protocol.md §7）と同じ経路で読まれる構造に変える
+- Marc-Antoine Lecat（Archeco kit v7.14）の bugs.md 構造を参考に FAMBOX L0-L9 構造へ適応
+
+### 追加ファイル
+- `brand/fambox/design-system/bugs.md`（v0.1 current・515 行・33.4 KB）
+  - **BUG** 12 件（過去に踏んだ罠）: Shopify Liquid 4 / WF→Liquid・Theme 干渉 4 / Tokens・Claude 運用 4
+  - **DOCTRINE** 5 件（strict rule 候補・DNA v1.0 後に `principles/doctrine.md` へ昇格予定）: Typography / Anti-pattern / 資料フォント / Specificity 3 層戦略 / Schema 型選択
+  - **PROCESS** 10 件（運用ルール）: Audit-first / 3 回失敗ルール / 指示遵守 / 検証規律 / 4 点内部レビュー / Token 実機検証 / Reviewer 検証 / `~/.claude/` ワークフロー / WF→Liquid サイクル / Liquid 検証 3 段階
+  - 計 **27 エントリ**を番号付き ID（BUG-XXX / DOCTRINE-XXX / PROC-XXX）で管理
+  - 各エントリに「症状 / 原因 / 検出 / 対処 / 関連 / 出自」の構造化メタデータ
+
+### 既存接続（変更なし・参照link追加のみ）
+- `operations/audit-first-protocol.md` ← PROC-001 が出自記録として参照（昇格済正規ルール）
+- `operations/promotion-rule.md` ← DOCTRINE / PROCESS の昇格判定基準を提供
+- `operations/lastmile-playbook.md` ← CORRECTION-XXX と bugs.md BUG-XXX は別物（前者は AI 生成残 5% 補正、後者は Claude 作業時の罠）と明示
+- `principles/doctrine.md`（未整備・2026-06-30 予定）← DOCTRINE-001〜005 の正式昇格先
+
+### 13 feedback memory の出自記録
+- 13 ファイル全てに末尾追記「→ brand/fambox/design-system/bugs.md ... に統合（2026-05-21・ストリーム A）」を実施
+- **削除はしない**（出自記録として保持）。Memory システムの方針として「memory は point-in-time observation」「方針の原点記録として保持」を踏襲
+
+### 更新ファイル
+- `brand/INDEX.md`（Quick Links に bugs.md 1 行追加 / last_updated を 2026-05-21 に bump）
+- `brand/CHANGELOG.md`（本エントリ）
+- user memory 13 件: feedback_liquid_workflow / feedback_implementation_discipline / feedback_file_verification / feedback_document_font / feedback_claude_config_write / feedback_answer_review / feedback_fam_typography / feedback_existing_asset_first / feedback_fambox_visual_effects / feedback_token_name_verification / feedback_reviewer_hallucination_check / feedback_shopify_liquid_specificity / feedback_design_system_liquid_patterns
+
+### 効果
+- **session start での参照経路**: design-system 配下に集約 → audit-first-protocol.md と同じ経路で読まれる
+- **「変化なし」報告受信時の即応**: BUG-001〜004（Shopify Liquid 罠 4 種）を最優先で確認
+- **新規 Liquid 提案前のチェック**: PROC-001 + PROC-009 + DOCTRINE-001〜005 を確認
+- **Token 引用時**: PROC-006 + BUG-009 を確認
+- **Reviewer 指摘受信時**: PROC-007 + BUG-010 を確認
+
+### 次ストリーム
+- ストリーム B-1：`fambox-new-section` script（半日 / 来週着手予定）
+- ストリーム C：Iconify / Simple Icons / Lottie の MCP 追加（30 分）
+- ストリーム E：`output-adapters/ppt-adapter.md` で DOCTRINE-003（游ゴシック）を正式 Spec 化（6 月予定）
+
+### 関連
+- `~/.claude/projects/-Users-archecoinc--Desktop-Claude-1/memory/project_brand_output_expansion.md` — 5 ストリーム全体計画
+- OKR KR1-1 DNA v1.0（6/30）→ DOCTRINE-001〜005 を `principles/doctrine.md` へ正式昇格（Promotion Event 第 1 号）
+
+---
+
+## 2026-05-12（DS v0.2 拡張 — L7 Operations 2 ルール追加 / Marc-Antoine Archeco kit v7.0 知見統合）
+
+### 背景
+- Archeco kit v7.0 開発者 Marc-Antoine との Slack やり取り（2026-05-08〜2026-05-12）から得た 2 つの暗黙知を FAMBOX L0-L9 構造に適応
+- 知見 1: Audit-first protocol（既存資産棚卸し必須）= Marc kit `06-workflow § 12` 相当
+- 知見 2: Promotion Rule メタ原則「The fact that it's repeatedly needed is the signal that it should be a protocol, not a reminder.」
+- 既存構造を尊重し、空フォルダ `principles/` への提案は DNA v1.0 確定後（2026-06-30）に保留。今回は `operations/` への追加のみ
+
+### 追加ファイル
+- `brand/fambox/design-system/operations/audit-first-protocol.md`（v0.2 confirmed・235 行）
+  - 新規 Component / Pattern / Token / Section 提案前に既存資産を必ず棚卸しするプロトコル
+  - Contribution Process（naming-convention.md §3）の **Step 0** として位置づけ
+  - 4 判定パス（A. 流用 / B. 拡張 / C. 新規 / D. 不採用）と 80% カバー率ルール
+  - Claude 向け Audit-first 実行プロンプトテンプレ + Component sources 宣言テンプレ
+  - 既存 5 つの SSoT 順（Spec → Tokens → Figma → Liquid → ADR → Last-Mile Playbook）を尊重
+- `brand/fambox/design-system/operations/promotion-rule.md`（v0.2 confirmed・232 行）
+  - ad-hoc 指摘 / 指示 / 補正を「いつ」「どこに」昇格させるかの判定基準
+  - 3 段階トリガー（一回 / 同案件 2 回 / 異案件 2 回 or 同案件 3 回）
+  - 既存 Versioning（naming-convention.md §2）の **前段メタルール** として位置づけ
+  - 昇格先マッピング表 + 昇格時チェックリスト + Anti-pattern 5 項目
+  - Last-Mile Playbook CORRECTION-001〜005 の昇格状態を追跡
+
+### 既存接続（変更なし・参照link追加のみ）
+- naming-convention.md §0 SSoT / §2 Versioning / §3 Contribution を相互参照
+- lastmile-playbook.md の Prevention 欄を Promotion Rule の実用ソースとして位置づけ
+- forward-reference `principles/doctrine.md` / `principles/references-policy.md` は「DNA v1.0 確定後（2026-06-30）整備」と明記
+
+### v0.2 状態の更新
+- L7 Operations 運用ルール: 1 件 → **3 件**（naming-convention + audit-first-protocol + promotion-rule）
+- Contribution Process の Step 0（入口検閲）と Versioning の前段（昇格判定）が体系として揃う
+
+### 更新ファイル
+- `brand/INDEX.md`（Quick Links に audit-first-protocol / promotion-rule 2 行追加）
+- `brand/fambox/design-system/current.md`（milestone 行追加 + last_updated bump）
+- `brand/CHANGELOG.md`（本エントリ）
+- user memory: `feedback_fam_typography.md` / `feedback_fambox_visual_effects.md` / `feedback_existing_asset_first.md` に Promotion Rule 連動の追記
+
+### 次フェーズ（DNA v1.0 連動）
+- 6 月末 DNA v1.0 確定時に `principles/doctrine.md` を新設し strict rule を集約
+- feedback memory 3 件の strict rule 部分を doctrine.md に正式昇格（Promotion Event 第 1 号）
+- `principles/references-policy.md` で「色 / フォント引用禁止・エフェクト / モーション / レイアウトのみ可」を確定
+
+---
+
 ## 2026-04-29（DS v0.2.1 patch — Header SP-compact drawer 切替 + Phase 2 実装適用）
 
 ### Header 実装フェーズ着手 + v0.2.1 patch
