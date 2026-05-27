@@ -42,13 +42,15 @@ purpose: Claudeでは生成不可能な「実資産」「一次情報」「宮�
   - v0.2 Library Published（B2-4g）
 - **更新**: 2026-05-27 ステータス反映（Claude）
 
-### M4. 競合ブランド UI キャプチャ集（5社 × 主要3画面）
+### M4. 競合ブランド UI キャプチャ集（5社 × 主要3画面）✅ **完了（2026-05-27）**
 - **なぜ**: POD（L2-6）と DS トーン判断の根拠。「何が FAMBOX らしくないか」を視覚化
-- **対象競合**: シンプルミール／マッスルデリ／GREEN SPOON／nosh／筋肉食堂
-- **必要画面**: TOP / 商品詳細 / 問合せ or 法人ページ
-- **必要な形式**: Figma に貼り付け or スプシ（URL＋スクショ＋一言コメント）
-- **期限**: 5/8
-- **作業量**: 2-3時間
+- **対象競合**: シンプルミール（ヨシケイ夕食.net）／マッスルデリ／GREEN SPOON／nosh／筋肉食堂DELI
+- **必要画面**: TOP / 商品詳細 / 問合せ or 法人ページ → **15/15 取得完了**
+- **期限**: 5/8 → 19 日遅延での達成
+- **成果物**: [MATERIALS_TIER1/M4-competitors/OVERVIEW.md](MATERIALS_TIER1/M4-competitors/OVERVIEW.md)
+  - 各社個別 summary.md（5 件）+ 全社まとめ OVERVIEW.md（5 観点比較 + POD 強化候補）
+  - スクショ 15 PNG（PC 1440 / `01-top.png` `02-product.png` `03-corporate.png` × 5 社）
+- **更新**: 2026-05-27 ステータス反映 + subagent 取得（Claude）
 
 ### M5. 最優先5件の意思決定（Daily Backlog A-1）✅ **全件確定済（2026-05-22 / v0.7）**
 
