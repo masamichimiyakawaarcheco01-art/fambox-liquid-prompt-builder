@@ -1,123 +1,92 @@
-# PROGRESS — フェーズ別進捗
+# PROGRESS — 進捗管理（週次モデル）
 
-> 最新フェーズの状況は **🟢=完了 / 🟡=進行中 / ⚪=未着手** で確認。
+> 🟢 完了 / 🟡 進行中 / ⚪ 未着手
+> D-011（週次マイクロデリバラブル）を反映、Step / Week ベース。
 
-最終更新：2026-05-22
-
----
-
-## 現在のフェーズ
-
-**Phase 0：永続化基盤構築**（このディレクトリ自体の整備）
+最終更新：2026-05-26
 
 ---
 
-## Phase 0：永続化基盤構築（2026-05-22）
+## 現在地
 
-> ゴール：構想・決定・進捗が永続的に追跡でき、セッション断絶からの復帰ができる状態にする。
-
-- 🟢 `docs/okr/fambox-flywheel/` ディレクトリ作成
-- 🟢 README.md（プロジェクト全体像）
-- 🟢 ARCHITECTURE.md（4層構造正典）
-- 🟢 DECISIONS.md（意思決定ログ D-001〜D-009）
-- 🟢 PROGRESS.md（このファイル）
-- 🟢 OPEN_QUESTIONS.md
-- 🟢 phases/phase-1-generate.md（プレースホルダ）
-- 🟢 phases/phase-2-sense.md（プレースホルダ）
-- 🟢 phases/phase-3-reach.md（プレースホルダ）
-- 🟢 phases/phase-4-learn.md（プレースホルダ）
-- 🟢 phases/phase-5-multibrand.md（プレースホルダ）
-- 🟢 sessions/2026-05-22-kickoff.md（キックオフブレスト議事録）
-- 🟢 memory: `project_fambox_flywheel.md` 作成
-- 🟢 MEMORY.md に追加（Active Development 最上位）
-- 🟢 git commit（後で実施）
-
-**達成条件：** 新セッションで「Flywheel の続き」と言われた時、Claude が文脈を完全復元できる。
+- **Step**：Step 1 — 宮川さんの個人インフラ構築
+- **Week**：Week 1（2026-05-26 〜 2026-05-30）
+- **Theme**：Purpose 確定 + 永続化 + Marc 接続準備
 
 ---
 
-## Phase 1：Generate 層詳細設計 + プロトタイプ（2026-05-23 〜 2026-06）
+## Step 1：宮川さんの個人インフラ構築
 
-> ゴール：マレルチームが Shopify セクション UI を「自分の手で」作れるプロトタイプを作る。
+> **期間目標：** 2026-05-26 〜 2026-07
+> **達成条件：** 宮川さんが AI 環境で 7割を AI に任せられる / 1セクション = 数時間（10倍速）/ Marc 式環境を左側用に翻訳済み
 
-### 1-A：要件詳細化
-- ⚪ マレルチームへのインタビュー（または推測ペルソナ確定）
-  - どのセクションを最も作りたいか
-  - 既存セクションのどれをコピーして派生させたいか
-  - フォーム入力のどの粒度なら使えるか
-- ⚪ 「マレル向け最小機能セット」の定義
+### 過去の Step
+- 🟢 **Phase 0：永続化基盤構築**（2026-05-22 完了）
+- 🟢 **Week 2 再計画セッション**（2026-05-26）— 須藤さん3段階モデル採用、Purpose 確定
 
-### 1-B：操作 UI（マレル向け）
-- ⚪ フォーム入力 UI 設計（既存 LPB v4.1 をベースに簡略化）
-- ⚪ フォーム → LPB プロンプトへの変換ロジック
-- ⚪ 出力プレビュー UI（生成結果を実機表示）
+### 今週（Week 1：2026-05-26 〜 2026-05-30）
 
-### 1-C：Brand Brain（生成エンジン側）
-- ⚪ Brand DNA + DS + bugs.md を Claude Project に統合
-- ⚪ プロンプトテンプレート（用途別）作成
-- ⚪ 自動 schema-lint（push 前検証）
-- ⚪ 出力 → Shopify Theme push の半自動化
+**Theme：** Purpose 確定 + 永続化 + Marc 接続準備
 
-### 1-D：パイロット運用
-- ⚪ マレルチーム 1人（候補：松浦さん）にパイロット使用してもらう
-- ⚪ フィードバック収集 → 改善
-- ⚪ 全員展開判断
+- 🟢 Purpose / Goal Image / Positioning 確定（D-015〜D-017）
+- 🟢 「7割 / 3割」境界定義（D-020）
+- 🟢 Step 2 インプット設計（D-018）
+- 🟢 Marc 連携運用ルール（D-019）
+- 🟢 DECISIONS.md に D-015〜D-020 追加
+- 🟢 README.md に Purpose / Goal / Positioning 反映
+- 🟢 memory: project_fambox_flywheel.md 更新
+- 🟢 PROGRESS.md 構造更新（このファイル）
+- 🟢 sessions/2026-05-26 追記（Part 2 追加）
+- 🟢 **環境棚卸しドキュメント作成**（environment-audit-v0.1.md）
+- 🟢 **Marc 向け Slack メッセージドラフト**（日本語 + 英語、marc-message-draft-v0.1.md）
+- ⚪ 金曜事業開発で発表（今週の進捗 + 来週の計画）
+- ⚪ Week 1 完了 commit
 
-**達成条件：** マレルチームが「宮川さんに頼まず」「FAMBOX らしい」Shopify セクションを1つ作れる。
+### 来週（Week 2：2026-06-01 〜 2026-06-05）
 
----
+**Theme：** Marc 接続 + 実案件着手
 
-## Phase 2：Sense 層強化（2026-07 想定）
+- ⚪ Marc に Slack メッセージ送信（月）
+- ⚪ 法人ページ 1セクション選定（松浦さんと相談）
+- ⚪ AI パイプラインで初稿生成
+- ⚪ 制作時間ログ取得（Before/After 比較）
+- ⚪ 金曜事業開発で「○時間→○時間」発表
 
-> ゴール：データから「次に作るべきもの」を自動提案する。
+### Week 3 以降（仮）
 
-- ⚪ Design Insight Engine の出力フォーマット標準化（JSON）
-- ⚪ Shopify Analytics / GA4 データの統合パイプライン
-- ⚪ SNS データ取込（Instagram / X）
-- ⚪ 「弱いアセット」自動検知ロジック
-- ⚪ Generate 層への指示書フォーマット（→ Generate と接続）
-
-**達成条件：** 月曜にダッシュボードを開くと「今週はこれを作るべき」が3件表示される。
-
----
-
-## Phase 3：Reach 層自動化（2026-08 想定）
-
-> ゴール：生成 → 配信のパイプラインを自動化する。
-
-- ⚪ Shopify Theme push API 連携
-- ⚪ Canva Brand Kit + テンプレ自動更新
-- ⚪ メール配信（Klaviyo / Seal）統合
-- ⚪ SNS 半自動投稿（Buffer / Hootsuite 検討）
-
-**達成条件：** Generate で作ったものが「ボタン1つで」配信される。
+- Marc とのやり取りで詰まったポイントを解消
+- 法人ページ 2件目に着手 → パターン化
+- 「持ってこい資料」テンプレが自然発生する想定
 
 ---
 
-## Phase 4：Learn 層構築（2026-09 想定）
+## Step 2：指示書ドライブ運用
 
-> ゴール：配信したアセットの結果を Sense にフィードバックする。
+> **期間目標：** 2026-07 〜 2026-10
+> **達成条件：** 須藤・松浦・三宅・マレルチーム・安原さん等が「要件 + ジャーニー」を Slack に書くと2時間で初稿
+> 詳細は Step 1 完了後に詰める
 
-- ⚪ アセット ID 管理（タグ付け）
-- ⚪ KPI 自動紐付け（アセット ID → CTR / CVR / 売上）
-- ⚪ 反省ログ自動生成（ChatGPT / Claude）
-- ⚪ Brand Memory Graph 更新ロジック
-- ⚪ Sense へのフィードバックループ完成
-
-**達成条件：** ホイールが1周自動で回る。
+### 既知の要件
+- インプット形式：Standard（D-018）
+- 媒体：Slack（D-018）
+- 頻度想定：週5件（チーム全体合計）
+- インフラ側で背景情報（FAM Brand DNA / DS / 過去資産）自動付与
 
 ---
 
-## Phase 5：マルチブランド化（2026-Q4 〜 想定）
+## Step 3：Flywheel MVP 完成
 
-> ゴール：他ブランド（架空 Brand B）で同じ Flywheel を回せるようにする。
+> **期間目標：** 2026-10 〜 2027-Q1
+> **達成条件：** 誰でも AI と Design の仕組みを使える / 7割の質が早く出る / 3割は各人が詰める
+> 詳細は Step 2 進行中に詰める
 
-- ⚪ Brand Layer 完全分離（FAMBOX 固有のリテラル除去）
-- ⚪ DS 4階層の抽象化検証
-- ⚪ Brand B の DNA + DS テンプレ作成
-- ⚪ 2ブランド並走テスト
+---
 
-**達成条件：** FAMBOX 設定を Brand B 設定に差し替えるだけで動く。
+## MVP の外側（次フェーズ・将来）
+
+- Sense / Learn の完全自動化（リニア → 円形化）
+- マルチブランド展開（FAM / Lemon / 他）
+- 新領域開拓（宮川さんが「AI 時代のデザインのやり方論を確立した人」として）
 
 ---
 
@@ -125,5 +94,19 @@
 
 - 着手時：⚪ → 🟡 に変更 + 開始日記入
 - 完了時：🟡 → 🟢 に変更 + 完了日記入
-- ブロック時：🟡 のまま、`OPEN_QUESTIONS.md` に記録
-- 新タスク追加時：そのフェーズに ⚪ で追加 + DECISIONS.md にも反映
+- ブロック時：🟡 のまま、OPEN_QUESTIONS.md に記録
+- 新タスク追加時：そのStepに ⚪ で追加 + DECISIONS.md にも反映
+- **週次の振り返り：** 金曜事業開発前に PROGRESS.md を見直す
+
+---
+
+## 過去計画（参考・廃止済み）
+
+D-011 で廃止された Phase 1〜5 計画は `phases/` ディレクトリに残しています。
+歴史的な参照用で、現在の運用は **Step / Week** ベース（このファイル）です。
+
+- [phases/phase-1-generate.md](./phases/phase-1-generate.md)（廃止）
+- [phases/phase-2-sense.md](./phases/phase-2-sense.md)（廃止）
+- [phases/phase-3-reach.md](./phases/phase-3-reach.md)（廃止）
+- [phases/phase-4-learn.md](./phases/phase-4-learn.md)（廃止）
+- [phases/phase-5-multibrand.md](./phases/phase-5-multibrand.md)（廃止）
