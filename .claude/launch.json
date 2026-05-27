@@ -12,6 +12,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1", "-l", "3457", "--no-clipboard"],
       "port": 3457
+    },
+    {
+      "name": "wf-simple-diagnosis",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1/docs/okr/wf_simple_diagnosis_20260513", "-l", "3458", "--no-clipboard"],
+      "port": 3458
     }
   ]
 }

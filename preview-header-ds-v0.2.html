@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview: Header DS v0.2.1 — 2026-04-29</title>
+
+<!-- Google Fonts (Poppins for English) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+ * FAMBOX DS v0.2 Tokens — preview 用ローカル定義
+ * 本番では tokens.css から読み込まれる前提
+ * ============================================================ */
+:root {
+  --color-drive: #FB4C15;
+  --color-drive-light: #FC825B;
+  --color-ink: #1B1D1A;
+  --color-sub: #545655;
+  --color-caption: #888888;
+  --color-white: #FFFFFF;
+  --color-focus-ring: #FB4C15;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #FAFAFA;
+  --border-light: #ECECEC;
+  --border-base: #D0D0D0;
+
+  --font-en: 'Poppins', sans-serif;
+  --font-ja: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+
+  --fs-caption: 12px;
+  --fs-body-sm: 14px;
+  --fs-body: 16px;
+  --fs-h3: 24px;
+
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+
+  --radius-md: 8px;
+  --radius-pill-cta: 50px;
+  --radius-pill: 9999px;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-2: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+  --layer-4: 4;
+}
+
+/* ============================================================
+ * Preview ページ装飾（実際の Header とは別の仕組み）
+ * ============================================================ */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-ja);
+  color: var(--color-ink);
+  background: var(--bg-secondary);
+  line-height: 1.6;
+}
+
+.preview-controls {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--color-ink);
+  color: var(--color-white);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.preview-controls h1 {
+  font-family: var(--font-en);
+  font-size: 14px;
+  margin: 0;
+  margin-right: auto;
+  font-weight: 600;
+}
+
+.preview-controls button {
+  font-family: var(--font-en);
+  font-size: 12px;
+  padding: 6px 14px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: transparent;
+  color: var(--color-white);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.preview-controls button:hover { background: rgba(255,255,255,0.1); }
+.preview-controls button.is-active { background: var(--color-drive); border-color: var(--color-drive); }
+
+.preview-frame {
+  margin: var(--space-3) auto;
+  background: var(--color-white);
+  box-shadow: var(--shadow-2);
+  transition: max-width 200ms var(--ease-out);
+  max-width: 1440px;  /* default PC */
+}
+
+.preview-frame.is-tablet { max-width: 980px; }
+.preview-frame.is-sp { max-width: 600px; }
+
+.preview-section {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.preview-section h2 {
+  font-family: var(--font-en);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0 0 var(--space-2);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.preview-note {
+  font-size: var(--fs-body-sm);
+  color: var(--color-sub);
+  margin-bottom: var(--space-2);
+  padding: var(--space-2);
+  background: var(--bg-secondary);
+  border-left: 4px solid var(--color-drive);
+  border-radius: 4px;
+}
+
+.preview-note code {
+  background: rgba(0,0,0,0.05);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.dummy-content {
+  padding: var(--space-4) var(--space-3);
+  background: linear-gradient(180deg, #f9f9f9 0%, #fff 100%);
+  text-align: center;
+  color: var(--color-sub);
+  font-size: 14px;
+}
+
+/* ============================================================
+ * 既存 Shopify Dawn header 互換 styles（プレビュー用簡略版）
+ * 本番の component-list-menu.css 等の中身を抽出
+ * ============================================================ */
+.header-wrapper {
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.header-wrapper--border-bottom {
+  border-bottom: 1px solid var(--border-base);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0 var(--space-3);
+  height: 80px;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.header__heading {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.header__heading-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--color-ink);
+  font-family: var(--font-en);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.header__inline-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.header__menu-item-link {
+  font-family: var(--font-ja);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  color: var(--color-ink);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.header__icons {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.header__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--color-ink);
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  transition: background 150ms ease;
+}
+
+.header__icon:hover { background: rgba(27, 29, 26, 0.06); }
+
+.header__icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+/* 既存 .header__corp-btn のスタイル（既存 fambox-custom.css 由来推定）*/
+.header__corp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  background: var(--color-drive);
+  color: var(--color-white);
+  font-family: var(--font-ja);
+  font-size: var(--fs-body-sm);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  border-radius: var(--radius-pill-cta);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* ============================================================
+ * DS v0.2 Phase 2b CSS — ここから追加分（実際の改修で入った CSS）
+ * ============================================================ */
+
+/* Heights */
+header[data-ds-version="0.2"].header--compact { min-height: 64px; }
+header[data-ds-version="0.2"].header--default { min-height: 80px; }
+header[data-ds-version="0.2"].header--tall    { min-height: 96px; }
+
+/* SP 横スクロールメニュー（DNA v0.5 既定）*/
+@media (max-width: 989px) {
+  header[data-ds-version="0.2"] .header__inline-menu {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    white-space: nowrap;
+  }
+  header[data-ds-version="0.2"] .header__inline-menu::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* DS CTA Button hover 拡張 */
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"] {
+  position: relative;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2);
+}
+
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:active {
+  transform: translateY(0);
+}
+
+/* Menu link Drive 色 hover */
+header[data-ds-version="0.2"] .header__menu-item-link {
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+header[data-ds-version="0.2"] .header__menu-item-link:hover,
+header[data-ds-version="0.2"] .header__menu-item-link:focus-visible {
+  color: var(--color-drive);
+}
+
+/* Active page indicator */
+header[data-ds-version="0.2"] .header__menu-item-link[aria-current="page"] {
+  color: var(--color-drive);
+  text-decoration: underline;
+  text-underline-offset: 8px;
+  text-decoration-thickness: 2px;
+}
+
+/* prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* ============================================================
+ * Phase 2c — header--compact + SP の drawer 主体切替（v0.2.1）
+ * ============================================================ */
+@media (max-width: 767px) {
+  header[data-ds-version="0.2"].header--compact .header__inline-menu {
+    display: none;
+  }
+  header[data-ds-version="0.2"].header--compact .drawer-trigger {
+    display: inline-flex !important;
+  }
+  header[data-ds-version="0.2"].header--compact .header__icon--account,
+  header[data-ds-version="0.2"].header--compact .header__icon--cart {
+    display: inline-flex !important;
+  }
+}
+
+/* PC では drawer trigger 非表示 */
+@media (min-width: 768px) {
+  header[data-ds-version="0.2"] .drawer-trigger {
+    display: none !important;
+  }
+}
+
+/* 極小 SP < 360px */
+@media (max-width: 359px) {
+  header[data-ds-version="0.2"].header--compact .btn-primary[data-ds-component="button"] {
+    padding: 6px 12px;
+    font-size: var(--fs-caption);
+  }
+}
+
+/* drawer trigger スタイル */
+.drawer-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-ink);
+  border-radius: var(--radius-pill);
+  transition: background 150ms ease;
+}
+.drawer-trigger:hover { background: rgba(27, 29, 26, 0.06); }
+.drawer-trigger svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+/* ============================================================
+ * Heights バリエーション表示用（preview 限定）
+ * ============================================================ */
+.height-variant-grid {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.height-label {
+  font-family: var(--font-en);
+  font-size: var(--fs-caption);
+  color: var(--color-sub);
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.diff-table {
+  font-family: monospace;
+  font-size: 12px;
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: var(--space-2);
+}
+.diff-table th, .diff-table td {
+  padding: 6px 10px;
+  border: 1px solid var(--border-light);
+  text-align: left;
+}
+.diff-table th { background: var(--bg-secondary); }
+.diff-add { background: rgba(16, 185, 129, 0.08); color: #047857; }
+.diff-keep { color: var(--color-caption); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     プレビュー操作バー
+     ============================================================ -->
+<div class="preview-controls">
+  <h1>FAMBOX Header DS v0.2 — Preview</h1>
+  <span style="font-size: 12px; opacity: 0.7;">Viewport:</span>
+  <button onclick="setViewport('pc')" class="is-active" id="btn-pc">PC（1440）</button>
+  <button onclick="setViewport('tablet')" id="btn-tablet">Tablet（980）</button>
+  <button onclick="setViewport('sp')" id="btn-sp">SP（600）</button>
+</div>
+
+<div class="preview-frame" id="preview-frame">
+
+  <!-- ============================================================
+       Section 1: Default Header (header--default 80px)
+       ============================================================ -->
+  <div class="preview-section">
+    <h2>① Default — header--default（80px）</h2>
+    <div class="preview-note">
+      Phase 2b 適用後の <code>&lt;header data-ds-version="0.2" class="header header-standard header--default"&gt;</code>。
+      既存 Shopify 機能（Cart / Account / Search）は完全保持、DS の hover アニメ・focus ring・aria-current 対応が追加されます。
+      <strong>「法人・プロ」ボタンに hover してみてください</strong> → 2px 上に浮く + shadow が出ます。
+    </div>
+
+    <div class="header-wrapper">
+      <header class="header header-standard header--default" data-ds-version="0.2" data-ds-component="header">
+        <h1 class="header__heading">
+          <a href="#" class="header__heading-link">FAMBOX</a>
+        </h1>
+
+        <ul class="header__inline-menu" role="list">
+          <li><a href="#" class="header__menu-item-link" aria-current="page">ホーム</a></li>
+          <li><a href="#" class="header__menu-item-link">食事診断</a></li>
+          <li><a href="#" class="header__menu-item-link">プラン</a></li>
+          <li><a href="#" class="header__menu-item-link">事例</a></li>
+          <li><a href="#" class="header__menu-item-link">ブログ</a></li>
+          <li><a href="#" class="header__menu-item-link">お問い合わせ</a></li>
+        </ul>
+
+        <div class="header__icons">
+          <a href="#" class="header__icon" aria-label="検索">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+          </a>
+          <a href="#" class="header__icon header__icon--account" aria-label="アカウント">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg>
+          </a>
+          <a href="#" class="header__icon header__icon--cart" aria-label="カート">
+            <svg viewBox="0 0 24 24"><path d="M3 5h2l3 12h11l3-9H6"/><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/></svg>
+          </a>
+          <a href="#" class="btn btn-primary btn-md header__corp-btn" data-ds-component="button" data-ds-version="0.2">法人・プロ</a>
+        </div>
+      </header>
+    </div>
+    <div class="dummy-content">↓ ここからページコンテンツ</div>
+  </div>
+
+  <!-- ============================================================
+       Section 2: Heights バリエーション
+       ============================================================ -->
+  <div class="preview-section">
+    <h2>② Heights バリエーション</h2>
+    <div class="preview-note">
+      DS Spec の 3 段階 Heights。<code>header--compact</code>（64px）/ <code>header--default</code>（80px・既定）/ <code>header--tall</code>（96px）を modifier で切替。
+    </div>
+
+    <div class="height-variant-grid">
+      <div>
+        <p class="height-label">header--compact (64px)</p>
+        <div class="preview-note" style="margin-bottom: 8px; font-size: 12px;">
+          <strong>v0.2.1 適用</strong>: SP（&lt; 768px）では drawer trigger（☰）を表示し menu を drawer 内に格納。
+          Account / Cart / CTA は EC 優先で常時表示。Viewport を「SP」に切り替えて確認してください。
+        </div>
+        <div class="header-wrapper">
+          <header class="header header-standard header--compact" data-ds-version="0.2" data-ds-component="header" style="height: 64px;">
+            <button class="drawer-trigger" aria-label="メニューを開く">
+              <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+            </button>
+            <h1 class="header__heading"><a href="#" class="header__heading-link" style="font-size: 20px;">FAMBOX</a></h1>
+            <ul class="header__inline-menu" role="list" style="gap: var(--space-2);">
+              <li><a href="#" class="header__menu-item-link">プラン</a></li>
+              <li><a href="#" class="header__menu-item-link">事例</a></li>
+              <li><a href="#" class="header__menu-item-link">ブログ</a></li>
+            </ul>
+            <div class="header__icons">
+              <a href="#" class="header__icon header__icon--account" aria-label="アカウント">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg>
+              </a>
+              <a href="#" class="header__icon header__icon--cart" aria-label="カート">
+                <svg viewBox="0 0 24 24"><path d="M3 5h2l3 12h11l3-9H6"/><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/></svg>
+              </a>
+              <a href="#" class="btn btn-primary btn-md header__corp-btn" data-ds-component="button" data-ds-version="0.2" style="padding: 8px 16px; font-size: 14px;">法人・プロ</a>
+            </div>
+          </header>
+        </div>
+      </div>
+
+      <div>
+        <p class="height-label">header--default (80px) — 既定</p>
+        <div class="header-wrapper">
+          <header class="header header-standard header--default" data-ds-version="0.2" data-ds-component="header">
+            <h1 class="header__heading"><a href="#" class="header__heading-link">FAMBOX</a></h1>
+            <ul class="header__inline-menu" role="list">
+              <li><a href="#" class="header__menu-item-link" aria-current="page">ホーム</a></li>
+              <li><a href="#" class="header__menu-item-link">プラン</a></li>
+              <li><a href="#" class="header__menu-item-link">事例</a></li>
+            </ul>
+            <a href="#" class="btn btn-primary btn-md header__corp-btn" data-ds-component="button" data-ds-version="0.2">法人・プロ</a>
+          </header>
+        </div>
+      </div>
+
+      <div>
+        <p class="height-label">header--tall (96px)</p>
+        <div class="header-wrapper">
+          <header class="header header-standard header--tall" data-ds-version="0.2" data-ds-component="header" style="height: 96px;">
+            <h1 class="header__heading"><a href="#" class="header__heading-link" style="font-size: 28px;">FAMBOX</a></h1>
+            <ul class="header__inline-menu" role="list">
+              <li><a href="#" class="header__menu-item-link">ホーム</a></li>
+              <li><a href="#" class="header__menu-item-link">プラン</a></li>
+              <li><a href="#" class="header__menu-item-link">事例</a></li>
+            </ul>
+            <a href="#" class="btn btn-primary btn-md header__corp-btn" data-ds-component="button" data-ds-version="0.2" style="padding: 16px 32px; font-size: 18px;">法人・プロ</a>
+          </header>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       Section 3: SP 横スクロールメニュー
+       ============================================================ -->
+  <div class="preview-section">
+    <h2>③ SP 横スクロールメニュー（DNA 既定）</h2>
+    <div class="preview-note">
+      Brand DNA v0.5 の「ハンバーガー不採用」を体現。990px 未満で <code>.header__inline-menu</code> が <code>overflow-x: auto</code> + スクロールバー非表示でメニュー横スワイプ対応。
+      <strong>上の Viewport を「SP」に切り替えて確認してください。</strong>
+    </div>
+
+    <div class="header-wrapper">
+      <header class="header header-standard header--default" data-ds-version="0.2" data-ds-component="header">
+        <h1 class="header__heading"><a href="#" class="header__heading-link">FAMBOX</a></h1>
+        <ul class="header__inline-menu" role="list">
+          <li><a href="#" class="header__menu-item-link" aria-current="page">ホーム</a></li>
+          <li><a href="#" class="header__menu-item-link">食事診断</a></li>
+          <li><a href="#" class="header__menu-item-link">定期便プラン</a></li>
+          <li><a href="#" class="header__menu-item-link">導入事例</a></li>
+          <li><a href="#" class="header__menu-item-link">ブログ</a></li>
+          <li><a href="#" class="header__menu-item-link">よくあるご質問</a></li>
+          <li><a href="#" class="header__menu-item-link">お問い合わせ</a></li>
+          <li><a href="#" class="header__menu-item-link">会社情報</a></li>
+        </ul>
+        <div class="header__icons">
+          <a href="#" class="header__icon header__icon--cart" aria-label="カート">
+            <svg viewBox="0 0 24 24"><path d="M3 5h2l3 12h11l3-9H6"/><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/></svg>
+          </a>
+          <a href="#" class="btn btn-primary btn-md header__corp-btn" data-ds-component="button" data-ds-version="0.2">法人・プロ</a>
+        </div>
+      </header>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       Section 3.5: SP-compact 詳細（v0.2.1）
+       ============================================================ -->
+  <div class="preview-section">
+    <h2>③.5 SP-compact 詳細（v0.2.1 patch）</h2>
+    <div class="preview-note">
+      <strong>UX 課題</strong>: compact (64px) + SP では Logo + EC + CTA で横幅消費し、横スクロールメニューが認識されない。<br>
+      <strong>解決</strong>: SP かつ compact のとき <code>.header__inline-menu</code> を非表示・<code>.drawer-trigger</code>（☰）を表示。
+      Account / Cart / CTA は <strong>EC 優先で常時表示</strong>（Anti 違反「SP-compact で Cart/Account を drawer 内に隠す」を回避）。
+      <br><br>
+      <strong>Viewport を「SP」に切り替え</strong>て、下のヘッダーが
+      <code>[☰][Logo] ... [👤][🛒][法人・プロ]</code> の構成になることを確認してください。
+    </div>
+
+    <div class="header-wrapper">
+      <header class="header header-standard header--compact" data-ds-version="0.2" data-ds-component="header" style="height: 64px;">
+        <button class="drawer-trigger" aria-label="メニューを開く">
+          <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+        </button>
+        <h1 class="header__heading"><a href="#" class="header__heading-link" style="font-size: 20px;">FAMBOX</a></h1>
+        <ul class="header__inline-menu" role="list">
+          <li><a href="#" class="header__menu-item-link" aria-current="page">ホーム</a></li>
+          <li><a href="#" class="header__menu-item-link">食事診断</a></li>
+          <li><a href="#" class="header__menu-item-link">プラン</a></li>
+          <li><a href="#" class="header__menu-item-link">事例</a></li>
+          <li><a href="#" class="header__menu-item-link">ブログ</a></li>
+          <li><a href="#" class="header__menu-item-link">FAQ</a></li>
+        </ul>
+        <div class="header__icons">
+          <a href="#" class="header__icon header__icon--account" aria-label="アカウント">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4 4-7 8-7s8 3 8 7"/></svg>
+          </a>
+          <a href="#" class="header__icon header__icon--cart" aria-label="カート">
+            <svg viewBox="0 0 24 24"><path d="M3 5h2l3 12h11l3-9H6"/><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/></svg>
+          </a>
+          <a href="#" class="btn btn-primary btn-md header__corp-btn" data-ds-component="button" data-ds-version="0.2" style="padding: 8px 16px; font-size: 14px;">法人・プロ</a>
+        </div>
+      </header>
+    </div>
+
+    <div class="preview-note" style="margin-top: 8px; font-size: 12px;">
+      <strong>幅シミュレーション（375px SP）</strong>:
+      ☰ 44px + Logo 100px + flex auto + 👤 44px + 🛒 44px + CTA 80px + gaps 24px ≈ <strong>336px / 375px ✅</strong> 収まる。<br>
+      <strong>極小 SP（&lt; 360px）対策</strong>: CTA padding 縮小（6px 12px）+ font-size を <code>--fs-caption</code> 12px に。
+    </div>
+  </div>
+
+  <!-- ============================================================
+       Section 4: Diff（変更前/後）
+       ============================================================ -->
+  <div class="preview-section">
+    <h2>④ DS v0.2 適用 Diff（変更前 / 変更後）</h2>
+    <table class="diff-table">
+      <thead>
+        <tr>
+          <th>要素</th>
+          <th>変更前（既存 Shopify Dawn）</th>
+          <th>変更後（DS v0.2 適用）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>&lt;header&gt; class</strong></td>
+          <td class="diff-keep">header header--center …</td>
+          <td class="diff-add">header header--center … <strong>header-standard header--default</strong></td>
+        </tr>
+        <tr>
+          <td><strong>&lt;header&gt; data 属性</strong></td>
+          <td class="diff-keep">（なし）</td>
+          <td class="diff-add">data-ds-version="0.2" data-ds-component="header"</td>
+        </tr>
+        <tr>
+          <td><strong>CTA class</strong></td>
+          <td class="diff-keep">header__corp-btn</td>
+          <td class="diff-add"><strong>btn btn-primary btn-md</strong> header__corp-btn</td>
+        </tr>
+        <tr>
+          <td><strong>CTA hover</strong></td>
+          <td class="diff-keep">変化なし</td>
+          <td class="diff-add">2px 上に浮く + shadow-2 追加</td>
+        </tr>
+        <tr>
+          <td><strong>CTA focus</strong></td>
+          <td class="diff-keep">browser default</td>
+          <td class="diff-add">2px Drive outline + 2px offset</td>
+        </tr>
+        <tr>
+          <td><strong>Menu link hover</strong></td>
+          <td class="diff-keep">変化なし</td>
+          <td class="diff-add">Drive 色（#FB4C15）に 150ms transition</td>
+        </tr>
+        <tr>
+          <td><strong>aria-current="page"</strong></td>
+          <td class="diff-keep">style なし</td>
+          <td class="diff-add">Drive 色 + 下線 2px（offset 8px）</td>
+        </tr>
+        <tr>
+          <td><strong>SP &lt;990px</strong></td>
+          <td class="diff-keep">そのまま</td>
+          <td class="diff-add">Menu 横スクロール + scrollbar 非表示</td>
+        </tr>
+        <tr>
+          <td><strong>EC 機能（Cart/Account/Search/Localization）</strong></td>
+          <td class="diff-keep">動作中</td>
+          <td class="diff-keep">完全保持（class scope 外）</td>
+        </tr>
+        <tr>
+          <td><strong>GA4 計測 data-gtag-cta</strong></td>
+          <td class="diff-keep">to_corp_lp</td>
+          <td class="diff-keep">to_corp_lp（保持）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function setViewport(size) {
+  const frame = document.getElementById('preview-frame');
+  frame.classList.remove('is-tablet', 'is-sp');
+  document.querySelectorAll('.preview-controls button').forEach(b => b.classList.remove('is-active'));
+
+  if (size === 'tablet') {
+    frame.classList.add('is-tablet');
+    document.getElementById('btn-tablet').classList.add('is-active');
+  } else if (size === 'sp') {
+    frame.classList.add('is-sp');
+    document.getElementById('btn-sp').classList.add('is-active');
+  } else {
+    document.getElementById('btn-pc').classList.add('is-active');
+  }
+}
+</script>
+
+</body>
+</html>

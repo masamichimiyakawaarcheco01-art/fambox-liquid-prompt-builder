@@ -25,7 +25,7 @@
     <!-- 左上 -->
     <div class="fam-footer-v2__corner fam-footer-v2__corner--tl">
       {%- if section.settings.corner_icon != blank -%}
-        <img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+        <img src="{{ section.settings.corner_icon | image_url: width: 1200 }}" alt="" width="64" height="64">
       {%- else -%}
         {{ default_corner_svg }}
       {%- endif -%}
@@ -33,7 +33,7 @@
     <!-- 左下 -->
     <div class="fam-footer-v2__corner fam-footer-v2__corner--bl">
       {%- if section.settings.corner_icon != blank -%}
-        <img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+        <img src="{{ section.settings.corner_icon | image_url: width: 1200 }}" alt="" width="64" height="64">
       {%- else -%}
         {{ default_corner_svg }}
       {%- endif -%}
@@ -41,7 +41,7 @@
     <!-- 右上 -->
     <div class="fam-footer-v2__corner fam-footer-v2__corner--tr">
       {%- if section.settings.corner_icon != blank -%}
-        <img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+        <img src="{{ section.settings.corner_icon | image_url: width: 1200 }}" alt="" width="64" height="64">
       {%- else -%}
         {{ default_corner_svg }}
       {%- endif -%}
@@ -49,7 +49,7 @@
     <!-- 右下 -->
     <div class="fam-footer-v2__corner fam-footer-v2__corner--br">
       {%- if section.settings.corner_icon != blank -%}
-        <img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+        <img src="{{ section.settings.corner_icon | image_url: width: 1200 }}" alt="" width="64" height="64">
       {%- else -%}
         {{ default_corner_svg }}
       {%- endif -%}
@@ -64,7 +64,7 @@
             {%- assign flogo = section.settings.footer_logo -%}
             {%- assign flogo_h = section.settings.footer_logo_width | divided_by: flogo.aspect_ratio -%}
             <img
-              src="{{ flogo | image_url: width: 400 }}"
+              src="{{ flogo | image_url: width: 1200 }}"
               alt="{{ shop.name }}"
               class="fam-footer-v2__logo"
               width="{{ section.settings.footer_logo_width }}"
@@ -151,7 +151,7 @@
           {%- assign deco_img = section.settings.footer_deco_image -%}
           {%- assign deco_h = 800 | divided_by: deco_img.aspect_ratio -%}
           <img
-            src="{{ deco_img | image_url: width: 800 }}"
+            src="{{ deco_img | image_url: width: 1200 }}"
             alt=""
             width="800"
             height="{{ deco_h }}"
@@ -182,7 +182,7 @@
 }
 .fam-footer-v2__inner {
   position: relative;
-  z-index: 1;
+  z-index: 1; /* layer */
   max-width: 1440px;
   margin: 0 auto;
   overflow: hidden;
@@ -208,7 +208,7 @@
   width: 64px;
   height: 64px;
   pointer-events: none;
-  z-index: 2;
+  z-index: 2; /* layer */
 }
 .fam-footer-v2__corner svg,
 .fam-footer-v2__corner img {
@@ -324,7 +324,7 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  z-index: 0;
+  z-index: 0; /* layer */
 }
 .fam-footer-v2__deco img {
   width: 280px;

@@ -24,7 +24,7 @@
   /* SECTION */
   #{{ sec_id }} {
     position: relative;
-    z-index: 1;
+    z-index: 1; /* layer */
     width: 100%;
     background: {{ section.settings.bg_color }} !important;
     padding: 120px 0 !important;
@@ -50,6 +50,42 @@
     line-height: 180% !important;
     letter-spacing: normal !important;
     text-transform: none !important;
+  }
+  #{{ sec_id }} .bc__title-link {
+    text-decoration: none !important;
+    color: inherit !important;
+    display: inline-block;
+    transition: color 0.25s ease;
+  }
+  #{{ sec_id }} .bc__title-link:hover .bc__title {
+    color: #FB4C15 !important;
+  }
+
+  /* ACTIONS (view-all + nav) */
+  #{{ sec_id }} .bc__actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  #{{ sec_id }} .bc__viewall {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1B1D1A !important;
+    letter-spacing: 0.04em;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.25s ease, color 0.25s ease;
+  }
+  #{{ sec_id }} .bc__viewall::after {
+    content: "→";
+    font-size: 14px;
+  }
+  #{{ sec_id }} .bc__viewall:hover {
+    color: #FB4C15 !important;
+    gap: 10px;
   }
 
   /* NAV BUTTONS */
@@ -227,6 +263,12 @@
     #{{ sec_id }} .bc__title {
       font-size: 28px !important;
     }
+    #{{ sec_id }} .bc__actions {
+      gap: 12px;
+    }
+    #{{ sec_id }} .bc__viewall {
+      font-size: 12px !important;
+    }
     #{{ sec_id }} .bc__track-wrap {
       padding: 0 0 0 24px;
     }
@@ -259,22 +301,33 @@
 
 <section id="{{ sec_id }}">
   <div class="bc__header">
-    <h2 class="bc__title">{{ section.settings.heading | newline_to_br }}</h2>
-    <div class="bc__nav">
-      <button class="bc__nav-btn" data-dir="prev" aria-label="前の記事">
-        {%- if section.settings.prev_svg != blank -%}
-          {{ section.settings.prev_svg }}
-        {%- else -%}
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        {%- endif -%}
-      </button>
-      <button class="bc__nav-btn" data-dir="next" aria-label="次の記事">
-        {%- if section.settings.next_svg != blank -%}
-          {{ section.settings.next_svg }}
-        {%- else -%}
-          <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
-        {%- endif -%}
-      </button>
+    {%- if blog_handle != blank and blogs[blog_handle].url != blank -%}
+      <a href="{{ blogs[blog_handle].url }}" class="bc__title-link" aria-label="{{ section.settings.heading | strip_html | escape }}記事一覧へ">
+        <h2 class="bc__title">{{ section.settings.heading | newline_to_br }}</h2>
+      </a>
+    {%- else -%}
+      <h2 class="bc__title">{{ section.settings.heading | newline_to_br }}</h2>
+    {%- endif -%}
+    <div class="bc__actions">
+      {%- if blog_handle != blank and blogs[blog_handle].url != blank and section.settings.view_all_label != blank -%}
+        <a href="{{ blogs[blog_handle].url }}" class="bc__viewall">{{ section.settings.view_all_label }}</a>
+      {%- endif -%}
+      <div class="bc__nav">
+        <button class="bc__nav-btn" data-dir="prev" aria-label="前の記事">
+          {%- if section.settings.prev_svg != blank -%}
+            {{ section.settings.prev_svg }}
+          {%- else -%}
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          {%- endif -%}
+        </button>
+        <button class="bc__nav-btn" data-dir="next" aria-label="次の記事">
+          {%- if section.settings.next_svg != blank -%}
+            {{ section.settings.next_svg }}
+          {%- else -%}
+            <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          {%- endif -%}
+        </button>
+      </div>
     </div>
   </div>
 
@@ -285,7 +338,7 @@
           <a href="{{ article.url }}" class="bc__card">
             <div class="bc__card-image">
               {%- if article.image -%}
-                {{ article.image | image_url: width: 600 | image_tag:
+                {{ article.image | image_url: width: 1200 | image_tag:
                   loading: 'lazy',
                   widths: '300, 400, 600',
                   sizes: '(max-width: 749px) 100vw, 300px'
@@ -422,6 +475,12 @@
       "step": 1,
       "default": 6,
       "label": "表示する記事数"
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "「記事一覧へ」リンク文言（空欄で非表示）",
+      "default": "記事一覧へ"
     },
     {
       "type": "header",

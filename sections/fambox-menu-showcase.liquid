@@ -171,7 +171,7 @@
           <div class="menu-showcase__item" {{ block.shopify_attributes }}>
             <div class="menu-showcase__img">
               {%- if block.settings.image != blank -%}
-                {{ block.settings.image | image_url: width: 264 | image_tag: alt: block.settings.name, loading: 'lazy' }}
+                {{ block.settings.image | image_url: width: 1200 | image_tag: alt: block.settings.name, loading: 'lazy' }}
               {%- else -%}
                 <svg viewBox="0 0 132 132" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="132" height="132" rx="8" fill="#ddd"/>
@@ -189,7 +189,7 @@
           <div class="menu-showcase__item">
             <div class="menu-showcase__img">
               {%- if block.settings.image != blank -%}
-                {{ block.settings.image | image_url: width: 264 | image_tag: alt: block.settings.name, loading: 'lazy' }}
+                {{ block.settings.image | image_url: width: 1200 | image_tag: alt: block.settings.name, loading: 'lazy' }}
               {%- else -%}
                 <svg viewBox="0 0 132 132" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="132" height="132" rx="8" fill="#ddd"/>

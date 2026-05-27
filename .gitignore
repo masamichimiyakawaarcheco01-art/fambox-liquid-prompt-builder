@@ -10,3 +10,12 @@ projects/analytics/ga4_service_account.json
 projects/analytics/shopify_token.txt
 projects/analytics/*.plist
 
+# Second brain — 個人領域（思考の生メモ・日記・bookmark harvest・システム設定）
+# 業務再利用される 4 ディレクトリ（30_Tech_Notes / 50_Business_Context / 20_Projects / 45_Design_Refs）は repo 管理
+brain/00_Inbox/
+brain/10_Journal/
+brain/40_Bookmarks/
+brain/90_System/
+brain/99_Archives/
+brain/.claude/
+
