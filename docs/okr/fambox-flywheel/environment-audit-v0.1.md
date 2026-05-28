@@ -62,8 +62,8 @@
 
 | 資産 | 場所 | 内容 | 完成度 |
 |---|---|---|---|
-| **FAMBOX Brand DNA v0.3** | `brand/fambox/brand-dna/` | 視覚言語、Editorial × Lab メタファー | v0.3 |
-| **FAMBOX Verbal Identity v1.0** | `brand/fambox/` | コピートーン、語彙、avoid 表現 | v1.0 |
+| **FAMBOX Brand DNA v1.0** | `brand/fambox/brand-dna/current.md` | 視覚言語、Editorial × Lab メタファー（2026-05-27 v1.0 promoted） | v1.0 |
+| **FAMBOX Verbal Identity v1.0** | `docs/okr/FAMBOX_Verbal_Guideline_v1.0.md` | コピートーン、語彙、avoid 表現 | v1.0 |
 | **FAMBOX Design System v0.5** | `brand/fambox/design-system/` | tokens / components / patterns | v0.5 |
 | **bugs.md 28規律** | `brand/fambox/design-system/bugs.md` | BUG/DOCTRINE/PROC 28エントリ。Anti-pattern 回避規範 | 28 entries |
 | **L0 翻訳表 v0.1** | `brand/fambox/design-system/` | 抽象指示 → トークン値の翻訳 | v0.1 / 412 行 |
