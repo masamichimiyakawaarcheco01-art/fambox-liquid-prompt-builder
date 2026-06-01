@@ -274,16 +274,22 @@ Marc → multi-surface production speed and consistency
 
 ### Q8 ★新規: 「`brand/fambox/CLAUDE.md` って何が書いてある？」
 
-> 1ファイルで FAMBOX のすべての判断基準を集約しています。
-> - Identity（ブランドの中核）
-> - Surfaces（出力面の分類）
-> - Hard Rules（絶対に守るルール）
-> - AI/Human Boundary（誰が何を担当するか）
-> - Vocabulary（重要用語）
-> - Exclusions（絶対にやらないこと）
-> - Decision Log Pointer（DECISIONS.md への参照）
+> 1ファイルで FAMBOX のすべての判断基準を集約した、**Step 2 で非デザイナーが最初に読む単一ファイル** です。Marc の `_TEMPLATE/CLAUDE.md` 構造を参考に、本日 v0.1 → v0.2 に強化済（**591行 / 11セクション**）。
 >
-> これが Step 2 で非デザイナーが入ってきた時に最初に読むファイルになります。Marc の `_TEMPLATE/CLAUDE.md` 構造を参考にしました。今は v0.1、Step 2 開始前に v1.0 にします。
+> 主要セクション：
+> - **🚀 Quick Orientation**（5分オリエンテーション + 30秒サマリ + 5ステップ手順）
+> - **Identity**（ブランドの中核 + 「らしい / らしくない」見分け方）
+> - **Surfaces**（9種類の出力面 + Surface 別の典型ワークフロー 6件）
+> - **Hard Rules**（絶対守るルール、**「ルール + 反例」ペアリング** で記述）
+> - **AI/Human Boundary**（4カテゴリ + **「declining = re-declaring」実例3件**）
+> - **Vocabulary**（重要用語）
+> - **Exclusions**（過去の失敗を **具体例 A〜H** で記述）
+> - **Learn Loop**（Step 1 から保護する仕組み）
+> - **Onboarding Flow**（新メンバーの最初の30分、5フェーズ + 完了判定7項目）
+> - **Decision Log Pointer**（DECISIONS.md への参照）
+> - **テンプレ集**（持ってこい資料 / Good-Bad コピー対比 / boundary 宣言 / Friday Learn 進捗）
+>
+> Marc のコメント「Q1 2027 前に作っておけば膨大な時間が節約できる」を受けて、当初 Step 2 開始前（2026-09）目標だった v1.0 への進化を前倒し中。**Step 2 開始前に v1.0 確定**。
 
 ### Q9 ★新規: 「peer ネットワーク、実際の運用はどうなる？」
 
