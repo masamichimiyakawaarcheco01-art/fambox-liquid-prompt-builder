@@ -94,6 +94,57 @@
 
 ---
 
+## 2.5 Marc からの即時 peer フィードバック（2分）★追加
+
+### 話す内容
+
+> 「Marc に Slack で共有したら、想像以上に深く読んでくれて、**1日で具体的なフィードバックが返ってきました**。peer 関係が成立した瞬間です。
+>
+> Marc が validate してくれたもの：
+> - Brand / Engine / Data 分離は excellent
+> - D-NNN 意思決定ログは very solid、Marc 自身の `EXTERNAL-INFLUENCES.md` に参考候補追加
+> - **bugs.md は "the real Learn loop lives there"** と最重要視
+>
+> Marc から得た改善案、**既にプランに反映済み**：
+> - D-021：AI/Human の境界を「70%/30%」から **「AI proposes / Human validates / adjusts / decides」のカテゴリベース** に再定義（時間が経っても曖昧にならない）
+> - D-022：Learn 層を Step 3 まで放置せず **Step 1 から保護機構必須化**（Generate だけ速くなって学習が止まるリスクへの対策）
+> - D-023：DNA に **Evolution Triggers** を明文化（化石化防止）
+> - D-024：Marc の `_TEMPLATE/CLAUDE.md` パターンを採用、**`brand/fambox/CLAUDE.md` v0.1 を本日作成**
+> - D-025：Marc コラボ招待を受諾、Archeco repo を read 可能になる
+>
+> Marc 側も今週 v7.32〜v7.37 をリリースしていて、宮川とイナイの仕事から複数の影響を受けたと明言。3つのシステムが **異なる問題を解いているが、同じ方向（決定を明示化・伝達可能化）に進化** しているという意義深い peer ネットワークが立ち上がっています。」
+
+### 1スライド想定
+
+```
+┌─────────────────────────────────────────────────┐
+│ Marc 初回フィードバック → 既に反映済（D-021〜D-025） │
+│                                                 │
+│ Marc validate:                                  │
+│  ✅ Brand/Engine/Data 分離 「excellent」          │
+│  ✅ D-NNN 意思決定ログ 参考に採用                  │
+│  ✅ bugs.md = "the real Learn loop lives there" │
+│                                                 │
+│ Marc 提案 → 採用:                                │
+│  🔄 D-021: AI/Human をカテゴリベース             │
+│  🛡 D-022: Learn 層を Step 1 から保護           │
+│  📅 D-023: DNA Evolution Triggers              │
+│  📄 D-024: brand/fambox/CLAUDE.md 作成済        │
+│  🤝 D-025: Marc コラボ受諾                       │
+└─────────────────────────────────────────────────┘
+```
+
+### 補足できる data point
+
+- Marc の応答スピード：投稿 → 翌日には精緻なレビュー
+- Marc の影響：v7.33（AI/Human boundary 原則）、v7.34（_TEMPLATE/CLAUDE.md、Surfaces）、v7.37 まで連続リリース
+- 「**3つのシステムが同じ challenge に異なる角度で取り組んでいる**」
+  - 宮川：infrastructure for scaling a team
+  - 稲井：brand fidelity across distributed production
+  - Marc-A：multi-surface production speed and consistency
+
+---
+
 ## 3. ポジショニング + 3段階モデル（3分）
 
 ### 話す内容

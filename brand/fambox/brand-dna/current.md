@@ -34,6 +34,46 @@ related:
 
 ---
 
+## 🔄 Evolution Triggers（次バージョンへの進化条件）
+
+> Marc-Antoine Lecat（2026-05-28）の指摘を採用。
+> DNA が「確定したから触らない」状態で化石化することを防ぐため、
+> 何が起きたら次のバージョンへ進むかを明文化する。
+> 詳細：[../../../docs/okr/fambox-flywheel/DECISIONS.md#d-023](../../../docs/okr/fambox-flywheel/DECISIONS.md) D-023
+
+### v1.1 トリガー（マイナーアップデート）
+
+以下のいずれかが発生した場合、v1.1 を検討する：
+
+- **新しい audience が中心化**（例：法人顧客中心 → 個人顧客中心、または逆）
+- **新しい market への展開**（例：FAM 親ブランド本体への展開）
+- **Verbal Identity の大幅改訂**（v1.0 → v1.1）
+- **30 項目のうち 3 項目以上に矛盾が見つかった**
+- **bugs.md に DNA レベルの矛盾が 5件以上蓄積**
+
+### v2.0 トリガー（メジャーアップデート）
+
+以下のいずれかが発生した場合、v2.0 を検討する：
+
+- **新しい direction**（例：Editorial × Lab メタファーの再解釈・置換）
+- **マルチブランド化に伴う Brand 分割**（[DECISIONS.md D-008](../../../docs/okr/fambox-flywheel/DECISIONS.md) 連動）
+- **事業モデルの根本的変更**（例：D2C → BtoB シフト）
+- **3年経過**（自動レビュー）
+
+### 検査スケジュール
+
+- **半年に1回（1月・7月）**：上記トリガー条件をチェック
+- **検査結果**：`brand/fambox/brand-dna/decisions/decisions-log.md` に記録
+- **トリガー発火時**：drafts/ に新バージョンを起こす → 検討 → promotion
+
+### 検査体制
+
+- **責任者**：宮川（DNA owner）
+- **協議者**：須齋（事業視点）、松浦（B2B 顧客視点）
+- **外部参照**：マレル（実運用視点）、Marc（システム視点 peer review）
+
+---
+
 ## 凡例
 
 | マーク | 意味 |

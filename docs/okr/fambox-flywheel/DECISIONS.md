@@ -421,6 +421,161 @@
 
 ---
 
+## D-021｜2026-05-28｜AI/Human をカテゴリベースに再定義（D-020 を上書き）
+
+**決定：** AI と人間の境界線を、パーセンテージ（70/30）ではなく **作業カテゴリ** で定義する。
+
+**新しい4カテゴリ：**
+
+| カテゴリ | 主体 | 具体例 |
+|---|---|---|
+| **AI proposes（提案）** | AI | 構造、レイアウト、ブランド準拠、初稿コピー、CTA バリエーション、コード |
+| **Human validates（承認）** | 人間 | bugs.md 規律通過、ブランド整合性、出荷判定 |
+| **Human adjusts（微調整）** | 人間 | コピーの魂、画像最終選定、案件固有事情の反映 |
+| **Human decides（決定）** | 人間 | 複数案からの選択、戦略判断、出荷可否 |
+
+**Marc の指摘（2026-05-28 フィードバック）：**
+> 「percentages quickly become abstract. In the long run, more sustainable to frame it as categories of work: 'AI proposes', 'human validates / adjusts'」
+
+**D-020 を上書きする理由：**
+- 「70%/30%」は時間が経つと意味が曖昧になる
+- カテゴリ定義の方が長期的に持続可能
+- Step 2/3 で非デザイナーが入ってきた時に役割分担が明確
+- 「AI proposes / Human validates」は普遍的なフレーミング
+
+**含意：**
+- bugs.md ルール違反検知 = "validates" 段階で機械化可能
+- 「魂の調整」と「文脈反映」は明確に「adjusts」段階
+- プロジェクト別の境界（D-022 後述）も同じ4カテゴリで記述
+
+---
+
+## D-022｜2026-05-28｜Learn 層を Step 1 から保護する
+
+**決定：** Learn 層を Step 3（2027-Q1）まで放置せず、**Step 1 から最小機構を必須化** する。
+
+**Marc の警告（2026-05-28 フィードバック）：**
+> 「Sense and Learn are probably doing most of the real work. Generate and Reach are the most visible parts, but also the easiest. **If Learn isn't protected, the system risks producing faster without actually learning better.**」
+
+**最小機構（Step 1 から必須）：**
+
+| トリガー | アクション |
+|---|---|
+| Generate で失敗（出荷不能 / 大きな修正必要） | bugs.md に候補エントリを追加 |
+| 同じ修正を 2回説明（Marc の M2 原則） | 即座に bugs.md にルール化 |
+| 月1回 | bugs.md 追加件数を可視化（停滞検知メトリクス） |
+| 金曜事業開発 | **「今週の Learn 進捗」を発表項目に追加** |
+
+**理由：**
+- Generate が回り始めると「速くなった」と満足してしまうリスク
+- Learn が遅れても気付かない構造になりがち
+- bugs.md の更新停滞 = 学習停滞 = システムが化石化
+
+**含意：**
+- 金曜事業開発の発表テンプレに「今週の Learn 進捗」を恒久的に追加
+- bugs.md の更新ペース自体が KPI
+- Marc の bugs.md パターン（Archeco V1-V51 index）から学ぶ
+
+**この決定が D-016（3段階モデル）に与える影響：**
+- Step 3 は「Learn 完成」ではなく「Learn が自走化」
+- Step 1〜2 でも Learn は最小機構で常時稼働
+
+---
+
+## D-023｜2026-05-28｜DNA に Evolution Triggers を明文化
+
+**決定：** Brand DNA に「いつ次のバージョンへ進化するか」のトリガー条件を明文化する。
+
+**Marc の指摘（2026-05-28 フィードバック）：**
+> 「Brand DNA v1.0: it would help to explicitly define what triggers a future v1.1 (new audience, new market, new direction, etc.), otherwise the document may slowly fossilize over time.」
+
+**Evolution Triggers の例：**
+
+| トリガー | 想定バージョン上げ |
+|---|---|
+| 新しい audience が中心化（例：法人顧客が個人顧客になる）| v1.1 |
+| 新しい market への展開（例：FAM 親ブランド本体へ）| v1.1 |
+| 新しい direction（例：Editorial メタファーの再解釈）| v2.0 |
+| Verbal Identity の大幅改訂 | v1.1 連動 |
+| マルチブランド化（D-008 トリガー）| v2.0 + brand split |
+
+**運用：**
+- `brand/fambox/brand-dna/current.md` の冒頭に Evolution Triggers セクションを追加
+- 半年に1回（1月・7月）、トリガー条件の検査を実施
+- 検査結果を `brand/fambox/brand-dna/decisions/decisions-log.md` に記録
+
+**理由：**
+- DNA が「確定したから触らない」と思われると、現実とのズレが蓄積
+- ズレが大きくなってから慌てて改訂すると、Brand 整合性が崩れる
+- 段階的進化を計画的に行うための仕掛け
+
+**含意：**
+- `brand/fambox/brand-dna/current.md` を更新（次の commit で）
+- 半年に1回の DNA 検査をスケジュールタスク化（FAMレモン君環境 候補）
+
+---
+
+## D-024｜2026-05-28｜Project CLAUDE.md パターンを採用（Marc の v7.34）
+
+**決定：** Marc の `projects/_TEMPLATE/CLAUDE.md` パターンを採用し、**`brand/fambox/CLAUDE.md`** を作成する。
+
+**Marc の提案（2026-05-28 フィードバック）：**
+> 「your biggest challenge will arrive when you open the system to non-designers. What really scales is not only the quality of the rules, but **the clarity of what has already been decided for each project**.」
+>
+> 「I genuinely think building an equivalent before your Q1 2027 milestone would save you a huge amount of time.」
+
+**brand/fambox/CLAUDE.md に含める要素（Marc の _TEMPLATE 構造を参考）：**
+
+| セクション | 内容 |
+|---|---|
+| Identity | FAMBOX が何のブランドか（1段落）|
+| Surface（一覧） | このブランドが展開する出力面（Shopify / Instagram / 印刷 等）|
+| Hard Rules | 絶対に守るべき規律（bugs.md DOCTRINE から抽出）|
+| AI/Human Boundaries | D-021 のカテゴリを surface 別に定義 |
+| Vocabulary | 重要用語（Editorial × Lab、Middle & Fast 等）|
+| Exclusions | 絶対にやらないこと（bugs.md BUG カテゴリ参照）|
+| Decision Log Pointer | DECISIONS.md への参照 |
+
+**位置づけ：**
+- これが **非デザイナーが Step 2 で読む単一ファイル**
+- 「持ってこい資料」（D-018）の上位フレーム
+- 新規プロジェクト着手時に最初に読むファイル
+
+**理由：**
+- Step 2 で須藤・松浦・マレル等が入ってくる前に、判断基準が一箇所にまとまっている必要
+- Marc の実体験：「Q1 2027 前に作っておけば膨大な時間が節約できる」
+- D-021 + D-022 + DNA Evolution Triggers と全部繋がる総合インデックス
+
+**初稿作成タイミング：** Week 1 中（今週中）
+**完成度目標：** v0.1（初稿）→ Step 2 開始前に v1.0
+
+---
+
+## D-025｜2026-05-28｜Marc コラボ招待を受諾
+
+**決定：** Marc の Archeco repo への collaborator 招待を受諾する。
+
+**Marc の提案：**
+> 「Happy to add both of you as collaborators on the repo if useful for cross-reference.」
+
+**理由：**
+- Marc の v7.32〜v7.37 の最新作業を直接見られる（実装の生きた例）
+- `_TEMPLATE/CLAUDE.md` を実物確認できる（D-024 の参考）
+- `EXTERNAL-INFLUENCES.md` で自分がどう参照されているか可視化
+- Marc 達のチーム会レビュー文化を観察可能
+- bugs.md の Archeco V1-V51 構造を学べる
+
+**運用：**
+- 招待を Slack で受諾、GitHub username 共有
+- Read のみ（最初は）。Write は Marc が判断
+- 我々の repo（`fambox-liquid-prompt-builder`）への collaborator 招待は Marc 側から要望あれば検討
+
+**含意：**
+- Marc の最新 commit を週次でチェック（金曜事業開発で言及できる）
+- 学んだことは `EXTERNAL-INFLUENCES-fambox.md`（仮）に逆参照記録
+
+---
+
 ## 過去決定を覆した記録
 
 | 新 ID | 上書きされた ID | 内容 |
@@ -429,3 +584,8 @@
 | D-011 | D-005 | 円形ホイール最小化 → 週次マイクロデリバラブルへ |
 | D-017 | （D-004 補完）| Flywheel 構造を Middle & Fast ポジショニングで再定義 |
 | D-016 | （D-002 進化）| 出力優先順位を「Step 3 = 誰でも7割」の MVP ゴールに具体化 |
+| **D-021** | **D-020** | **AI/Human を %（70/30）ではなくカテゴリベース（AI proposes / Human validates / adjusts / decides）に再定義** |
+| **D-022** | （D-016 + D-005 補完）| **Learn 層を Step 3 まで放置せず Step 1 から保護機構必須化** |
+| **D-023** | （DNA v1.0 補完）| **DNA に Evolution Triggers を明文化（化石化防止）** |
+| **D-024** | （D-018 上位フレーム）| **Marc の Project CLAUDE.md パターンを採用、brand/fambox/CLAUDE.md 作成** |
+| **D-025** | （新規）| **Marc コラボ招待受諾** |
