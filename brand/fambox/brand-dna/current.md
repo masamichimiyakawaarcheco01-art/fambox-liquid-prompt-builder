@@ -707,10 +707,26 @@ v0.6.3 以降、`brain/45_Design_Refs/` 蓄積から **FAM BOX に固有の視�
 
 **Status**: ✅（v0.7+ADR-026 確定）
 
-## L5-7. KEEP/REFINE/CREATE/IGNORE 4象限
-**現状**: 運用開始時（v1.0確定後）に実施
-**対象**: 既存接点の棚卸し（L5-2リスト）→ 象限分類
-**Status**: ⏳（v1.0後）
+## L5-7. KEEP/REFINE/CREATE/IGNORE 4 象限 ★ v1.0+ADR-034 確定（2026-05-27）
+
+**実施**: 2026-05-27 / DNA v1.0 公式昇格（ADR-031）直後に着手
+**対象**: L5-2 接点リスト + M4 競合分析 + DS v0.2 達成接点 = **48 接点**
+**分類結果**:
+
+| 象限 | 件数 | 主な接点 |
+|---|:---:|---|
+| 🟢 **KEEP**（維持） | 11 | Header v0.2 / Modal / Stat Grid / Footer / Bento Grid / Contact Form / tokusetsu-jisseki / 守屋選手企画 / Seal メール 12 種 / 食事診断 / Figma DS |
+| 🟡 **REFINE**（改善） | 12 | Shopify TOP / 商品詳細 LP / 問合せ動線 / FAQ / Blog テンプレ / spirit / active-plans / value-proposition / 物理接点（POP #2 整備） |
+| 🔵 **CREATE**（新設） | 8 | **B2B 独立 LP** / 法人提案資料 / YouTube / アカデミー LP / Press Release テンプレ / アフターケアチラシ |
+| 🔴 **IGNORE**（退役） | 17 | fam-corp-* / fam-active-plans v1 / fam-blog-* / fam-collection-* / fam-spirit / fam-* legacy（fam-jp.com 移行ターゲット） |
+
+**詳細マトリクス**: [L5-7-touchpoint-matrix.md](L5-7-touchpoint-matrix.md)
+
+**カスタマージャーニー 6 ステージ × 4 象限クロス分析**も同 md に記載。
+
+**半期アクション（13 項目）**: High 5 件（6 月内）/ Mid 5 件（7-8 月）/ Low 3 件（9 月以降）。**B2B 独立 LP 設計**と **法人提案資料テンプレ**が OKR KR1-5 直結のクリティカルパス。
+
+**Status**: ✅（v1.0+ADR-034 確定 / 半期アクションは別途実装フェーズへ）
 
 ## L5-8. 第三者ブランド認知テスト設計
 **OKR Task 1-1-c 前段**
