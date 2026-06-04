@@ -284,8 +284,34 @@ owner: 宮川
 
 ---
 
+---
+
+## ADR-033: L4-14 ロックアップ実装着手 — Component spec 起草（2026-05-27）
+
+- **決定**: ADR-024 で確定した L4-14 ロックアップ 10 項目を、**Component spec として正式起草**（`brand/fambox/design-system/components/lockup.md` v0.1 / status `planning`）。Figma 実装は **Phase A〜C** に分けて段階的に進める。
+- **前提**:
+  - ADR-024（2026-05-22）でロックアップ 10 項目を確定（横組み / 縦組み / シンボル / ワードマーク単体 / クリアスペース 0.5x / 最小 24px / 3 color / 背景ルール / 6 Don'ts / Co-branding / パートナー / 配置 / 5 納品形式）
+  - ADR-031（2026-05-27）で DNA v1.0 公式昇格を達成し、v1.1 以降のロックアップ実装に着手可能
+  - M1 ロゴ master の整理完了（PR #3 / 8 ファイルを `brand/fambox/assets/logos/` に集約 + 不足分リスト化）
+- **Component Set 構造**:
+  - **4 type**（wordmark / vertical / symbol / wordmark-only）× **3 color**（fullcolor / monochrome-black / monochrome-white）= **12 variants**
+  - Figma マスター（`QsiBrc2v20BYw76YHI9x3e`）の **3. Primitives** ページに登録
+  - Variables 紐付け: `FAMBOX/color/brand/drive` `#FB4C15` / `FAMBOX/color/ink/ink` `#1B1D1A` / `FAMBOX/color/ink/white` `#FFFFFF`
+- **実装フェーズ**:
+  - **Phase A**（次セッション以降 / Figma plugin 接続必要）: Figma で Component Set 作成 + Variables 紐付け + Documentation page 6 種（Variations / Clear Space / Min Size / Color / Background / Don'ts）
+  - **Phase B**（依頼 + 段階収集）: M1 不足アセット（フルカラー SVG / AI EPS / 縦組み / シンボル単体）を大前さん / 制作元へ依頼
+  - **Phase C**（v1.1 以降）: 全資産展開 — 名刺 / 封筒 / パッケージ / 営業資料 / LP / Blog バナーテンプレ
+- **export 出力**: 12 variants × 4 format（SVG / PNG / AI / PDF）= **48 ファイル**を `brand/fambox/assets/logos/exports/` に書き出し
+- **検証チェックリスト**: lockup.md 末尾に 7 項目（v1.1 完了時）
+- **ブロッカー / 待機**:
+  - Figma plugin 接続が未確立 → 本セッションでは Component spec 起草のみで完結
+  - M1 不足分（特に フルカラー SVG）が揃わないと Phase A 完成不可
+- **関連 PR**: `feat/lockup-adr-033` ブランチで Component spec md + 本 ADR を含む PR を作成
+
+---
+
 ## 次の ADR 候補（v1.1 以降）
 - ADR-032: 視覚軸 v2 の軸3 / 軸4 候補の昇格判定（refs 追加 2 件以上集まり次第）
-- ADR-033: L4-14 ロックアップ実装 — Figma 素材生成 + 全資産展開
+- ~~ADR-033: L4-14 ロックアップ実装 — Figma 素材生成 + 全資産展開~~ → **本日着手（2026-05-27 / spec 起草完了）**
 - ADR-034: L5-7 KEEP/REFINE/CREATE/IGNORE 4 象限実施（v1.0 後）
 - ADR-035: L5-9 ブランド運用ガイド作成（v1.0 後）
