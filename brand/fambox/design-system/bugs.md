@@ -225,6 +225,43 @@ related:
 - **関連**: PROC-005（回答前 4 点内部レビュー「前提」項目の強化）
 - **出自**: 2026-05-21 セッション内で発生（ストリーム C 中の MCP 既存接続トラブル修復手順）
 
+### UI / インタラクション（2）
+
+#### BUG-014: 横スクロールカルーセルのアクティブ判定ミス & 実行検証不足
+- **症状**: 横スワイプカルーセルで「末尾カードのアクティブドットが反応しない」「動きが硬い」。さらに「動くはず」で提示しユーザーに2回指摘された
+- **原因**:
+  - `Math.round(scrollLeft / (cardW + gap))` は **末尾カードがスナップ開始位置に届かない**（max scrollLeft < lastIndex × step）ため index を取りこぼす（=最後のドットが永遠に active にならない）
+  - ドット遷移にモーショントークン未使用 → 硬い動き
+  - **使い捨てプレビューを自己流で手書き**し、bugs.md(BUG-008/009) / DS tokens / 実績 section(fam-corp-steps) を参照しなかった
+  - ファイル検証のみで **実ブラウザ実行検証をせず** 提示
+- **発生事例**（2026-06-03・定期便 解約ガイド section / 6枚カルーセル）: 6個目ドット無反応 + janky
+- **対処**:
+  1. アクティブ判定は **「コンテナ中央に最も近いカード」方式**（各カード `getBoundingClientRect()` 中心とコンテナ中心の距離最小）→ 末尾含め全カード確実。実ブラウザで `0,1,2,3,4,5 / 末尾=5` を検証済
+  2. ドット遷移は実在トークン `var(--duration-base, 250ms) var(--ease-out)` + `prefers-reduced-motion`（BUG-009 準拠）
+  3. 状態更新を **`requestAnimationFrame` 単独に依存しない**（バックグラウンドタブで rAF 停止 → 更新されない）。同期計算 or visibility 考慮
+  4. インタラクティブ JS は PROC-010 Step1（ファイル）に加え **実ブラウザで DOM 実行検証**（Claude in Chrome 等）。⚠️ 操作タブは `document.hidden=true` で rAF が止まるため、検証ロジックは同期で書く
+- **関連**: BUG-008（carousel は構造で組む）/ BUG-009（モーショントークン）/ PROC-012（蓄積資産ファースト + 実行検証）/ PROC-009
+- **出自**: 2026-06-03 解約ガイド section 制作セッション
+
+#### BUG-015: Seal 顧客ポータル / 解約popup の CSS 整形レシピ & 罠
+- **概要**: Seal Subscriptions の顧客ポータル（特に解約popup）の見た目を FAM BOX 仕様に整える際の確定知見。次回再利用のレシピ
+- **貼付先**: `Seal → Settings → General Settings → Advanced → Custom CSS for customer portal`（基本色は General Settings の色設定でも可）
+- **構造（実機確認済 2026-06-03）**:
+  - ポータルは **iframe ではなく本体 DOM** に `seal-*` クラスでレンダリング → Custom CSS / テーマ CSS で整形可
+  - 解約popup の安定識別子: モーダル **`#seal-cancellation-flow-box`** / オーバーレイ **`#seal-cancellation-flow-overlay`**（ID = 高特異度・ポータル本体ボタンに非影響）
+  - 主要クラス: タイトル `.question` / 理由ラベル `span.cancellation-reason-label` / 理由select `select.seal-input.sls-select`（"replaced" ライブラリ製）/ ボタン `.seal-button` `.seal-button-red` / 閉じる `.seal-close`
+- **罠**:
+  1. select に **`max-width:350px`** が効いている → `max-width:none !important` で解除しないと全幅にならない
+  2. select に **`margin-left:8px`** → `margin:0 !important` でボタンと左右整列（gap 24=24）
+  3. **「継続/解約」ボタンは理由選択後に出現**（初期は width 0）→ 計測時は理由選択 or 親 div を表示
+  4. タイトルが右上 ✗ と重なる → `.question{padding-right:40px}`。⚠️ `getBoundingClientRect()` は要素枠（padding 含む）なので、テキスト実位置は **Range で計測**
+  5. popup は **バックグラウンドタブで描画されない**（rAF/hidden）→ 検証は visible 化 or computed style（BUG-014 と同根）
+- **設計方針（リテンション）**: 「定期購入を継続する」を **Drive Orange 主役**、「解約」を控えめ（アウトライン）＝解約抑止 + FAM 配色統一
+- **検証法**: 候補 CSS を `<style>` 注入して computed/rendered 値を実機確認（推測で渡さない＝PROC-006/012）
+- **完成 CSS**: `docs/okr/cancel-guide-assets/seal-cancellation-popup.css`（v3）
+- **関連**: BUG-014（hidden タブ検証）/ DOCTRINE-001（Hiragino）/ DOCTRINE-004（specificity）/ PROC-006・PROC-012
+- **出自**: 2026-06-03 Seal 解約popup 整形セッション
+
 ---
 
 ## 2. DOCTRINE（strict rule 候補）
@@ -334,6 +371,42 @@ DNA v1.0 確定後（2026-06-30 予定）に `principles/doctrine.md` へ正式�
 - **関連**: BUG-002（richtext + `<p>` ネスト破綻）
 - **Promotion Status**: 昇格対象（DS Spec 本体に組み込み可能）
 - **出自**: feedback_design_system_liquid_patterns パターン 1-2
+
+### DOCTRINE-006: 印刷物タイポグラフィ例外（4書体構成）
+- **ルール**: DOCTRINE-001（Poppins+Hiragino 固定）は **Web / Shopify Liquid 用**。**消費者向け印刷物（チラシ等）は例外**として4書体構成を正式採用（2026-06-02 宮川さん確認）
+- **4書体**:
+  - `F910-Shin-comic-tai`（主役・親しみ系）= セクション見出し 20pt / 本文 10pt / 注釈 8pt
+  - `Hiragino Sans`（W4-W7）= Hero 主見出し 26-30pt / 監修者の正式情報
+  - `Poppins`（Light/Medium/SemiBold）= 英字ラベル / クーポンコード / 割引数字 / 連絡先
+  - `YuMincho +36p Kana`（Demibold）= 縦書きドラマ装飾見出し 32pt
+- **Why**: チラシは消費者との親しみ接点で F910 の柔らかさが適合（DOCTRINE-001 の NBA/NFL 系禁止とは別軸）。媒体で書体方針を分ける
+- **出自**: 梱包チラシ第一弾（人力サンプル実測）/ feedback_fam_typography 印刷物例外条項
+
+### DOCTRINE-007: 色ゾーニング規則（チラシ/印刷物）
+- **ルール**: 色は「装飾」でなく「情報設計（IA）」として使う。1色=1役割を全ページ一貫
+  - Drive Orange `#FB4C15` = エネルギー/CTA（Hero・クーポン・Instagram のみ）
+  - Deep Blue `#0F2A5C` = 信頼/連絡（お問い合わせ・法人窓口のみ）
+  - White / Light gray = エディトリアル本文
+- **❌ Anti**: 彩度の高い全幅ベタ帯を2つ隣接させる（白の余白で必ず分離）/ 全面ベタの多用（ゾーンは角丸パネル R8-16 で囲う）
+- **Why**: 2026-06-02 AI 試作の「上下橙ベタ＋中白」サンドイッチが単調・重いと判定。人力版は橙/青/白の面でセクションを区画
+- **出自**: 梱包チラシ第一弾 v4-how-to-reach-70
+
+### DOCTRINE-008: 印刷物は「3テイストモード」を宣言してから作る
+- **ルール**: FAM BOX 印刷物は単一スタイルでなく**目的別3モード**。制作前に必ずモード宣言し、該当の type/color/装飾語彙を適用
+  - **A. Editorial Catalog**（冊子・世界観）：雑誌的・明暗ページ混在・データ可視化。Inter Extra Bold **Italic 72** で実績数字、Hiragino W5(本文)↔W7(見出し)、暖アクセント アンバー`#FFA41A`/イエロー`#FFCC24`
+  - **B. Manga Impact**（掴み広告/ポスター）：**F910-Shin-comic-tai 108** 効果音、Poppins Bold **Italic**、Hiragino **W8**。斜めコマ割り・吹き出し・切り抜き人物・縦組極太。上で掴み→下で整然3カラム着地
+  - **C. Corporate Solution**（B2B提案）：白/**明青`#0F43C7`**/橙バンド・**2本柱ダイアグラム＋コネクタチップ＋双方向矢印**・写真グリッド・スマホモック。Hiragino W8見出し＋W5/W6本文
+- **横断**: 日本語 Hiragino を**W4〜W8 の広い幅**で階層化／**斜体＝エネルギー**（スポーツ躍動）／数字は特大スタッツ化／インクは純黒でなく暖緑みの黒`#252726`/`#221B14`／背景は面（帯）でゾーニング
+- **Why**: 2026-06-04 過去制作物（MENU CATALOG / 和田杯広告 / A1ソリューション）実測。テイストを混ぜると失敗、宣言で一意化
+- **出自**: PRINT-DESIGN-DNA-research-2026-06-04（リバースエンジニアリング）
+
+### DOCTRINE-009: 比率ブロッキング先行 ＋ マストヘッド全ブリード ＋ レイヤー3層の重なり
+- **作る順序（色から入らない）**：①アートボードの内側パディング決定（情報多め32）→②パディング内を**情報優先度で % にブロック分割**（グレー面で割るだけ。色・装飾はまだ）→③各ブロックにリード文/本文/画像の入る場所をプレースホルダ配置→④全体俯瞰で領域調整（狭ければ比率調整、収まらない情報は裏面へ）→⑤**優先度が最も高いブロックから精緻にデザイン**（色・タイポ・装飾はここで付与）
+- **パディングと際（フルブリード）**：パディング 32 は**コンテンツと下部ブロック**に適用。**最上部の主役（Hero=マストヘッド）の背景は artboard 際まで全ブリード**（x0 y0 w595、角丸なし）で presence を出す。背景は際・文字は左32尊重＝窮屈に見えない。箱に閉じ込めると弱い
+- **レイヤー3層の重なり**：前景（切り抜き人物・浮くカード/バッジ）＞中景（文字）＞背景（カラー帯）。**図やバッジをゾーン境界（橙→白）にまたがせ、ドロップシャドウで浮かせる**と奥行き・複雑さ・美しさが出る
+- **❌ 事故の重なり**：可読要素（特に文字）の上に図を被せて潰す（以前 Hero サブに被せた事故）。良い重なりは z-order を意図設計＋クリアランス確保＋生成後スクショで破綻確認
+- **Why**: 2026-06-04〜06 宮川さん修正版（C-front-stepbuild_修正）研究。比率ブロッキング先行で構図検証→主役から精緻化、Hero フルブリード＋境界またぎ重なりで「複雑で美しい」を実現
+- **出自**: v5/stepbuild 研究、fambox-flyer-builder スキル
 
 ---
 
@@ -494,6 +567,26 @@ DNA v1.0 確定後（2026-06-30 予定）に `principles/doctrine.md` へ正式�
 - **関連**: BUG-001〜004（Shopify Liquid 4 罠の検出手段）/ PROC-004
 - **出自**: feedback_design_system_liquid_patterns パターン 4
 
+### PROC-011: Figma 自動化の AI/人間 分担（フォントの壁 + 写真は配置可）
+- **ルール**: Figma を AI で組む際、**当てられる範囲と人間専用範囲を最初に切り分ける**
+- **AI で可能**:
+  - 構造（フレーム/テキスト/矩形/auto-layout）= figma-bridge
+  - フォント名・サイズ・色の変更、英字 Poppins / 日本語 Noto Sans JP（代替）= 公式 Figma MCP `use_figma`
+  - **写真配置 = `upload_assets`**（ローカル画像→single-use URL に curl POST→nodeId の塗りに設定）。PNG/JPG/GIF/WebP・10MB まで・SVG 不可
+- **人間専用（このツールチェーンの構造的制約）**:
+  - **ブランド印刷フォント**（Hiragino / F910-Shin-comic-tai / YuMincho）の適用 = MCP 実行環境に未インストールで `loadFontAsync` 失敗。Mac 上 Figma で 1クリック差し替え
+- **教訓**: 「figma-bridge 直組み＝7割」は誤り。実測3〜4割（ワイヤー）。**型（人力完成型）の複製＋スロット差し替え＋素材供給**が70%への最短（[[v4-how-to-reach-70]]）
+- **出自**: 梱包チラシ第一弾 / feedback_figma_bridge_text_limitations
+
+### PROC-012: 蓄積資産ファースト & インタラクティブ要素は実ブラウザ実行検証
+- **ルール**:
+  1. UI 制作は **使い捨てプレビューであっても** bugs.md / DS tokens / 既存実績 section を**必ず先に参照**してから組む（自己流で手書きしない）。プレビューは承認素材であり、そのまま Liquid 化される＝品質は地続き
+  2. インタラクティブ要素（カルーセル / アコーディオン / モーダル / タブ等）は、ファイル検証（PROC-010 Step1）に加えて **実ブラウザでの DOM 実行検証を必須**にする。「動くはず」での提示を禁止
+  3. 検証で想定外の結果が出たら、結論を急がず**原因を切り分ける**（例: 2026-06-03 はバックグラウンドタブの rAF 停止が偽陰性の原因と特定）
+- **Why**: 2026-06-03、解約ガイド section で蓄積資産（BUG-008/009・DS tokens・fam-corp-steps）を使わず手書きカルーセルを組み、末尾ドット無反応 + janky をユーザーに2回指摘された。**「こういうミスを繰り返さないための積み重ねではなかったのか」という信頼毀損**。資産は「持っている」だけでなく「初手で使う」規律がなければ意味がない
+- **関連**: BUG-014（本件の技術事故）/ PROC-001（Audit-first）/ PROC-004（ファイル検証）/ PROC-009（WF サイクル）/ PROC-010（Liquid 検証3段階）
+- **出自**: 2026-06-03 解約ガイド section 制作セッション
+
 ---
 
 ## 4. 統合元 feedback memory 一覧（出自記録）
@@ -523,10 +616,10 @@ DNA v1.0 確定後（2026-06-30 予定）に `principles/doctrine.md` へ正式�
 
 | カテゴリ | 件数 | 構成 |
 |---|---|---|
-| BUG | 13 | Shopify Liquid 4 / WF→Liquid・Theme 干渉 4 / Tokens・Claude 運用 5 |
-| DOCTRINE | 5 | Typography 1 / Anti-pattern 1 / 資料フォント 1 / Specificity 1 / Schema 型 1 |
-| PROCESS | 10 + 1 sub | Audit-first 1 / 失敗対処 2 / 検証規律 3 / Token 検証 2 / Workflow 1 / Liquid 検証 1 / **PROC-005-A CLI 事前検証** |
-| **合計** | **28** | BUG-013 と PROC-005-A は 2026-05-21 セッション内事故事例から追加 |
+| BUG | 15 | Shopify Liquid 4 / WF→Liquid・Theme 干渉 4 / Tokens・Claude 運用 5 / **UI・インタラクション 2** |
+| DOCTRINE | 9 | Typography 1 / Anti-pattern 1 / 資料フォント 1 / Specificity 1 / Schema 型 1 / 印刷物Typo 1 / 色ゾーニング 1 / 3テイストモード 1 / **ブロッキング+フルブリード+レイヤー 1** |
+| PROCESS | 12 + 1 sub | Audit-first 1 / 失敗対処 2 / 検証規律 3 / Token 検証 2 / Workflow 1 / Liquid 検証 1 / Figma分担 1 / **蓄積資産ファースト+実行検証 1** / PROC-005-A CLI 事前検証 |
+| **合計** | **36** | DOCTRINE-009（ブロッキング先行+マストヘッド全ブリード+レイヤー3層）は 2026-06-06 stepbuild 研究から追加 |
 
 ---
 
@@ -546,3 +639,5 @@ DNA v1.0 確定後（2026-06-30 予定）に `principles/doctrine.md` へ正式�
 
 - v0.1 (2026-05-21): 初版。13 個の feedback memory を BUG 12 / DOCTRINE 5 / PROCESS 10 = 27 エントリに統合。ストリーム A（bugs.md 統合）成果物。Marc-Antoine Archeco kit v7.14 の bugs.md 構造を FAMBOX L0-L9 構造に適応。
 - v0.2 (2026-05-21): **セッション内事故事例から 2 エントリ追加** — BUG-013（CLI/MCP/API コマンド推測の罠）+ PROC-005-A（CLI / MCP / API コマンド構文の事前検証 — 必須サブルール）。`claude mcp reauth` 推測ミス（実在しないサブコマンド）+ `plugin:github:github` の名前空間誤解で発生したユーザー時間浪費から、AI 自身の規律を強化。**bugs.md が「ユーザー罠の蓄積」だけでなく「Claude 自身の運用規律」も含むようになった点が構造的進化**。
+- v0.3 (2026-06-03): **解約ガイド section 制作の失敗から 2 エントリ追加** — BUG-014（横スクロールカルーセルのアクティブ判定ミス + 実行検証不足）+ PROC-012（蓄積資産ファースト + インタラクティブ要素の実ブラウザ実行検証）。蓄積資産（BUG-008/009・DS tokens・fam-corp-steps）を使わず自己流で手書きし、末尾ドット無反応 + janky をユーザーに2回指摘された信頼毀損から、「資産は初手で使う」「インタラクティブ要素は実行検証する」を規律化。**新カテゴリ「UI / インタラクション」を新設**。
+- v0.4 (2026-06-03): **Seal 解約popup 整形の知見を BUG-015 に資産化**。`#seal-cancellation-flow-box`/`-overlay` の識別子、select の `max-width:350px`/`margin-left:8px` 罠、ボタンは理由選択後出現、タイトル✗重なり（padding-right + Range計測）、リテンション設計（継続=Drive Orange主役）。完成CSS `docs/okr/cancel-guide-assets/seal-cancellation-popup.css`。実機 computed/rendered 検証を徹底（推測で渡さない）。
