@@ -89,3 +89,13 @@ status: inbox | reviewed | applied
 - **`docs/okr/references/`**: FAMBOX OKR用の参考素材（DNA汚染防止のため引用範囲限定）
 
 `docs/okr/references/` と異なり、`45_Design_Refs/` は **DNA汚染防止ルールなし** の自由な参考エリア。応用するときに「これはFAM/FAMBOXに合うか」を判断する。
+
+## wheel-pattern タグ軸（2026-06-09 追加 / Design Wheel 連携）
+
+FAMBOX軸（意味/隠喩）とは**直交**する表層スタイルの軸。Design Wheel の
+パターン在庫（`docs/design-wheel/`）と連動する。
+
+- 値: `geometric / corporate / grid / digital / sporty / lab`
+- 記法: 各 ref ファイルの front-matter またはタグ行に `wheel-pattern: <値>` を併記。
+- FAMBOX軸タグは従来通り維持（2軸＝意味×スタイルで引ける）。
+- `_by-style/` 仕組みとは共存（重複可）。

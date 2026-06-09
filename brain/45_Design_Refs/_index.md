@@ -2,6 +2,8 @@
 
 最終更新: 2026-05-21 / 件数: 15
 
+> **2026-06-09 〜**: 各行に `wheel-pattern`（geometric/corporate/grid/digital/sporty/lab）を併記。新規追加分から適用、既存15件は遡及任意。
+
 | 追加日 | タイトル | フォーマット | スタイル | コンポーネント | FAMBOX軸 |
 |---|---|---|---|---|---|
 | 2026-05-21 | [段ボール箱が落ちて積み上がる 3D 物理シミュレーション（Brik Tool）](2026/05/2026-05-21_brik-cardboard-boxes-falling.md) | motion (3D) | motion-graphic, lab-scientific, dynamic | hero-visual, load-accumulation | **軸4 候補: 蓄積する負荷 ★NEW（シード1件目 / before の表現）** |
