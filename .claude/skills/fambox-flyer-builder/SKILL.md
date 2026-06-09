@@ -1,6 +1,6 @@
 ---
 name: fambox-flyer-builder
-description: FAM BOX の印刷物（チラシ・パンフレット・ポスター・カタログ・梱包同梱物・B2B提案資料）を Figma 上で設計・構築する。3テイストモード（Editorial Catalog / Manga Impact / Corporate Solution）を宣言し、背景バンドゾーニング・箱(auto-layout)・タイポ階層・グレーボックス画像・写真の upload_assets 配置・生成後の自己検証まで一貫して行う。Use when creating or revising any FAM BOX / FAM 印刷物（チラシ/flyer/パンフレット/pamphlet/ポスター/poster/カタログ/catalog/梱包同梱/B2B 提案・solution 資料）, building A4/大判 print layouts in Figma, applying FAM print design DNA, or iterating on flyer feedback. Triggers: 「チラシ」「パンフレット」「印刷物」「梱包同梱」「ポスター」「カタログ」「flyer」「poster」「提案資料」+ FAM/FAMBOX 文脈。
+description: "FAM BOX の印刷物（チラシ・パンフレット・ポスター・カタログ・梱包同梱物・B2B提案資料）を Figma 上で設計・構築する。3テイストモード（Editorial Catalog / Manga Impact / Corporate Solution）を宣言し、背景バンドゾーニング・箱(auto-layout)・タイポ階層・グレーボックス画像・写真の upload_assets 配置・生成後の自己検証まで一貫して行う。Use when creating or revising any FAM BOX / FAM 印刷物（チラシ/flyer/パンフレット/pamphlet/ポスター/poster/カタログ/catalog/梱包同梱/B2B 提案・solution 資料）, building A4/大判 print layouts in Figma, applying FAM print design DNA, or iterating on flyer feedback. Triggers 「チラシ」「パンフレット」「印刷物」「梱包同梱」「ポスター」「カタログ」「flyer」「poster」「提案資料」+ FAM/FAMBOX 文脈。"
 ---
 
 # FAM BOX Flyer / Print Builder
@@ -19,6 +19,7 @@ FAM BOX の印刷物を「誰でも7割を早く」出すための器。過去�
 | [references/build-playbook.md](references/build-playbook.md) | Figma 構築の手続き知見（figma-bridge/use_figma/upload_assets/箱/自己検証/既知の罠） |
 | [references/taste-and-tokens.md](references/taste-and-tokens.md) | 3モード早見＋type/color/tracking/line-height トークン（DNA 蒸留版） |
 | [references/asset-index.md](references/asset-index.md) | 画像アセット索引（スロット→実写真の自動選択＋ upload_assets 配置） |
+| [references/quality-rubric.md](references/quality-rubric.md) | 品質ルーブリック（9軸/合格80%）＋ゴールド見本。生成後の自己採点基準。ループ運用は `docs/okr/fambox-flywheel/quality-loop/CRITIQUE-AGENT.md` |
 
 関連 feedback memory（罠回避）：`feedback_figma_bridge_text_limitations` / `feedback_fam_typography`（印刷物例外）/ `feedback_visual_design_video_first`。
 
@@ -38,7 +39,7 @@ FAM BOX の印刷物を「誰でも7割を早く」出すための器。過去�
    - 色ゾーニング：濃面=impact／淡面=reading。橙=CTA/Hero、Deep Blue=信頼/連絡、Ink濃=特集/監修。彩度高ベタを2面隣接させない。
 8. **タイポ**：日本語 Hiragino を W4〜W8（構築時は Noto Sans JP 代替→Mac で差し替え）、英字 Poppins、行間 本文170%/見出し125-150%/Display150%、トラッキング Display-3〜4%/見出し-2%/本文+1%。数字・実績は**斜体スタッツ**で特大。
 9. **画像**：まず構造はグレーボックスで確定 → **asset-index.md でスロットに合う実写真を選び `upload_assets` で配置**（build-playbook §3）。索引に無い/質不足はグレーのまま＋必要素材をユーザーに依頼（無理な合成はしない）。人物の肖像/契約/チーム許諾は確定前に確認。
-10. **生成後スクショで自己検証**：右端/下端のはみ出し・要素衝突・濃背景上のコントラストを確認してから報告。
+10. **生成後スクショで自己検証＋ルーブリック採点**：右端/下端のはみ出し・要素衝突・濃背景上のコントラストを確認した上で、`references/quality-rubric.md` の9軸で**同じ面のゴールド見本と並べて採点（加重・合格80%）**。80%未満は未完成として優先ギャップ Top3 を直す。再発ギャップは §3 で恒久ルール化（書き戻し）してから報告。
 
 ## 2. モード別の要点（詳細は taste-and-tokens.md）
 
