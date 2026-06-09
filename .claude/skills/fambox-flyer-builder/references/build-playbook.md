@@ -33,6 +33,8 @@ Figma 上で印刷物を組む際の手続き知見と既知の罠。実機検�
 1. `upload_assets(fileKey, nodeId, scaleMode)` で single-use URL 取得（scaleMode: FILL/CROP/FIT）。
 2. `curl -X POST -F "file=@path.png;type=image/png" "<submitUrl>"` で POST → imageHash と placedOnNodeId が返る。
 3. **placedOnNodeId が返らない場合**（小さい枠で起きがち）は、返った imageHash を使って use_figma で明示設定：`node.fills=[{type:"IMAGE",imageHash:"<hash>",scaleMode:"FILL"}]`。
+   - 実証（2026-06-08, fileKey PqlR5…）：`upload_assets(nodeId)` で **named placeholder（rounded-rectangle）を直接 fill 設定でき、44px の小アバター枠でも `placedOnNodeId` が返った**。狙い撃ち挿入は安定。なお既に同一画像が入った枠へ同じ素材を再 place しても画素は不変（before/after バイト一致）＝“変化が見たい”なら別素材か CROP transform を変える。
+   - ページ全体が巨大（数万px・多数フレーム）だと `get_metadata(page)` がタイムアウトしノード列挙不可。**対象アートボードの node ID（ビルドログ記録 or ⌘L で取得）でサブツリー metadata を引く**のが確実。FAM チラシ v2 stepbuild の節点：`01-C-front=1:2 / 02-C-back=3:28 / 03-B-front=3:65 / 04-B-back=3:100`（B-front 画像枠 hero-image-pair=3:67・advisor-omae-photo=3:93・advisor-wada-photo=3:94、B-back は qr-business=3:133 のみ＝写真枠なし）。
 4. 対応形式 PNG/JPG/GIF/WebP・10MB まで。**SVG 不可**（ロゴ SVG は別途）。
 5. **QR は公開 API で生成**して配置可：`curl "https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=8&data=<URL>" -o qr.png` → upload。URL は表示テキストと一致させ、印刷前に最終URLを確認（暫定なら明記）。
 6. 素材在庫例：`/Users/archecoinc./Desktop/Claude_1/Asset/`（Mask group.png=大前+和田、【明治】大前写真.png、Wada_01.png 等）。内容不明な多数画像は PIL でコンタクトシート化して Read すると効率的。
