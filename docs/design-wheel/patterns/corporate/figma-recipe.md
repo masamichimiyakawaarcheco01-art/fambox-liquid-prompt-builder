@@ -46,4 +46,5 @@
 - カード行: `137:87` / card-01 `137:88` / card-02 `137:92` / card-03 `137:96`
 - **学び1**: `create_frame` の `layoutSizingHorizontal: FILL` は親が auto-layout でも作成時指定だとエラー → 固定 W で作成すれば OK（FILL は作成後に set する必要あり）
 - **学び2**: カードは固定 H220 で作ったため本文下に余白ムラ → 次回は `layoutSizingVertical: HUG`（critique v1 の減点要因）
+- **学び3**: `create_frame` がエラーを返しても**フレーム本体が孤児として canvas 直下に残る**ことがある（白 1280×520 が canvas (0,0) に残り Hero を覆い隠した / 137:78）。エラー発生時は ID 採番の欠番を確認し `get_node_info` → `delete_node` で掃除する。**構築完了後は export 目視だけでなく canvas 全体のゴミ確認も必須**（export は対象フレームしか写らないため孤児を検出できない）
 - export: PNG scale 0.75 で目視確認済み（採点 11/12 → critique-log.md）
