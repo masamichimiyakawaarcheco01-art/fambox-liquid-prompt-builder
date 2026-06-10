@@ -1,7 +1,7 @@
 ---
 style: corporate
-count: 1
-last_updated: 2026-04-27
+count: 2
+last_updated: 2026-06-10
 ---
 
 # corporate — Design References
@@ -14,4 +14,5 @@ last_updated: 2026-04-27
 - 過剰な遊びを避けた構成
 
 ## 該当リファレンス（新しい順）
+- 2026-06-10 [Security, Reinforced — fintech/SaaS コーポレートLP](../2026/06/2026-06-10_arrasel-corporate-ui.md) — AR Rasel（Design Wheel シード）
 - 2026-04-27 [WorRC — Brand Identity](../2026/04/2026-04-27_worrc-brand-identity.md) — Behance

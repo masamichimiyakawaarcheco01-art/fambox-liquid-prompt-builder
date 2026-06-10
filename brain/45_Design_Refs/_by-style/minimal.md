@@ -1,7 +1,7 @@
 ---
 style: minimal
-count: 5
-last_updated: 2026-04-28
+count: 6
+last_updated: 2026-06-10
 ---
 
 # minimal — Design References
@@ -14,6 +14,7 @@ last_updated: 2026-04-28
 - 控えめなアニメーション
 
 ## 該当リファレンス（新しい順）
+- 2026-06-10 [Security, Reinforced — fintech/SaaS コーポレートLP](../2026/06/2026-06-10_arrasel-corporate-ui.md) — AR Rasel
 - 2026-04-28 [アスリートのトレーニング — 明暗のはっきりした躍動的フォト](../2026/04/2026-04-28_athlete-training-photography.md) — @touyun0917T
 - 2026-04-28 [代官山青果店 — モノトーンのラボ的レイアウト](../2026/04/2026-04-28_daikanyama-seikaten-lab-layout.md) — マネるデザイン研究所
 - 2026-04-28 [ぼかし×マスクでアスリートの集中を可視化（モーション）](../2026/04/2026-04-28_baltatzis-blur-mask-focus.md) — Christos Baltatzis
