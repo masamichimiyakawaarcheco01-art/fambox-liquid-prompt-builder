@@ -45,3 +45,11 @@
 - **学び5**: 統計カードを `layoutSizingVertical: HUG` で作成 → corporate v1 の固定高さ余白ムラ問題が再発せず（critique 5観点 2/2）。**カード類は常に HUG** をレシピ標準にする
 - **学び6**: 絶対配置（layoutMode NONE）のヒーローは要素間隔の検算が必要（band y400 / CTA y520 など手計算）。auto-layout 区画より調整コストが高く、純構築時間 +1分44秒の主因
 - export: PNG scale 0.5 で2回目視（修正→再export）。ID 採番 138:100〜121 連番＝孤児なし（学び3 の検算）
+
+### v2（2026-06-10 / channel uz94id3p / 純構築 5分47秒 / LAYER-NAMING v1.0 準拠）
+- ページ: `142:122` **page/sporty-stride/v2**（v1 の右 x=3200）
+- 構成: section/hero（text/display → image/runner-ghost → image/placeholder-runner → shape/band-accent → text/marquee → text/label-eyebrow → button/pill-primary の作成順=z設計）/ section/content（group/stats-row + card/stat-* + group/photos-row + image/photo-duo/01-03）
+- **検収結果**: `scan_nodes_by_types` で25ノード全て命名規則準拠・デフォルト名0件・ID 連番（孤児なし）✅
+- v1 からの改善反映: ①全ノード作成時命名（rename 不可のため）②カプセル型 runner プレースホルダで「帯が被写体の前を貫通する」深度を作成順で実現 ③カード類 HUG（学び5）
+- **学び7**: `set_corner_radius` の `corners` 配列引数は "Cannot unwrap symbol" エラー → `radius` のみ指定する（部分角丸は人間仕上げ）
+- **学び8**: v1 とほぼ同規模で構築時間は同等（5:47 vs 5:59）— **命名規則のオーバーヘッドはゼロ**（name パラメータを渡すだけ）。管理性向上は無料で手に入る
