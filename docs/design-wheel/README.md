@@ -24,11 +24,11 @@ Pinterest画像 → Claude Design（抽出＋Web即プレビュー）→蒸留�
 
 | パターン | ステータス | パック |
 |---|---|---|
-| corporate | 🟡 パイロット進行中 | [patterns/corporate/](patterns/corporate/) |
+| corporate | ✅ 在庫入り（2026-06-10 昇格 / 11/12） | [patterns/corporate/](patterns/corporate/) |
 | geometric | ⬜ 未着手 | — |
 | grid | ⬜ 未着手 | — |
 | digital | ⬜ 未着手 | — |
-| sporty | ⬜ 未着手 | — |
+| sporty | 🟡 シード収集中（2026-06-10〜） | [patterns/sporty/](patterns/sporty/) |
 | lab | ⬜ 未着手 | — |
 
 ## ファイル構成

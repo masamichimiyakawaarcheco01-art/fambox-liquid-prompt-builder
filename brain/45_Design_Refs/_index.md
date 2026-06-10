@@ -1,11 +1,13 @@
 # Design References Index
 
-最終更新: 2026-06-10 / 件数: 18
+最終更新: 2026-06-10 / 件数: 20
 
 > **2026-06-09 〜**: 各行に `wheel-pattern`（geometric/corporate/grid/digital/sporty/lab）を併記。新規追加分から適用、既存15件は遡及任意。
 
 | 追加日 | タイトル | フォーマット | スタイル | コンポーネント | FAMBOX軸 / wheel-pattern |
 |---|---|---|---|---|---|
+| 2026-06-10 | [TENISTA — テニスコーチングLP](2026/06/2026-06-10_tenista-tennis-sporty.md) | static | athletic-lifestyle, dynamic, photography | landing-page, hero, athlete-photography | **wheel-pattern: sporty（Web UI 型シード）** |
+| 2026-06-10 | [NIKE GUANGZHOU — バスケポスター](2026/06/2026-06-10_nike-guangzhou-sporty.md) | static | sports-advertising, graphic, bold | poster, sport-graphic, hero-visual | **wheel-pattern: sporty（グラフィック型シード）／軸2 隣接** |
 | 2026-06-10 | [Pharmacy Automation System — ヘルスケアB2B](2026/06/2026-06-10_pharmacy-automation-corporate.md) | static | corporate, minimal, monochrome | landing-page, hero, navigation, card | **wheel-pattern: corporate（明るい系）** |
 | 2026-06-10 | [RIDEQUEST — 配車サービス（ダーク）](2026/06/2026-06-10_ridequest-transport-corporate.md) | static | corporate, editorial, monochrome, dark | landing-page, hero, navigation, card | **wheel-pattern: corporate（ダーク系）** |
 | 2026-06-10 | [Security, Reinforced — fintech/SaaS コーポレートLP](2026/06/2026-06-10_arrasel-corporate-ui.md) | static | corporate, minimal, editorial | landing-page, hero, card | **wheel-pattern: corporate ★Design Wheel シード1件目** |
