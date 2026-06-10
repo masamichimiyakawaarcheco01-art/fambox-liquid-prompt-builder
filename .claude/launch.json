@@ -18,6 +18,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1/docs/okr/wf_simple_diagnosis_20260513", "-l", "3458", "--no-clipboard"],
       "port": 3458
+    },
+    {
+      "name": "design-wheel-prototypes",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8743", "--directory", "/Users/archecoinc./Desktop/Claude_1/docs/design-wheel/patterns"],
+      "port": 8743
     }
   ]
 }

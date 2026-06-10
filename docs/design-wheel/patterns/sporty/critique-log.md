@@ -29,3 +29,30 @@
 
 **純構築時間: 5分59秒**（11:54:46→12:00:45 / レシピ作成除く・自己修正2回込み）
 → corporate 4分15秒 比 +1分44秒（絶対配置ヒーローの調整コスト）。
+
+---
+
+## v1-html チャネル実験 2026-06-10（宮川さん提案: HTML ベースで起こす）
+
+**対象**: [prototypes/stride-v1.html](prototypes/stride-v1.html)（同一 SYSTEM.md・同一題材 STRIDE を HTML/CSS で構築）
+
+| 観点 | Figma (v1) | HTML (v1) | 差の理由 |
+|---|---|---|---|
+| 1 色ゾーニング | 2 | 2 | 同等（CSS variables = SYSTEM.md トークン直結） |
+| 2 タイポ階層 | 2 | 2 | HTML は Oswald（コンデンス）+ letter-spacing 指定可 → bridge の Inter 固定制約が消える |
+| 3 グリッド | 2 | 2 | 同等。HTML は clamp() でレスポンシブまで含む |
+| 4 コンポーネント | 2 | 2 | 同等＋hover 状態（scale/translateY）まで実装済み |
+| 5 余白 | 2 | 2 | 同等 |
+| 6 らしさ | **1** | **2** | **HTML はランナーSVGシルエット（デュオトーン+残像ブラー）・文字の前後深度・±回転・マーキー帯・設計図グリッド下地まで AI 側で実装できた** |
+
+**合計: Figma 11/12 → HTML 12/12**
+
+**チャネル実験の結論:**
+- sporty のような**写真・深度・動勢依存のパターンは HTML チャネルの方が AI 7割の到達点が高い**。
+  figma-bridge で「人間3割」に残した項目（フォント選択 / letter-spacing / 回転 / デュオトーン / 深度）が
+  ほぼすべて AI 側に移った。残る人間3割は「実写真の差込」と「シルエット→実画像の置換」のみ。
+- Figma チャネルの強みは「デザイナーが後から編集できる」こと。HTML チャネルの強みは「表現再現度と速度」。
+- **運用提案**: パターンごとに推奨チャネルを SYSTEM.md に明記する（corporate=どちらでも / sporty=HTML 優位）。
+  Step 2 以降の非デザイナー運用では HTML 出力の方が「そのまま見せられる」点でも有利。
+- 検証環境: launch.json `design-wheel-prototypes`（ただし既存 wf-preview サーバー再利用のため
+  `docs/okr/wf_simple_diagnosis_20260513/stride-v1.html` に symlink で配信。恒久化するなら専用 server 設定を整理）。
