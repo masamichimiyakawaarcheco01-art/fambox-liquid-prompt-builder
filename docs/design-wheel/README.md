@@ -36,6 +36,7 @@ Pinterest画像 → Claude Design（抽出＋Web即プレビュー）→蒸留�
 - `LOOP.md` — 4フェーズ手順書
 - `PATTERN-SCHEMA.md` — SYSTEM.md の型
 - `CRITIQUE-RUBRIC.md` — レビュー・70%判定
+- `LAYER-NAMING.md` — Figma レイヤー命名規則（チラシ制作と共通 / HTML クラス名と1対1対応）
 - `patterns/<p>/` — 各パターンのパック（SYSTEM.md / refs.md / figma-recipe.md / critique-log.md）
 
 ## 運用ルール

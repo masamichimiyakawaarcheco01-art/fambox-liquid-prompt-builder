@@ -1,6 +1,8 @@
 # sporty — Figma ビルドレシピ
 
 > [SYSTEM.md](SYSTEM.md) を Figma に落とす手順。figma-bridge で構造7割を組む。
+> **レイヤー命名は [LAYER-NAMING.md](../../LAYER-NAMING.md) v1.0 準拠**（v2 ビルドから適用。
+> v1 フレーム `138:100` は規則制定前のため未準拠。命名規則 §6 に本フレームの準拠版ツリー例あり）。
 
 ## 題材（参照と別物）
 **STRIDE — ランニングクラブ** LP 上部1画面。

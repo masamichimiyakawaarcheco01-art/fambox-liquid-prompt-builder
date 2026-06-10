@@ -19,12 +19,15 @@
 - **完了条件**: SYSTEM.md が7セクション全て埋まり、空欄/TBD なし。
 
 ## Phase 3: Generate（Figma構築）AI
-1. `SYSTEM.md` を読み込む。
+1. `SYSTEM.md` と **`LAYER-NAMING.md`（命名規則）** を読み込む。
 2. **参照とは別物の題材**で1画面を設計（例: corporate なら B2Bサービス紹介LP Hero）。
-3. figma-bridge で構造7割を構築（レイアウト/余白/色/階層/グレーボックス）。
+3. チャネルを選択: Figma（後編集性重視）or HTML（表現再現度・写真/動勢依存パターン向き）。
+4. figma-bridge で構造7割を構築（レイアウト/余白/色/階層/グレーボックス）。
    - フォントは Inter 固定で割り切る（人間が後で差替）。
-4. 手順を `patterns/<pattern>/figma-recipe.md` に記録。
-- **完了条件**: Figma に1画面の構造が組み上がり、export 画像を取得。
+   - **全ノードを LAYER-NAMING 準拠の `name` 付きで作成**（bridge に rename 無し＝作成時が唯一のチャンス）。
+   - 前後深度が要る場合は z-order=作成順で設計（学び4）。
+5. 手順を `patterns/<pattern>/figma-recipe.md` に記録。
+- **完了条件**: Figma に1画面の構造が組み上がり、export 画像を取得。**命名検収**（デフォルト名 0件）と孤児フレーム検査（ID 欠番確認）を通過。
 
 ## Phase 4: Learn（採点・改訂）AI＋🧑
 1. 生成 Figma を export → 参照と並べて `CRITIQUE-RUBRIC.md` で採点。

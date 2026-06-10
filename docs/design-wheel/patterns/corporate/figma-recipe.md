@@ -2,6 +2,8 @@
 
 > [SYSTEM.md](SYSTEM.md) を Figma に落とす手順。figma-bridge で構造7割を組む。
 > フォントは Inter 固定（bridge 制約 / [[feedback_figma_bridge_text_limitations]]）→ 人間が3割仕上げ。
+> **レイヤー命名は [LAYER-NAMING.md](../../LAYER-NAMING.md) v1.0 準拠**（v2 ビルドから適用。
+> v1 フレーム `137:77` は規則制定前のため未準拠 — bridge に rename 無し、改名は Figma 手動 or 再構築時）。
 
 ## 題材（参照と別物）
 **FlowOps — 業務オートメーション基盤**（架空 B2B SaaS）の LP 上部1画面。
