@@ -39,4 +39,11 @@
 - accent の最終トーン微調整
 
 ## 構築ログ
-（Task 9 実行時に追記）
+
+### v1（2026-06-10 / channel 6ccjwqtf / 純構築 4分15秒）
+- ページ: `137:77` corporate-flowops（VERTICAL, padding 80, spacing 64, HUG）
+- Hero: `137:79`（HORIZONTAL spacing 32）/ 左コピー `137:80` / CTA `137:84` / 円形枠 `137:86`
+- カード行: `137:87` / card-01 `137:88` / card-02 `137:92` / card-03 `137:96`
+- **学び1**: `create_frame` の `layoutSizingHorizontal: FILL` は親が auto-layout でも作成時指定だとエラー → 固定 W で作成すれば OK（FILL は作成後に set する必要あり）
+- **学び2**: カードは固定 H220 で作ったため本文下に余白ムラ → 次回は `layoutSizingVertical: HUG`（critique v1 の減点要因）
+- export: PNG scale 0.75 で目視確認済み（採点 11/12 → critique-log.md）
