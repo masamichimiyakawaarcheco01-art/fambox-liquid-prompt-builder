@@ -1,11 +1,16 @@
 # Design References Index
 
-最終更新: 2026-06-10 / 件数: 23
+最終更新: 2026-06-11 / 件数: 28
 
 > **2026-06-09 〜**: 各行に `wheel-pattern`（geometric/corporate/grid/digital/sporty/lab）を併記。新規追加分から適用、既存15件は遡及任意。
 
 | 追加日 | タイトル | フォーマット | スタイル | コンポーネント | FAMBOX軸 / wheel-pattern |
 |---|---|---|---|---|---|
+| 2026-06-11 | [TORANOMON HILLS CLOCK — 巨大数字サイネージ](2026/06/2026-06-11_toranomon-clock-digital.md) | static | kinetic-typography, minimal, monochrome | kinetic-typography, motion-design | **wheel-pattern: digital（環境サイネージ型）** |
+| 2026-06-11 | [Granger — スポーツウェルネスLP](2026/06/2026-06-11_granger-sports-wellness.md) | static | athletic-lifestyle, dynamic, vibrant | landing-page, hero, dashboard | **wheel-pattern: sporty（Web UI 型2枚目）** |
+| 2026-06-11 | [Reown — onchain UX LP（bento×カプセル）](2026/06/2026-06-11_reown-onchain-digital.md) | static | geometric, minimal, bold | landing-page, grid-layout, icon-system | **wheel-pattern: digital（Web UI 型）** |
+| 2026-06-11 | [Aura Dome — グラデ半円ロゴ](2026/06/2026-06-11_aura-dome-gradient-logo.md) | static | gradient, minimal | brand-identity, logo-presentation | **wheel-pattern: gradient（ロゴ型3件目）** |
+| 2026-06-11 | [Glass Effect タイルグリッド](2026/06/2026-06-11_glass-effect-tiles.md) | static | glassmorphism, gradient, minimal | card, grid-layout | **wheel-pattern: glass（★候補シード1）** |
 | 2026-06-10 | [Andy Lin 2024 Portfolio — 3D×履歴書グリッド](2026/06/2026-06-10_andylin-portfolio-digital.md) | static | editorial, minimal, geometric | portfolio, hero-visual, card, grid-layout | **wheel-pattern: digital（シード1件目）** |
 | 2026-06-10 | [Graints — グレイングラデ素材ライブラリLP](2026/06/2026-06-10_graints-gradient-library.md) | static | gradient, minimal, editorial | landing-page, hero-typography, card | **wheel-pattern: gradient（Web UI 型シード）** |
 | 2026-06-10 | [HELMO MODE — Showroom 2024 ポスター](2026/06/2026-06-10_helmo-showroom-gradient.md) | static | gradient, minimal, graphic | poster, hero-typography | **wheel-pattern: gradient（印刷物型シード）** |

@@ -9,6 +9,7 @@
 |---|---|---|---|---|
 | 1 | TENISTA テニスコーチングLP（Web UI 型） | [tenista-tennis-sporty](../../../../brain/45_Design_Refs/2026/06/2026-06-10_tenista-tennis-sporty.md) | フルブリード写真ヒーロー、文字を被写体の奥に潜らせる深度、統計数値カード、回転写真カード | 写真主役のレイヤー構成 ／ display×写真の重なり ／ 18K+等の数値訴求 |
 | 2 | NIKE GUANGZHOU バスケポスター（グラフィック型） | [nike-guangzhou-sporty](../../../../brain/45_Design_Refs/2026/06/2026-06-10_nike-guangzhou-sporty.md) | モノクロ写真×デュオトーン、オレンジ横断バンド、薄グリッド下地 | 色帯ゾーニングの前後関係 ／ デュオトーン処理 ／ 設計図的下地 |
+| 3 | Granger スポーツウェルネスLP（Web UI 型 2026-06-11 追加） | [granger-sports-wellness](../../../../brain/45_Design_Refs/2026/06/2026-06-11_granger-sports-wellness.md) | 写真×特大ロゴの重なり（手前・下端型）、統計カード、活動トラッキングUI断片、ロゴのブックエンド反復 | 深度の別解（ロゴ手前配置） ／ ダッシュボード断片=信頼演出 ／ イベント行のアクティブ表現 |
 
 ## 遡及タグ付け候補（既存 45_Design_Refs / FAMBOX軸2 と重なる）
 
