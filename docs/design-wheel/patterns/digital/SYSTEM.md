@@ -1,7 +1,11 @@
-# digital — SYSTEM.md (v0)
+# digital — SYSTEM.md (v0 — ✅ 人間評価で実証済み)
 
 > 真ソース。refs 3件＋遡及候補（[refs.md](refs.md)）から起草した v0。
 > 推奨チャネル: **HTML / Figma どちらも可**（bento・カプセル・モノスペースは bridge で再現可能。ブラー表現のみ HTML 優位）。
+>
+> **🔒 凍結（2026-06-11 宮川さん高評価により）**: ①Color の値（グレーbg＋面限定原色）
+> ②Type の二重奏（Inter×JetBrains Mono・特大数字 w300）③余白 S12/M24/L48 —
+> この3点は relay-v1 で「色味・フォント・余白のバランスが素晴らしい」と人間評価済み。改訂時も変更禁止。
 
 ## 1. Identity
 - **パターン名**: digital
