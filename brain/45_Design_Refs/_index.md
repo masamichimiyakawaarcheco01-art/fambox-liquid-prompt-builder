@@ -1,11 +1,14 @@
 # Design References Index
 
-最終更新: 2026-06-10 / 件数: 20
+最終更新: 2026-06-10 / 件数: 23
 
 > **2026-06-09 〜**: 各行に `wheel-pattern`（geometric/corporate/grid/digital/sporty/lab）を併記。新規追加分から適用、既存15件は遡及任意。
 
 | 追加日 | タイトル | フォーマット | スタイル | コンポーネント | FAMBOX軸 / wheel-pattern |
 |---|---|---|---|---|---|
+| 2026-06-10 | [Andy Lin 2024 Portfolio — 3D×履歴書グリッド](2026/06/2026-06-10_andylin-portfolio-digital.md) | static | editorial, minimal, geometric | portfolio, hero-visual, card, grid-layout | **wheel-pattern: digital（シード1件目）** |
+| 2026-06-10 | [Graints — グレイングラデ素材ライブラリLP](2026/06/2026-06-10_graints-gradient-library.md) | static | gradient, minimal, editorial | landing-page, hero-typography, card | **wheel-pattern: gradient（Web UI 型シード）** |
+| 2026-06-10 | [HELMO MODE — Showroom 2024 ポスター](2026/06/2026-06-10_helmo-showroom-gradient.md) | static | gradient, minimal, graphic | poster, hero-typography | **wheel-pattern: gradient（印刷物型シード）** |
 | 2026-06-10 | [TENISTA — テニスコーチングLP](2026/06/2026-06-10_tenista-tennis-sporty.md) | static | athletic-lifestyle, dynamic, photography | landing-page, hero, athlete-photography | **wheel-pattern: sporty（Web UI 型シード）** |
 | 2026-06-10 | [NIKE GUANGZHOU — バスケポスター](2026/06/2026-06-10_nike-guangzhou-sporty.md) | static | sports-advertising, graphic, bold | poster, sport-graphic, hero-visual | **wheel-pattern: sporty（グラフィック型シード）／軸2 隣接** |
 | 2026-06-10 | [Pharmacy Automation System — ヘルスケアB2B](2026/06/2026-06-10_pharmacy-automation-corporate.md) | static | corporate, minimal, monochrome | landing-page, hero, navigation, card | **wheel-pattern: corporate（明るい系）** |
