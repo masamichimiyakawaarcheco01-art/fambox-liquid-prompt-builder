@@ -27,10 +27,10 @@ Pinterest画像 → Claude Design（抽出＋Web即プレビュー）→蒸留�
 | corporate | ✅ 在庫入り（2026-06-10 昇格 / 11/12） | [patterns/corporate/](patterns/corporate/) |
 | geometric | ⬜ 未着手 | — |
 | grid | ⬜ 未着手 | — |
-| digital | 🟠 SYSTEM.md v0 起草済・Generate 待ち | [patterns/digital/](patterns/digital/) |
+| digital | 🟡 一周完了 12/12（HTML / 昇格確認待ち） | [patterns/digital/](patterns/digital/) |
 | sporty | 🟡 一周完了・写真差込後に昇格判定（refs 4件に増強） | [patterns/sporty/](patterns/sporty/) |
 | lab | ⬜ 未着手 | — |
-| **gradient** ★追加 | 🟠 SYSTEM.md v0 起草済・Generate 待ち（HTML 優位） | [patterns/gradient/](patterns/gradient/) |
+| **gradient** ★追加 | 🟡 一周完了 12/12（HTML / 昇格確認待ち） | [patterns/gradient/](patterns/gradient/) |
 | glass | 💭 候補（シード1。gradient の隣接技法。3件で独立判断） | — |
 
 ## ファイル構成

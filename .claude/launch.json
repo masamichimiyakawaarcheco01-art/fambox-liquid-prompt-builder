@@ -20,9 +20,15 @@
       "port": 3458
     },
     {
+      "name": "box-mockup-3d",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1/tools/box-mockup-3d", "-l", "3459", "--no-clipboard"],
+      "port": 3459
+    },
+    {
       "name": "design-wheel-prototypes",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8743", "--directory", "/Users/archecoinc./Desktop/Claude_1/docs/design-wheel/patterns"],
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1/docs/design-wheel/patterns", "-l", "8743", "--no-clipboard"],
       "port": 8743
     }
   ]
