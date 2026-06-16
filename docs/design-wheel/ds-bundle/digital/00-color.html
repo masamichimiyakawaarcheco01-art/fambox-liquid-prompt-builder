@@ -1,0 +1,34 @@
+<!-- @dsCard group="Foundations · digital" name="Color" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<style>
+  :root{
+    --bg:#9FA0A3;--surface:#F2F2F0;--surface-dark:#161618;
+    --ink:#111114;--ink-muted:#77777E;
+    --accent-r:#F04E23;--accent-y:#F5B800;--accent-b:#2D6BFF;--line:#D9D9DB;
+  }
+  *{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+  body{background:var(--surface);padding:24px;color:var(--ink)}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:16px}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .sw{width:128px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .chip{height:72px}
+  .meta{padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:10px}
+  .meta b{display:block;font-size:11px;color:var(--ink)}
+  .meta span{color:var(--ink-muted)}
+</style></head>
+<body>
+  <h2>digital — Color tokens</h2>
+  <div class="row">
+    <div class="sw"><div class="chip" style="background:#9FA0A3"></div><div class="meta"><b>bg</b><span>#9FA0A3</span></div></div>
+    <div class="sw"><div class="chip" style="background:#F2F2F0"></div><div class="meta"><b>surface</b><span>#F2F2F0</span></div></div>
+    <div class="sw"><div class="chip" style="background:#161618"></div><div class="meta"><b>surface-dark</b><span>#161618</span></div></div>
+    <div class="sw"><div class="chip" style="background:#111114"></div><div class="meta"><b>ink</b><span>#111114</span></div></div>
+    <div class="sw"><div class="chip" style="background:#77777E"></div><div class="meta"><b>ink-muted</b><span>#77777E</span></div></div>
+    <div class="sw"><div class="chip" style="background:#F04E23"></div><div class="meta"><b>accent-r</b><span>#F04E23</span></div></div>
+    <div class="sw"><div class="chip" style="background:#F5B800"></div><div class="meta"><b>accent-y</b><span>#F5B800</span></div></div>
+    <div class="sw"><div class="chip" style="background:#2D6BFF"></div><div class="meta"><b>accent-b</b><span>#2D6BFF</span></div></div>
+    <div class="sw"><div class="chip" style="background:#D9D9DB"></div><div class="meta"><b>line</b><span>#D9D9DB</span></div></div>
+  </div>
+  <p style="margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#77777E">規律: bg=グレー / 面=オフ白+黒の混成 / 原色は<b>図形・カード面のみ</b>（テキスト・罫線には使わない）</p>
+</body></html>

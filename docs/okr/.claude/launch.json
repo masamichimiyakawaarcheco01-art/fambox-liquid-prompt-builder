@@ -11,7 +11,7 @@
     {
       "name": "design-wheel-prototypes",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1/docs/design-wheel/patterns", "-l", "8743", "--no-clipboard"],
+      "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1/docs/design-wheel", "-l", "8743", "--no-clipboard"],
       "port": 8743
     }
   ]

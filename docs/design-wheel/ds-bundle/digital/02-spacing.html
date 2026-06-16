@@ -1,0 +1,27 @@
+<!-- @dsCard group="Foundations · digital" name="Spacing & radius" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<style>
+  :root{--ink:#111114;--muted:#77777E;--surface:#F2F2F0;--accent:#2D6BFF;--line:#D9D9DB}
+  *{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+  body{background:var(--surface);padding:28px;color:var(--ink)}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;font-weight:600}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .bar{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .box{background:var(--accent);height:18px;border-radius:4px}
+  .lbl{font-family:'JetBrains Mono',monospace;font-size:11px;width:120px;flex:none}
+  .radii{display:flex;gap:16px;margin-top:24px}
+  .r{width:96px;height:64px;background:#161618;display:flex;align-items:flex-end;padding:8px}
+  .r span{color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px}
+</style></head>
+<body>
+  <h2>digital — Spacing（等比2x）& Radius</h2>
+  <div class="bar"><span class="lbl">S — 12px</span><div class="box" style="width:12px"></div></div>
+  <div class="bar"><span class="lbl">M — 24px</span><div class="box" style="width:24px"></div></div>
+  <div class="bar"><span class="lbl">L — 48px</span><div class="box" style="width:48px"></div></div>
+  <p class="mono" style="font-size:10px;color:#77777E">corporate より一段タイト＝密度が「精密感」を作る。grid ガター16 / 整数スパン。</p>
+  <div class="radii">
+    <div class="r" style="border-radius:20px"><span>card · 20</span></div>
+    <div class="r" style="border-radius:999px;width:128px"><span>capsule · 999</span></div>
+  </div>
+</body></html>
