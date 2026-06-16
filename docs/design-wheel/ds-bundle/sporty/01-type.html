@@ -1,0 +1,39 @@
+<!-- @dsCard group="Foundations · sporty" name="Type scale" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,800;1,800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0E0E12;--muted:#8A8A90;--surface:#F4F5F6;--line:#ECECEE;--accent:#FF4D1F}
+  *{margin:0;box-sizing:border-box}
+  body{background:var(--surface);padding:28px;color:var(--ink);font-family:'Inter',sans-serif}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;font-weight:600}
+  .row{display:flex;align-items:baseline;gap:16px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .tag{font-size:10px;color:var(--muted);width:180px;flex:none;line-height:1.4}
+  .depth-demo{position:relative;height:80px;background:#0E0E12;border-radius:12px;overflow:hidden;margin:16px 0;display:flex;align-items:center;padding:0 20px}
+  .depth-back{position:absolute;font-size:52px;font-weight:800;text-transform:uppercase;color:rgba(255,255,255,.18);left:12px;top:8px;letter-spacing:-.02em}
+  .depth-front{font-size:52px;font-weight:800;text-transform:uppercase;color:#fff;z-index:1;letter-spacing:-.02em}
+  .depth-accent{color:var(--accent)}
+  .rule{font-size:10px;color:var(--muted);line-height:1.6;border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
+  .rule b{color:var(--ink)}
+</style></head>
+<body>
+  <h2>sporty — Type scale（Inter ExtraBold）</h2>
+
+  <div class="row"><span class="tag">display / 88 / w800 / uppercase</span><span style="font-size:56px;font-weight:800;text-transform:uppercase;letter-spacing:-.02em;line-height:1">STRIDE</span></div>
+  <div class="row"><span class="tag">h1 / 56 / w800</span><span style="font-size:36px;font-weight:800;line-height:1.05">Train Harder. Win Faster.</span></div>
+  <div class="row"><span class="tag">h2 / 32 / w700</span><span style="font-size:24px;font-weight:700">今季の成績を塗り替える</span></div>
+  <div class="row"><span class="tag">h3 / 20 / w600</span><span style="font-size:18px;font-weight:600">Performance Analytics</span></div>
+  <div class="row"><span class="tag">body / 14 / w400</span><span style="font-size:14px;font-weight:400;line-height:1.6">アスリートの限界を押し広げるために設計されたトレーニングプログラム。</span></div>
+  <div class="row" style="border:none"><span class="tag">small / 11 / w600 / uppercase / ls.1em</span><span style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase">season 2026 · official partner</span></div>
+
+  <div class="depth-demo">
+    <span class="depth-back">SPRINT</span>
+    <span class="depth-front">SPR<span class="depth-accent">I</span>NT</span>
+  </div>
+
+  <div class="rule">
+    <b>深度規則（sporty 最大の識別子）</b> — Display を写真・黒背景と前後に重ねる。<br>
+    文字の一部を被写体の「奥」に潜らせる（z-index ではなく作成順で設計）。<br>
+    ジャンプ率 <b>Display88 ÷ Body14 ≒ 6.3x</b>（超高）。行間は見出し 0.95–1.05（詰める）。
+  </div>
+</body></html>

@@ -1,0 +1,96 @@
+<!-- @dsCard group="Components · sporty" name="Photo depth & rotation" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0E0E12;--muted:#8A8A90;--surface:#F4F5F6;--line:#ECECEE;--accent:#FF4D1F}
+  *{margin:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+  body{background:var(--surface);padding:24px;color:var(--ink)}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;font-weight:600}
+  .section{margin-bottom:24px}
+  .label{font-size:10px;color:var(--muted);margin-bottom:12px;letter-spacing:.06em;text-transform:uppercase}
+
+  /* Hero depth demo */
+  .hero{position:relative;background:#111;border-radius:16px;height:160px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .hero-photo{position:absolute;inset:0;background:linear-gradient(135deg,#1a1a2e 0%,#2d2d44 40%,#111 100%);opacity:.9}
+  /* Simulated athlete silhouette */
+  .silhouette{position:absolute;right:60px;top:10px;width:90px;height:140px;background:linear-gradient(180deg,rgba(255,255,255,.15) 0%,rgba(255,255,255,.05) 100%);border-radius:50% 50% 30% 30%;transform:skewX(-4deg)}
+  .depth-back{position:absolute;font-size:64px;font-weight:800;text-transform:uppercase;letter-spacing:-.02em;color:rgba(255,255,255,.12);left:16px;top:20px;z-index:1}
+  .depth-band{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:36px;background:var(--accent);z-index:2;display:flex;align-items:center;padding:0 20px}
+  .depth-band span{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#fff}
+  .depth-front{position:absolute;font-size:64px;font-weight:800;text-transform:uppercase;letter-spacing:-.02em;color:#fff;left:16px;top:20px;z-index:3}
+
+  /* Rotation cards */
+  .card-row{display:flex;gap:16px;align-items:center;padding:16px 0}
+  .photo-card{width:120px;height:160px;border-radius:20px;background:linear-gradient(145deg,#2d2d44,#1a1a2e);box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:flex-end;padding:12px;transition:transform .2s cubic-bezier(.16,1,.3,1)}
+  .photo-card:nth-child(1){transform:rotate(-5deg)}
+  .photo-card:nth-child(2){transform:rotate(3deg)}
+  .photo-card:nth-child(3){transform:rotate(-2deg)}
+  .photo-card:hover{transform:rotate(0deg)!important}
+  .card-tag{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+  .rot-note{font-size:10px;color:var(--muted);margin-left:8px;line-height:1.5}
+
+  /* Duotone demo */
+  .duotone-row{display:flex;gap:12px}
+  .dt{width:100px;height:80px;border-radius:12px;position:relative;overflow:hidden}
+  .dt-base{position:absolute;inset:0;background:linear-gradient(135deg,#2d2d44,#111)}
+  .dt-overlay{position:absolute;inset:0;background:var(--accent);mix-blend-mode:screen;opacity:.6}
+  .dt-label{font-size:10px;color:var(--muted);margin-top:6px}
+
+  /* Grid base */
+  .grid-base{background:#0E0E12;border-radius:12px;height:60px;position:relative;overflow:hidden;margin-top:4px}
+  .grid-lines{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0px,rgba(255,255,255,.06) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0px,rgba(255,255,255,.06) 1px,transparent 1px,transparent 20px)}
+
+  .rule{font-size:10px;color:var(--muted);line-height:1.6;border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
+  .rule b{color:var(--ink)}
+</style></head>
+<body>
+  <h2>sporty — Photo depth & rotation（sporty 固有）</h2>
+
+  <div class="section">
+    <div class="label">深度 — Display テキストを被写体と前後に重ねる</div>
+    <div class="hero">
+      <div class="hero-photo"></div>
+      <div class="silhouette"></div>
+      <div class="depth-back">SPRINT</div>
+      <div class="depth-band"><span>season 2026 · official partner</span></div>
+      <div class="depth-front">SPRINT</div>
+    </div>
+    <p style="font-size:10px;color:var(--muted);margin-top:8px">奥: 文字（opacity 低）→ 被写体 → 色帯 → 文字（前面）の順に重ねる</p>
+  </div>
+
+  <div class="section">
+    <div class="label">写真カード ±3〜6° 回転 / hover で 0° に戻す</div>
+    <div class="card-row">
+      <div class="photo-card"><span class="card-tag">−5°</span></div>
+      <div class="photo-card"><span class="card-tag">+3°</span></div>
+      <div class="photo-card"><span class="card-tag">−2°</span></div>
+      <span class="rot-note">hover すると<br>0° に戻る<br>（ease-out 0.2s）</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">デュオトーン処理（accent × 写真）</div>
+    <div class="duotone-row">
+      <div>
+        <div class="dt"><div class="dt-base"></div></div>
+        <div class="dt-label">元写真</div>
+      </div>
+      <div>
+        <div class="dt"><div class="dt-base"></div><div class="dt-overlay"></div></div>
+        <div class="dt-label">duotone<br>accent overlay</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">グリッド下地（設計図・計測の気配）</div>
+    <div class="grid-base"><div class="grid-lines"></div></div>
+    <p style="font-size:10px;color:var(--muted);margin-top:6px">line色の細線グリッド。ヒーロー下敷きや統計セクションの背景に使う。</p>
+  </div>
+
+  <div class="rule">
+    <b>sporty 固有の3技法</b> — ①深度（前後テキスト重ね）②回転±3〜6°（動勢）③デュオトーン（大面積 accent の唯一の例外）。<br>
+    corporate / digital にはない。これらを使わないと sporty に見えない。
+  </div>
+</body></html>
