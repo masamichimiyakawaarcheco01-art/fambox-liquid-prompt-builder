@@ -56,3 +56,23 @@
   Step 2 以降の非デザイナー運用では HTML 出力の方が「そのまま見せられる」点でも有利。
 - 検証環境: launch.json `design-wheel-prototypes`（ただし既存 wf-preview サーバー再利用のため
   `docs/okr/wf_simple_diagnosis_20260513/stride-v1.html` に symlink で配信。恒久化するなら専用 server 設定を整理）。
+
+---
+
+## 再テスト（2026-06-17）— 写真ありで別題材を一から生成
+
+**背景**: 宮川さんから「sporty があまり美しくない」FB。原因切り分け → **写真プレースホルダーが主役を張ると安っぽく見える**（sporty 固有の構造的弱点。digital と違い写真前提）。
+
+**対処**: サンプルLP（_sample-stride-LP.html）に Unsplash 実写真 + デュオトーン（grayscale+brightness+accent overlay）を差込 → Hero が別物の品質に。
+
+**再テスト**: まぐれでないことの確認のため、別題材（架空ジム PULSE）・別アクセント（court blue #2E6BE6、STRIDE は orange）・別写真で一から生成。`prototypes/pulse-retest.html`。
+- ✅ 文字の前後深度（PULSE が被写体奥に潜る）再現
+- ✅ accent 色帯の画面横断 + マーキー文言 再現
+- ✅ 写真カード回転（実測 -2.5° / +1.5° / -1°）再現
+- ✅ デュオトーン（暗転＋青オーバーレイ）再現
+- ✅ 写真5枚すべて読込成功・実機スクショで Hero 良好
+
+**結論（運用ルールに昇格）**:
+- sporty は**「写真必須パターン」**。生成時は必ず「Unsplash 等のアクション写真を入れる」指示を添える。
+- デュオトーンは `filter: grayscale(.4-.5) brightness(.4-.6) contrast(1.1)` + accent グラデ/ラジアル overlay が安定レシピ。
+- accent は orange / court blue のどちらか1色（題材で選ぶ）。両 LP で再現性を確認。

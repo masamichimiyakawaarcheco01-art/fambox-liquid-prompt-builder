@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PULSE — sporty retest</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,600;0,800;1,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF;--surface:#F4F5F6;--ink:#0E0E12;--muted:#8A8A90;
+    --accent:#2E6BE6;--line:#ECECEE; /* court blue を採用（STRIDE は orange） */
+    --s:16px;--m:32px;--l:64px;
+  }
+  *{margin:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink)}
+  img{display:block;width:100%;height:100%;object-fit:cover}
+
+  /* Hero */
+  .hero{position:relative;height:90vh;min-height:580px;overflow:hidden;background:#0E0E12}
+  .hero-photo{position:absolute;inset:0}
+  .hero-photo img{filter:grayscale(.45) contrast(1.1) brightness(.6)}
+  .hero-photo::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(255deg,#0E0E12 10%,rgba(14,14,18,.35) 50%,rgba(46,107,230,.30) 100%)}
+  .hero-back{position:absolute;right:56px;top:44%;transform:translateY(-50%);z-index:1;text-align:right;
+    font-size:clamp(80px,16vw,220px);font-weight:800;text-transform:uppercase;letter-spacing:-.04em;line-height:.82;color:rgba(255,255,255,.10)}
+  .band{position:absolute;left:0;right:0;top:63%;height:46px;background:var(--accent);z-index:2;
+    display:flex;align-items:center;gap:28px;padding:0 56px;overflow:hidden}
+  .band span{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;white-space:nowrap}
+  .hero-front{position:absolute;right:56px;top:44%;transform:translateY(-50%);z-index:3;text-align:right;
+    font-size:clamp(80px,16vw,220px);font-weight:800;text-transform:uppercase;letter-spacing:-.04em;line-height:.82;color:#fff}
+  .hero-front em{color:var(--accent);font-style:normal}
+  .hero-bottom{position:absolute;left:56px;bottom:var(--l);z-index:4;max-width:500px}
+  .hero-bottom p{font-size:15px;color:rgba(255,255,255,.8);margin-bottom:var(--m);line-height:1.6}
+  .eyebrow{position:absolute;left:56px;top:48px;z-index:4;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#fff}
+  .btn{display:inline-flex;align-items:center;padding:15px 30px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;border:none;letter-spacing:.04em;text-transform:uppercase;transition:transform .2s cubic-bezier(.16,1,.3,1)}
+  .btn:hover{transform:scale(1.05)}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45);margin-left:12px}
+
+  /* Stats */
+  .stats{padding:var(--l) 56px;background:var(--ink)}
+  .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--m)}
+  .stat{border-left:2px solid var(--accent);padding-left:var(--s)}
+  .stat-val{font-size:clamp(48px,6vw,72px);font-weight:800;letter-spacing:-.03em;line-height:.9;color:#fff}
+  .stat-val span{color:var(--accent)}
+  .stat-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:12px}
+
+  /* Features */
+  .features{padding:var(--l) 56px;background:var(--bg)}
+  .section-tag{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:var(--s)}
+  .section-h{font-size:clamp(34px,5vw,60px);font-weight:800;letter-spacing:-.03em;line-height:.98;margin-bottom:var(--l);text-transform:uppercase}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .card{border-radius:20px;overflow:hidden;background:var(--surface);transition:transform .25s cubic-bezier(.16,1,.3,1)}
+  .card:nth-child(1){transform:rotate(-2.5deg)}
+  .card:nth-child(2){transform:rotate(1.5deg)}
+  .card:nth-child(3){transform:rotate(-1deg)}
+  .card:hover{transform:rotate(0deg) translateY(-6px)}
+  .card-img{height:200px;position:relative}
+  .card-img img{filter:grayscale(.2) contrast(1.05)}
+  .card-num{position:absolute;left:14px;top:12px;font-size:13px;font-weight:800;color:#fff;letter-spacing:.06em;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+  .card-body{padding:var(--m)}
+  .card-body h3{font-size:20px;font-weight:800;margin-bottom:8px}
+  .card-body p{font-size:13px;color:var(--muted);line-height:1.6}
+
+  /* CTA */
+  .cta{position:relative;padding:calc(var(--l)*1.5) 56px;text-align:center;overflow:hidden;background:#0E0E12}
+  .cta-photo{position:absolute;inset:0}
+  .cta-photo img{filter:grayscale(.5) brightness(.4) contrast(1.1)}
+  .cta-photo::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(46,107,230,.34) 0%,rgba(14,14,18,.72) 70%)}
+  .cta-content{position:relative;z-index:1}
+  .cta h2{font-size:clamp(40px,7vw,90px);font-weight:800;text-transform:uppercase;letter-spacing:-.04em;color:#fff;line-height:.9;margin-bottom:var(--m)}
+  .cta h2 em{color:var(--accent);font-style:normal}
+  .cta p{font-size:15px;color:rgba(255,255,255,.7);margin-bottom:var(--l)}
+
+  @media(max-width:720px){
+    :root{--l:40px}
+    .hero,.stats,.features,.cta{padding-left:24px;padding-right:24px}
+    .hero-back,.hero-front{right:24px}.eyebrow,.hero-bottom{left:24px}.band{padding:0 24px}
+    .stats-grid,.cards{grid-template-columns:1fr}
+  }
+</style></head>
+<body>
+
+  <section class="hero">
+    <div class="hero-photo"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&q=80" alt=""></div>
+    <div class="eyebrow">PULSE — strength club tokyo</div>
+    <div class="hero-back">PULSE</div>
+    <div class="band"><span>members 12,000+</span><span>·</span><span>24/7 open</span><span>·</span><span>shibuya / shinjuku</span><span>·</span><span>since 2019</span></div>
+    <div class="hero-front">PUL<em>S</em>E</div>
+    <div class="hero-bottom">
+      <p>限界の一歩先へ。科学的トレーニングと最先端マシンが、あなたの身体を更新する。</p>
+      <button class="btn btn-primary">体験予約</button>
+      <button class="btn btn-ghost">料金を見る</button>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-val"><span>12</span>K+</div><div class="stat-label">active members</div></div>
+      <div class="stat"><div class="stat-val">24<span>/7</span></div><div class="stat-label">always open</div></div>
+      <div class="stat"><div class="stat-val"><span>4.</span>9</div><div class="stat-label">google rating</div></div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="section-tag">why pulse</div>
+    <h2 class="section-h">Stronger.<br>Every Day.</h2>
+    <div class="cards">
+      <div class="card"><div class="card-img"><span class="card-num">#01</span><img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=800&q=80" alt=""></div><div class="card-body"><h3>最新マシン</h3><p>世界トップブランドのマシンを全店完備。待ち時間ゼロの設計。</p></div></div>
+      <div class="card"><div class="card-img"><span class="card-num">#02</span><img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=800&q=80" alt=""></div><div class="card-body"><h3>専属トレーナー</h3><p>国家資格保有のトレーナーが個別プログラムを設計。</p></div></div>
+      <div class="card"><div class="card-img"><span class="card-num">#03</span><img src="https://images.unsplash.com/photo-1571388208497-71bedc66e932?w=800&q=80" alt=""></div><div class="card-body"><h3>栄養指導</h3><p>食事管理アプリと連動。トレーニング効果を最大化する。</p></div></div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="cta-photo"><img src="https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=1600&q=80" alt=""></div>
+    <div class="cta-content">
+      <h2>OWN YOUR<br><em>STRENGTH</em></h2>
+      <p>初回体験は無料。今すぐ予約してください。</p>
+      <button class="btn btn-primary" style="font-size:14px;padding:17px 40px">無料体験を予約</button>
+    </div>
+  </section>
+
+</body></html>
