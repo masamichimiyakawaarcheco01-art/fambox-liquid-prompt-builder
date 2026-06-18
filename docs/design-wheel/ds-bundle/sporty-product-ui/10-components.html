@@ -1,0 +1,70 @@
+<!-- @dsCard group="Components · sporty-product-UI" name="Buttons, chips, tiles" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0A0C0B;--surface:#14171A;--surface-2:#1C2024;--line:#272C30;--ink:#FFFFFF;--muted:#8C949C;--accent:#C6FF3A;--accent-ink:#0A0C0B}
+  *{margin:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+  body{background:var(--bg);padding:24px;color:var(--ink)}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;font-family:'Space Grotesk'}
+  .grotesk{font-family:'Space Grotesk'}
+  .label{font-size:10px;color:var(--muted);margin-bottom:12px;letter-spacing:.06em;text-transform:uppercase}
+  .section{margin-bottom:24px}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:999px;padding:13px 24px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn-primary{background:var(--accent);color:var(--accent-ink)}
+  .btn-ghost{background:var(--surface-2);color:#fff;border:1px solid var(--line)}
+  .chip{font-size:11px;font-weight:600;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:6px 13px;color:var(--muted)}
+  .chip.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}
+  .tile .n{font-family:'Space Grotesk';font-size:42px;font-weight:700;letter-spacing:-.02em;line-height:1}
+  .tile .n em{color:var(--accent);font-style:normal}
+  .tile .l{font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.06em;text-transform:uppercase}
+  .fcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;max-width:280px}
+  .ic{width:44px;height:44px;border-radius:13px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .ic svg{width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:2}
+  .fcard h3{font-family:'Space Grotesk';font-size:18px;font-weight:600;margin-bottom:6px}
+  .fcard p{font-size:13px;color:var(--muted);line-height:1.6}
+  .rule{font-size:10px;color:var(--muted);line-height:1.7;border-top:1px solid var(--line);padding-top:12px;margin-top:6px}
+  .rule b{color:var(--accent);font-family:'Space Grotesk'}
+</style></head>
+<body>
+  <h2>sporty / product-UI — Components</h2>
+
+  <div class="section">
+    <div class="label">Pill buttons</div>
+    <div class="row">
+      <button class="btn btn-primary">無料体験を予約 →</button>
+      <button class="btn btn-ghost">プランを見る</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Status chips（選択中は volt 塗り）</div>
+    <div class="row"><span class="chip on">Strength</span><span class="chip">Cardio</span><span class="chip">Mobility</span></div>
+  </div>
+
+  <div class="section">
+    <div class="label">Stat tiles（特大数字・2桁目 accent）</div>
+    <div class="tiles">
+      <div class="tile"><div class="n grotesk">12<em>K+</em></div><div class="l">active members</div></div>
+      <div class="tile"><div class="n grotesk">4.<em>9</em></div><div class="l">google rating</div></div>
+      <div class="tile"><div class="n grotesk">0<em>3</em></div><div class="l">locations</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Feature card（hover で border が volt 化・line アイコン）</div>
+    <div class="fcard">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg></div>
+      <h3>リアルタイム計測</h3>
+      <p>心拍・出力・疲労スコアをトレーニング中に可視化。</p>
+    </div>
+  </div>
+
+  <div class="rule">
+    規律: カード=角丸18–20・1px line・hover で border を <b>accent 化</b>。アイコンは line（stroke=accent）。<br>
+    ボタン=pill。primary=volt 塗り/暗文字。<b>影・グランジは使わない</b>。
+  </div>
+</body></html>

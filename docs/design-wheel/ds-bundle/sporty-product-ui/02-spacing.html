@@ -1,0 +1,46 @@
+<!-- @dsCard group="Foundations · sporty-product-UI" name="Spacing & grid" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0A0C0B;--surface:#14171A;--surface-2:#1C2024;--line:#272C30;--ink:#FFFFFF;--muted:#8C949C;--accent:#C6FF3A}
+  *{margin:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+  body{background:var(--bg);padding:24px;color:var(--ink)}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;font-family:'Space Grotesk'}
+  .label{font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:.06em;text-transform:uppercase}
+  .section{margin-bottom:24px}
+  .bars{display:flex;flex-direction:column;gap:8px}
+  .bar-row{display:flex;align-items:center;gap:12px}
+  .bar{background:var(--accent);border-radius:4px;height:18px}
+  .bar-label{font-size:11px;width:170px;flex:none}
+  .bar-val{font-size:11px;color:var(--muted);font-family:'Space Grotesk'}
+  .cols{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;height:60px}
+  .colbox{background:var(--surface);border:1px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted)}
+  .rule{font-size:10px;color:var(--muted);line-height:1.7;border-top:1px solid var(--line);padding-top:12px}
+  .rule b{color:var(--accent);font-family:'Space Grotesk'}
+</style></head>
+<body>
+  <h2>sporty / product-UI — Spacing & grid</h2>
+
+  <div class="section">
+    <div class="label">Spacing（余白の緩急が premium の鍵）</div>
+    <div class="bars">
+      <div class="bar-row"><span class="bar-label">グループ内 tight</span><div class="bar" style="width:16px"></div><span class="bar-val">8–16px</span></div>
+      <div class="bar-row"><span class="bar-label">要素間 M</span><div class="bar" style="width:56px"></div><span class="bar-val">28px</span></div>
+      <div class="bar-row"><span class="bar-label">セクション間 L</span><div class="bar" style="width:160px"></div><span class="bar-val">80px</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Hero グリッド 1.15 : 0.85（コピー / データカード）</div>
+    <div class="cols">
+      <div class="colbox">copy block</div>
+      <div class="colbox" style="border-color:var(--accent);color:var(--accent)">data card</div>
+    </div>
+  </div>
+
+  <div class="rule">
+    規律: max-width 1200px / 外パディング 32px。<br>
+    緩急比を効かせる（tight 8–16 ⇔ section 80）。<b>整然と並べる</b> — 回転・斜め・グリッド破りは禁止。
+  </div>
+</body></html>
