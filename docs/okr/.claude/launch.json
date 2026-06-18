@@ -13,6 +13,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1/docs/design-wheel", "-l", "8743", "--no-clipboard"],
       "port": 8743
+    },
+    {
+      "name": "repo-root",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1", "-l", "8744", "--no-clipboard"],
+      "port": 8744
     }
   ]
 }
