@@ -28,10 +28,12 @@ Pinterest画像 → Claude Design（抽出＋Web即プレビュー）→蒸留�
 | geometric | ⬜ 未着手 | — |
 | grid | ⬜ 未着手 | — |
 | digital | ✅ **在庫入り**（12/12・2026-06-11 昇格。宮川さん高評価: 色味/フォント/余白） | [patterns/digital/](patterns/digital/) |
-| sporty | 🟡 一周完了・写真差込後に昇格判定（refs 4件に増強） | [patterns/sporty/](patterns/sporty/) |
+| sporty | ✅ **在庫入り**（2026-06-18 / SYSTEM.md **v1 = 2 sub-style**）<br>・A: **product-UI**（ダーク+volt+データ可視化／**12/12**・推奨デフォルト）<br>・B: poster（写真主役+深度+デュオトーン／Hero良好・写真前提）<br>抽出根拠 [REF-EXTRACTION-v1.md](patterns/sporty/REF-EXTRACTION-v1.md) | [patterns/sporty/](patterns/sporty/) |
 | lab | ⬜ 未着手 | — |
 | **gradient** ★追加 | ✅ **在庫入り**（12/12・2026-06-11 昇格） | [patterns/gradient/](patterns/gradient/) |
 | glass | 💭 候補（シード1。gradient の隣接技法。3件で独立判断） | — |
+
+**在庫: 4 パターン**（corporate / digital / gradient / sporty）。sporty は 1 パターン内に 2 sub-style を持つ初のケース。
 
 ## ファイル構成
 
