@@ -19,6 +19,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1", "-l", "8744", "--no-clipboard"],
       "port": 8744
+    },
+    {
+      "name": "design-wheel-app",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/Users/archecoinc./Desktop/Claude_1/tools/design-wheel-app/server.js"],
+      "port": 8750
     }
   ]
 }
