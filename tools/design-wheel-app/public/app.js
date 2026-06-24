@@ -1,5 +1,13 @@
 const $ = s => document.querySelector(s);
-let state = { pattern: null, rating: 0, lastHtml: null };
+let state = { pattern: null, rating: 0, lastHtml: null, mode: 'page' };
+
+// 形態トグル
+document.querySelectorAll('#modes .mode').forEach(m => {
+  m.onclick = () => {
+    state.mode = m.dataset.mode;
+    document.querySelectorAll('#modes .mode').forEach(x => x.classList.toggle('on', x === m));
+  };
+});
 
 async function init() {
   const r = await fetch('/api/patterns').then(r => r.json());
@@ -40,7 +48,7 @@ $('#gen').onclick = async () => {
   try {
     const res = await fetch('/api/generate', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pattern: state.pattern, prompt, size: $('#size').value }),
+      body: JSON.stringify({ pattern: state.pattern, prompt, size: $('#size').value, mode: state.mode }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || data.error);
@@ -57,7 +65,34 @@ function showHtml(html) {
   $('#empty').style.display = 'none';
   const f = $('#frame'); f.style.display = 'block'; f.srcdoc = html;
   $('#export').disabled = false;
+  $('#chatbar').style.display = 'flex';
 }
+
+// チャット改善: 前回HTMLを引き継いで修正
+$('#reviseBtn').onclick = async () => {
+  const instr = $('#revise').value.trim();
+  if (!instr) return;
+  if (!state.lastHtml) return alert('先に叩き台を生成してください');
+  const btn = $('#reviseBtn'); const orig = btn.textContent;
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>修正中…';
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        pattern: state.pattern, prompt: instr, size: $('#size').value,
+        mode: state.mode, previousHtml: state.lastHtml,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || data.error);
+    showHtml(data.html);
+    $('#revise').value = '';
+  } catch (e) {
+    alert('修正に失敗: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = orig;
+  }
+};
 
 $('#export').onclick = async () => {
   if (!state.lastHtml) return;

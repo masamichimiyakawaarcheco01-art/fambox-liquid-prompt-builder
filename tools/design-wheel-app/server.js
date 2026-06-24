@@ -20,10 +20,10 @@ app.get('/api/patterns', (req, res) => {
 });
 
 app.post('/api/generate', async (req, res) => {
-  const { pattern, prompt, size } = req.body || {};
+  const { pattern, prompt, size, mode, previousHtml } = req.body || {};
   if (!pattern || !prompt) return res.status(400).json({ error: 'pattern と prompt は必須です' });
   try {
-    const out = await generateHtml({ pattern, prompt, size });
+    const out = await generateHtml({ pattern, prompt, size, mode, previousHtml });
     res.json(out);
   } catch (e) {
     if (e.code === 'NO_API_KEY') {
