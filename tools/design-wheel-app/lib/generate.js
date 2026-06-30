@@ -1,8 +1,21 @@
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import Anthropic from '@anthropic-ai/sdk';
 import { readSystem, readExtraSpecs, CATALOG } from './patterns.js';
 import { SIZES } from './export-png.js';
 
 const MODEL = process.env.DW_MODEL || 'claude-opus-4-8';
+
+// Layer ①（普遍の骨格）— 全パターン・全生成に共通注入
+const __dir = dirname(fileURLToPath(import.meta.url));
+let FOUNDATIONS = '';
+try {
+  FOUNDATIONS = readFileSync(
+    join(__dir, '../../../docs/design-wheel/foundations/FOUNDATIONS.md'),
+    'utf8'
+  );
+} catch { /* foundations が見つからなくても生成は継続 */ }
 
 export function hasKey() {
   return Boolean(process.env.ANTHROPIC_API_KEY);
@@ -30,7 +43,12 @@ function buildSystemPrompt(patternId, { size, mode } = {}) {
 
 ${form}
 
-# 厳守する設計書（SYSTEM）
+${FOUNDATIONS ? `# 普遍の骨格（FOUNDATIONS / Layer ①）— どのパターンでも必ず守る土台
+${FOUNDATIONS}
+
+> 上の FOUNDATIONS は土台。次の SYSTEM（色/フォント/世界観）と値が衝突したら **SYSTEM を優先**する。
+` : ''}
+# 厳守する設計書（SYSTEM / Layer ②）
 ${system}
 
 ${extra ? `# 追加仕様（参考）\n${extra}` : ''}
