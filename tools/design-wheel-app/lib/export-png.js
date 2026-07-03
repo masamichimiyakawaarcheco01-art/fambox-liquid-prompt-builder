@@ -13,6 +13,7 @@ export const SIZES = {
   '9x16':  { w: 1080, h: 1920, label: 'TikTok・ストーリー (9:16)' },
   '16x9':  { w: 1280, h: 720,  label: 'YouTube サムネ (16:9)' },
   '191x1': { w: 1200, h: 630,  label: 'Blog OGP・シェア (1.91:1)' },
+  'a4':    { w: 794,  h: 1123, label: 'A4 チラシ（縦）' },
 };
 
 export function exportPng({ html, size, scale = 2 }) {
@@ -36,6 +37,33 @@ export function exportPng({ html, size, scale = 2 }) {
         if (err) return reject(err);
         const buf = readFileSync(outFile);
         resolve({ buffer: buf, w: s.w * scale, h: s.h * scale });
+      } catch (e) {
+        reject(e);
+      } finally {
+        try { rmSync(dir, { recursive: true, force: true }); } catch {}
+      }
+    });
+  });
+}
+
+export function exportPdf({ html }) {
+  return new Promise((resolve, reject) => {
+    const dir = mkdtempSync(join(tmpdir(), 'dw-pdf-'));
+    const htmlFile = join(dir, 'page.html');
+    const outFile = join(dir, 'out.pdf');
+    writeFileSync(htmlFile, html, 'utf8');
+    const args = [
+      '--headless=new', '--disable-gpu',
+      '--no-pdf-header-footer',
+      '--virtual-time-budget=2500',
+      `--print-to-pdf=${outFile}`,
+      'file://' + htmlFile,
+    ];
+    execFile(CHROME, args, { timeout: 20000 }, (err) => {
+      try {
+        if (err) return reject(err);
+        const buf = readFileSync(outFile);
+        resolve({ buffer: buf });
       } catch (e) {
         reject(e);
       } finally {
