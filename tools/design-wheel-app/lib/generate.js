@@ -17,6 +17,14 @@ try {
   );
 } catch { /* foundations が見つからなくても生成は継続 */ }
 
+let PRINT_LAYOUT = '';
+try {
+  PRINT_LAYOUT = readFileSync(
+    join(__dir, '../../../docs/design-wheel/foundations/PRINT-LAYOUT.md'),
+    'utf8'
+  );
+} catch { /* 無くても継続 */ }
+
 export function hasKey() {
   return Boolean(process.env.ANTHROPIC_API_KEY);
 }
@@ -28,7 +36,13 @@ function buildSystemPrompt(patternId, { size, mode } = {}) {
   const s = SIZES[size];
 
   let form;
-  if (mode === 'banner' && s) {
+  if (mode === 'flyer') {
+    form = `# 出力形態: チラシ（A4 縦・1枚）
+- A4 縦1枚。<body>と最外要素を **794px × 1123px（A4比率）に固定**し、スクロール・改ページを作らない。
+- CSS に \`@page{size:A4;margin:0}\` と \`html,body{margin:0;padding:0}\` を必ず入れる。
+- 最外コンテナは \`width:794px;height:1123px;overflow:hidden;position:relative\`。
+- 下の PRINT-LAYOUT（印刷の作法）を厳守する。`;
+  } else if (mode === 'banner' && s) {
     form = `# 出力形態: バナー1枚（${s.label}）
 - これは1枚のバナー。<body> と最外要素を**正確に ${s.w}px × ${s.h}px に固定**し、スクロールを生まない。
 - 全要素をこの枠の中に収める（はみ出し・余白の出しすぎを避け、構図を枠に最適化する）。
@@ -47,6 +61,9 @@ ${FOUNDATIONS ? `# 普遍の骨格（FOUNDATIONS / Layer ①）— どのパタ�
 ${FOUNDATIONS}
 
 > 上の FOUNDATIONS は土台。次の SYSTEM（色/フォント/世界観）と値が衝突したら **SYSTEM を優先**する。
+` : ''}
+${mode === 'flyer' && PRINT_LAYOUT ? `# 印刷レイアウトの作法（PRINT-LAYOUT）— flyer 専用
+${PRINT_LAYOUT}
 ` : ''}
 # 厳守する設計書（SYSTEM / Layer ②）
 ${system}
