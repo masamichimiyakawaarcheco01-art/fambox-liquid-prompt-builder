@@ -6,6 +6,11 @@ document.querySelectorAll('#modes .mode').forEach(m => {
   m.onclick = () => {
     state.mode = m.dataset.mode;
     document.querySelectorAll('#modes .mode').forEach(x => x.classList.toggle('on', x === m));
+    const isFlyer = state.mode === 'flyer';
+    const sizeSel = $('#size');
+    if (isFlyer) { sizeSel.value = 'a4'; sizeSel.disabled = true; }
+    else { sizeSel.disabled = false; }
+    $('#exportPdf').style.display = isFlyer ? 'inline-block' : 'none';
   };
 });
 
@@ -65,6 +70,7 @@ function showHtml(html) {
   $('#empty').style.display = 'none';
   const f = $('#frame'); f.style.display = 'block'; f.srcdoc = html;
   $('#export').disabled = false;
+  if (state.mode === 'flyer') $('#exportPdf').disabled = false;
   $('#chatbar').style.display = 'flex';
 }
 
@@ -110,6 +116,28 @@ $('#export').onclick = async () => {
     a.click(); URL.revokeObjectURL(a.href);
   } catch (e) {
     alert('書き出し失敗: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = orig;
+  }
+};
+
+$('#exportPdf').onclick = async () => {
+  if (!state.lastHtml) return;
+  const btn = $('#exportPdf'); btn.disabled = true; const orig = btn.textContent;
+  btn.innerHTML = '<span class="spin"></span>PDF書き出し中…';
+  try {
+    const res = await fetch('/api/export', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ html: state.lastHtml, size: 'a4', format: 'pdf' }),
+    });
+    if (!res.ok) { const d = await res.json(); throw new Error(d.message || d.error); }
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `design-wheel-${state.pattern}-flyer.pdf`;
+    a.click(); URL.revokeObjectURL(a.href);
+  } catch (e) {
+    alert('PDF書き出し失敗: ' + e.message);
   } finally {
     btn.disabled = false; btn.textContent = orig;
   }
