@@ -9,8 +9,9 @@
 |---|---|---|
 | ① 普遍 | `foundations/FOUNDATIONS.md` | 比率・余白・キャラクターライン・タイポ・状態の作法。**全生成の土台** |
 | ③ 条件 | `foundations/BRIEF.md` | 依頼ごとの6因子ヒアリング → パラメータ翻訳 |
+| ①印刷 | `foundations/PRINT-LAYOUT.md` | チラシ（flyer）時の印刷レイアウト作法（A4固定・ブロッキング先行等） |
 
-> この2つは Layer ②（各 SYSTEM）より先に効く。教材「UIデザインの基本」全121pを蒸留したもの。
+> これらは Layer ②（各 SYSTEM）より先に効く。教材「UIデザインの基本」全121pを蒸留したもの。
 
 ## v0 で登録するファイル（在庫4パターン＝Layer ②）
 
@@ -22,6 +23,7 @@
 | digital | `patterns/digital/SYSTEM.md` ＋ `ds-bundle/_upload/digital-SYSTEM-spec.md` |
 | gradient | `patterns/gradient/SYSTEM.md` |
 | sporty | `patterns/sporty/SYSTEM.md`（2 sub-style）＋ `ds-bundle/sporty-product-ui/product-ui-SYSTEM-spec.md` |
+| fambox | `patterns/fambox/SYSTEM.md`（FAM ブランド・3配色サブスタイル：SNS/Web/Print） |
 
 ※ パス基準 = `docs/design-wheel/`。
 ※ 余裕があれば各 `ds-bundle/<p>/` の HTMLカード（色・フォントの実例）も足すと精度が上がる。
