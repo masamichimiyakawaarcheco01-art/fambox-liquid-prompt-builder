@@ -25,6 +25,14 @@ try {
   );
 } catch { /* 無くても継続 */ }
 
+let CARD_LAYOUT = '';
+try {
+  CARD_LAYOUT = readFileSync(
+    join(__dir, '../../../docs/design-wheel/foundations/CARD-LAYOUT.md'),
+    'utf8'
+  );
+} catch { /* 無くても継続 */ }
+
 export function hasKey() {
   return Boolean(process.env.ANTHROPIC_API_KEY);
 }
@@ -42,6 +50,12 @@ function buildSystemPrompt(patternId, { size, mode } = {}) {
 - CSS に \`@page{size:A4;margin:0}\` と \`html,body{margin:0;padding:0}\` を必ず入れる。
 - 最外コンテナは \`width:794px;height:1123px;overflow:hidden;position:relative\`。
 - 下の PRINT-LAYOUT（印刷の作法）を厳守する。`;
+  } else if (mode === 'card') {
+    form = `# 出力形態: 名刺カード（91×55mm 横・片面1枚）
+- <body>と最外要素を **344px × 208px（91×55mm相当）に固定**し、スクロール・改ページを作らない。
+- CSS に \`@page{size:91mm 55mm;margin:0}\` と \`html,body{margin:0;padding:0}\` を必ず入れる。
+- 最外コンテナは \`width:344px;height:208px;overflow:hidden;position:relative\`。
+- 下の CARD-LAYOUT（名刺の作法）を厳守する。`;
   } else if (mode === 'banner' && s) {
     form = `# 出力形態: バナー1枚（${s.label}）
 - これは1枚のバナー。<body> と最外要素を**正確に ${s.w}px × ${s.h}px に固定**し、スクロールを生まない。
@@ -64,6 +78,9 @@ ${FOUNDATIONS}
 ` : ''}
 ${mode === 'flyer' && PRINT_LAYOUT ? `# 印刷レイアウトの作法（PRINT-LAYOUT）— flyer 専用
 ${PRINT_LAYOUT}
+` : ''}
+${mode === 'card' && CARD_LAYOUT ? `# 名刺レイアウトの作法（CARD-LAYOUT）— card 専用
+${CARD_LAYOUT}
 ` : ''}
 # 厳守する設計書（SYSTEM / Layer ②）
 ${system}

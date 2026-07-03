@@ -7,10 +7,12 @@ document.querySelectorAll('#modes .mode').forEach(m => {
     state.mode = m.dataset.mode;
     document.querySelectorAll('#modes .mode').forEach(x => x.classList.toggle('on', x === m));
     const isFlyer = state.mode === 'flyer';
+    const isCard = state.mode === 'card';
     const sizeSel = $('#size');
     if (isFlyer) { sizeSel.value = 'a4'; sizeSel.disabled = true; }
+    else if (isCard) { sizeSel.value = 'card'; sizeSel.disabled = true; }
     else { sizeSel.disabled = false; }
-    $('#exportPdf').style.display = isFlyer ? 'inline-block' : 'none';
+    $('#exportPdf').style.display = (isFlyer || isCard) ? 'inline-block' : 'none';
   };
 });
 
@@ -70,7 +72,7 @@ function showHtml(html) {
   $('#empty').style.display = 'none';
   const f = $('#frame'); f.style.display = 'block'; f.srcdoc = html;
   $('#export').disabled = false;
-  if (state.mode === 'flyer') $('#exportPdf').disabled = false;
+  if (state.mode === 'flyer' || state.mode === 'card') $('#exportPdf').disabled = false;
   $('#chatbar').style.display = 'flex';
 }
 
@@ -128,13 +130,13 @@ $('#exportPdf').onclick = async () => {
   try {
     const res = await fetch('/api/export', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ html: state.lastHtml, size: 'a4', format: 'pdf' }),
+      body: JSON.stringify({ html: state.lastHtml, size: state.mode === 'card' ? 'card' : 'a4', format: 'pdf' }),
     });
     if (!res.ok) { const d = await res.json(); throw new Error(d.message || d.error); }
     const blob = await res.blob();
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `design-wheel-${state.pattern}-flyer.pdf`;
+    a.download = `design-wheel-${state.pattern}-${state.mode}.pdf`;
     a.click(); URL.revokeObjectURL(a.href);
   } catch (e) {
     alert('PDF書き出し失敗: ' + e.message);
