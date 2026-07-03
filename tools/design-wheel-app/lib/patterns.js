@@ -12,6 +12,7 @@ export const CATALOG = [
   { id: 'digital',   label: 'デジタル',     tagline: '精度の説得', use: 'アプリ・SaaS・IoT・テック' },
   { id: 'gradient',  label: 'グラデーション', tagline: '感性の説得', use: 'ブランド・コスメ・食・やわらかさ' },
   { id: 'sporty',    label: 'スポーティ',   tagline: '運動量の説得', use: 'スポーツ・ジム・アプリUI（2系統）' },
+  { id: 'fambox',    label: 'FAM / FAM BOX', tagline: 'ブランドの説得', use: 'FAM SNS・Web・チラシ（3配色）' },
 ];
 
 export function listPatterns() {
