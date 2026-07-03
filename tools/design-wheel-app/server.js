@@ -3,7 +3,7 @@ import express from 'express';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { appendFileSync } from 'node:fs';
-import { listPatterns } from './lib/patterns.js';
+import { listPatterns, PATTERNS_DIR } from './lib/patterns.js';
 import { generateHtml, hasKey } from './lib/generate.js';
 import { exportPng, exportPdf, SIZES } from './lib/export-png.js';
 
@@ -11,6 +11,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 app.use(express.json({ limit: '4mb' }));
 app.use(express.static(join(__dirname, 'public')));
+// パターンの素材ライブラリを配信: /pa/<pattern>/assets/<file>
+// → docs/design-wheel/patterns/<pattern>/assets/<file>（保存場所は1か所＝真ソース）
+app.use('/pa', express.static(PATTERNS_DIR));
 
 const PORT = process.env.PORT || 8750;
 const FEEDBACK_LOG = join(__dirname, 'feedback.jsonl');

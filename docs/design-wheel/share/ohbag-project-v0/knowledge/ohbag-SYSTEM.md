@@ -96,7 +96,8 @@ Wi-Fi 接続 / 荷物配送（東京→京都 等・ヤマト手配）/ 1日の�
 ### アセットの渡し方（重要）
 - **SVG（ロゴ・ドゥードル・✦）**: インライン埋め込みが最善（app・Project 共通・劣化なし）。
 - **透過PNG（3Dキャラ・QR）**:
-  - ローカル app: `tools/design-wheel-app/public/assets/ohbag/` に置き、生成HTMLから `http://localhost:8750/assets/ohbag/xxx.png` で参照（プレビュー・書き出し両対応）。
+  - **保存は1か所**＝`docs/design-wheel/patterns/ohbag/assets/`（真ソース・git管理）。app が自動配信する。
+  - ローカル app: 生成HTMLから **`http://localhost:8750/pa/ohbag/assets/characters/xxx.png`** で参照（`/pa/<pattern>/assets/…`。プレビュー・PNG/PDF書き出し両対応）。
   - claude.ai Project: Artifact は外部URL画像を読めないことが多い → **チャットに画像添付**して「これを使って」、または data URI 埋め込み。
 
 ## 確定マスターデータ（差し替えマスター）★一部要確認
