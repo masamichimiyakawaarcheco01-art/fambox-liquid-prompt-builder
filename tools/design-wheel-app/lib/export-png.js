@@ -14,6 +14,7 @@ export const SIZES = {
   '16x9':  { w: 1280, h: 720,  label: 'YouTube サムネ (16:9)' },
   '191x1': { w: 1200, h: 630,  label: 'Blog OGP・シェア (1.91:1)' },
   'a4':    { w: 794,  h: 1123, label: 'A4 チラシ（縦）' },
+  'card':  { w: 344,  h: 208,  label: '名刺カード（91×55mm）' },
 };
 
 export function exportPng({ html, size, scale = 2 }) {

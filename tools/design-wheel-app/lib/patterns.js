@@ -13,6 +13,7 @@ export const CATALOG = [
   { id: 'gradient',  label: 'グラデーション', tagline: '感性の説得', use: 'ブランド・コスメ・食・やわらかさ' },
   { id: 'sporty',    label: 'スポーティ',   tagline: '運動量の説得', use: 'スポーツ・ジム・アプリUI（2系統）' },
   { id: 'fambox',    label: 'FAM / FAM BOX', tagline: 'ブランドの説得', use: 'FAM SNS・Web・チラシ（3配色）' },
+  { id: 'ohbag',     label: 'ohbag',        tagline: '旅の相棒', use: 'ohbag 現地チラシ・名刺（AIトラベル）' },
 ];
 
 export function listPatterns() {
