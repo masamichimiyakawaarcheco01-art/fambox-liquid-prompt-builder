@@ -11,6 +11,13 @@
 | `knowledge/` | ohbag-SYSTEM＋FOUNDATIONS＋PRINT-LAYOUT＋BRIEF |
 | `SCENARIO-INTAKE.md` | 現場でコピペして送る入力テンプレ |
 | `FEEDBACK.md` | 現地1行FBの型（日次PDCA） |
+| `CHARACTER-DATAURIS.md` | 3Dキャラ写真の data URI（Project でキャラを出す用・コピペ素材） |
+
+## 3Dキャラ写真を Project で使う（重要）
+- ロゴ等の **SVG は自動で使える**（ohbag-SYSTEM に索引済み）。
+- **キャラ写真（PNG/WebP）は claude.ai Artifact が外部URLを読めない** → `CHARACTER-DATAURIS.md` を開き、使いたいキャラの `<img ...>`（data URI）をコピー → チャットに貼って「この img を右に配置して」と指示。
+- ⚠️ `CHARACTER-DATAURIS.md` は容量が大きいので **Project のナレッジには登録しない**（都度コピペ用の参照ファイル）。須藤さんには Slack/Drive で共有すると良い。
+- ローカル app では data URI 不要（`/pa/ohbag/assets/characters/…` で参照）。
 
 ## セットアップ手順（宮川さん・15分）
 1. claude.ai で**新規 Project**「ohbag Design Wheel」を作る（須藤さんチームに共有・**使用可**権限）
