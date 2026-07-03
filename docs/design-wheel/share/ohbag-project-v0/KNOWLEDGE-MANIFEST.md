@@ -3,12 +3,13 @@
 > claude.ai の「ohbag Design Wheel」Project の**ナレッジ（添付ファイル）**に、以下をドラッグ登録する。
 > これが「アプリのコンテンツ」。宮川が改訂したらここを差し替える（＝アップデート）。
 
-## 登録するファイル（4点）
+## 登録するファイル（5点）
 | レイヤー | ファイル | 役割 |
 |---|---|---|
 | ② ohbag意思 | `knowledge/ohbag-SYSTEM.md` | ohbag の色・フォント・世界観・2テイスト・確定データ。**真ソース** |
 | ① 普遍 | `knowledge/FOUNDATIONS.md` | 比率・余白・整列・タイポの土台（全生成） |
 | ①印刷 | `knowledge/PRINT-LAYOUT.md` | A4チラシ時の印刷レイアウト作法 |
+| ①名刺 | `knowledge/CARD-LAYOUT.md` | 名刺（91×55mm）時のレイアウト・文字階層 |
 | ③ 条件 | `knowledge/BRIEF.md` | 依頼ごとの条件ヒアリング → 翻訳 |
 
 ※ パス基準 = `docs/design-wheel/share/ohbag-project-v0/`。
