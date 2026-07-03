@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { appendFileSync } from 'node:fs';
 import { listPatterns } from './lib/patterns.js';
 import { generateHtml, hasKey } from './lib/generate.js';
-import { exportPng, SIZES } from './lib/export-png.js';
+import { exportPng, exportPdf, SIZES } from './lib/export-png.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -35,12 +35,18 @@ app.post('/api/generate', async (req, res) => {
 });
 
 app.post('/api/export', async (req, res) => {
-  const { html, size } = req.body || {};
+  const { html, size, format } = req.body || {};
   if (!html) return res.status(400).json({ error: 'html は必須です' });
   try {
+    if (format === 'pdf') {
+      const { buffer } = await exportPdf({ html });
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="design-wheel-flyer.pdf"`);
+      return res.send(buffer);
+    }
     const { buffer } = await exportPng({ html, size });
     res.setHeader('Content-Type', 'image/png');
-    res.setHeader('Content-Disposition', `attachment; filename="banner-${size || '1x1'}@2x.png"`);
+    res.setHeader('Content-Disposition', `attachment; filename="design-wheel-${size || '1x1'}@2x.png"`);
     res.send(buffer);
   } catch (e) {
     console.error(e);
