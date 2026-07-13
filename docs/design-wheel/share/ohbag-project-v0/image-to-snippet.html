@@ -73,6 +73,8 @@ document.addEventListener('paste',e=>{const it=[...e.clipboardData.items].find(i
 const TARGET_W=500, QUALITY=0.82, WARN_KB=200;
 const KEY_THRESH=90;   // 白判定（RGB差の合計がこれ以下なら背景候補）
 const ERODE_IT=2;      // 輪郭を削る回数（白フチの芯を除去）
+const HOLE_PURITY=0.70;// 囲まれた白を「穴」と判定する純白率（白い靴・服は陰影で下回る）
+const HOLE_MIN=30;     // 穴とみなす最小画素数
 
 // 白背景キーイング: 外周から繋がった白だけを透過（内部の白い服・靴は保護）
 // →1px単位で erode → 内側にだけ効くぼかし → 白の混入を数学的に除去（デフリンジ）
@@ -91,6 +93,21 @@ function removeWhiteBg(ctx,w,h){
     if(x<w-1&&!bg[i+1]&&isW(i+1)){bg[i+1]=1;stack[sp++]=i+1;}
     if(y>0&&!bg[i-w]&&isW(i-w)){bg[i-w]=1;stack[sp++]=i-w;}
     if(y<h-1&&!bg[i+w]&&isW(i+w)){bg[i+w]=1;stack[sp++]=i+w;}}
+  // 1.5) 囲まれた白＝「穴」（取っ手の隙間・腕の隙間等）も背景化。
+  //     背景の白は純白、白い物体（靴・服）は陰影がある→純白率で見分ける
+  const isPure=i=>{const p=i*4;return (255-px[p])+(255-px[p+1])+(255-px[p+2])<=12;};
+  const seen=new Uint8Array(N), comp=new Int32Array(N);
+  for(let s=0;s<N;s++){
+    if(seen[s]||bg[s]||!isW(s)) continue;
+    let cp=0, pureN=0; comp[cp++]=s; seen[s]=1;
+    let head=0;
+    while(head<cp){const i=comp[head++],x=i%w,y=(i/w)|0;
+      if(isPure(i)) pureN++;
+      const nb=[];
+      if(x>0)nb.push(i-1); if(x<w-1)nb.push(i+1); if(y>0)nb.push(i-w); if(y<h-1)nb.push(i+w);
+      for(const j of nb) if(!seen[j]&&!bg[j]&&isW(j)){seen[j]=1;comp[cp++]=j;}}
+    if(cp>=HOLE_MIN && pureN/cp>=HOLE_PURITY){ for(let k=0;k<cp;k++) bg[comp[k]]=1; }
+  }
   // 2) erode（前景を1pxずつ削る）
   let fg=new Uint8Array(N); for(let i=0;i<N;i++) fg[i]=bg[i]?0:255;
   for(let it=0;it<ERODE_IT;it++){

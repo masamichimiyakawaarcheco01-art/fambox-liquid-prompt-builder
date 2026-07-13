@@ -17,6 +17,7 @@ from PIL import Image, ImageDraw, ImageFilter
 import numpy as np
 
 THRESH = 60          # flood fill の白判定のゆるさ（大きいほど影も背景扱い）
+HOLE_PURITY = 0.70   # 囲まれた白を「穴」と判定する純白率（白い靴・服は陰影で下回る）
 ERODE_PX = 3         # 輪郭を削る量（白フチの芯を除去）
 FEATHER = 1.5        # エッジのぼかし半径（なめらかさ）
 
@@ -39,6 +40,29 @@ def cutout(src_path, dst_path):
             ImageDraw.floodfill(ff, xy, MARK, thresh=THRESH)
     arr = np.asarray(ff)
     bg = (arr[:,:,0]==255) & (arr[:,:,1]==0) & (arr[:,:,2]==255)
+
+    # --- 1.5) 囲まれた白＝「穴」（バッグ取っ手の隙間・腕の隙間等）も背景化 ---
+    # 背景の白は純白(255)、白い物体（靴・服）は陰影がある。純白率で見分ける。
+    src_arr = np.asarray(im).astype(np.int32)
+    diff = (255 - src_arr).sum(axis=2)
+    nearwhite = diff <= THRESH
+    pure = diff <= 12
+    rest = nearwhite & ~bg
+    from collections import deque
+    seen = np.zeros(bg.shape, bool)
+    H, W = bg.shape
+    for y0 in range(H):
+        for x0 in range(W):
+            if rest[y0,x0] and not seen[y0,x0]:
+                q = deque([(y0,x0)]); seen[y0,x0]=True; px=[]
+                while q:
+                    cy,cx = q.popleft(); px.append((cy,cx))
+                    for ny,nx in ((cy-1,cx),(cy+1,cx),(cy,cx-1),(cy,cx+1)):
+                        if 0<=ny<H and 0<=nx<W and rest[ny,nx] and not seen[ny,nx]:
+                            seen[ny,nx]=True; q.append((ny,nx))
+                if len(px) >= 30 and np.mean([pure[p] for p in px]) >= HOLE_PURITY:
+                    for p in px: bg[p] = True   # 穴として背景化
+
     alpha = np.where(bg, 0, 255).astype(np.uint8)
 
     a = Image.fromarray(alpha, 'L')
