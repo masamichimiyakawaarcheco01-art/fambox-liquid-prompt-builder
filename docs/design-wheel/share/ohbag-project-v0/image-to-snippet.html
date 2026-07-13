@@ -35,14 +35,15 @@
 </style></head>
 <body><div class="wrap">
   <h1><span class="dot"></span>ohbag 画像 → 貼り付けスニペット変換</h1>
-  <p class="lead">背景を消した PNG（3Dキャラなど）をここに入れると、<b>Project のチャットにそのまま貼れるコード</b>に変換します。軽量化も自動です。ネット接続不要・画像はどこにも送信されません。</p>
-  <div class="steps"><span>① 画像をドラッグ or クリックで選択</span><span>② 「コピー」を押す</span><span>③ Project のチャットに貼り付け</span></div>
+  <p class="lead">Gemini などで作った<b>白背景のキャラ画像をそのまま</b>ここに入れてください。<b>背景の白を自動で綺麗に消して</b>、Project のチャットにそのまま貼れるコードに変換します（軽量化も自動）。ネット接続不要・画像はどこにも送信されません。</p>
+  <div class="steps"><span>① 白背景の画像をドラッグ（背景消し不要）</span><span>② 「コピー」を押す</span><span>③ Project のチャットに貼り付け</span></div>
 
   <div id="drop">
-    <b>ここに PNG をドラッグ＆ドロップ</b>
-    <small>またはクリックしてファイルを選択（透過PNG推奨・JPGも可）</small>
+    <b>ここに画像をドラッグ＆ドロップ</b>
+    <small>白背景のままでOK（自動で切り抜きます）。透過済みPNGも可</small>
     <input type="file" id="file" accept="image/*">
   </div>
+  <label style="display:block;margin-top:10px;font-size:12.5px;color:#555"><input type="checkbox" id="autokey" checked> 白背景を自動で消す（キャラ内部の白い服・靴は残ります）</label>
 
   <div class="result" id="result">
     <div class="preview-row">
@@ -70,6 +71,46 @@ file.onchange=()=>{if(file.files[0])handle(file.files[0]);};
 document.addEventListener('paste',e=>{const it=[...e.clipboardData.items].find(i=>i.type.startsWith('image/'));if(it)handle(it.getAsFile());});
 
 const TARGET_W=500, QUALITY=0.82, WARN_KB=200;
+const KEY_THRESH=90;   // 白判定（RGB差の合計がこれ以下なら背景候補）
+const ERODE_IT=2;      // 輪郭を削る回数（白フチの芯を除去）
+
+// 白背景キーイング: 外周から繋がった白だけを透過（内部の白い服・靴は保護）
+// →1px単位で erode → 内側にだけ効くぼかし → 白の混入を数学的に除去（デフリンジ）
+function removeWhiteBg(ctx,w,h){
+  const im=ctx.getImageData(0,0,w,h), px=im.data, N=w*h;
+  const isW=i=>{const p=i*4;return (255-px[p])+(255-px[p+1])+(255-px[p+2])<=KEY_THRESH;};
+  // 角が白くなければスキップ（写真など）
+  const corners=[0,w-1,(h-1)*w,(h-1)*w+w-1];
+  if(!corners.every(isW)) return false;
+  // 1) flood fill（BFS）で外周から繋がった白＝背景
+  const bg=new Uint8Array(N); const stack=new Int32Array(N); let sp=0;
+  for(let x=0;x<w;x++){for(const i of [x,(h-1)*w+x]) if(!bg[i]&&isW(i)){bg[i]=1;stack[sp++]=i;}}
+  for(let y=0;y<h;y++){for(const i of [y*w,y*w+w-1]) if(!bg[i]&&isW(i)){bg[i]=1;stack[sp++]=i;}}
+  while(sp>0){const i=stack[--sp],x=i%w,y=(i/w)|0;
+    if(x>0&&!bg[i-1]&&isW(i-1)){bg[i-1]=1;stack[sp++]=i-1;}
+    if(x<w-1&&!bg[i+1]&&isW(i+1)){bg[i+1]=1;stack[sp++]=i+1;}
+    if(y>0&&!bg[i-w]&&isW(i-w)){bg[i-w]=1;stack[sp++]=i-w;}
+    if(y<h-1&&!bg[i+w]&&isW(i+w)){bg[i+w]=1;stack[sp++]=i+w;}}
+  // 2) erode（前景を1pxずつ削る）
+  let fg=new Uint8Array(N); for(let i=0;i<N;i++) fg[i]=bg[i]?0:255;
+  for(let it=0;it<ERODE_IT;it++){
+    const nf=new Uint8Array(fg);
+    for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=y*w+x;
+      if(fg[i]&&((x>0&&!fg[i-1])||(x<w-1&&!fg[i+1])||(y>0&&!fg[i-w])||(y<h-1&&!fg[i+w]))) nf[i]=0;}
+    fg=nf;}
+  // 3) 内側にだけ効くぼかし（3x3平均→hardマスクとminを取る＝外に滲ませない）
+  const soft=new Float32Array(N);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){let s=0,n=0;
+    for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const yy=y+dy,xx=x+dx;
+      if(yy>=0&&yy<h&&xx>=0&&xx<w){s+=fg[yy*w+xx];n++;}}
+    soft[y*w+x]=Math.min(s/n, fg[y*w+x]);}
+  // 4) デフリンジ: 半透明画素から白の混入を除去して書き戻し
+  for(let i=0;i<N;i++){const a=soft[i]/255,p=i*4;
+    if(a<=0.004){px[p+3]=0;continue;}
+    if(a<0.996){for(let k=0;k<3;k++) px[p+k]=Math.max(0,Math.min(255,(px[p+k]-255*(1-a))/a));}
+    px[p+3]=Math.round(a*255);}
+  ctx.putImageData(im,0,0); return true;
+}
 
 function handle(f){
   const img=new Image();
@@ -77,10 +118,16 @@ function handle(f){
     const scale=Math.min(1, TARGET_W/img.width);
     const w=Math.round(img.width*scale), h=Math.round(img.height*scale);
     const c=document.createElement('canvas'); c.width=w; c.height=h;
-    c.getContext('2d').drawImage(img,0,0,w,h);
+    const ctx=c.getContext('2d');
+    // 透過済みPNGが来ても一度白に敷いてから処理（Mac切り抜きの白フチ・ギザギザも救済）
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h);
+    ctx.drawImage(img,0,0,w,h);
+    let keyed=false;
+    if(document.getElementById('autokey').checked) keyed=removeWhiteBg(ctx,w,h);
     // WebP優先（透過対応・軽い）。非対応ブラウザはPNGへフォールバック
     let durl=c.toDataURL('image/webp',QUALITY), fmt='WebP（軽量・透過対応）';
     if(!durl.startsWith('data:image/webp')){ durl=c.toDataURL('image/png'); fmt='PNG（このブラウザはWebP非対応）'; }
+    fmt += keyed ? ' ／ 背景: 自動切り抜き済み ✂️' : ' ／ 背景: そのまま（白背景でない画像は手動で切り抜いてください）';
     const kb=Math.round(durl.length*3/4/1024);
     const snippet='<img src="'+durl+'" alt="ohbag character" style="height:80%;object-fit:contain">';
     document.getElementById('pvimg').src=durl;
