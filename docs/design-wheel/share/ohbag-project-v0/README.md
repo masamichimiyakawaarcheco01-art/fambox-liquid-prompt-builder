@@ -12,6 +12,8 @@
 | `SCENARIO-INTAKE.md` | 現場でコピペして送る入力テンプレ |
 | `FEEDBACK.md` | 現地1行FBの型（日次PDCA） |
 | `CHARACTER-DATAURIS.md` | 3Dキャラ写真の data URI（Project でキャラを出す用・コピペ素材） |
+| `CHARACTER-RECIPE.md` | **新キャラを自分で追加する手順書**（Gemini生成→remove.bg→変換ツール。5分） |
+| `image-to-snippet.html` | **画像→貼り付けスニペット変換ツール**（ダブルクリックで起動・オフライン動作） |
 
 ## 3Dキャラ写真を Project で使う（重要）
 - ロゴ等の **SVG は自動で使える**（ohbag-SYSTEM に索引済み）。
