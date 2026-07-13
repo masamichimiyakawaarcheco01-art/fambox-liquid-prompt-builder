@@ -76,14 +76,19 @@ const ERODE_IT=2;      // 輪郭を削る回数（白フチの芯を除去）
 const HOLE_PURITY=0.70;// 囲まれた白を「穴」と判定する純白率（白い靴・服は陰影で下回る）
 const HOLE_MIN=30;     // 穴とみなす最小画素数
 
-// 白背景キーイング: 外周から繋がった白だけを透過（内部の白い服・靴は保護）
-// →1px単位で erode → 内側にだけ効くぼかし → 白の混入を数学的に除去（デフリンジ）
+// 白系背景キーイング: 背景色を外周からサンプリング（純白でも薄グレーでも対応）し、
+// 外周連結＋囲まれた「穴」を透過（内部の白い服・靴・地図は陰影＝純度で保護）
+// → erode → 内側にだけ効くぼかし → 背景色の混入を数学的に除去（デフリンジ）
 function removeWhiteBg(ctx,w,h){
   const im=ctx.getImageData(0,0,w,h), px=im.data, N=w*h;
-  const isW=i=>{const p=i*4;return (255-px[p])+(255-px[p+1])+(255-px[p+2])<=KEY_THRESH;};
-  // 角が白くなければスキップ（写真など）
-  const corners=[0,w-1,(h-1)*w,(h-1)*w+w-1];
-  if(!corners.every(isW)) return false;
+  // 0) 背景色 = 外周画素の中央値
+  const bR=[],bG=[],bB=[];
+  for(let x=0;x<w;x++){for(const i of [x,(h-1)*w+x]){const p=i*4;bR.push(px[p]);bG.push(px[p+1]);bB.push(px[p+2]);}}
+  for(let y=0;y<h;y++){for(const i of [y*w,y*w+w-1]){const p=i*4;bR.push(px[p]);bG.push(px[p+1]);bB.push(px[p+2]);}}
+  const med=a=>{a.sort((x,y)=>x-y);return a[a.length>>1];};
+  const bgR=med(bR),bgG=med(bG),bgB=med(bB);
+  if(Math.min(bgR,bgG,bgB)<200) return false; // 暗背景はスキップ（白系背景専用）
+  const isW=i=>{const p=i*4;return Math.abs(px[p]-bgR)+Math.abs(px[p+1]-bgG)+Math.abs(px[p+2]-bgB)<=KEY_THRESH;};
   // 1) flood fill（BFS）で外周から繋がった白＝背景
   const bg=new Uint8Array(N); const stack=new Int32Array(N); let sp=0;
   for(let x=0;x<w;x++){for(const i of [x,(h-1)*w+x]) if(!bg[i]&&isW(i)){bg[i]=1;stack[sp++]=i;}}
@@ -95,7 +100,7 @@ function removeWhiteBg(ctx,w,h){
     if(y<h-1&&!bg[i+w]&&isW(i+w)){bg[i+w]=1;stack[sp++]=i+w;}}
   // 1.5) 囲まれた白＝「穴」（取っ手の隙間・腕の隙間等）も背景化。
   //     背景の白は純白、白い物体（靴・服）は陰影がある→純白率で見分ける
-  const isPure=i=>{const p=i*4;return (255-px[p])+(255-px[p+1])+(255-px[p+2])<=12;};
+  const isPure=i=>{const p=i*4;return Math.abs(px[p]-bgR)+Math.abs(px[p+1]-bgG)+Math.abs(px[p+2]-bgB)<=14;};
   const seen=new Uint8Array(N), comp=new Int32Array(N);
   for(let s=0;s<N;s++){
     if(seen[s]||bg[s]||!isW(s)) continue;
@@ -121,10 +126,11 @@ function removeWhiteBg(ctx,w,h){
     for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const yy=y+dy,xx=x+dx;
       if(yy>=0&&yy<h&&xx>=0&&xx<w){s+=fg[yy*w+xx];n++;}}
     soft[y*w+x]=Math.min(s/n, fg[y*w+x]);}
-  // 4) デフリンジ: 半透明画素から白の混入を除去して書き戻し
+  // 4) デフリンジ: 半透明画素から背景色の混入を除去して書き戻し
+  const bgc=[bgR,bgG,bgB];
   for(let i=0;i<N;i++){const a=soft[i]/255,p=i*4;
     if(a<=0.004){px[p+3]=0;continue;}
-    if(a<0.996){for(let k=0;k<3;k++) px[p+k]=Math.max(0,Math.min(255,(px[p+k]-255*(1-a))/a));}
+    if(a<0.996){for(let k=0;k<3;k++) px[p+k]=Math.max(0,Math.min(255,(px[p+k]-bgc[k]*(1-a))/a));}
     px[p+3]=Math.round(a*255);}
   ctx.putImageData(im,0,0); return true;
 }
