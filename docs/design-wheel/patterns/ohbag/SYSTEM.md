@@ -36,11 +36,29 @@
 ## タイポグラフィ（Google Fonts で実レンダリング。★実サイト CSS で確定済 2026-07-03）
 - **見出し（Display）= Poppins**（wght 500/600/700/800）。CSS 変数 `--display:'Poppins'`。
 - **本文（Body）= Manrope**（wght 400/500/600/700）。CSS 変数 `--body:'Manrope'`。
-- 日本語 = **Noto Sans JP**（`'Noto Sans JP', sans-serif`）。
-- 読み込み: `https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap`
 - 見出し: **インディゴ `#3D39D6`・Poppins 700/800・2行**（例: "Your whole trip, / in one chat"）。字間わずかにタイト。
 - 本文: ネイビー・Manrope 400/500、短く。行間 1.6〜1.75。
 - ALL CAPS は**字間広めのラベル**（ナビ/フッター）に限定使用（ref の "TU SONRISA EN MOVIMIENTO" 調）。
+
+### 多言語対応（★2026-07-13 追加。非ラテン文字は Google Noto Sans 系で統一）
+ohbag はホテル現地の多国籍ゲスト向け。**欧文（英語・フランス語等ヨーロッパ言語）は Poppins/Manrope のまま**（両方 Latin 拡張対応＝アクセント記号OK）。それ以外は言語別に Noto Sans を使う：
+
+| 言語 | フォント | Google Fonts family |
+|---|---|---|
+| 英語・フランス語等（欧文全般） | Poppins（見出し）/ Manrope（本文）※現状維持 | `Poppins` / `Manrope` |
+| 日本語 | Noto Sans JP | `Noto+Sans+JP` |
+| 韓国語 | Noto Sans KR | `Noto+Sans+KR` |
+| 中国語（簡体・中国本土） | Noto Sans SC | `Noto+Sans+SC` |
+| 中国語（繁体・台湾/香港） | Noto Sans TC | `Noto+Sans+TC` |
+| タイ語 | Noto Sans Thai | `Noto+Sans+Thai` |
+| その他・混在時の最終フォールバック | Noto Sans | `Noto+Sans` |
+
+運用ルール:
+- **その制作物に登場する言語のフォントだけ読み込む**（全部入りは重い）。例: 英日韓のチラシ → Poppins＋Manrope＋Noto Sans JP＋Noto Sans KR。
+- font-family スタックは「欧文フォント → その言語の Noto Sans → sans-serif」の順（例: `'Manrope','Noto Sans KR',sans-serif`）。数字・英字は自動的に Manrope/Poppins が拾い、ハングルだけ Noto に落ちる＝混植が綺麗。
+- **CJK の見出しは Noto Sans（各言語）の 700/800** を使う（Poppins は CJK グリフを持たないため）。字間: CJK は 0〜0.02em（欧文のタイトな字間を適用しない）。
+- ウェイトは 400/500/700 を基本に（Noto Sans 系は全対応）。
+- 読み込み例（英日韓）: `https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap`
 
 ## レイアウト / グリッド
 - **大きな角丸パネル**（radius 24〜40px）で色ゾーニング（ライム面 / ラベンダー面 / 白面を組み合わせる）。
