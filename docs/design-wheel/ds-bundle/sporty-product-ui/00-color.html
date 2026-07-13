@@ -1,0 +1,36 @@
+<!-- @dsCard group="Foundations · sporty-product-UI" name="Color" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0A0C0B;--surface:#14171A;--surface-2:#1C2024;--line:#272C30;--ink:#FFFFFF;--muted:#8C949C;--accent:#C6FF3A}
+  *{margin:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+  body{background:var(--bg);padding:24px;color:var(--ink)}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;font-family:'Space Grotesk'}
+  .row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .sw{width:128px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .chip{height:72px}
+  .meta{padding:8px 10px;font-size:10px;background:var(--surface)}
+  .meta b{display:block;font-size:11px;color:var(--ink);font-family:'Space Grotesk'}
+  .meta span{color:var(--muted)}
+  .glow{height:72px;background:radial-gradient(circle at 50% 50%,rgba(198,255,58,.5),transparent 62%)}
+  .rule{font-size:10px;color:var(--muted);line-height:1.7;border-top:1px solid var(--line);padding-top:12px}
+  .rule b{color:var(--accent);font-family:'Space Grotesk'}
+</style></head>
+<body>
+  <h2>sporty / product-UI — Color tokens</h2>
+  <div class="row">
+    <div class="sw"><div class="chip" style="background:#0A0C0B"></div><div class="meta"><b>bg</b><span>#0A0C0B 近黒</span></div></div>
+    <div class="sw"><div class="chip" style="background:#14171A"></div><div class="meta"><b>surface</b><span>#14171A</span></div></div>
+    <div class="sw"><div class="chip" style="background:#1C2024"></div><div class="meta"><b>surface-2</b><span>#1C2024</span></div></div>
+    <div class="sw"><div class="chip" style="background:#272C30"></div><div class="meta"><b>line</b><span>#272C30</span></div></div>
+    <div class="sw"><div class="chip" style="background:#8C949C"></div><div class="meta"><b>muted</b><span>#8C949C</span></div></div>
+    <div class="sw"><div class="chip" style="background:#C6FF3A"></div><div class="meta"><b>accent volt</b><span>#C6FF3A</span></div></div>
+    <div class="sw"><div class="glow"></div><div class="meta"><b>glow</b><span>radial 22%→0</span></div></div>
+  </div>
+  <div class="rule">
+    規律: <b>近黒 bg ＋ volt 1色</b>が product-UI の signature（orange/blue より「アプリらしさ」）。<br>
+    accent は CTA・データ・1ハイライトに限定（画面内3〜4回まで）。<br>
+    質感は <b>grain でなく radial グロー</b>。grain・斜め・グランジは使わない（poster 側の語彙）。
+  </div>
+</body></html>

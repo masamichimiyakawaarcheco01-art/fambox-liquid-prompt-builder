@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FAMBOX バナーキット v0</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --drive:#FB4C15;--drive-light:#FC825B;--sky:#3DB8E8;--deep:#0F2A5C;
+    --ink:#1B1D1A;--sub:#545655;--white:#FFFFFF;--bg2:#FAFAFA;
+    --ja:'Hiragino Sans','Hiragino Kaku Gothic ProN','Meiryo',sans-serif;
+    --en:'Poppins',sans-serif;
+  }
+  *{margin:0;box-sizing:border-box}
+  body{background:#E9EBEE;font-family:var(--ja);padding:28px;color:var(--ink)}
+  h1.page{font-family:var(--en);font-size:20px;font-weight:700;margin-bottom:4px}
+  p.note{font-size:13px;color:var(--sub);margin-bottom:24px}
+  .lab{font-family:var(--en);font-size:12px;font-weight:600;color:var(--sub);margin:18px 0 8px;letter-spacing:.04em}
+  .stage{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start}
+
+  /* バナー共通：実寸を transform:scale で縮小表示 */
+  .frame{position:relative;overflow:hidden;background:var(--white);box-shadow:0 8px 24px rgba(15,42,92,.12);border-radius:8px;flex:none}
+  .banner{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;color:var(--white);background:var(--deep)}
+  .banner .glow{position:absolute;width:60%;aspect-ratio:1;border-radius:50%;right:-10%;top:-12%;
+    background:radial-gradient(circle,rgba(251,76,21,.42),transparent 62%)}
+  .banner .photo{position:absolute;inset:0;background:linear-gradient(140deg,#0F2A5C 25%,#16386f 60%,#0c2css 100%);opacity:.0}
+  .banner .top{position:relative;display:flex;justify-content:space-between;align-items:flex-start;z-index:2}
+  .eyebrow{font-family:var(--en);font-weight:600;color:var(--drive-light);text-transform:uppercase}
+  .logo{font-family:var(--en);font-weight:800;letter-spacing:.02em}
+  .logo .b{color:var(--drive)}
+  .mid{position:relative;z-index:2}
+  .head{font-weight:600;line-height:1.18;letter-spacing:.01em}
+  .head .accent{color:var(--drive-light)}
+  .bottom{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between}
+  .cta{background:var(--drive);color:#fff;font-family:var(--en);font-weight:700;border-radius:999px;display:inline-flex;align-items:center;gap:.4em;white-space:nowrap}
+  .sub{font-family:var(--en);font-weight:500;color:rgba(255,255,255,.6)}
+
+  /* ===== 各サイズの内側スケール ===== */
+  /* 1:1 1080 → 表示300 (×0.2778) */
+  .f-sq{width:300px;height:300px}
+  .f-sq .banner{padding:30px}
+  .f-sq .eyebrow{font-size:14px}.f-sq .logo{font-size:18px}
+  .f-sq .head{font-size:38px}.f-sq .cta{font-size:14px;padding:11px 20px}.f-sq .sub{font-size:12px}
+
+  /* 4:5 1080×1350 → 288×360 */
+  .f-pt{width:288px;height:360px}
+  .f-pt .banner{padding:30px}
+  .f-pt .eyebrow{font-size:14px}.f-pt .logo{font-size:18px}
+  .f-pt .head{font-size:40px}.f-pt .cta{font-size:14px;padding:11px 20px}.f-pt .sub{font-size:12px}
+
+  /* 9:16 1080×1920 → 216×384 */
+  .f-st{width:216px;height:384px}
+  .f-st .banner{padding:26px}
+  .f-st .eyebrow{font-size:13px}.f-st .logo{font-size:16px}
+  .f-st .head{font-size:34px}.f-st .cta{font-size:13px;padding:11px 18px}.f-st .sub{font-size:11px}
+
+  /* 16:9 1280×720 → 426×240 */
+  .f-yt{width:426px;height:240px}
+  .f-yt .banner{padding:28px;flex-direction:row;align-items:center;gap:20px}
+  .f-yt .col{display:flex;flex-direction:column;justify-content:space-between;height:100%;flex:1;z-index:2;position:relative}
+  .f-yt .eyebrow{font-size:13px}.f-yt .logo{font-size:17px}
+  .f-yt .head{font-size:40px}.f-yt .cta{font-size:14px;padding:11px 20px}.f-yt .sub{font-size:12px}
+
+  /* 1.91:1 1200×630 → 420×220 */
+  .f-og{width:420px;height:220px}
+  .f-og .banner{padding:26px}
+  .f-og .eyebrow{font-size:13px}.f-og .logo{font-size:16px}
+  .f-og .head{font-size:34px}.f-og .cta{font-size:13px;padding:10px 18px}.f-og .sub{font-size:11px}
+</style></head>
+<body>
+  <h1 class="page">FAMBOX BANNER KIT <span style="color:#FB4C15">v0</span></h1>
+  <p class="note">同一レシピ「見出し型」を5アスペクトで展開。Drive Orange グロー / Deep Blue 地 / Poppins×Hiragino。実寸の縮小表示。</p>
+
+  <div class="lab">1:1 — Instagram フィード（1080×1080）　／　4:5 — IG 縦長（1080×1350）　／　9:16 — TikTok・ストーリー（1080×1920）</div>
+  <div class="stage">
+    <!-- 1:1 -->
+    <div class="frame f-sq"><div class="banner"><div class="glow"></div>
+      <div class="top"><span class="eyebrow">For Athletes</span><span class="logo">FAM<span class="b">BOX</span></span></div>
+      <div class="mid"><div class="head">アスリートの食事を、<br><span class="accent">もっと自由に。</span></div></div>
+      <div class="bottom"><span class="cta">いまはじめる →</span><span class="sub">fam-box.jp</span></div>
+    </div></div>
+    <!-- 4:5 -->
+    <div class="frame f-pt"><div class="banner"><div class="glow"></div>
+      <div class="top"><span class="eyebrow">For Athletes</span><span class="logo">FAM<span class="b">BOX</span></span></div>
+      <div class="mid"><div class="head">アスリートの食事を、<br><span class="accent">もっと自由に。</span></div></div>
+      <div class="bottom"><span class="cta">いまはじめる →</span><span class="sub">fam-box.jp</span></div>
+    </div></div>
+    <!-- 9:16 -->
+    <div class="frame f-st"><div class="banner"><div class="glow"></div>
+      <div class="top"><span class="eyebrow">For Athletes</span><span class="logo">FAM<span class="b">BOX</span></span></div>
+      <div class="mid"><div class="head">アスリートの<br>食事を、<br><span class="accent">もっと自由に。</span></div></div>
+      <div class="bottom"><span class="cta">いまはじめる →</span><span class="sub">fam-box.jp</span></div>
+    </div></div>
+  </div>
+
+  <div class="lab">16:9 — YouTube サムネ（1280×720）　／　1.91:1 — Blog OGP・SNSシェア（1200×630）</div>
+  <div class="stage">
+    <!-- 16:9 -->
+    <div class="frame f-yt"><div class="banner"><div class="glow"></div>
+      <div class="col">
+        <div class="top"><span class="eyebrow">For Athletes</span><span class="logo">FAM<span class="b">BOX</span></span></div>
+        <div class="mid"><div class="head">アスリートの食事を、<br><span class="accent">もっと自由に。</span></div></div>
+        <div class="bottom"><span class="cta">いまはじめる →</span><span class="sub">fam-box.jp</span></div>
+      </div>
+    </div></div>
+    <!-- 1.91:1 -->
+    <div class="frame f-og"><div class="banner"><div class="glow"></div>
+      <div class="top"><span class="eyebrow">For Athletes</span><span class="logo">FAM<span class="b">BOX</span></span></div>
+      <div class="mid"><div class="head">アスリートの食事を、<span class="accent">もっと自由に。</span></div></div>
+      <div class="bottom"><span class="cta">いまはじめる →</span><span class="sub">fam-box.jp</span></div>
+    </div></div>
+  </div>
+</body></html>

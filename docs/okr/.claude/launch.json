@@ -1,0 +1,30 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "wf-preview",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8765"],
+      "port": 8765,
+      "cwd": "/Users/archecoinc./Desktop/Claude_1/docs/okr/wf_simple_diagnosis_20260513"
+    },
+    {
+      "name": "design-wheel-prototypes",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1/docs/design-wheel", "-l", "8743", "--no-clipboard"],
+      "port": 8743
+    },
+    {
+      "name": "repo-root",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/archecoinc./Desktop/Claude_1", "-l", "8744", "--no-clipboard"],
+      "port": 8744
+    },
+    {
+      "name": "design-wheel-app",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/Users/archecoinc./Desktop/Claude_1/tools/design-wheel-app/server.js"],
+      "port": 8750
+    }
+  ]
+}

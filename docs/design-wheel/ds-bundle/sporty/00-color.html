@@ -1,0 +1,39 @@
+<!-- @dsCard group="Foundations · sporty" name="Color" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<style>
+  :root{
+    --bg:#FFFFFF;--surface:#F4F5F6;
+    --ink:#0E0E12;--ink-muted:#8A8A90;
+    --accent:#FF4D1F;--accent-alt:#2E6BE6;--line:#ECECEE;
+  }
+  *{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+  body{background:var(--surface);padding:24px;color:var(--ink)}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:16px}
+  .row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .sw{width:128px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .chip{height:72px}
+  .meta{padding:8px 10px;font-size:10px}
+  .meta b{display:block;font-size:11px;color:var(--ink)}
+  .meta span{color:var(--ink-muted)}
+  .rule{font-size:10px;color:var(--ink-muted);line-height:1.6;border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
+  .rule b{color:var(--ink)}
+</style></head>
+<body>
+  <h2>sporty — Color tokens</h2>
+  <div class="row">
+    <div class="sw"><div class="chip" style="background:#FFFFFF;border-bottom:1px solid #ECECEE"></div><div class="meta"><b>bg</b><span>#FFFFFF</span></div></div>
+    <div class="sw"><div class="chip" style="background:#F4F5F6"></div><div class="meta"><b>surface</b><span>#F4F5F6</span></div></div>
+    <div class="sw"><div class="chip" style="background:#0E0E12"></div><div class="meta"><b>ink</b><span>#0E0E12</span></div></div>
+    <div class="sw"><div class="chip" style="background:#8A8A90"></div><div class="meta"><b>ink-muted</b><span>#8A8A90</span></div></div>
+    <div class="sw"><div class="chip" style="background:#FF4D1F"></div><div class="meta"><b>accent</b><span>#FF4D1F energy</span></div></div>
+    <div class="sw"><div class="chip" style="background:#2E6BE6"></div><div class="meta"><b>accent-alt</b><span>#2E6BE6 court</span></div></div>
+    <div class="sw"><div class="chip" style="background:#ECECEE"></div><div class="meta"><b>line</b><span>#ECECEE</span></div></div>
+  </div>
+  <div class="rule">
+    <b>ゾーニング規則</b> — 写真の色が主役、UI色は脇役。<br>
+    accent は<b>1作品に1色のみ</b>（energy orange OR court blue）。<br>
+    accent 面積 = 「色帯・CTA・数値強調」に限定。デュオトーン処理のみ大面積可。<br>
+    白 bg が写真を立たせる。パステル・マルチカラー禁止。
+  </div>
+</body></html>

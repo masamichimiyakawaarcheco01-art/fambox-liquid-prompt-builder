@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>intBB UI モックアップ v0.3</title>
+<style>
+  :root{
+    --page-bg:#F2F2F3; --page-ink:#1A1C20; --page-muted:#7A7A82; --page-line:#E2E2E4; --page-surface:#FFFFFF;
+    /* intBB v0.3 tokens (mock screens are fixed light = product design) */
+    --bb-bg:#FAFAFA; --bb-surface:#FFFFFF; --bb-ink:#1A1C20; --bb-muted:#9A9AA2;
+    --bb-primary:#1F3A5F; --bb-gold:#C9A465; --bb-line:#ECECEC; --bb-note:#F5F5F4; --bb-danger:#D14343;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --page-bg:#17181B; --page-ink:#EDEDEF; --page-muted:#8E8E96; --page-line:#2A2B2F; --page-surface:#1F2024; }
+  }
+  :root[data-theme="dark"]{ --page-bg:#17181B; --page-ink:#EDEDEF; --page-muted:#8E8E96; --page-line:#2A2B2F; --page-surface:#1F2024; }
+  :root[data-theme="light"]{ --page-bg:#F2F2F3; --page-ink:#1A1C20; --page-muted:#7A7A82; --page-line:#E2E2E4; --page-surface:#FFFFFF; }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--page-bg); color:var(--page-ink);
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:14px; line-height:1.7;
+  }
+  .wrap{max-width:1160px; margin:0 auto; padding:40px 24px 72px}
+
+  /* ---------- viewer chrome ---------- */
+  .head{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:20px}
+  .head h1{font-size:20px; font-weight:600; margin:0; letter-spacing:.01em}
+  .head .sub{font-size:12px; color:var(--page-muted); margin-top:4px}
+  .seg{display:inline-flex; background:var(--page-surface); border:1px solid var(--page-line); border-radius:999px; padding:3px; gap:2px}
+  .seg button{
+    appearance:none; border:0; background:transparent; color:var(--page-muted); font:inherit; font-size:13px;
+    padding:7px 18px; border-radius:999px; cursor:pointer; transition:background .15s,color .15s;
+  }
+  .seg button:hover{color:var(--page-ink)}
+  .seg button:focus-visible{outline:2px solid var(--bb-primary); outline-offset:2px}
+  .seg button.on{background:var(--bb-primary); color:#fff}
+  .caption{font-size:12px; color:var(--page-muted); margin:14px 2px 0}
+  .panel{display:none}
+  .panel.on{display:block}
+
+  /* mock frame */
+  .frame{border:1px solid var(--page-line); border-radius:16px; overflow:hidden; background:var(--bb-bg); box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .scrollx{overflow-x:auto}
+  .scrollx .frame{min-width:980px}
+
+  svg.i{width:16px; height:16px; stroke:currentColor; stroke-width:1.5; fill:none; stroke-linecap:round; stroke-linejoin:round; flex:none}
+
+  /* ---------- intBB mock common ---------- */
+  .bb{color:var(--bb-ink); font-size:14px}
+  .bb-logo{
+    width:56px; height:56px; border-radius:16px; background:var(--bb-primary); position:relative;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:20px; letter-spacing:0; color:#fff;
+  }
+  .bb-logo b{color:#fff; font-weight:700}
+  .bb-logo span{color:var(--bb-gold); font-weight:700}
+  .bb-logo::after{content:""; position:absolute; top:-2px; right:-2px; width:10px; height:10px; border-radius:50%; background:var(--bb-gold); border:2px solid var(--bb-bg)}
+
+  /* ---------- login ---------- */
+  .login{min-height:620px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:56px 24px 28px; gap:0}
+  .login-card{
+    width:400px; max-width:100%; background:var(--bb-surface); border:1px solid var(--bb-line); border-radius:20px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06); padding:48px 40px 40px; text-align:center;
+  }
+  .login-card .bb-logo{margin:0 auto 20px}
+  .login-eyebrow{font-size:11px; letter-spacing:.14em; color:var(--bb-muted); text-transform:uppercase}
+  .login-title{font-size:24px; font-weight:600; color:var(--bb-ink); margin:6px 0 10px; letter-spacing:.01em}
+  .login-desc{font-size:13px; color:var(--bb-muted); line-height:1.8; margin:0 0 28px}
+  .g-btn{
+    display:flex; align-items:center; justify-content:center; gap:10px; width:100%; height:48px;
+    background:var(--bb-surface); border:1px solid var(--bb-line); border-radius:999px;
+    font:inherit; font-size:14px; font-weight:500; color:var(--bb-ink); cursor:pointer; transition:background .15s,border-color .15s;
+  }
+  .g-btn:hover{background:#F7F7F7; border-color:#DFDFDF}
+  .g-btn:focus-visible{outline:2px solid var(--bb-primary); outline-offset:2px}
+  .login-note{font-size:12px; color:var(--bb-muted); line-height:1.8; margin:24px 0 0}
+  .login-warn{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--bb-muted); margin-top:24px}
+  .login-foot{font-size:11px; color:var(--bb-muted); margin-top:40px}
+
+  /* ---------- workspace ---------- */
+  .ws{display:flex; flex-direction:column; height:640px}
+  .ws-head{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:0 20px; height:52px; border-bottom:1px solid var(--bb-line); background:var(--bb-bg); flex:none;
+  }
+  .ws-head .brand{font-size:14px; font-weight:600; color:var(--bb-primary); letter-spacing:.01em}
+  .ghost-chip{
+    display:inline-flex; align-items:center; gap:6px; padding:5px 14px; border:1px solid var(--bb-line);
+    border-radius:999px; font-size:11px; color:var(--bb-muted); background:var(--bb-surface);
+  }
+  .ws-body{display:flex; flex:1; min-height:0}
+
+  .sb{width:260px; flex:none; border-right:1px solid var(--bb-line); display:flex; flex-direction:column; padding:16px 12px 12px}
+  .sb-label{font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--bb-muted); padding:0 10px 8px}
+  .tree{display:flex; flex-direction:column; gap:1px}
+  .tree-ws{display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:9px; font-size:13px; font-weight:500; color:var(--bb-ink); cursor:pointer}
+  .tree-ws .caret{color:var(--bb-muted); font-size:9px; width:10px}
+  .tree-ws.sel{background:rgba(31,58,95,.08); color:var(--bb-primary)}
+  .avatar-chip{width:20px; height:20px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; flex:none}
+  .avatar-chip.a{background:rgba(31,58,95,.12); color:var(--bb-primary)}
+  .avatar-chip.f{background:rgba(201,164,101,.18); color:#8A6D3B}
+  .tree-item{display:flex; align-items:center; gap:8px; padding:6px 10px 6px 38px; border-radius:8px; font-size:13px; color:var(--bb-muted); cursor:pointer; transition:background .12s,color .12s}
+  .tree-item:hover{background:#F4F4F5; color:var(--bb-ink)}
+  .tree-item.hover-demo{background:#F4F4F5; color:var(--bb-ink)}
+  .sb-user{margin-top:auto; display:flex; align-items:center; gap:10px; padding:10px; border-top:1px solid var(--bb-line)}
+  .sb-user .ava{width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#B9C4D4,#8195AE); flex:none}
+  .sb-user .nm{font-size:13px; font-weight:500; color:var(--bb-ink); line-height:1.3}
+  .sb-user .rl{font-size:11px; color:var(--bb-muted); line-height:1.3}
+
+  .main{flex:1; display:flex; flex-direction:column; min-width:0}
+  .tabs{display:flex; gap:4px; padding:0 20px; border-bottom:1px solid var(--bb-line); flex:none}
+  .tab{
+    display:flex; align-items:center; gap:7px; padding:13px 14px 11px; font-size:13px; color:var(--bb-muted);
+    border-bottom:2px solid transparent; margin-bottom:-1px; cursor:pointer; transition:color .12s;
+  }
+  .tab:hover{color:var(--bb-ink)}
+  .tab.on{color:var(--bb-ink); font-weight:500; border-bottom-color:var(--bb-primary)}
+  .chat{flex:1; display:flex; align-items:center; justify-content:center; padding:24px}
+  .empty{text-align:center; max-width:520px}
+  .empty .mini-logo{width:40px; height:40px; border-radius:12px; background:var(--bb-primary); color:#fff; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 18px}
+  .empty .mini-logo span{color:var(--bb-gold)}
+  .empty h2{font-size:20px; font-weight:600; color:var(--bb-ink); margin:0 0 6px; letter-spacing:.01em}
+  .empty p{font-size:13px; color:var(--bb-muted); margin:0 0 24px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; justify-content:center}
+  .chip{
+    display:inline-flex; align-items:center; gap:7px; padding:8px 16px; border:1px solid var(--bb-line); border-radius:999px;
+    background:var(--bb-surface); font-size:13px; color:var(--bb-ink); cursor:pointer; transition:border-color .15s,background .15s;
+  }
+  .chip:hover{border-color:var(--bb-primary); color:var(--bb-primary)}
+  .chip svg.i{color:var(--bb-muted)}
+  .chip:hover svg.i{color:var(--bb-primary)}
+  .composer{flex:none; padding:16px 20px 20px}
+  .composer-in{
+    display:flex; align-items:center; gap:10px; background:var(--bb-surface); border:1px solid var(--bb-line);
+    border-radius:999px; padding:6px 6px 6px 18px; transition:border-color .15s;
+  }
+  .composer-in:focus-within{border-color:var(--bb-primary); border-width:1.5px}
+  .composer-in svg.i{color:var(--bb-muted)}
+  .composer-in input{flex:1; border:0; background:transparent; font:inherit; font-size:13px; color:var(--bb-ink); outline:none; min-width:0}
+  .composer-in input::placeholder{color:var(--bb-muted)}
+  .send{
+    width:38px; height:38px; border-radius:50%; background:var(--bb-primary); border:0; color:#fff;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none; transition:opacity .15s;
+  }
+  .send:hover{opacity:.88}
+  .send:focus-visible{outline:2px solid var(--bb-primary); outline-offset:2px}
+  .rail{width:48px; flex:none; border-left:1px solid var(--bb-line); display:flex; justify-content:center; padding-top:14px; color:var(--bb-muted)}
+  .rail button{appearance:none; border:0; background:transparent; color:inherit; cursor:pointer; padding:6px; border-radius:8px}
+  .rail button:hover{background:#F4F4F5; color:var(--bb-ink)}
+
+  /* ---------- components sheet ---------- */
+  .sheet{padding:40px; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px}
+  .card{background:var(--bb-surface); border:1px solid var(--bb-line); border-radius:16px; padding:24px}
+  .card h3{font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--bb-muted); font-weight:600; margin:0 0 18px}
+  .num{font-size:36px; font-weight:500; color:var(--bb-ink); line-height:1.1; font-variant-numeric:tabular-nums}
+  .num sup{font-size:13px; color:var(--bb-muted); font-weight:400; margin-left:2px}
+  .num-label{font-size:11px; color:var(--bb-muted); margin-top:6px}
+  .bar{height:4px; border-radius:999px; background:#EEEEEE; margin-top:14px; overflow:hidden}
+  .bar i{display:block; height:100%; width:32%; border-radius:999px; background:var(--bb-primary)}
+  .row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+  .btn-p{border:0; background:var(--bb-primary); color:#fff; font:inherit; font-size:13px; font-weight:500; padding:9px 22px; border-radius:999px; cursor:pointer}
+  .btn-p:hover{opacity:.88}
+  .btn-p:disabled{background:#D9D9DE; color:#fff; cursor:not-allowed; opacity:1}
+  .btn-o{border:1px solid var(--bb-line); background:var(--bb-surface); color:var(--bb-ink); font:inherit; font-size:13px; padding:8px 20px; border-radius:999px; cursor:pointer}
+  .btn-o:hover{border-color:#DFDFDF; background:#F7F7F7}
+  .btn-d{border:1px solid var(--bb-line); background:var(--bb-surface); color:var(--bb-danger); font:inherit; font-size:13px; padding:8px 20px; border-radius:999px; cursor:pointer}
+  .list-demo{display:flex; flex-direction:column; gap:2px}
+  .list-demo .tree-item{padding-left:10px}
+  .list-demo .tree-item.sel{background:rgba(31,58,95,.08); color:var(--bb-primary); font-weight:500}
+  .swatches{display:grid; grid-template-columns:repeat(auto-fit,minmax(96px,1fr)); gap:10px; margin-top:20px}
+  .sw{border:1px solid var(--page-line); border-radius:12px; overflow:hidden; background:var(--page-surface)}
+  .sw i{display:block; height:44px}
+  .sw div{padding:7px 9px; font-size:10.5px; line-height:1.5; color:var(--page-muted)}
+  .sw div b{display:block; color:var(--page-ink); font-weight:600; font-size:11px}
+  .note-strip{margin-top:36px; border-top:1px solid var(--page-line); padding-top:20px}
+  .note-strip h2{font-size:13px; font-weight:600; margin:0 0 4px}
+  .note-strip p{font-size:12px; color:var(--page-muted); margin:0}
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div>
+      <h1>int. Business Brain — UI モックアップ</h1>
+      <div class="sub">intBB トークン v0.3（承認済み・白ベース）適用イメージ ／ intbb-ui-feedback-v1.md P1〜P3 反映</div>
+    </div>
+    <div class="seg" role="tablist" aria-label="画面切り替え">
+      <button class="on" data-p="p-login" role="tab" aria-selected="true">ログイン</button>
+      <button data-p="p-ws" role="tab" aria-selected="false">ワークスペース</button>
+      <button data-p="p-comp" role="tab" aria-selected="false">コンポーネント</button>
+    </div>
+  </div>
+
+  <!-- ============ LOGIN ============ -->
+  <section class="panel on" id="p-login">
+    <div class="frame bb">
+      <div class="login">
+        <div class="login-card">
+          <div class="bb-logo"><b>B</b><span>B</span></div>
+          <div class="login-eyebrow">ARCHECO</div>
+          <div class="login-title">int. Business Brain</div>
+          <p class="login-desc">社内ナレッジと AI ワークスペース。<br>会社の Google アカウントでログインしてください。</p>
+          <button class="g-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.27c0-.85-.08-1.66-.22-2.45H12v4.64h6.46a5.53 5.53 0 0 1-2.4 3.63v3h3.88c2.27-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.88-3c-1.08.72-2.45 1.15-4.06 1.15-3.13 0-5.78-2.11-6.72-4.95H1.27v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.28 14.29A7.2 7.2 0 0 1 4.9 12c0-.8.14-1.57.38-2.29v-3.1H1.27a12 12 0 0 0 0 10.78l4.01-3.1z"/><path fill="#EA4335" d="M12 4.76c1.76 0 3.35.6 4.6 1.8l3.44-3.44A11.97 11.97 0 0 0 12 0 12 12 0 0 0 1.27 6.61l4.01 3.1C6.22 6.87 8.87 4.76 12 4.76z"/></svg>
+            Google でログイン
+          </button>
+          <p class="login-note">初回ログインでは自動的に登録されます。<br>@archeco.co.jp のアカウントのみ利用できます。</p>
+        </div>
+        <div class="login-warn">
+          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          開発期間中は kadota ryo の代表アカウントで運用のため、モデルは Sonnet 固定・利用量に制限があります
+        </div>
+        <div class="login-foot">© ARCHECO, Inc. — 社外秘 / Internal use only</div>
+      </div>
+    </div>
+    <p class="caption">変更点: 背景の白化（#FAFAFA）／カード内の連続ボックス2つを解体（案内→本文テキスト2行、開発中警告→カード外の小テキスト）／カード padding 48px・ヘアライン枠＋薄シャドウ1段。</p>
+  </section>
+
+  <!-- ============ WORKSPACE ============ -->
+  <section class="panel" id="p-ws">
+    <div class="scrollx">
+      <div class="frame bb">
+        <div class="ws">
+          <div class="ws-head">
+            <div class="brand">int. Business Brain</div>
+            <div class="ghost-chip">
+              <svg class="i" style="width:13px;height:13px" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              開発期間中: Sonnet 固定・利用量制限あり
+            </div>
+          </div>
+          <div class="ws-body">
+            <nav class="sb">
+              <div class="sb-label">ワークスペース</div>
+              <div class="tree">
+                <div class="tree-ws sel"><span class="caret">▾</span><span class="avatar-chip a">a</span>ai-regular</div>
+                <div class="tree-item"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>deliverables</div>
+                <div class="tree-item hover-demo"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>materials</div>
+                <div class="tree-item"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>meetings</div>
+                <div class="tree-ws" style="margin-top:6px"><span class="caret">▸</span><span class="avatar-chip f">f</span>fam-meiji</div>
+              </div>
+              <div class="sb-user">
+                <div class="ava" aria-hidden="true"></div>
+                <div><div class="nm">Amane Watanabe</div><div class="rl">管理者</div></div>
+              </div>
+            </nav>
+            <div class="main">
+              <div class="tabs">
+                <div class="tab on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>チャット</div>
+                <div class="tab"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.68-.75 1.68-1.68 0-.44-.17-.83-.44-1.12-.27-.29-.43-.68-.43-1.12a1.68 1.68 0 0 1 1.68-1.68H16.5a5.5 5.5 0 0 0 5.5-5.5C22 6 17.5 2 12 2z"/></svg>Design Wheel</div>
+                <div class="tab"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>受信箱</div>
+              </div>
+              <div class="chat">
+                <div class="empty">
+                  <div class="mini-logo">B<span>B</span></div>
+                  <h2>こんにちは、渡辺さん</h2>
+                  <p>社内ナレッジのことなら何でも聞いてください。よく使う操作から始められます。</p>
+                  <div class="chips">
+                    <div class="chip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>ナレッジを検索</div>
+                    <div class="chip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>議事録を取り込む</div>
+                    <div class="chip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>wiki の下書きを作る</div>
+                    <div class="chip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>ナレッジを整理する</div>
+                  </div>
+                </div>
+              </div>
+              <div class="composer">
+                <div class="composer-in">
+                  <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                  <input type="text" placeholder="メッセージを入力（Enterで送信 / 「/」でコマンド）" aria-label="メッセージを入力">
+                  <button class="send" aria-label="送信"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+                </div>
+              </div>
+            </div>
+            <div class="rail">
+              <button aria-label="成果物パネルを開く"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">変更点: ヘッダー色帯→ヘアライン1本／警告帯→ゴーストチップ1箇所／サイドバー枠ボックス→ゴーストリスト（materials に hover 状態を表示）／絵文字→線画アイコン／アクティブタブ=下線 2px／空状態に挨拶＋サジェストチップ／入力バーをピル化＋円形送信／右レールは空のため折りたたみ。</p>
+  </section>
+
+  <!-- ============ COMPONENTS ============ -->
+  <section class="panel" id="p-comp">
+    <div class="frame bb">
+      <div class="sheet">
+        <div class="card">
+          <h3>数値パターン（今日の使用量）</h3>
+          <div class="num">32,450<sup>/ 100,000 トークン</sup></div>
+          <div class="num-label">TODAY’S USAGE ・ 32%</div>
+          <div class="bar"><i></i></div>
+        </div>
+        <div class="card">
+          <h3>ボタン</h3>
+          <div class="row">
+            <button class="btn-p">送信</button>
+            <button class="btn-o">キャンセル</button>
+            <button class="btn-p" disabled>送信（disabled）</button>
+            <button class="btn-d">ログアウト</button>
+          </div>
+          <h3 style="margin-top:24px">チップ</h3>
+          <div class="row">
+            <div class="chip">ナレッジ検索</div>
+            <div class="chip" style="border-color:var(--bb-primary); color:var(--bb-primary)">選択中</div>
+            <div class="ghost-chip">
+              <svg class="i" style="width:13px;height:13px" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              ゴースト警告チップ
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>リスト状態（サイドバー）</h3>
+          <div class="list-demo">
+            <div class="tree-item">default</div>
+            <div class="tree-item hover-demo">hover（#F4F4F5）</div>
+            <div class="tree-item sel">selected（primary 8%）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note-strip">
+      <h2>intBB トークン v0.3</h2>
+      <p>区切りは「1px ヘアライン＋余白」。primary の塗りは1画面 1〜2箇所。ゴールドはロゴ等ごく少量。</p>
+      <div class="swatches">
+        <div class="sw"><i style="background:#FAFAFA; border-bottom:1px solid #ECECEC"></i><div><b>bg</b>#FAFAFA</div></div>
+        <div class="sw"><i style="background:#FFFFFF; border-bottom:1px solid #ECECEC"></i><div><b>surface</b>#FFFFFF</div></div>
+        <div class="sw"><i style="background:#1A1C20"></i><div><b>ink</b>#1A1C20</div></div>
+        <div class="sw"><i style="background:#9A9AA2"></i><div><b>ink-muted</b>#9A9AA2</div></div>
+        <div class="sw"><i style="background:#1F3A5F"></i><div><b>primary</b>#1F3A5F</div></div>
+        <div class="sw"><i style="background:#C9A465"></i><div><b>accent-gold</b>#C9A465</div></div>
+        <div class="sw"><i style="background:#ECECEC"></i><div><b>line</b>#ECECEC</div></div>
+        <div class="sw"><i style="background:#D14343"></i><div><b>danger</b>#D14343</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  const segBtns = document.querySelectorAll('.seg button');
+  const panels = document.querySelectorAll('.panel');
+  segBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      segBtns.forEach(b => { b.classList.toggle('on', b === btn); b.setAttribute('aria-selected', b === btn ? 'true' : 'false'); });
+      panels.forEach(p => p.classList.toggle('on', p.id === btn.dataset.p));
+    });
+  });
+</script>
+
+</body>
+</html>

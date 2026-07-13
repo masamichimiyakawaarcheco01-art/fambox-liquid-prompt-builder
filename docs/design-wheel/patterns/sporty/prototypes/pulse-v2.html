@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PULSE v2 — sporty leveled up</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF;--surface:#F2F3F4;--ink:#0B0B0E;--muted:#86868C;
+    --accent:#FF3B14;--line:#E6E6E8;
+    --s:16px;--m:32px;--l:72px;
+  }
+  *{margin:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden}
+  img{display:block;width:100%;height:100%;object-fit:cover}
+  .display{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.005em;line-height:.86}
+  /* グレイン質感 */
+  .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  /* ───── HERO（斜め断ち・非対称・深度） ───── */
+  .hero{position:relative;height:100vh;min-height:640px;overflow:hidden;background:#0B0B0E}
+  .hero-photo{position:absolute;inset:0}
+  .hero-photo img{filter:grayscale(.55) contrast(1.15) brightness(.66);object-position:62% 30%}
+  /* 斜めの暗パネル（左下を沈める） */
+  .hero-shade{position:absolute;inset:0;background:linear-gradient(115deg,#0B0B0E 18%,rgba(11,11,14,.2) 60%,rgba(255,59,20,.22) 100%);
+    clip-path:polygon(0 0,100% 0,100% 70%,0 100%)}
+  /* 背面アウトライン語（質感） */
+  .ghost{position:absolute;right:-2vw;top:8%;font-size:clamp(120px,22vw,360px);color:transparent;
+    -webkit-text-stroke:1.5px rgba(255,255,255,.10);z-index:1}
+  /* 縦ラベル */
+  .vlabel{position:absolute;left:40px;top:50%;transform:rotate(-90deg) translateX(50%);transform-origin:left center;z-index:5;
+    font-size:11px;font-weight:700;letter-spacing:.4em;text-transform:uppercase;color:rgba(255,255,255,.6);white-space:nowrap}
+  .eyebrow{position:absolute;left:64px;top:44px;z-index:5;font-size:11px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:#fff;display:flex;align-items:center;gap:12px}
+  .eyebrow::before{content:"";width:40px;height:2px;background:var(--accent)}
+  /* 巨大見出し（左下に食い込ませる） */
+  .hero-head{position:absolute;left:56px;bottom:96px;z-index:4}
+  .hero-head h1{font-size:clamp(96px,20vw,300px);color:#fff}
+  .hero-head h1 .slash{color:var(--accent)}
+  /* 斜めの accent スラッシュバンド */
+  .slashband{position:absolute;left:0;bottom:188px;z-index:3;background:var(--accent);
+    padding:8px 56px 8px 56px;transform:skewY(-2.2deg);transform-origin:left;display:flex;gap:24px;align-items:center}
+  .slashband span{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#fff;transform:skewY(2.2deg);white-space:nowrap}
+  .hero-sub{position:absolute;right:56px;bottom:96px;z-index:5;max-width:330px;text-align:right}
+  .hero-sub p{font-size:14px;color:rgba(255,255,255,.85);line-height:1.65;margin-bottom:20px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:15px 28px;border-radius:999px;font-size:12px;font-weight:800;cursor:pointer;border:none;letter-spacing:.08em;text-transform:uppercase;transition:transform .2s cubic-bezier(.16,1,.3,1)}
+  .btn:hover{transform:scale(1.05)}
+  .btn-primary{background:var(--accent);color:#fff}
+
+  /* ───── STATS（横長キネティックストリップ・斜め） ───── */
+  .stats{background:var(--ink);padding:var(--l) 56px;position:relative;overflow:hidden}
+  .stats-row{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--m);flex-wrap:wrap}
+  .stat{position:relative}
+  .stat .v{font-size:clamp(64px,9vw,128px);color:#fff}
+  .stat .v em{color:var(--accent);font-style:normal}
+  .stat .l{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:4px}
+  .stats::after{content:"PERFORMANCE";position:absolute;right:-20px;top:10px;font-family:'Anton',sans-serif;text-transform:uppercase;
+    font-size:clamp(60px,11vw,150px);color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.06)}
+
+  /* ───── FEATURES（エディトリアル：1大＋2小・非対称・番号アウトライン） ───── */
+  .features{padding:var(--l) 56px;background:var(--bg);position:relative}
+  .feat-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:var(--l);flex-wrap:wrap;gap:16px}
+  .feat-head .tag{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+  .feat-head h2{font-size:clamp(40px,6vw,84px);color:var(--ink)}
+  .feat-head h2 em{font-style:italic;color:var(--accent)}
+  .feat-grid{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:auto auto;gap:20px}
+  .feat{position:relative;border-radius:18px;overflow:hidden;background:var(--surface);min-height:240px}
+  .feat.big{grid-row:span 2;min-height:520px}
+  .feat-photo{position:absolute;inset:0}
+  .feat-photo img{filter:grayscale(.25) contrast(1.08) brightness(.82)}
+  .feat-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(11,11,14,.85) 0%,rgba(11,11,14,0) 55%)}
+  .feat-content{position:absolute;left:24px;right:24px;bottom:24px;z-index:2;color:#fff}
+  .feat-num{font-family:'Anton',sans-serif;font-size:40px;color:transparent;-webkit-text-stroke:1.5px var(--accent);line-height:1;margin-bottom:8px}
+  .feat-content h3{font-size:22px;font-weight:800;margin-bottom:6px}
+  .feat-content p{font-size:13px;color:rgba(255,255,255,.78);line-height:1.6;max-width:380px}
+
+  /* ───── CTA（斜めaccentブロック・特大） ───── */
+  .cta{position:relative;overflow:hidden;background:#0B0B0E;padding:0}
+  .cta-photo{position:absolute;inset:0}
+  .cta-photo img{filter:grayscale(.6) brightness(.34) contrast(1.12);object-position:center 35%}
+  .cta-accent{position:absolute;left:0;right:0;bottom:0;height:62%;background:var(--accent);
+    clip-path:polygon(0 22%,100% 0,100% 100%,0 100%);opacity:.92}
+  .cta-inner{position:relative;z-index:2;padding:160px 56px 96px;text-align:center}
+  .cta h2{font-size:clamp(56px,11vw,180px);color:#fff;line-height:.84}
+  .cta h2 .o{color:transparent;-webkit-text-stroke:2px #fff}
+  .cta p{font-size:15px;color:rgba(255,255,255,.9);margin:24px 0 32px;font-weight:600}
+  .btn-light{background:#fff;color:var(--ink)}
+
+  @media(max-width:760px){
+    :root{--l:48px}
+    .hero,.stats,.features,.cta-inner{padding-left:22px;padding-right:22px}
+    .eyebrow,.hero-head{left:22px}.hero-head{bottom:120px}
+    .hero-sub{position:static;text-align:left;max-width:none;padding:0 22px;margin-top:16px}
+    .vlabel{display:none}
+    .feat-grid{grid-template-columns:1fr}.feat.big{grid-row:auto;min-height:300px}
+  }
+</style></head>
+<body>
+<div class="grain"></div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-photo"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1800&q=80" alt=""></div>
+    <div class="hero-shade"></div>
+    <div class="ghost display">STRENGTH</div>
+    <div class="vlabel">strength club · tokyo · est 2019</div>
+    <div class="eyebrow">PULSE</div>
+    <div class="slashband"><span>members 12,000+</span><span>24/7 open</span><span>shibuya · shinjuku</span></div>
+    <div class="hero-head"><h1 class="display">PUL<span class="slash">/</span>SE</h1></div>
+    <div class="hero-sub">
+      <p>限界の一歩先へ。科学的トレーニングと最先端マシンが、あなたの身体を更新する。</p>
+      <button class="btn btn-primary">体験予約 →</button>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stats-row">
+      <div class="stat"><div class="v display">12<em>K+</em></div><div class="l">active members</div></div>
+      <div class="stat"><div class="v display">24<em>/7</em></div><div class="l">always open</div></div>
+      <div class="stat"><div class="v display">4.<em>9</em></div><div class="l">google rating</div></div>
+      <div class="stat"><div class="v display"><em>03</em></div><div class="l">tokyo locations</div></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="feat-head">
+      <div>
+        <div class="tag">why pulse</div>
+        <h2 class="display">Stronger. <em>Every</em> Day.</h2>
+      </div>
+    </div>
+    <div class="feat-grid">
+      <div class="feat big">
+        <div class="feat-photo"><img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=1000&q=80" alt=""></div>
+        <div class="feat-content"><div class="feat-num">01</div><h3>最新マシン完備</h3><p>世界トップブランドのマシンを全店導入。待ち時間ゼロを実現する台数設計で、あなたのペースを止めない。</p></div>
+      </div>
+      <div class="feat">
+        <div class="feat-photo"><img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=800&q=80" alt=""></div>
+        <div class="feat-content"><div class="feat-num">02</div><h3>専属トレーナー</h3><p>国家資格保有者が個別設計。</p></div>
+      </div>
+      <div class="feat">
+        <div class="feat-photo"><img src="https://images.unsplash.com/photo-1571388208497-71bedc66e932?w=800&q=80" alt=""></div>
+        <div class="feat-content"><div class="feat-num">03</div><h3>栄養指導</h3><p>食事管理アプリと連動。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="cta-photo"><img src="https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=1800&q=80" alt=""></div>
+    <div class="cta-accent"></div>
+    <div class="cta-inner">
+      <h2 class="display">OWN YOUR<br><span class="o">STRENGTH</span></h2>
+      <p>初回体験は無料。</p>
+      <button class="btn btn-light">無料体験を予約 →</button>
+    </div>
+  </section>
+
+</body></html>

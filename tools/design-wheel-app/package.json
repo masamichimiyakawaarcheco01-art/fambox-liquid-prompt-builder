@@ -1,0 +1,15 @@
+{
+  "name": "design-wheel-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Design Wheel — 非デザイナーが70%品質を出すローカルWebアプリ MVP",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2"
+  }
+}

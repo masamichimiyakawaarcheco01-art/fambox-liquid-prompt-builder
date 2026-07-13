@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --drive:#FB4C15;--drive-light:#FC825B;--deep:#0F2A5C;--white:#fff;
+    --ja:'Hiragino Sans','Hiragino Kaku Gothic ProN','Meiryo',sans-serif;
+    --en:'Poppins',sans-serif;
+  }
+  *{margin:0;box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  /* body は JS で正確サイズに設定。1枚 = 1バナー */
+  #banner{position:relative;overflow:hidden;background:var(--deep);color:var(--white);
+    display:flex;flex-direction:column;justify-content:space-between}
+  #banner .glow{position:absolute;width:62%;aspect-ratio:1;border-radius:50%;right:-10%;top:-12%;
+    background:radial-gradient(circle,rgba(251,76,21,.45),transparent 62%)}
+  .top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:flex-start}
+  .eyebrow{font-family:var(--en);font-weight:600;color:var(--drive-light);text-transform:uppercase}
+  .logo{font-family:var(--en);font-weight:800;letter-spacing:.02em}
+  .logo .b{color:var(--drive)}
+  .mid{position:relative;z-index:2}
+  .head{font-family:var(--ja);font-weight:600;line-height:1.18}
+  .head .accent{color:var(--drive-light)}
+  .bottom{position:relative;z-index:2;display:flex;align-items:center;gap:1em;justify-content:space-between}
+  .cta{background:var(--drive);color:#fff;font-family:var(--en);font-weight:700;border-radius:999px;
+    display:inline-flex;align-items:center;gap:.4em;white-space:nowrap}
+  .url{font-family:var(--en);font-weight:500;color:rgba(255,255,255,.6)}
+</style></head>
+<body>
+  <div id="banner">
+    <div class="glow"></div>
+    <div class="top"><span class="eyebrow" id="eyebrow"></span><span class="logo">FAM<span class="b">BOX</span></span></div>
+    <div class="mid"><div class="head" id="head"></div></div>
+    <div class="bottom"><span class="cta" id="cta"></span><span class="url" id="url"></span></div>
+  </div>
+<script>
+  // ?ar=1x1|4x5|9x16|16x9|191x1 & eyebrow,head,cta,url（| 改行）
+  var P=new URLSearchParams(location.search);
+  var AR={ "1x1":[1080,1080], "4x5":[1080,1350], "9x16":[1080,1920], "16x9":[1280,720], "191x1":[1200,630] };
+  var ar=P.get("ar")||"1x1"; var d=AR[ar]||AR["1x1"];
+  var W=d[0],H=d[1];
+  // 比率ごとの組版（px）
+  var S={
+    "1x1":  {pad:80, eye:38, logo:52, head:104, cta:36, url:34, gap:1},
+    "4x5":  {pad:84, eye:38, logo:52, head:112, cta:38, url:34, gap:1},
+    "9x16": {pad:80, eye:40, logo:54, head:120, cta:40, url:34, gap:1},
+    "16x9": {pad:60, eye:30, logo:42, head:88,  cta:32, url:28, gap:1},
+    "191x1":{pad:64, eye:30, logo:40, head:80,  cta:30, url:28, gap:1}
+  }[ar];
+  var b=document.getElementById("banner");
+  document.body.style.width=W+"px"; document.body.style.height=H+"px";
+  b.style.width=W+"px"; b.style.height=H+"px"; b.style.padding=S.pad+"px";
+  document.getElementById("eyebrow").style.fontSize=S.eye+"px";
+  document.querySelector(".logo").style.fontSize=S.logo+"px";
+  var head=document.getElementById("head"); head.style.fontSize=S.head+"px";
+  var cta=document.getElementById("cta"); cta.style.fontSize=S.cta+"px"; cta.style.padding=(S.cta*0.8)+"px "+(S.cta*1.4)+"px";
+  document.getElementById("url").style.fontSize=S.url+"px";
+  // 内容（デフォルト = FAMBOX 見出し型サンプル）
+  function nl(s){return (s||"").split("|").join("<br>");}
+  document.getElementById("eyebrow").textContent=P.get("eyebrow")||"For Athletes";
+  head.innerHTML = P.get("head")? nl(P.get("head")) : 'アスリートの食事を、<br><span class="accent">もっと自由に。</span>';
+  cta.innerHTML = (P.get("cta")||"いまはじめる")+' &rarr;';
+  document.getElementById("url").textContent=P.get("url")||"fam-box.jp";
+</script>
+</body></html>

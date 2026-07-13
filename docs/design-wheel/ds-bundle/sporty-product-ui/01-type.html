@@ -1,0 +1,30 @@
+<!-- @dsCard group="Foundations · sporty-product-UI" name="Type scale" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0A0C0B;--surface:#14171A;--line:#272C30;--ink:#FFFFFF;--muted:#8C949C;--accent:#C6FF3A}
+  *{margin:0;box-sizing:border-box}
+  body{background:var(--bg);padding:28px;color:var(--ink);font-family:'Inter',sans-serif}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;font-family:'Space Grotesk'}
+  .grotesk{font-family:'Space Grotesk',sans-serif}
+  .row{display:flex;align-items:baseline;gap:16px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .tag{font-size:10px;color:var(--muted);width:190px;flex:none;line-height:1.4}
+  .accent{color:var(--accent)}
+  .o{color:transparent;-webkit-text-stroke:1.2px var(--accent)}
+  .rule{font-size:10px;color:var(--muted);line-height:1.7;border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
+  .rule b{color:var(--accent);font-family:'Space Grotesk'}
+</style></head>
+<body>
+  <h2>sporty / product-UI — Type（Space Grotesk × Inter）</h2>
+  <div class="row"><span class="tag">display / 700 / -.03em</span><span class="grotesk" style="font-size:46px;font-weight:700;letter-spacing:-.03em;line-height:1.02">Train <span class="o">Smarter</span></span></div>
+  <div class="row"><span class="tag">h1 / Space Grotesk 700</span><span class="grotesk" style="font-size:32px;font-weight:700;letter-spacing:-.02em">Get Stronger.</span></div>
+  <div class="row"><span class="tag">h2 / Space Grotesk 600</span><span class="grotesk" style="font-size:22px;font-weight:600">データで強くなる</span></div>
+  <div class="row"><span class="tag">数字 / 700 / 2桁目 accent</span><span class="grotesk" style="font-size:40px;font-weight:700">24<span class="accent">/7</span></span></div>
+  <div class="row"><span class="tag">body / Inter 400</span><span style="font-size:14px;line-height:1.65">科学的トレーニングとリアルタイムの身体データ分析。</span></div>
+  <div class="row" style="border:none"><span class="tag">eyebrow / 600 / .14em / upper</span><span style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase" class="accent">Strength Club · Tokyo</span></div>
+  <div class="rule">
+    規律: 見出し=<b>Space Grotesk 700（幾何 grotesk・tight -.03em）</b>／本文=Inter。<br>
+    アウトライン見出し（text-stroke accent）は<b>1語だけ</b>効かせる。コンデンス grunge（Anton 等）は使わない。
+  </div>
+</body></html>

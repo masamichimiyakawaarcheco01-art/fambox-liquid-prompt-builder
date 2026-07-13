@@ -1,0 +1,29 @@
+{
+  "name": "FAM BOX",
+  "description": "アスリート・スポーツチーム・健康経営に取り組む法人向けの食事サブスクリプションサービス",
+
+  "colors": {
+    "background": "ffffff",
+    "background_alt": "fafafa",
+    "text": "1b1d1a",
+    "text_secondary": "545655",
+    "accent": "fb4c15",
+    "accent_secondary": "0f2a5c",
+    "accent_tertiary": "3db8e8",
+    "code_bg": "f3f3f3",
+    "card_bg": "fafafa",
+    "card_bg_alt": "f3f3f3"
+  },
+
+  "fonts": {
+    "heading": "Yu Gothic UI",
+    "body": "Yu Gothic UI",
+    "code": "Consolas"
+  },
+
+  "assets": {
+    "logo": "assets/logo.png",
+    "logo_dark": "assets/logo-white.png",
+    "icon": null
+  }
+}

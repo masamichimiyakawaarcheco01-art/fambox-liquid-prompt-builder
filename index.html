@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Liquid Prompt Builder v4 - Figma-Driven PDCA Verification</title>
+<title>Liquid Prompt Builder v4.1 - Figma-Driven PDCA + FAMBOX Discipline</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1672,6 +1672,58 @@ function generatePrompt() {
   p += `- レスポンシブ対応（PC / SP）\n`;
   p += `- スペーシングはS/M/Lスケールに従い、任意のpx値を避ける\n`;
   p += `- 日本語コメントでセクション分けする\n`;
+
+  // === FAMBOX BRAND DISCIPLINE (v4.1 / bugs.md 連動) ===
+  p += `\n## FAMBOX ブランド規律（v4.1・bugs.md 由来 28 エントリ）\n`;
+  p += `※ 詳細: brand/fambox/design-system/bugs.md / BUG・DOCTRINE・PROC を必ず遵守\n\n`;
+
+  // Typography (DOCTRINE-001)
+  p += `### DOCTRINE-001: Typography 固定\n`;
+  p += `- 英字: Poppins (wght 400/500/600/700) — Archivo Black / Space Grotesk / Manrope 等の重厚 Display 系は禁止\n`;
+  p += `- 日本語: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif\n`;
+  p += `- Editorial 感はフォント選定ではなく、大きなサイズ・ジャンプ率・レイアウトで演出\n\n`;
+
+  // Anti-pattern (DOCTRINE-002)
+  p += `### DOCTRINE-002: ビジュアル Anti-pattern（清潔・Editorial × Lab・信頼）\n`;
+  p += `❌ 採用しない:\n`;
+  p += `  - 輪郭・エッジを強く歪ませる変形（feDisplacementMap 大 scale / wave / liquify）\n`;
+  p += `  - 荒いノイズ + 発光合わせ技（noise-bloom）\n`;
+  p += `  - 色収差・グリッチ（Cyberpunk / 80 年代系）\n`;
+  p += `  - 重いブラー + 強いグロー（Neumorphism / ドラマチック発光）\n`;
+  p += `⚠️ 応用可: 微細ノイズ / ごく静かな揺らぎ / 薄いラジアルグロー（opacity 0.08 以下）\n\n`;
+
+  // Specificity (DOCTRINE-004)
+  p += `### DOCTRINE-004: CSS Specificity 3 層戦略\n`;
+  p += `- L1 inline style="...": PC 基本値の確実化（メディアクエリ不可・specificity 1000 最強）\n`;
+  p += `- L2 Liquid 内 <style> タグ: SP オーバーライド（メディアクエリ可・外部より後勝ち）\n`;
+  p += `- L3 外部 CSS: デザイントークン経由の共通スタイル\n\n`;
+
+  // Schema 型 (DOCTRINE-005)
+  p += `### DOCTRINE-005: Schema 型選択ガイド\n`;
+  p += `- text: 単純テキスト・見出し（改行不可）\n`;
+  p += `- textarea: 段落（改行あり / <br> は手動）\n`;
+  p += `- richtext: フォーマット付き → 出力は <p> ラップ → **コンテナタグは <div> 必須**（<p> 禁止 / BUG-002 回避）\n`;
+  p += `- html: 自由（XSS リスク・ユーザー編集には非推奨）\n\n`;
+
+  // Known traps
+  p += `### 既知の罠（BUG-001〜004 回避必須）\n`;
+  p += `- BUG-001: inline style="..." が外部 CSS より優先（specificity 1000）→ 不要な inline は削除\n`;
+  p += `- BUG-002: richtext 型を <p> でラップすると <p> 内 <p> でブラウザが破綻 → <div> でラップ\n`;
+  p += `- BUG-003: Shopify CDN / ブラウザキャッシュで反映遅延 → 「保存」再実行で CDN バスト\n`;
+  p += `- BUG-004: 公開中テーマ vs 下書きテーマの取り違え → Code Editor 上部のテーマ名を必ず確認\n\n`;
+
+  // Verification
+  p += `### 検証手順（実装後）\n`;
+  p += `- PROC-006: Token 名は projects/fambox/snippets/fambox-tokens.css.liquid で grep 実在検証必須\n`;
+  p += `- PROC-010: 3 段階検証 — Step1 ローカル grep / Step2 curl で本番 HTML / Step3 DevTools Computed\n`;
+  p += `- PROC-009: WF（HTML ワイヤーフレーム）→ 承認 → Liquid 化のサイクルを厳守（一足飛びに Liquid 書かない）\n\n`;
+
+  // Assets (Iconify / LottieFiles / Simple Icons)
+  p += `### アセット参照ルール（採用 4 MCP）\n`;
+  p += `- アイコン: Iconify MCP で取得 → 色は CSS 変数で指定（--color-ink / --color-drive 等）\n`;
+  p += `- 他社ロゴ: Simple Icons CDN 直接利用 — <img src="https://cdn.simpleicons.org/{name}/{hex}"> 形式\n`;
+  p += `- Lottie アニメ: LottieFiles MCP（fam-jp.com 移行先のみ・Shopify Liquid では使わない）\n`;
+  p += `- ❌ 不採用: Unsplash / Pexels / Brandfetch / Storyset / Mapbox（References discipline 違反）\n`;
 
   // === SECTION TAB DATA ===
   const secSpec = getVal('secSpec');

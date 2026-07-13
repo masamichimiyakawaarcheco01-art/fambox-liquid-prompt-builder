@@ -1,0 +1,94 @@
+<!-- @dsCard group="Components · sporty" name="Buttons & stat cards" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0E0E12;--muted:#8A8A90;--surface:#F4F5F6;--line:#ECECEE;--accent:#FF4D1F;--accent-alt:#2E6BE6}
+  *{margin:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+  body{background:var(--surface);padding:24px;color:var(--ink)}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;font-weight:600}
+  .section{margin-bottom:24px}
+  .label{font-size:10px;color:var(--muted);margin-bottom:12px;letter-spacing:.06em;text-transform:uppercase}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.02em;border:none}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-dark{background:var(--ink);color:#fff}
+  .btn-outline{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+  .btn-sm{padding:8px 18px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+
+  /* Stat cards */
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+  .stat{background:#fff;border-radius:20px;padding:20px;border:1px solid var(--line)}
+  .stat-val{font-size:44px;font-weight:800;line-height:1;letter-spacing:-.02em}
+  .stat-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+  .stat-accent{color:var(--accent)}
+
+  /* Band */
+  .band{background:var(--accent);padding:10px 24px;border-radius:8px;display:flex;align-items:center;gap:16px;margin-top:4px}
+  .band span{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#fff}
+
+  /* Number badge */
+  .badge{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:800}
+
+  .rule{font-size:10px;color:var(--muted);line-height:1.6;border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
+  .rule b{color:var(--ink)}
+</style></head>
+<body>
+  <h2>sporty — Buttons & stat cards</h2>
+
+  <div class="section">
+    <div class="label">Pill buttons（radius 999px）</div>
+    <div class="row">
+      <button class="btn btn-primary">今すぐ始める</button>
+      <button class="btn btn-dark">詳細を見る</button>
+      <button class="btn btn-outline">プランを選ぶ</button>
+      <button class="btn btn-primary btn-sm">JOIN NOW</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">統計カード — 特大数値 + Small uppercase label</div>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-val"><span class="stat-accent">18</span>K+</div>
+        <div class="stat-label">active athletes</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">100<span class="stat-accent">%</span></div>
+        <div class="stat-label">satisfaction rate</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val"><span class="stat-accent">#</span>01</div>
+        <div class="stat-label">in Japan 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">色帯（band）— accent 横断・グリッド下地</div>
+    <div class="band">
+      <span>official partner</span>
+      <span>·</span>
+      <span>season 2026</span>
+      <span>·</span>
+      <span>powered by fam</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">番号バッジ #01 形式</div>
+    <div class="row">
+      <span class="badge">01</span>
+      <span class="badge">02</span>
+      <span class="badge">03</span>
+      <span style="font-size:11px;color:var(--muted)">accent 色 / フォント w800</span>
+    </div>
+  </div>
+
+  <div class="rule">
+    <b>hover 規則</b> — ボタン hover = scale(1.05)・写真カード hover = rotate 0°（傾き戻し）。<br>
+    accent は energy orange / court blue のどちらか1色のみ。1作品で混在禁止。
+  </div>
+</body></html>

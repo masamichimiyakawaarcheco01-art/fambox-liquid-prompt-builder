@@ -9,7 +9,7 @@
 {% endif %}
 <!-- 背景楕円 SP -->
 {% if section.settings.subtract_sp != blank %}
-<img class="fsol__subtract fsol__subtract--sp" src="{{ section.settings.subtract_sp | image_url: width: 390 }}" alt="" width="390" height="196" aria-hidden="true">
+<img class="fsol__subtract fsol__subtract--sp" src="{{ section.settings.subtract_sp | image_url: width: 1200 }}" alt="" width="390" height="196" aria-hidden="true">
 {% endif %}
 <!-- 人物写真 PC -->
 {% if section.settings.photo_pc != blank %}
@@ -17,15 +17,15 @@
 {% endif %}
 <!-- 人物写真 SP -->
 {% if section.settings.photo_sp != blank %}
-<img class="fsol__photo fsol__photo--sp" src="{{ section.settings.photo_sp | image_url: width: 600 }}" alt="" width="500" height="250" loading="lazy">
+<img class="fsol__photo fsol__photo--sp" src="{{ section.settings.photo_sp | image_url: width: 1200 }}" alt="" width="500" height="250" loading="lazy">
 {% endif %}
 <!-- タイトル PC -->
 {% if section.settings.title_image_pc != blank %}
-<img class="fsol__title fsol__title--pc" src="{{ section.settings.title_image_pc | image_url: width: 480 }}" alt="{{ section.settings.title_alt }}" width="240" height="364" loading="eager">
+<img class="fsol__title fsol__title--pc" src="{{ section.settings.title_image_pc | image_url: width: 1200 }}" alt="{{ section.settings.title_alt }}" width="240" height="364" loading="eager">
 {% endif %}
 <!-- タイトル SP -->
 {% if section.settings.title_image_sp != blank %}
-<img class="fsol__title fsol__title--sp" src="{{ section.settings.title_image_sp | image_url: width: 360 }}" alt="{{ section.settings.title_alt }}" width="180" height="273" loading="eager">
+<img class="fsol__title fsol__title--sp" src="{{ section.settings.title_image_sp | image_url: width: 1200 }}" alt="{{ section.settings.title_alt }}" width="180" height="273" loading="eager">
 {% endif %}
 <!-- ボタン PC -->
 <div class="fsol__cta fsol__cta--pc">
@@ -35,7 +35,7 @@
 {%- if section.settings.cta_arrow_svg != blank -%}
 {{ section.settings.cta_arrow_svg }}
 {%- elsif section.settings.cta_arrow_icon != blank -%}
-<img src="{{ section.settings.cta_arrow_icon | image_url: width: 80 }}" alt="" width="40" height="14">
+<img src="{{ section.settings.cta_arrow_icon | image_url: width: 1200 }}" alt="" width="40" height="14">
 {%- else -%}
 <svg width="40" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg>
 {%- endif -%}
@@ -50,7 +50,7 @@
 {%- if section.settings.cta_arrow_svg != blank -%}
 {{ section.settings.cta_arrow_svg }}
 {%- elsif section.settings.cta_arrow_icon != blank -%}
-<img src="{{ section.settings.cta_arrow_icon | image_url: width: 80 }}" alt="" width="40" height="14">
+<img src="{{ section.settings.cta_arrow_icon | image_url: width: 1200 }}" alt="" width="40" height="14">
 {%- else -%}
 <svg width="40" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="5" width="46" height="2" fill="white"/><path d="M46 0L53 6L46 12V0Z" fill="white"/></svg>
 {%- endif -%}
@@ -82,7 +82,7 @@ position: absolute;
 top: 0;
 display: block;
 height: auto;
-z-index: 1;
+z-index: 1; /* layer */
 pointer-events: none;
 }
 .fsol__subtract--pc {
@@ -96,7 +96,7 @@ transform: translateX(-50%);
 position: absolute;
 left: 50%;
 transform: translateX(-50%);
-z-index: 2;
+z-index: 2; /* layer */
 pointer-events: none;
 display: block;
 height: auto;
@@ -114,7 +114,7 @@ left: 50%;
 transform: translateX(-50%);
 display: block;
 height: auto;
-z-index: 3;
+z-index: 3; /* layer */
 }
 .fsol__title--pc {
 top: 96px;
@@ -124,7 +124,7 @@ width: 240px;
 /* ===== CTAボタン z-index:4 ===== */
 .fsol__cta {
 position: absolute;
-z-index: 4;
+z-index: 4; /* layer */
 width: 320px;
 height: 48px;
 }
@@ -160,7 +160,7 @@ position: relative;
 .fsol__btn:active { filter: brightness(0.95); }
 .fsol__btn-text {
 position: relative;
-z-index: 1;
+z-index: 1; /* layer */
 color: #ffffff;
 }
 .fsol__btn-arrow {

@@ -19,7 +19,7 @@ aria-hidden="true"
 {% if section.settings.athlete_image_pc != blank %}
 <div class="fam-voices__hero-pc">
 <img
-src="{{ section.settings.athlete_image_pc | image_url: width: 1000 }}"
+src="{{ section.settings.athlete_image_pc | image_url: width: 1200 }}"
 alt="アスリート"
 width="620"
 height="800"
@@ -31,7 +31,7 @@ loading="lazy"
 {% if section.settings.athlete_image_sp != blank %}
 <div class="fam-voices__hero-sp">
 <img
-src="{{ section.settings.athlete_image_sp | image_url: width: 500 }}"
+src="{{ section.settings.athlete_image_sp | image_url: width: 1200 }}"
 alt="アスリート"
 width="390"
 height="518"
@@ -56,7 +56,7 @@ loading="lazy"
 <div class="fam-voices__card-avatar">
 {% if block.settings.avatar != blank %}
 <img
-src="{{ block.settings.avatar | image_url: width: 100, height: 100, crop: 'center' }}"
+src="{{ block.settings.avatar | image_url: width: 1200, height: 1200, crop: 'center' }}"
 alt=""
 width="76"
 height="76"
@@ -83,7 +83,7 @@ loading="lazy"
 <div class="fam-voices__card-avatar">
 {% if block.settings.avatar != blank %}
 <img
-src="{{ block.settings.avatar | image_url: width: 100, height: 100, crop: 'center' }}"
+src="{{ block.settings.avatar | image_url: width: 1200, height: 1200, crop: 'center' }}"
 alt=""
 width="76"
 height="76"
@@ -108,7 +108,7 @@ loading="lazy"
 {% if section.settings.logo_image != blank %}
 <div class="fam-voices__logo">
 <img
-src="{{ section.settings.logo_image | image_url: width: 200 }}"
+src="{{ section.settings.logo_image | image_url: width: 1200 }}"
 alt="FAM BOX"
 width="120"
 height="40"
@@ -134,7 +134,7 @@ bottom: 0;
 left: 0;
 right: 0;
 height: 60%;
-z-index: 0;
+z-index: 0; /* layer */
 pointer-events: none;
 overflow: hidden;
 }
@@ -157,7 +157,7 @@ height: 100%;
 background: linear-gradient(180deg, rgba(250,250,250,0) 0%, #ffffff 100%);
 opacity: 0.3;
 pointer-events: none;
-z-index: 0;
+z-index: 0; /* layer */
 }
 /* ===== アスリート写真 PC ===== */
 .fam-voices__hero-pc {
@@ -169,7 +169,7 @@ right: max(0px, calc((100vw - 1440px) / 2));
 width: 48%;
 max-width: 660px;
 height: 95%;
-z-index: 1;
+z-index: 1; /* layer */
 overflow: hidden;
 }
 .fam-voices__hero-pc img {
@@ -187,7 +187,7 @@ top: 40px;
 right: -40px;
 width: 75%;
 max-width: 300px;
-z-index: 1;
+z-index: 1; /* layer */
 overflow: hidden;
 -webkit-mask-image: linear-gradient(180deg, #000 50%, transparent 88%);
 mask-image: linear-gradient(180deg, #000 50%, transparent 88%);
@@ -200,7 +200,7 @@ display: block;
 /* ===== コンテンツ制約（1440px・左64px） ===== */
 .fam-voices__content {
 position: relative;
-z-index: 2;
+z-index: 2; /* layer */
 max-width: 1440px;
 margin: 0 auto;
 padding: 0 64px;
@@ -231,7 +231,7 @@ margin: 0;
 /* ===== カードエリア（全幅） ===== */
 .fam-voices__cards-area {
 position: relative;
-z-index: 2;
+z-index: 2; /* layer */
 display: flex;
 flex-direction: column;
 gap: 16px;

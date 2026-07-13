@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>{{ shop.name }} - ご注文の商品を発送いたしました</title>
+  <!--[if mso]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->
+  <style>
+    body,table,td,a { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+    table,td { mso-table-lspace:0; mso-table-rspace:0; }
+    img { -ms-interpolation-mode:bicubic; border:0; outline:none; text-decoration:none; display:block; }
+    body { margin:0; padding:0; width:100%!important; background:#FAFAFA; }
+    a { text-decoration:none; }
+    @media only screen and (max-width:620px) {
+      .fam-container { width:100%!important; }
+      .fam-px-pc     { padding-left:20px!important; padding-right:20px!important; }
+      .fam-h1        { font-size:22px!important; line-height:1.45!important; }
+      .fam-body      { font-size:14px!important; }
+      .fam-cta       { font-size:15px!important; padding:14px 24px!important; }
+      .fam-item-title{ font-size:14px!important; }
+      .fam-tracking  { font-size:15px!important; }
+      .fam-addr      { font-size:13px!important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background:#FAFAFA;color-scheme:light;">
+
+  <!-- Preheader -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#FAFAFA;">
+    ご注文 {{ order_name }} を発送いたしました。追跡番号をご確認ください。
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FAFAFA;">
+    <tr>
+      <td align="center" style="padding:32px 16px 40px 16px;">
+        <table role="presentation" class="fam-container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;background:#FFFFFF;">
+
+          <!-- Header: Logo -->
+          <tr>
+            <td class="fam-px-pc" align="center" style="padding:32px 32px 24px 32px;background:#FFFFFF;">
+              <img src="https://cdn.shopify.com/s/files/1/0673/7379/3477/files/Fambox_logo_Black.png?v=1775096636" alt="FAMBOX" width="120" height="28" style="display:block;height:28px;width:auto;margin:0 auto;">
+            </td>
+          </tr>
+
+          <!-- Drive Orange アクセント帯 -->
+          <tr>
+            <td style="height:4px;line-height:4px;font-size:0;background:#FB4C15;">&nbsp;</td>
+          </tr>
+
+          <!-- Hero -->
+          <tr>
+            <td class="fam-px-pc" style="padding:40px 32px 8px 32px;background:#FFFFFF;">
+              <p style="margin:0 0 16px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:600;line-height:1;letter-spacing:0.15em;color:#FB4C15;">
+                SHIPPED
+              </p>
+              <h1 class="fam-h1" style="margin:0 0 20px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;font-size:24px;font-weight:600;line-height:1.45;color:#1B1D1A;">
+                商品を発送いたしました。
+              </h1>
+              <p style="margin:0 0 24px 0;">
+                <span style="display:inline-block;padding:4px 12px;background:rgba(16,185,129,0.12);color:#0B7D59;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:11px;font-weight:600;line-height:1;letter-spacing:0.08em;border-radius:9999px;">
+                  発送済
+                </span>
+              </p>
+              <p class="fam-body" style="margin:0 0 8px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;font-size:15px;font-weight:400;line-height:1.8;color:#1B1D1A;">
+                {{ customer.first_name }} 様
+              </p>
+              {% if fulfillment.item_count == item_count %}
+              <p class="fam-body" style="margin:0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;font-size:15px;font-weight:400;line-height:1.8;color:#545655;">
+                ご注文いただきました商品を発送いたしました。<br>
+                追跡番号をご確認いただけますので、配送状況はこちらからご確認ください。
+              </p>
+              {% else %}
+              <p class="fam-body" style="margin:0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic UI','Meiryo',sans-serif;font-size:15px;font-weight:400;line-height:1.8;color:#545655;">
+                ご注文いただきました商品のうち、一部を発送いたしました。<br>
+                残りの商品は準備が整い次第、改めてご連絡いたします。
+              </p>
+              {% endif %}
+            </td>
+          </tr>
+
+          <!-- 追跡番号カード -->
+          {% if fulfillment.tracking_numbers.size > 0 %}
+          <tr>
+            <td class="fam-px-pc" style="padding:24px 32px 8px 32px;background:#FFFFFF;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FAFAFA;border-radius:8px;">
+                <tr>
+                  <td style="padding:24px;">
+                    <p style="margin:0 0 16px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.05em;color:#1B1D1A;">
+                      追跡番号
+                    </p>
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      {% if fulfillment.tracking_company %}
+                      <tr>
+                        <td width="80" valign="top" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">配送業者</td>
+                        <td valign="top" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:14px;color:#1B1D1A;">{{ fulfillment.tracking_company }}</td>
+                      </tr>
+                      {% endif %}
+                      <tr>
+                        <td width="80" valign="top" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">番号</td>
+                        <td valign="top" style="padding:4px 0;">
+                          {% for tracking_number in fulfillment.tracking_numbers %}
+                          <p class="fam-tracking" style="margin:0 0 4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:600;letter-spacing:0.04em;color:#1B1D1A;">
+                            {{ tracking_number }}
+                          </p>
+                          {% endfor %}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- CTA -->
+          <tr>
+            <td class="fam-px-pc" align="left" style="padding:24px 32px 16px 32px;background:#FFFFFF;">
+              {% if fulfillment.tracking_url %}
+              <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ fulfillment.tracking_url }}" style="height:50px;v-text-anchor:middle;width:280px;" arcsize="8%" strokecolor="#FB4C15" fillcolor="#FB4C15">
+                <w:anchorlock/>
+                <center style="color:#FFFFFF;font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;">配送状況を確認する</center>
+              </v:roundrect>
+              <![endif]-->
+              <!--[if !mso]><!-- -->
+              <a href="{{ fulfillment.tracking_url }}" class="fam-cta" style="display:inline-block;padding:16px 32px;background:#FB4C15;color:#FFFFFF;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1;letter-spacing:0.02em;text-decoration:none;border-radius:4px;">
+                配送状況を確認する　→
+              </a>
+              <!--<![endif]-->
+              {% else %}
+              <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ order_status_url }}" style="height:50px;v-text-anchor:middle;width:280px;" arcsize="8%" strokecolor="#FB4C15" fillcolor="#FB4C15">
+                <w:anchorlock/>
+                <center style="color:#FFFFFF;font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;">注文状況を確認する</center>
+              </v:roundrect>
+              <![endif]-->
+              <!--[if !mso]><!-- -->
+              <a href="{{ order_status_url }}" class="fam-cta" style="display:inline-block;padding:16px 32px;background:#FB4C15;color:#FFFFFF;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1;letter-spacing:0.02em;text-decoration:none;border-radius:4px;">
+                注文状況を確認する　→
+              </a>
+              <!--<![endif]-->
+              {% endif %}
+            </td>
+          </tr>
+
+          <!-- Info Card: 発送商品 -->
+          <tr>
+            <td class="fam-px-pc" style="padding:16px 32px 8px 32px;background:#FFFFFF;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FAFAFA;border-radius:8px;">
+
+                <tr>
+                  <td style="padding:24px 24px 12px 24px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td align="left" style="padding:4px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">注文番号</td>
+                        <td align="right" style="padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;font-weight:600;color:#1B1D1A;">{{ order_name }}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <tr><td style="padding:0 24px;"><div style="height:1px;background:#ECECEC;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
+
+                <tr>
+                  <td style="padding:16px 24px 8px 24px;">
+                    <p style="margin:0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.08em;color:#888888;">
+                      今回発送の商品
+                    </p>
+                  </td>
+                </tr>
+
+                {% for line in fulfillment.fulfillment_line_items %}
+                <tr>
+                  <td style="padding:12px 24px 20px 24px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td width="64" valign="top" style="width:64px;">
+                          {% if line.line_item.image %}
+                          <img src="{{ line.line_item | img_url: '128x128', crop: 'center' }}" alt="" width="64" height="64" style="display:block;border-radius:8px;">
+                          {% else %}
+                          <div style="width:64px;height:64px;background:#ECECEC;border-radius:8px;"></div>
+                          {% endif %}
+                        </td>
+                        <td width="16" style="width:16px;">&nbsp;</td>
+                        <td valign="top">
+                          <p class="fam-item-title" style="margin:0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:15px;font-weight:600;line-height:1.5;color:#1B1D1A;">
+                            {{ line.line_item.title }}
+                          </p>
+                          {% if line.line_item.variant_title %}
+                          <p style="margin:4px 0 0 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;font-weight:400;line-height:1.5;color:#888888;">
+                            {{ line.line_item.variant_title }}　×　{{ line.quantity }}
+                          </p>
+                          {% else %}
+                          <p style="margin:4px 0 0 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;font-weight:400;line-height:1.5;color:#888888;">
+                            数量　×　{{ line.quantity }}
+                          </p>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {% unless forloop.last %}
+                <tr><td style="padding:0 24px;"><div style="height:1px;background:#ECECEC;line-height:1px;font-size:0;">&nbsp;</div></td></tr>
+                {% endunless %}
+                {% endfor %}
+
+              </table>
+            </td>
+          </tr>
+
+          <!-- お届け情報 -->
+          <tr>
+            <td class="fam-px-pc" style="padding:32px 32px 8px 32px;background:#FFFFFF;">
+              <p style="margin:0 0 16px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.05em;color:#1B1D1A;">
+                お届け情報
+              </p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="100" valign="top" style="padding:6px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;line-height:1.7;">お届け先</td>
+                  <td valign="top" class="fam-addr" style="padding:6px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:14px;color:#1B1D1A;line-height:1.7;">
+                    {{ shipping_address.last_name }} {{ shipping_address.first_name }} 様<br>
+                    〒{{ shipping_address.zip }}<br>
+                    {{ shipping_address.province }} {{ shipping_address.city }}{{ shipping_address.address1 }}{% if shipping_address.address2 != blank %} {{ shipping_address.address2 }}{% endif %}
+                  </td>
+                </tr>
+                {% if shipping_method %}
+                <tr>
+                  <td width="100" valign="top" style="padding:6px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;color:#888888;">配送方法</td>
+                  <td valign="top" style="padding:6px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:14px;color:#1B1D1A;">{{ shipping_method.title }}</td>
+                </tr>
+                {% endif %}
+              </table>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td class="fam-px-pc" style="padding:24px 32px 0 32px;background:#FFFFFF;">
+              <div style="height:1px;background:#ECECEC;line-height:1px;font-size:0;">&nbsp;</div>
+            </td>
+          </tr>
+
+          <!-- お問い合わせ -->
+          <tr>
+            <td class="fam-px-pc" style="padding:24px 32px 0 32px;background:#FFFFFF;">
+              <p style="margin:0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:13px;line-height:1.7;color:#545655;">
+                ご不明な点がございましたら、<a href="mailto:fam.athletefood.frozen@gmail.com" style="color:#FB4C15;text-decoration:underline;">fam.athletefood.frozen@gmail.com</a> までお問い合わせください。
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td class="fam-px-pc" style="padding:32px 32px 40px 32px;background:#FFFFFF;">
+              <p style="margin:0 0 8px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:12px;line-height:1.7;color:#888888;">
+                株式会社 ARCHECO　{{ shop.name }}
+              </p>
+              <p style="margin:0 0 16px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:12px;line-height:1.7;color:#888888;">
+                〒150-0001 東京都渋谷区神宮前1-15-4 Barbizon76 3F
+              </p>
+              <p style="margin:0 0 16px 0;font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans',sans-serif;font-size:12px;line-height:1.8;color:#888888;">
+                <a href="https://fam-athletefood-frozen.com/policies/privacy-policy" style="color:#888888;text-decoration:underline;">プライバシーポリシー</a>　・
+                <a href="https://fam-athletefood-frozen.com/policies/legal-notice" style="color:#888888;text-decoration:underline;">特定商取引法</a>　・
+                <a href="https://fam-athletefood-frozen.com/policies/terms-of-service" style="color:#888888;text-decoration:underline;">利用規約</a>
+              </p>
+              <p style="margin:0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;line-height:1.6;color:#888888;letter-spacing:0.05em;">
+                © 2026 ARCHECO Inc. All rights reserved.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

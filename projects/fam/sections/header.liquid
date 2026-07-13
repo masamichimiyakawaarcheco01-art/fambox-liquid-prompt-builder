@@ -103,6 +103,136 @@ margin-right: 8px !important;
   }
 }
 </style>
+{% comment %}
+============================================================
+DS v0.2 Header — Phase 2b CSS
+Source: brand/fambox/design-system/components/header.md
+Scope: header[data-ds-version="0.2"] のみ（既存 Shopify スタイル非干渉）
+Tokens: var() に fallback 値併設（tokens.css 未ロード環境互換）
+============================================================
+{% endcomment %}
+<style>
+/* === Heights（DS Spec § Heights）=== */
+header[data-ds-version="0.2"].header--compact { min-height: 64px; }
+header[data-ds-version="0.2"].header--default { min-height: 80px; }
+header[data-ds-version="0.2"].header--tall    { min-height: 96px; }
+
+/* === Sticky Modes（既存 sticky-header WC は維持）
+       --scroll-up は将来拡張用に予約・JS 実装は別途 === */
+.header-wrapper[data-ds-sticky-mode="scroll-up"] {
+  transform: translateY(0);
+  transition: transform var(--duration-base, 300ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+.header-wrapper[data-ds-sticky-mode="scroll-up"].is-hidden {
+  transform: translateY(-100%);
+}
+
+/* === SP 横スクロールメニュー（DNA v0.5 既定）=== */
+@media (max-width: 989px) {
+  header[data-ds-version="0.2"] .header__inline-menu {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    white-space: nowrap;
+  }
+  header[data-ds-version="0.2"] .header__inline-menu::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* === DS CTA Button（btn-primary）の hover 拡張
+       既存 .header__corp-btn の background / color は触らず、
+       transform / shadow / focus-visible のみ追加 === */
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"] {
+  position: relative;
+  transition:
+    background var(--duration-fast, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+    color var(--duration-fast, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+    transform var(--duration-fast, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
+    box-shadow var(--duration-fast, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2, 0 2px 8px rgba(0, 0, 0, 0.06));
+}
+
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:focus-visible {
+  outline: 2px solid var(--color-focus-ring, var(--color-drive, #FB4C15));
+  outline-offset: 2px;
+}
+
+header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:active {
+  transform: translateY(0);
+}
+
+/* === Menu link Drive 色 hover（DNA 既定: color 0.2s ease 互換）=== */
+header[data-ds-version="0.2"] .header__menu-item-link {
+  transition: color var(--duration-fast, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+}
+
+header[data-ds-version="0.2"] .header__menu-item-link:hover,
+header[data-ds-version="0.2"] .header__menu-item-link:focus-visible {
+  color: var(--color-drive, #FB4C15);
+}
+
+/* === Active page indicator（DS Spec の `aria-current="page"` 対応）=== */
+header[data-ds-version="0.2"] .header__menu-item-link[aria-current="page"] {
+  color: var(--color-drive, #FB4C15);
+  text-decoration: underline;
+  text-underline-offset: 8px;
+  text-decoration-thickness: 2px;
+}
+
+/* === Variant: Minimal（将来用・現在は未使用）=== */
+header[data-ds-version="0.2"].header-minimal .header__inline-menu,
+header[data-ds-version="0.2"].header-minimal .header__icon--account {
+  display: none;
+}
+
+/* === prefers-reduced-motion 対応 === */
+@media (prefers-reduced-motion: reduce) {
+  header[data-ds-version="0.2"] .btn-primary[data-ds-component="button"]:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .header-wrapper[data-ds-sticky-mode="scroll-up"] {
+    transition: none;
+  }
+}
+
+/* ============================================================
+ * Phase 2c — header--compact + SP の drawer 主体切替（v0.2.1 追加）
+ * Source: brand/fambox/design-system/components/header.md §SP 挙動
+ * 課題: SP 幅で compact + 横スクロールメニューは UX 破綻
+ *       → drawer 主体に切替 / EC アイコン優先表示の保証
+ * ============================================================ */
+
+/* compact + SP では横スクロールメニュー非表示・drawer 主体 */
+@media (max-width: 767px) {
+  header[data-ds-version="0.2"].header--compact .header__inline-menu {
+    display: none;
+  }
+  header[data-ds-version="0.2"].header--compact header-drawer,
+  header[data-ds-version="0.2"].header--compact .menu-drawer-container {
+    display: block;
+  }
+  /* EC アイコン優先表示の保証（DS Spec Anti 違反防止）*/
+  header[data-ds-version="0.2"].header--compact .header__icon--account,
+  header[data-ds-version="0.2"].header--compact .header__icon--cart {
+    display: inline-flex !important;
+  }
+}
+
+/* 極小 SP（< 360px）対策: CTA 縮小 */
+@media (max-width: 359px) {
+  header[data-ds-version="0.2"].header--compact .btn-primary[data-ds-component="button"] {
+    padding: 6px 12px;
+    font-size: var(--fs-caption, 12px);
+  }
+}
+</style>
 <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
 <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
 <symbol id="icon-search" viewBox="0 0 18 19" fill="none">
@@ -135,7 +265,7 @@ if localization.available_countries.size > 1 and section.settings.enable_country
 assign localization_forms = true
 endif
   -%}
-<header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
+<header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %} header-standard header--default" data-ds-version="0.2" data-ds-component="header">
 {%- liquid
 if section.settings.menu != blank
 render 'header-drawer'
@@ -235,7 +365,7 @@ preload: true
 {%- endif -%}
 </div>
 {% render 'header-search', input_id: 'Search-In-Modal' %}
-<a href="/pages/company_lp" class="header__corp-btn" data-gtag-cta="to_corp_lp" data-gtag-location="header">法人・プロ</a>
+<a href="/pages/company_lp" class="btn btn-primary btn-md header__corp-btn" data-gtag-cta="to_corp_lp" data-gtag-location="header" data-ds-version="0.2" data-ds-component="button">法人・プロ</a>
 {%- if shop.customer_accounts_enabled -%}
 <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="header__icon header__icon--account link focus-inset{% if section.settings.menu != blank %} small-hide{% endif %}">
 {%- if section.settings.enable_customer_avatar -%}

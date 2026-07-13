@@ -5,14 +5,14 @@
      SP: 390 × 650px
   ============================================================ */
 .fv17 {
---orange: #FB4C15;
---dark:   #1B1D1A;
+--orange: var(--color-drive);
+--dark:   var(--color-ink);
 position: relative;
 z-index: 1; /* ヘッダー(z-index:3-4)より下に配置 */
 width: 100%;
 height: 650px;
 overflow: hidden;
-background: #FAFAFA;
+background: var(--bg-secondary);
 font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
 -webkit-font-smoothing: antialiased;
   }
@@ -37,7 +37,7 @@ object-fit: cover;
   ── */
 .fv17-corner {
 position: absolute;
-z-index: 10;
+z-index: 10; /* layer */
 pointer-events: none;
 width: 64px;
 height: 64px;
@@ -56,26 +56,26 @@ object-fit: contain;
 /* ── テキストブロック（PC: left:64px / top:184px） ── */
 .fv17-text {
 position: absolute;
-left: 64px;
+left: var(--space-6);
 top: 184px;
-z-index: 10;
+z-index: 10; /* layer */
 pointer-events: none;
   }
 .fv17-h1 {
 font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
-font-weight: 600;
-font-size: 48px;
+font-weight: var(--fw-semibold);
+font-size: var(--fs-h1);
 line-height: 1.7;
-color: var(--dark);
+color: var(--color-ink);
 margin: 0 0 12px 0;
 white-space: nowrap;
   }
 .fv17-sub {
 font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
-font-weight: 500;
-font-size: 20px;
+font-weight: var(--fw-medium);
+font-size: var(--fs-h4);
 line-height: 1.2;
-color: var(--dark);
+color: var(--color-ink);
 margin: 0;
 white-space: pre-wrap;
   }
@@ -85,7 +85,7 @@ position: absolute;
 left: 50%;
 transform: translateX(-50%);
 bottom: 72px;
-z-index: 15;
+z-index: 15; /* layer */
 pointer-events: auto;
   }
 .fv17-cta {
@@ -95,19 +95,19 @@ align-items: center;
 justify-content: center;  /* テキストを左右中央に */
 width: 320px;
 height: 48px;
-border-radius: 4px;
+border-radius: var(--radius-sm);
 border: 1px solid rgba(255,255,255,0.1);
 background: linear-gradient(to bottom, rgba(251,76,21,0.90), rgba(251,76,21,0.95));
-color: #fff !important;
+color: var(--color-white) !important;
 font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
-font-size: 14px;
-font-weight: 700;
+font-size: var(--fs-body-sm);
+font-weight: var(--fw-bold);
 text-decoration: none !important;
 letter-spacing: 0.08em;
 overflow: hidden;
 pointer-events: auto;
 transition: filter 0.3s ease;
-z-index: 1;
+z-index: 1; /* layer */
 box-shadow: 0 16px 16px -8px rgba(251,76,21,0.35);
   }
 .fv17-cta:hover { filter: brightness(1.12); }
@@ -115,12 +115,12 @@ box-shadow: 0 16px 16px -8px rgba(251,76,21,0.35);
 /* テキスト: ボタン幅に対して左右センター（デフォルトのflex中央揃えで対応） */
 .fv17-cta-text {
 position: relative;
-z-index: 1;
+z-index: 1; /* layer */
   }
 /* アイコン: ボタン右端から16px固定 */
 .fv17-cta-arrow {
 position: absolute;
-right: 16px;
+right: var(--space-2);
 top: 50%;
 transform: translateY(-50%);
 display: inline-flex;
@@ -147,7 +147,7 @@ position: absolute;
 top: calc(50% - 30px);
 left: 50%;
 transform: translate(-50%, -50%);
-z-index: 5;
+z-index: 5; /* layer */
 pointer-events: none;
   }
 .fv17-dish-viewport {
@@ -201,7 +201,7 @@ object-fit: contain;
 .fv17-dish-logo {
 position: absolute;
 inset: 0;
-z-index: 8;
+z-index: 8; /* layer */
 display: flex;
 align-items: center;
 justify-content: center;
@@ -220,7 +220,7 @@ left: 50%;
 transform: translateX(-50%);
 width: 42%;
 max-width: 600px;
-z-index: 6;
+z-index: 6; /* layer */
 pointer-events: none;
 line-height: 0;
   }
@@ -238,17 +238,17 @@ bottom: 0;
 left: 0;
 right: 0;
 height: 60px;
-background: var(--dark);
-z-index: 20;
+background: var(--color-ink);
+z-index: 20; /* layer */
 display: flex;
 align-items: center;
 justify-content: center;
 overflow: hidden;
   }
 .fv17-credit {
-color: #fff;
-font-size: 14px;
-font-weight: 600;
+color: var(--color-white);
+font-size: var(--fs-body-sm);
+font-weight: var(--fw-semibold);
 letter-spacing: 0.04em;
 white-space: nowrap;
 text-align: center;
@@ -272,15 +272,15 @@ object-position: center center;
 .fv17-bg-video--right { display: none; }
 /* ── グラデーション: ::before 疑似要素で確実に表示 ──
        外部要素・z-index競合・stacking context 問題をすべて回避
-       高さ325px、#FAFAFA 100% → 透明 0%
+       高さ325px、var(--bg-secondary) 100% → 透明 0%
     ── */
 .fv17::before {
 content: '';
 position: absolute;
 top: 0; left: 0; right: 0;
 height: 325px;
-background: linear-gradient(to bottom, #FAFAFA 0%, rgba(250,250,250,0) 100%);
-z-index: 3;
+background: linear-gradient(to bottom, var(--bg-secondary) 0%, rgba(250,250,250,0) 100%);
+z-index: 3; /* layer */
 pointer-events: none;
     }
 /* ── SP z-index レイヤー構造 ──
@@ -306,9 +306,9 @@ pointer-events: none;
 .fv17-corner--bl,
 .fv17-corner--br { display: none; }
 /* テキスト */
-.fv17-text { left: 24px; top: 46px; right: 24px; }
-.fv17-h1 { font-size: 32px; font-weight: 600; line-height: 1.7; white-space: normal; margin-bottom: 8px; }
-.fv17-sub { font-size: 14px; line-height: 1.2; }
+.fv17-text { left: var(--space-3); top: 46px; right: var(--space-3); }
+.fv17-h1 { font-size: var(--fs-h2); font-weight: var(--fw-semibold); line-height: 1.7; white-space: normal; margin-bottom: var(--space-1); }
+.fv17-sub { font-size: var(--fs-body-sm); line-height: 1.2; }
 /* PC版CTA非表示 */
 .fv17-cta-wrap { display: none; }
 /* SP専用CTA */
@@ -316,10 +316,10 @@ pointer-events: none;
 display: flex;
 justify-content: center;
 position: absolute;
-left: 16px; right: 16px;
+left: var(--space-2); right: var(--space-2);
 bottom: 72px;
     }
-.fv17-cta-sp-wrap .fv17-cta { width: 100%; max-width: 358px; font-size: 14px; }
+.fv17-cta-sp-wrap .fv17-cta { width: 100%; max-width: 358px; font-size: var(--fs-body-sm); }
 /* 皿: 280px、動画エリア（高さ590px）の上下左右中央 */
 .fv17-dish-wrap {
 top: 0;
@@ -339,7 +339,7 @@ justify-content: center;
 /* SP フッター: マーキー */
 .fv17-footer { justify-content: flex-start; overflow: hidden; }
 .fv17-credit {
-font-size: 12px;
+font-size: var(--fs-caption);
 white-space: nowrap;
 padding-left: 100%;
 animation: fv17marquee 22s linear infinite;
@@ -350,7 +350,7 @@ animation: fv17marquee 22s linear infinite;
     }
   }
 </style>
-<div class="fv17" data-section-name="hero-video">
+<div class="fv17">
 <!-- 背景動画（左・右）+ SPグラデーション -->
 <div class="fv17-bg" aria-hidden="true">
 <video
@@ -369,16 +369,16 @@ autoplay muted loop playsinline preload="auto"
   -->
 {%- if section.settings.corner_icon != blank -%}
 <span class="fv17-corner fv17-corner--tl" aria-hidden="true">
-<img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+<img src="{{ section.settings.corner_icon | image_url: width: 1200 }}" alt="" width="64" height="64">
 </span>
 <span class="fv17-corner fv17-corner--tr" aria-hidden="true">
-<img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+<img src="{{ section.settings.corner_icon | image_url: width: 1200 }}" alt="" width="64" height="64">
 </span>
 <span class="fv17-corner fv17-corner--bl" aria-hidden="true">
-<img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+<img src="{{ section.settings.corner_icon | image_url: width: 1200 }}" alt="" width="64" height="64">
 </span>
 <span class="fv17-corner fv17-corner--br" aria-hidden="true">
-<img src="{{ section.settings.corner_icon | image_url: width: 128 }}" alt="" width="64" height="64">
+<img src="{{ section.settings.corner_icon | image_url: width: 1200 }}" alt="" width="64" height="64">
 </span>
 {%- endif -%}
 <!-- テキストブロック -->
@@ -388,13 +388,13 @@ autoplay muted loop playsinline preload="auto"
 </div>
 <!-- CTAボタン（PC: 水平中央） -->
 <div class="fv17-cta-wrap">
-<a href="{{ section.settings.cta_url }}" class="fv17-cta" data-gtag-cta="hero_main_cta" data-gtag-location="top_hero">
+<a href="{{ section.settings.cta_url }}" class="fv17-cta">
 <span class="fv17-cta-text">{{ section.settings.cta_text }}</span>
 <span class="fv17-cta-arrow">
 {%- if section.settings.cta_arrow_svg != blank -%}
 {{ section.settings.cta_arrow_svg }}
 {%- elsif section.settings.cta_arrow_icon != blank -%}
-<img src="{{ section.settings.cta_arrow_icon | image_url: width: 80 }}" alt="" width="40" height="14">
+<img src="{{ section.settings.cta_arrow_icon | image_url: width: 1200 }}" alt="" width="40" height="14">
 {%- else -%}
 <svg width="40" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="0" y="5" width="46" height="2" fill="white"/>
@@ -406,13 +406,13 @@ autoplay muted loop playsinline preload="auto"
 </div>
 <!-- SP専用CTAボタン -->
 <div class="fv17-cta-sp-wrap">
-<a href="{{ section.settings.cta_url }}" class="fv17-cta" data-gtag-cta="hero_main_cta" data-gtag-location="top_hero">
+<a href="{{ section.settings.cta_url }}" class="fv17-cta">
 <span class="fv17-cta-text">{{ section.settings.cta_text }}</span>
 <span class="fv17-cta-arrow">
 {%- if section.settings.cta_arrow_svg != blank -%}
 {{ section.settings.cta_arrow_svg }}
 {%- elsif section.settings.cta_arrow_icon != blank -%}
-<img src="{{ section.settings.cta_arrow_icon | image_url: width: 80 }}" alt="" width="40" height="14">
+<img src="{{ section.settings.cta_arrow_icon | image_url: width: 1200 }}" alt="" width="40" height="14">
 {%- else -%}
 <svg width="40" height="14" viewBox="0 0 53 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect x="0" y="5" width="46" height="2" fill="white"/>
@@ -428,22 +428,22 @@ autoplay muted loop playsinline preload="auto"
 <div class="fv17-dish-wrap" aria-hidden="true">
 <div class="fv17-dish-viewport">
 <div class="fv17-dish-slide fv17-dish-slide--1">
-<img src="{{ section.settings.dish_1 | image_url: width: 800 }}" alt="" width="800" height="800" loading="eager">
+<img src="{{ section.settings.dish_1 | image_url: width: 1200 }}" alt="" width="800" height="800" loading="eager">
 </div>
 <div class="fv17-dish-slide fv17-dish-slide--2">
-<img src="{{ section.settings.dish_2 | image_url: width: 800 }}" alt="" width="800" height="800" loading="eager">
+<img src="{{ section.settings.dish_2 | image_url: width: 1200 }}" alt="" width="800" height="800" loading="eager">
 </div>
 <div class="fv17-dish-slide fv17-dish-slide--3">
-<img src="{{ section.settings.dish_3 | image_url: width: 800 }}" alt="" width="800" height="800" loading="eager">
+<img src="{{ section.settings.dish_3 | image_url: width: 1200 }}" alt="" width="800" height="800" loading="eager">
 </div>
 <div class="fv17-dish-slide fv17-dish-slide--4">
-<img src="{{ section.settings.dish_4 | image_url: width: 800 }}" alt="" width="800" height="800" loading="eager">
+<img src="{{ section.settings.dish_4 | image_url: width: 1200 }}" alt="" width="800" height="800" loading="eager">
 </div>
 </div>
 <!-- FAMBOXロゴ（皿の上・中央） -->
 {%- if section.settings.dish_logo != blank -%}
 <div class="fv17-dish-logo" aria-hidden="true">
-<img src="{{ section.settings.dish_logo | image_url: width: 400 }}" alt="" width="200" height="80">
+<img src="{{ section.settings.dish_logo | image_url: width: 1200 }}" alt="" width="200" height="80">
 </div>
 {%- endif -%}
 </div>

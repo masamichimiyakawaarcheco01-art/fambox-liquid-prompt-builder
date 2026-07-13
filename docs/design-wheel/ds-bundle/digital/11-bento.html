@@ -1,0 +1,30 @@
+<!-- @dsCard group="Components · digital" name="Bento tiles & stat" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#9FA0A3;--surface:#F2F2F0;--dark:#161618;--ink:#111114;--muted:#77777E;
+    --accent-r:#F04E23;--accent-y:#F5B800;--accent-b:#2D6BFF;--line:#D9D9DB}
+  *{margin:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+  body{background:var(--bg);padding:24px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .tile{border-radius:20px;padding:20px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between}
+  .num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500}
+  .t-light{background:var(--surface);color:var(--ink)}
+  .t-dark{background:var(--dark);color:#fff}
+  .t-r{background:var(--accent-r);color:#fff}
+  h3{font-size:16px;font-weight:600;margin-top:8px}
+  .stat .v{font-size:44px;font-weight:300;font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+  .meter{height:1px;background:var(--line);position:relative;margin-top:12px}
+  .meter::after{content:"";position:absolute;left:0;top:-2px;height:5px;width:72%;background:var(--accent-b)}
+  .meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px}
+</style></head>
+<body>
+  <div class="grid">
+    <div class="tile t-light"><span class="num" style="color:var(--muted)">01</span><h3>Connect</h3></div>
+    <div class="tile t-dark"><span class="num" style="color:#fff8">02</span><h3>Normalize</h3></div>
+    <div class="tile t-r"><span class="num" style="color:#fff8">03</span><h3>Act</h3></div>
+    <div class="tile t-light stat"><span class="num" style="color:var(--muted)">throughput</span><div><div class="v">2.4M</div><div class="meter"></div><div class="meta">cluster 72%</div></div></div>
+  </div>
+  <p style="margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#111">bento＝不均等だが規格化されたタイル（radius20）。統計は特大数字＋計測ライン（meter）。</p>
+</body></html>

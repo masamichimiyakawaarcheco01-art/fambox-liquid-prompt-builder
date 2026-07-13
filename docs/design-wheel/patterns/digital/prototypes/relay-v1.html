@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relay — IoT Data Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ===== digital SYSTEM.md v0 tokens ===== */
+  :root {
+    --bg: #9FA0A3;
+    --surface: #F2F2F0;
+    --surface-dark: #161618;
+    --ink: #111114;
+    --ink-muted: #77777E;
+    --accent-r: #F04E23;
+    --accent-y: #F5B800;
+    --accent-b: #2D6BFF;
+    --line: #D9D9DB;
+    --s: 12px; --m: 24px; --l: 48px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', 'Hiragino Kaku Gothic Pro', sans-serif;
+    padding: 16px;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; max-width: 1408px; margin: 0 auto; }
+
+  /* ===== カプセル Hero ===== */
+  .hero {
+    grid-column: 1 / -1;
+    background: var(--surface-dark);
+    color: #FFF;
+    border-radius: 999px;
+    min-height: 320px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 48px 96px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .hero-copy { position: relative; max-width: 480px; display: flex; flex-direction: column; gap: 24px; }
+  .hero-copy .label { font-size: 10px; font-weight: 500; letter-spacing: .14em; color: rgba(255,255,255,.55); text-transform: uppercase; }
+  .hero-copy h1 { font-size: 40px; font-weight: 600; line-height: 1.1; letter-spacing: -.01em; }
+  .hero-copy p { font-size: 13px; line-height: 1.65; color: rgba(255,255,255,.6); }
+  .hero-cta { display: flex; gap: 12px; }
+  .btn { display: inline-block; padding: 12px 24px; border-radius: 999px; font-size: 12px; font-weight: 500; text-decoration: none; transition: opacity .25s linear; }
+  .btn:hover { opacity: .8; }
+  .btn-fill { background: var(--accent-r); color: #FFF; }
+  .btn-ghost { border: 1px solid rgba(255,255,255,.3); color: #FFF; }
+
+  /* 巨大数字（虎ノ門型: データの主役化） */
+  .hero-stat { position: relative; text-align: right; }
+  .hero-stat .big {
+    font-size: 96px; font-weight: 300; letter-spacing: .04em; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-stat .big .dim { opacity: .35; filter: blur(2px); }
+  .hero-stat .cap { margin-top: 12px; font-size: 10px; letter-spacing: .12em; color: rgba(255,255,255,.5); text-transform: uppercase; }
+  .hero-stat .rule { margin-top: 8px; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.3)); }
+
+  /* ===== bento タイル ===== */
+  .tile {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 24px;
+    min-height: 220px;
+    transition: filter .25s linear;
+  }
+  .tile:hover { filter: brightness(1.03); }
+  .tile .num { font-size: 11px; font-weight: 600; color: var(--ink-muted); }
+  .tile h3 { font-size: 16px; font-weight: 600; }
+  .tile p { font-size: 13px; line-height: 1.65; color: var(--ink-muted); }
+  .tile-dark { background: var(--surface-dark); color: #FFF; }
+  .tile-dark p { color: rgba(255,255,255,.55); }
+  .tile-r { background: var(--accent-r); color: #FFF; }
+  .tile-y { background: var(--accent-y); }
+  .tile-b { background: var(--accent-b); color: #FFF; }
+  .tile-r p, .tile-b p { color: rgba(255,255,255,.75); }
+
+  .span-3 { grid-column: span 3; }
+  .span-4 { grid-column: span 4; }
+  .span-6 { grid-column: span 6; }
+
+  /* 計測ライン付き統計タイル */
+  .stat-tile .v { font-size: 56px; font-weight: 300; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+  .stat-tile .meter { height: 1px; background: var(--line); position: relative; margin: 16px 0 8px; }
+  .stat-tile .meter::after { content: ""; position: absolute; left: 0; top: -2px; width: 72%; height: 5px; background: var(--accent-b); }
+  .stat-tile.warm .meter::after { background: var(--accent-r); width: 38%; }
+
+  /* 抽象UIモック（実画面ではなく図形化） */
+  .mock { display: flex; gap: 8px; align-items: flex-end; height: 88px; }
+  .mock i { display: block; border-radius: 6px; background: var(--line); width: 100%; }
+  .mock i:nth-child(1){height:40%} .mock i:nth-child(2){height:72%}
+  .mock i:nth-child(3){height:56%; background: var(--accent-y);} .mock i:nth-child(4){height:100%}
+  .mock i:nth-child(5){height:64%}
+
+  .geo { display: flex; gap: 8px; }
+  .geo span { width: 28px; height: 28px; border-radius: 8px; background: #FFF3; }
+  .geo span:nth-child(2){ border-radius: 50%; }
+
+  /* フッタ・カプセル CTA */
+  .foot {
+    grid-column: 1 / -1;
+    background: var(--surface);
+    border-radius: 999px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 32px 96px;
+  }
+  .foot .t { font-size: 20px; font-weight: 600; }
+  .foot .sub { font-size: 11px; color: var(--ink-muted); margin-top: 4px; }
+
+  /* 狭幅: カプセルは角丸48に落とし、bento は2分割に */
+  @media (max-width: 1100px) {
+    .hero { border-radius: 48px; flex-direction: column; align-items: flex-start; gap: 40px; padding: 48px; }
+    .hero-stat { text-align: left; }
+    .hero-stat .rule { background: linear-gradient(90deg, rgba(255,255,255,.3), transparent); }
+    .span-3, .span-4 { grid-column: span 6; }
+    .span-6 { grid-column: span 12; }
+    .foot { border-radius: 48px; flex-direction: column; gap: 24px; padding: 40px 48px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<main class="grid">
+
+  <!-- カプセル Hero -->
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="label mono">// relay.io — iot data platform</p>
+      <h1>Every sensor,<br>one stream.</h1>
+      <p>Relay は 400+ プロトコルのセンサーデータを単一ストリームに正規化。設置から可視化まで 5 分。</p>
+      <div class="hero-cta">
+        <a class="btn btn-fill mono" href="#">Start free</a>
+        <a class="btn btn-ghost mono" href="#">Docs</a>
+      </div>
+    </div>
+    <div class="hero-stat mono">
+      <div class="big">99.98<span class="dim">%</span></div>
+      <div class="rule"></div>
+      <p class="cap">uptime — last 365 days</p>
+    </div>
+  </section>
+
+  <!-- bento: 番号付き特徴 4 + アクセントタイル -->
+  <section class="tile span-3">
+    <p class="num mono">01</p>
+    <div><h3>Connect</h3><p>MQTT / Modbus / BLE — 既存設備のままつながる。</p></div>
+  </section>
+  <section class="tile tile-dark span-3">
+    <p class="num mono" style="color:#FFF8">02</p>
+    <div><h3>Normalize</h3><p>単位・周期・欠損をストリーム上で正規化。</p></div>
+  </section>
+  <section class="tile span-3">
+    <p class="num mono">03</p>
+    <div><h3>Observe</h3><p>異常は閾値でなく分布で検知する。</p></div>
+  </section>
+  <section class="tile tile-r span-3">
+    <p class="num mono" style="color:#FFF8">04</p>
+    <div><h3>Act</h3><p>Webhook / PLC へ 50ms で書き戻し。</p></div>
+  </section>
+
+  <!-- bento: 統計2 + モック + 幾何 -->
+  <section class="tile stat-tile span-4">
+    <p class="num mono">throughput</p>
+    <div>
+      <div class="v mono">2.4M<span style="font-size:20px;color:var(--ink-muted)"> msg/s</span></div>
+      <div class="meter"></div>
+      <p class="num mono">cluster capacity 72%</p>
+    </div>
+  </section>
+  <section class="tile stat-tile warm span-4">
+    <p class="num mono">latency p99</p>
+    <div>
+      <div class="v mono">38<span style="font-size:20px;color:var(--ink-muted)"> ms</span></div>
+      <div class="meter"></div>
+      <p class="num mono">edge → dashboard</p>
+    </div>
+  </section>
+  <section class="tile tile-y span-4">
+    <p class="num mono">live view</p>
+    <div class="mock"><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="num mono">sensor histogram — site B</p>
+  </section>
+
+  <!-- bento: 記事/リンク行 -->
+  <section class="tile span-6">
+    <p class="num mono">case — 2026.05</p>
+    <div><h3>製造ライン 3,200 センサーを 1 週間で移行</h3><p>某自動車部品メーカー（worker 12名 / ダウンタイム 0）</p></div>
+  </section>
+  <section class="tile tile-b span-6">
+    <p class="num mono" style="color:#FFF8">platform</p>
+    <div class="geo"><span></span><span></span><span></span></div>
+    <div><h3>Relay Mesh — エッジ間で完結する冗長化</h3><p>クラウド断でもサイト内ストリームは止まらない。</p></div>
+  </section>
+
+  <!-- カプセル フッタ CTA -->
+  <section class="foot">
+    <div><p class="t">Build on Relay.</p><p class="sub mono">free tier — 100k msg/day</p></div>
+    <a class="btn btn-fill mono" href="#">Create account →</a>
+  </section>
+
+</main>
+
+</body>
+</html>

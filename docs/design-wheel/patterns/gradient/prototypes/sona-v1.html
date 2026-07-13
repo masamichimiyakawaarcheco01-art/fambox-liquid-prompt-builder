@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sona — Sound Therapy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== gradient SYSTEM.md v0 tokens ===== */
+  :root {
+    --bg: #FAFAF7;
+    --surface: #FFFFFF;
+    --ink: #141416;
+    --ink-muted: #8C8C90;
+    --line: #E8E8E4;
+    --s: 16px; --m: 32px; --l: 64px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', 'Hiragino Kaku Gothic Pro', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ===== HERO: アウトライン文字（奥）×グラデカード散布（手前） ===== */
+  .hero { position: relative; min-height: 760px; padding: 64px 0 0; text-align: center; }
+
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 0 64px; margin-bottom: 72px; }
+  .nav .logo { font-weight: 800; font-size: 18px; letter-spacing: -.02em; }
+  .nav .links { display: flex; gap: 28px; font-size: 13px; color: var(--ink-muted); }
+  .nav .links span:hover { color: var(--ink); }
+
+  /* 奥の層: アウトライン特大タイポ */
+  .display-outline {
+    position: absolute; left: 50%; bottom: 120px; transform: translateX(-50%);
+    font-size: clamp(120px, 22vw, 300px);
+    font-weight: 800; letter-spacing: -.02em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px #C9C9C4;
+    user-select: none; white-space: nowrap;
+    z-index: 1;
+  }
+
+  .hero-copy { position: relative; z-index: 3; }
+  .hero-copy h1 { font-size: 44px; font-weight: 700; letter-spacing: -.01em; line-height: 1.15; }
+  .hero-copy p { margin-top: 16px; font-size: 14px; line-height: 1.7; color: var(--ink-muted); }
+  .btn {
+    display: inline-block; margin-top: 32px;
+    padding: 13px 32px; border: 1px solid var(--ink); border-radius: 6px;
+    font-size: 13px; font-weight: 500; color: var(--ink); text-decoration: none;
+    transition: all .6s ease-in-out;
+  }
+  .btn:hover { background: var(--ink); color: #FFF; }
+
+  /* 手前の層: グラデカード扇状散布 */
+  .deck { position: relative; z-index: 2; height: 420px; margin-top: 48px; }
+  .card {
+    position: absolute; left: 50%; bottom: 0;
+    width: 230px; height: 320px;
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: 0 24px 48px rgba(0,0,0,.08);
+    padding: 14px;
+    transition: transform .6s ease-in-out;
+  }
+  .card:hover { transform: translateX(var(--tx)) rotate(0deg) translateY(-16px) !important; }
+  .card .blob { width: 100%; height: 78%; border-radius: 8px; }
+  .card .cap { margin-top: 12px; font-size: 10px; letter-spacing: .06em; color: var(--ink-muted); text-transform: uppercase; display: flex; justify-content: space-between; }
+
+  /* grain 質感: SVG feTurbulence を data URI で重ねる */
+  .blob {
+    position: relative; overflow: hidden;
+  }
+  .blob::after {
+    content: ""; position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+  .g-warm  { background: radial-gradient(120% 120% at 20% 10%, #FF8A3D 0%, #FF4FA0 60%, #FFD8E8 100%); }
+  .g-cool  { background: radial-gradient(120% 120% at 80% 15%, #5AC8FF 0%, #7B5BFF 65%, #E6E0FF 100%); }
+  .g-fresh { background: radial-gradient(130% 130% at 30% 80%, #9BE15D 0%, #00E3AE 60%, #DFFBEF 100%); }
+  .g-dawn  { background: radial-gradient(140% 110% at 50% 0%, #FFC371 0%, #FF5F6D 70%, #FFE3D0 100%); }
+  .g-haze  { background: radial-gradient(120% 140% at 70% 70%, #C56BFF 0%, #FF8AE2 55%, #F4E1FF 100%); }
+
+  .card:nth-child(1) { --tx: -340px; transform: translateX(-340px) rotate(-9deg); z-index: 1; }
+  .card:nth-child(2) { --tx: -180px; transform: translateX(-180px) rotate(-4deg); z-index: 2; }
+  .card:nth-child(3) { --tx: -115px; transform: translateX(-115px) rotate(0deg) translateY(-24px); z-index: 3; }
+  .card:nth-child(4) { --tx: 50px;  transform: translateX(50px)  rotate(5deg); z-index: 2; }
+  .card:nth-child(5) { --tx: 210px; transform: translateX(210px) rotate(10deg); z-index: 1; }
+
+  /* 手書き風注釈 */
+  .note {
+    position: absolute; z-index: 4;
+    font-size: 12px; color: var(--ink-muted);
+    max-width: 140px; text-align: left;
+  }
+  .note svg { display: block; margin-top: 6px; }
+  .note-l { left: 9%; top: 300px; }
+  .note-r { right: 8%; top: 250px; text-align: right; }
+  .note-r svg { margin-left: auto; transform: scaleX(-1); }
+
+  /* ===== 下段: 3ステップ（要素最小） ===== */
+  .steps { max-width: 880px; margin: 96px auto 0; padding: 0 32px 96px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center; }
+  .step .dot { width: 56px; height: 28px; border-radius: 28px 28px 0 0; margin: 0 auto 16px; position: relative; overflow: hidden; }
+  .step h3 { font-size: 16px; font-weight: 700; }
+  .step p { margin-top: 8px; font-size: 13px; line-height: 1.7; color: var(--ink-muted); }
+
+  @media (max-width: 900px) {
+    .nav { padding: 0 24px; }
+    .nav .links { display: none; }
+    .steps { grid-template-columns: 1fr; }
+    .note { display: none; }
+    .card { width: 170px; height: 240px; }
+    .card:nth-child(1) { --tx: -250px; transform: translateX(-250px) rotate(-9deg); }
+    .card:nth-child(2) { --tx: -140px; transform: translateX(-140px) rotate(-4deg); }
+    .card:nth-child(3) { --tx: -85px; transform: translateX(-85px) translateY(-24px); }
+    .card:nth-child(4) { --tx: 30px; transform: translateX(30px) rotate(5deg); }
+    .card:nth-child(5) { --tx: 140px; transform: translateX(140px) rotate(10deg); }
+    .deck { height: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <nav class="nav">
+    <span class="logo">Sona</span>
+    <div class="links"><span>Sounds</span><span>Science</span><span>Pricing</span></div>
+  </nav>
+
+  <!-- 奥の層 -->
+  <div class="display-outline" aria-hidden="true">Sona</div>
+
+  <div class="hero-copy">
+    <h1>眠りに落ちる音を、<br>処方する。</h1>
+    <p>Sona は心拍と呼吸に同期するサウンドセラピー。<br>今夜の状態に合わせて、5つの音色から処方します。</p>
+    <a class="btn" href="#">7日間試す</a>
+  </div>
+
+  <!-- 手前の層: グラデカード -->
+  <div class="deck">
+    <div class="card"><div class="blob g-dawn"></div><p class="cap"><span>Dawn</span><span>04</span></p></div>
+    <div class="card"><div class="blob g-warm"></div><p class="cap"><span>Ember</span><span>01</span></p></div>
+    <div class="card"><div class="blob g-cool"></div><p class="cap"><span>Drift</span><span>02</span></p></div>
+    <div class="card"><div class="blob g-fresh"></div><p class="cap"><span>Moss</span><span>03</span></p></div>
+    <div class="card"><div class="blob g-haze"></div><p class="cap"><span>Haze</span><span>05</span></p></div>
+
+    <p class="note note-l">5つの音色 = 5つのグラデ処方
+      <svg width="60" height="32" viewBox="0 0 60 32" fill="none"><path d="M2 2 C 20 28, 40 30, 58 18" stroke="#8C8C90" stroke-width="1.2"/><path d="M50 14 L 58 18 L 52 24" stroke="#8C8C90" stroke-width="1.2" fill="none"/></svg>
+    </p>
+    <p class="note note-r">心拍に同期してゆっくり変化
+      <svg width="60" height="32" viewBox="0 0 60 32" fill="none"><path d="M2 2 C 20 28, 40 30, 58 18" stroke="#8C8C90" stroke-width="1.2"/><path d="M50 14 L 58 18 L 52 24" stroke="#8C8C90" stroke-width="1.2" fill="none"/></svg>
+    </p>
+  </div>
+</section>
+
+<section class="steps">
+  <div class="step"><div class="dot blob g-warm"></div><h3>測る</h3><p>Apple Watch / Oura から今夜の状態を読み取る。</p></div>
+  <div class="step"><div class="dot blob g-cool"></div><h3>処方</h3><p>5音色×強度を組み合わせて自動で調合。</p></div>
+  <div class="step"><div class="dot blob g-fresh"></div><h3>眠る</h3><p>入眠を検知したら 20 分かけてフェードアウト。</p></div>
+</section>
+
+</body>
+</html>

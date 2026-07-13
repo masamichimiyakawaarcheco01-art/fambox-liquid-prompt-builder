@@ -1,0 +1,64 @@
+<!-- @dsCard group="Foundations · sporty" name="Spacing & grid" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0E0E12;--muted:#8A8A90;--surface:#F4F5F6;--line:#ECECEE;--accent:#FF4D1F}
+  *{margin:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+  body{background:var(--surface);padding:24px;color:var(--ink)}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;font-weight:600}
+  .section{margin-bottom:24px}
+  .label{font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:.06em;text-transform:uppercase}
+  .bars{display:flex;flex-direction:column;gap:8px}
+  .bar-row{display:flex;align-items:center;gap:12px}
+  .bar{background:var(--accent);border-radius:3px;height:20px;opacity:.85}
+  .bar-label{font-size:11px;color:var(--ink);width:140px;flex:none}
+  .bar-val{font-size:11px;color:var(--muted)}
+  .grid-demo{background:#0E0E12;border-radius:12px;padding:16px;margin-top:8px}
+  .cols{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;height:32px}
+  .col{background:rgba(255,77,31,.25);border-radius:2px}
+  .grid-note{font-size:10px;color:rgba(255,255,255,.5);margin-top:8px}
+  .hero-demo{background:#0E0E12;border-radius:12px;height:48px;margin-top:6px;position:relative;overflow:hidden}
+  .hero-inner{position:absolute;inset:0;margin:0 80px;background:rgba(255,255,255,.08);border-radius:4px;display:flex;align-items:center;padding:0 12px}
+  .hero-label{font-size:10px;color:rgba(255,255,255,.5)}
+  .rule{font-size:10px;color:var(--muted);line-height:1.6;border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
+  .rule b{color:var(--ink)}
+</style></head>
+<body>
+  <h2>sporty — Spacing & grid</h2>
+
+  <div class="section">
+    <div class="label">Spacing scale（等比 2x）</div>
+    <div class="bars">
+      <div class="bar-row"><span class="bar-label">S — 16px（padding小・ gap）</span><div class="bar" style="width:32px"></div><span class="bar-val">16px</span></div>
+      <div class="bar-row"><span class="bar-label">M — 32px（セクション内余白）</span><div class="bar" style="width:64px"></div><span class="bar-val">32px</span></div>
+      <div class="bar-row"><span class="bar-label">L — 64px（セクション間）</span><div class="bar" style="width:128px"></div><span class="bar-val">64px</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">12カラムグリッド / ガター 24px</div>
+    <div class="grid-demo">
+      <div class="cols">
+        <div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div>
+        <div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div>
+        <div class="col"></div><div class="col"></div><div class="col"></div><div class="col"></div>
+      </div>
+      <div class="grid-note">ガター 24px（digital の16px より広い＝開放感）</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">ヒーロー外マージン 80px（本文セクション）</div>
+    <div class="hero-demo">
+      <div class="hero-inner"><span class="hero-label">content area（外マージン 80px）</span></div>
+    </div>
+    <p style="font-size:10px;color:var(--muted);margin-top:6px">ヒーロー自体はフルブリード（マージン 0）</p>
+  </div>
+
+  <div class="rule">
+    <b>整数比</b> — ヒーロー = 全幅 × 60–70vh。統計・カード列 = 1:1:1。<br>
+    digital（S12/M24/L48）より一段大きい＝運動量・開放感。<br>
+    等差（8/16/24）は使わない。等比（×2）のみ。
+  </div>
+</body></html>

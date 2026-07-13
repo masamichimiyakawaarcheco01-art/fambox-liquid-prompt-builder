@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PULSE v3 — sporty product UI</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0C0B;--surface:#14171A;--surface-2:#1C2024;--line:#272C30;
+    --ink:#FFFFFF;--muted:#8C949C;
+    --accent:#C6FF3A;       /* volt — sporty app の signature */
+    --accent-ink:#0A0C0B;
+    --r:20px;--s:16px;--m:28px;--l:80px;
+  }
+  *{margin:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+  .grotesk{font-family:'Space Grotesk',sans-serif}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+  .accent{color:var(--accent)}
+  a,button{font-family:inherit}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:999px;padding:14px 26px;font-size:14px;font-weight:600;cursor:pointer;transition:transform .2s cubic-bezier(.16,1,.3,1)}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:var(--accent);color:var(--accent-ink)}
+  .btn-ghost{background:var(--surface-2);color:#fff;border:1px solid var(--line)}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+
+  /* nav */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:24px 0}
+  .logo{font-family:'Space Grotesk';font-weight:700;font-size:20px;letter-spacing:-.01em}
+  .logo b{color:var(--accent)}
+  .nav-links{display:flex;gap:28px;font-size:14px;color:var(--muted)}
+  .nav-links span:hover{color:#fff}
+
+  /* hero */
+  .hero{position:relative;overflow:hidden;padding-bottom:var(--l)}
+  .hero-glow{position:absolute;top:-200px;right:-160px;width:620px;height:620px;border-radius:50%;
+    background:radial-gradient(circle,rgba(198,255,58,.22) 0%,rgba(198,255,58,0) 62%);pointer-events:none}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding-top:48px}
+  .hero h1{font-family:'Space Grotesk';font-weight:700;font-size:clamp(48px,6.6vw,82px);line-height:1.02;letter-spacing:-.03em;margin:20px 0}
+  .hero h1 .o{color:transparent;-webkit-text-stroke:1.5px var(--accent)}
+  .hero p{font-size:16px;color:var(--muted);line-height:1.65;max-width:440px;margin-bottom:var(--m)}
+  .hero-cta{display:flex;gap:12px}
+  /* device / data card */
+  .device{background:linear-gradient(160deg,var(--surface) 0%,var(--surface-2) 100%);border:1px solid var(--line);border-radius:28px;padding:24px;position:relative}
+  .ring-wrap{display:flex;align-items:center;gap:20px}
+  .ring{position:relative;width:128px;height:128px;flex:none}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .pct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring .pct b{font-family:'Space Grotesk';font-size:30px;font-weight:700;line-height:1}
+  .ring .pct span{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+  .ring-meta .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .ring-meta .big{font-family:'Space Grotesk';font-size:24px;font-weight:700;margin:2px 0 10px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{font-size:11px;font-weight:600;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:5px 11px;color:var(--muted)}
+  .chip.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  /* mini bar chart */
+  .bars{display:flex;align-items:flex-end;gap:8px;height:90px;margin-top:22px;padding-top:14px;border-top:1px solid var(--line)}
+  .bars .b{flex:1;background:#363D44;border-radius:6px 6px 0 0;position:relative}
+  .bars .b.hot{background:var(--accent)}
+
+  /* stats strip */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:var(--l) 0}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px}
+  .stat .n{font-family:'Space Grotesk';font-size:clamp(36px,4.4vw,52px);font-weight:700;letter-spacing:-.02em;line-height:1}
+  .stat .n em{color:var(--accent);font-style:normal}
+  .stat .l{font-size:12px;color:var(--muted);margin-top:8px;letter-spacing:.08em;text-transform:uppercase}
+
+  /* features */
+  .features{padding-bottom:var(--l)}
+  .sec-head{margin-bottom:40px}
+  .sec-head h2{font-family:'Space Grotesk';font-weight:700;font-size:clamp(32px,4.4vw,52px);letter-spacing:-.025em;margin-top:12px;max-width:620px;line-height:1.05}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;transition:border-color .2s,transform .2s}
+  .card:hover{border-color:var(--accent);transform:translateY(-4px)}
+  .ic{width:46px;height:46px;border-radius:13px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+  .ic svg{width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:2}
+  .card h3{font-family:'Space Grotesk';font-size:19px;font-weight:600;margin-bottom:8px}
+  .card p{font-size:14px;color:var(--muted);line-height:1.6}
+
+  /* cta */
+  .cta{position:relative;overflow:hidden;background:linear-gradient(140deg,var(--surface) 0%,#101512 100%);border:1px solid var(--line);border-radius:28px;padding:64px 48px;text-align:center;margin-bottom:var(--l)}
+  .cta-glow{position:absolute;bottom:-180px;left:50%;transform:translateX(-50%);width:560px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(198,255,58,.20),transparent 65%)}
+  .cta-content{position:relative;z-index:1}
+  .cta h2{font-family:'Space Grotesk';font-weight:700;font-size:clamp(34px,5vw,64px);letter-spacing:-.03em;line-height:1.02;margin-bottom:16px}
+  .cta p{color:var(--muted);margin-bottom:28px}
+
+  @media(max-width:860px){
+    .hero-grid{grid-template-columns:1fr;gap:32px}.stats{grid-template-columns:repeat(2,1fr)}
+    .cards{grid-template-columns:1fr}.nav-links{display:none}
+  }
+</style></head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <div class="logo">PUL<b>SE</b></div>
+    <div class="nav-links"><span>Training</span><span>Programs</span><span>Pricing</span><span>Club</span></div>
+    <button class="btn btn-primary">体験予約</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Strength Club · Tokyo</div>
+        <h1 class="grotesk">Train Smarter.<br><span class="o">Get</span> Stronger.</h1>
+        <p>科学的トレーニングとリアルタイムの身体データ分析。あなたのパフォーマンスを毎日アップデートする会員制ジム。</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary">無料体験を予約 →</button>
+          <button class="btn btn-ghost">プランを見る</button>
+        </div>
+      </div>
+      <!-- data card -->
+      <div class="device">
+        <div class="ring-wrap">
+          <div class="ring">
+            <svg width="128" height="128" viewBox="0 0 128 128">
+              <circle cx="64" cy="64" r="56" fill="none" stroke="#272C30" stroke-width="12"/>
+              <circle cx="64" cy="64" r="56" fill="none" stroke="#C6FF3A" stroke-width="12" stroke-linecap="round"
+                stroke-dasharray="351.8" stroke-dashoffset="74"/>
+            </svg>
+            <div class="pct"><b class="grotesk">79%</b><span>goal</span></div>
+          </div>
+          <div class="ring-meta">
+            <div class="label">Today</div>
+            <div class="big grotesk">1,240 <span style="font-size:13px;color:var(--muted)">kcal</span></div>
+            <div class="chips"><span class="chip on">Strength</span><span class="chip">Cardio</span><span class="chip">Mobility</span></div>
+          </div>
+        </div>
+        <div class="bars">
+          <div class="b" style="height:40%"></div><div class="b" style="height:62%"></div>
+          <div class="b" style="height:48%"></div><div class="b hot" style="height:88%"></div>
+          <div class="b" style="height:55%"></div><div class="b" style="height:70%"></div>
+          <div class="b" style="height:35%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stat"><div class="n grotesk">12<em>K+</em></div><div class="l">Active members</div></div>
+    <div class="stat"><div class="n grotesk">24<em>/7</em></div><div class="l">Always open</div></div>
+    <div class="stat"><div class="n grotesk">4.<em>9</em></div><div class="l">Google rating</div></div>
+    <div class="stat"><div class="n grotesk">0<em>3</em></div><div class="l">Tokyo locations</div></div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="sec-head">
+      <div class="eyebrow">Why Pulse</div>
+      <h2 class="grotesk">データで強くなる、<br>新しいトレーニング体験。</h2>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg></div>
+        <h3>リアルタイム計測</h3><p>心拍・出力・疲労スコアをトレーニング中に可視化。最適な強度を常にナビゲート。</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+        <h3>専属トレーナー</h3><p>国家資格を持つトレーナーがあなた専用のプログラムを設計・更新し続ける。</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>栄養 × アプリ連動</h3><p>食事管理アプリと同期し、トレーニング効果を最大化する栄養指導を自動提案。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="cta-glow"></div>
+    <div class="cta-content">
+      <div class="eyebrow">Start today</div>
+      <h2 class="grotesk">限界の一歩先へ。</h2>
+      <p>初回体験は無料。あなたの身体は、今日から更新できる。</p>
+      <button class="btn btn-primary">無料体験を予約 →</button>
+    </div>
+  </section>
+
+</div>
+</body></html>

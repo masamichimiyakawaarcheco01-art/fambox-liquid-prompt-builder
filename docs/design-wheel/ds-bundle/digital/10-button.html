@@ -1,0 +1,32 @@
+<!-- @dsCard group="Components · digital" name="Buttons (pill)" -->
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#111114;--muted:#77777E;--surface:#F2F2F0;--accent:#F04E23;--line:#D9D9DB}
+  *{margin:0;box-sizing:border-box;font-family:'JetBrains Mono',monospace}
+  body{background:var(--surface);padding:32px;color:var(--ink)}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;font-weight:500}
+  .row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+  .btn{padding:12px 24px;border-radius:999px;font-size:12px;font-weight:500;border:none;cursor:pointer}
+  .fill{background:var(--accent);color:#fff}
+  .dark{background:var(--ink);color:#fff}
+  .ghost{background:transparent;border:1px solid var(--ink);color:var(--ink)}
+  .on-dark{background:#161618;padding:20px;border-radius:12px}
+  .ghost-d{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;padding:12px 24px;border-radius:999px;font-size:12px}
+  .cap{font-size:10px;color:var(--muted)}
+</style></head>
+<body>
+  <h2>digital — Buttons</h2>
+  <div class="row">
+    <button class="btn fill">Start free</button>
+    <button class="btn dark">Create account →</button>
+    <button class="btn ghost">Docs</button>
+    <span class="cap">radius 999 / 12×24 / hover=opacity .8</span>
+  </div>
+  <div class="row on-dark">
+    <button class="btn fill">Start free</button>
+    <button class="ghost-d">Docs</button>
+    <span class="cap" style="color:rgba(255,255,255,.55)">on surface-dark</span>
+  </div>
+</body></html>
